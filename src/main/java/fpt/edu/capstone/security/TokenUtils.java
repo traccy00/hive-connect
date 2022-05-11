@@ -1,6 +1,8 @@
 //package fpt.edu.capstone.security;
 //
 //import fpt.edu.capstone.entity.sprint1.Role;
+//import fpt.edu.capstone.entity.sprint1.User;
+//import fpt.edu.capstone.utils.enums.Enums;
 //import io.jsonwebtoken.Claims;
 //import io.jsonwebtoken.Jwts;
 //import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,6 +13,8 @@
 //import org.springframework.stereotype.Component;
 //
 //import java.io.Serializable;
+//import java.time.Instant;
+//import java.util.Arrays;
 //import java.util.Date;
 //import java.util.function.Function;
 //import java.util.stream.Collectors;
@@ -51,14 +55,19 @@
 //    }
 //
 //    //generate token for user
-//    public String generateToken(UserDetails userDetails, Role role) {
-//        return doGenerateToken(userDetails, role);
+//    public String generateToken(User user) {
+//        Instant instant = Instant.now();
+//        return Jwts.builder().setSubject(user.getEmail()).claim(JWTConstants.CLAIM_USER_ID, user.getId())
+//                .claim("active_mode", adminConfig.getActiveMode())
+//                .claim("scopes", Arrays.asList(Enums.Scopes.ACCESS_TOKEN.authority())).setIssuedAt(Date.from(instant))
+//                .setExpiration(Date.from(instant.plusSeconds(jwtExpirationAccessToken)))
+//                .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
 //    }
 //
 //    // set token validity time and algorithm
-//    private String doGenerateToken(UserDetails userDetails, Role role) {
-//        Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
-//        claims.put("auth", userDetails.getAuthorities().stream().map(s -> new SimpleGrantedAuthority(s.getAuthority()))
+//    private String doGenerateToken(User user) {
+//        Claims claims = Jwts.claims().setSubject(user.getEmail());
+//        claims.put("auth", user.getAuthorities().stream().map(s -> new SimpleGrantedAuthority(s.getAuthority()))
 //                .collect(Collectors.toList()));
 //
 //        return Jwts.builder().setClaims(claims).setIssuedAt(new Date(System.currentTimeMillis()))

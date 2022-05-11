@@ -1,8 +1,5 @@
 package fpt.edu.capstone.utils;
 
-/**
- * @author hungnd on 05-Feb-2021
- */
 public class ResponseData {
   protected Object data;
   protected String status;
