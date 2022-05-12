@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name="\"user\"")
+@Table(name="users")
 @Where(clause = "is_deleted=0")
 @AllArgsConstructor
 @NoArgsConstructor
