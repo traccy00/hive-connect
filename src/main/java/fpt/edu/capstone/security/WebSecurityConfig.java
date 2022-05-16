@@ -28,10 +28,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final RequestFilter requestFilter;
 
-    public WebSecurityConfig(MyAuthenticationEntryPoint myAuthenticationEntryPoint, UserDetailsService userDetailsService, RequestFilter requestFilter) {
+    private final PasswordEncoder passwordEncoder;
+
+    public WebSecurityConfig(MyAuthenticationEntryPoint myAuthenticationEntryPoint, UserDetailsService userDetailsService,
+                             RequestFilter requestFilter, PasswordEncoder passwordEncoder) {
         this.myAuthenticationEntryPoint = myAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
         this.requestFilter = requestFilter;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private static final String[] HTTP_SECURITY_AUTH_LIST = {
@@ -58,13 +62,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     };
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
-    }
+
 
     @Bean
     @Override
