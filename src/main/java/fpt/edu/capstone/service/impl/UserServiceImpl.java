@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findUserByUserName(String userName) {
-        return userRepository.findByAccountAndIsDeleted(userName,0);
+        return userRepository.findByUsernameAndIsDeleted(userName,0);
     }
 
     @Override

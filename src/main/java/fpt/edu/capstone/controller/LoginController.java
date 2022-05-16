@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -47,9 +48,9 @@ public class LoginController {
     @Operation(summary = "Login user")
     public ResponseData login(@RequestBody @Valid LoginRequest request) throws Exception{
         try {
-            //            logger.info("login with username {}", username);
             authenticate(request.getUsername(), request.getPassword());
             String username = request.getUsername();
+            logger.info("login with username {}", username);
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(request.getPassword())) {
                 return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),
                         ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);

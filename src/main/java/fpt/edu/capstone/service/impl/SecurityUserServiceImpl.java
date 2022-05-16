@@ -1,7 +1,9 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.entity.sprint1.Role;
 import fpt.edu.capstone.entity.sprint1.User;
 import fpt.edu.capstone.repository.UserRepository;
+import fpt.edu.capstone.service.RoleService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,30 +19,27 @@ import java.util.Set;
 public class SecurityUserServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
-    public SecurityUserServiceImpl(UserRepository userRepository) {
+    private final RoleService roleService;
+
+    public SecurityUserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
-        if (!user.isPresent()) {
+        Optional<User> optionUser = userRepository.findByUsername(username);
+        if (!optionUser.isPresent()) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-//TODO:31-->37
-        long role = user.get().getRoleId();
-        Set<SimpleGrantedAuthority> sga = new HashSet<>();
+        User user = optionUser.get();
+        Role role = roleService.getRoleById(user.getRoleId());
 
-        if (!CollectionUtils.isEmpty(rolePermissions)){
-            rolePermissions.forEach(rp -> {
-                sga.add(new SimpleGrantedAuthority(rp.getPermission().getPermissionCode()));
-            });
-        }
-
-        return org.springframework.security.core.userdetails.User.withUsername(cmcUser.getAccount())
-                .password(cmcUser.getPassword())
-                .authorities(sga)
-                .accountExpired(false).accountLocked(false)
-                .credentialsExpired(false).disabled(false).build();
+        return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities(role.getName())
+//                .accountExpired(false).accountLocked(false)
+//                .credentialsExpired(false).disabled(false)
+                .build();
     }
 }
