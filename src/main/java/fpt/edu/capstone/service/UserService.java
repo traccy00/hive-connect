@@ -6,7 +6,9 @@ import fpt.edu.capstone.entity.sprint1.User;
 import java.util.Optional;
 
 public interface UserService {
-    User login(LoginRequest request) throws Exception;
-
     User getUserById(long id);
+
+    Optional<User> findUserByUserName(String userName);
+
+    User saveUser(User user);
 }
