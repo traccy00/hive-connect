@@ -4,5 +4,5 @@ import fpt.edu.capstone.entity.sprint1.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    Role findById(long roleId);
+    Role getById(long roleId);
 }

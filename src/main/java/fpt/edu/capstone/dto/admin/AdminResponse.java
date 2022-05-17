@@ -21,7 +21,7 @@ public class AdminResponse {
     private String username;
     private String email;
     private long roleId;
-    private Date createdAt;
+    private LocalDateTime createdAt;
     private LocalDateTime lastLoginTime;
 
     public static AdminResponse fromEntity(Admin entity, User user){

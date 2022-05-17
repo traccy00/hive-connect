@@ -39,7 +39,4 @@ public class User extends BaseEntity {
 
     @Column(name = "last_login_time")
     private LocalDateTime lastLoginTime;
-
-    @Transient
-    private Role role;
 }

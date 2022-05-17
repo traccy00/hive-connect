@@ -2,9 +2,12 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.login.LoginRequest;
+import fpt.edu.capstone.dto.register.RegisterRequest;
+import fpt.edu.capstone.entity.sprint1.Role;
 import fpt.edu.capstone.entity.sprint1.User;
 import fpt.edu.capstone.exception.ResourceNotFoundException;
 import fpt.edu.capstone.security.TokenUtils;
+import fpt.edu.capstone.service.RoleService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.SecurityUserServiceImpl;
 import fpt.edu.capstone.utils.Enums;
@@ -21,6 +24,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +35,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/login")
+@RequestMapping("/api/v1")
 @AllArgsConstructor
 public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
@@ -42,9 +46,13 @@ public class LoginController {
 
     private final SecurityUserServiceImpl securityUserService;
 
+    private final PasswordEncoder passwordEncoder;
+
     private final TokenUtils jwtTokenUtil;
 
-    @PostMapping("")
+    private final RoleService roleService;
+
+    @PostMapping("/login")
     @Operation(summary = "Login user")
     public ResponseData login(@RequestBody @Valid LoginRequest request) throws Exception{
         try {
@@ -88,7 +96,19 @@ public class LoginController {
 
     @PostMapping("/register")
     @Operation(summary = "register user")
-    public ResponseData register(){
+    public ResponseData register(@RequestBody RegisterRequest request){
+        Optional<Role> optionalRole = roleService.findRoleById(request.getRoleId());
+        if (!optionalRole.isPresent()) {
+            throw new ResourceNotFoundException("Role: "+optionalRole.get()+ "not found");
+        }
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());
+        user.setRoleId(request.getRoleId());
+        user.create();
+        userService.saveUser(user);
+
         return null;
     }
 }
