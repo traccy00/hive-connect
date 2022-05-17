@@ -3,8 +3,7 @@ package fpt.edu.capstone.controller;
 import fpt.edu.capstone.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.login.LoginRequest;
 import fpt.edu.capstone.dto.register.RegisterRequest;
-import fpt.edu.capstone.entity.sprint1.Role;
-import fpt.edu.capstone.entity.sprint1.User;
+import fpt.edu.capstone.entity.sprint1.Users;
 import fpt.edu.capstone.exception.ResourceNotFoundException;
 import fpt.edu.capstone.security.TokenUtils;
 import fpt.edu.capstone.service.RoleService;
@@ -18,7 +17,6 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -54,7 +52,7 @@ public class LoginController {
 
     @PostMapping("/login")
     @Operation(summary = "Login user")
-    public ResponseData login(@RequestBody @Valid LoginRequest request) throws Exception{
+    public ResponseData login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
             authenticate(request.getUsername(), request.getPassword());
             String username = request.getUsername();
@@ -66,18 +64,18 @@ public class LoginController {
 
             final UserDetails userDetails = securityUserService.loadUserByUsername(username);
 
-            Optional<User> optionalUser = userService.findUserByUserName(username);
-            if(!optionalUser.isPresent()){
-                throw new ResourceNotFoundException("Username: "+username+ "not found");
+            Optional<Users> optionalUser = userService.findUserByUserName(username);
+            if (!optionalUser.isPresent()) {
+                throw new ResourceNotFoundException("Username: " + username + "not found");
             }
-            User user = optionalUser.get();
+            Users user = optionalUser.get();
             String token = jwtTokenUtil.generateToken(userDetails);
 
             user.setLastLoginTime(LocalDateTime.now());
             userService.saveUser(user);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS,token);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS, token);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -96,19 +94,21 @@ public class LoginController {
 
     @PostMapping("/register")
     @Operation(summary = "register user")
-    public ResponseData register(@RequestBody RegisterRequest request){
-        Optional<Role> optionalRole = roleService.findRoleById(request.getRoleId());
-        if (!optionalRole.isPresent()) {
-            throw new ResourceNotFoundException("Role: "+optionalRole.get()+ "not found");
-        }
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setEmail(request.getEmail());
-        user.setRoleId(request.getRoleId());
-        user.create();
-        userService.saveUser(user);
+    public ResponseData register(@RequestBody RegisterRequest request) throws Exception {
+        try {
+            String username = request.getUsername();
+            String password = request.getPassword();
 
-        return null;
+            if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(password)) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),
+                        ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
+            }
+            userService.registerUser(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
     }
 }

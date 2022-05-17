@@ -1,8 +1,5 @@
 package fpt.edu.capstone.security;
 
-import fpt.edu.capstone.entity.sprint1.Role;
-import fpt.edu.capstone.entity.sprint1.User;
-import fpt.edu.capstone.utils.enums.Enums;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

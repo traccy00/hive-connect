@@ -1,7 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.entity.sprint1.Role;
-import fpt.edu.capstone.entity.sprint1.User;
+import fpt.edu.capstone.entity.sprint1.Users;
 import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.RoleService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,11 +28,11 @@ public class SecurityUserServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionUser = userRepository.findByUsername(username);
+        Optional<Users> optionUser = userRepository.findByUsername(username);
         if (!optionUser.isPresent()) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        User user = optionUser.get();
+        Users user = optionUser.get();
         Role role = roleService.getRoleById(user.getRoleId());
 
         return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())

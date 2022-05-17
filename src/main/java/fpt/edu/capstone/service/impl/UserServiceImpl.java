@@ -1,22 +1,17 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.common.JWTConstants;
-import fpt.edu.capstone.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.login.LoginRequest;
+import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.entity.sprint1.Role;
-import fpt.edu.capstone.entity.sprint1.User;
+import fpt.edu.capstone.entity.sprint1.Users;
 import fpt.edu.capstone.exception.ResourceNotFoundException;
 import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.LoginService;
 import fpt.edu.capstone.service.RoleService;
 import fpt.edu.capstone.service.UserService;
-import fpt.edu.capstone.utils.enums.Enums;
-import fpt.edu.capstone.utils.enums.SystemEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -26,30 +21,46 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    RoleService roleService;
+    private RoleService roleService;
 
     @Autowired
-    LoginService loginService;
+    private LoginService loginService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
-    public User getUserById(long id) {
+    public Users getUserById(long id) {
         return userRepository.getById(id);
     }
 
     @Override
-    public Optional<User> findUserByUserName(String userName) {
+    public Optional<Users> findUserByUserName(String userName) {
         return userRepository.findByUsernameAndIsDeleted(userName,0);
     }
 
     @Override
-    public User saveUser(User user) {
+    public Users saveUser(Users user) {
         return userRepository.save(user);
     }
 
-    public static boolean isHasRole(Set<Role> roles, String roleName) {
-        for (Role role : roles)
-            if (role.getName().equals(roleName))
-                return true;
-        return false;
+    @Override
+    public void registerUser(RegisterRequest request) {
+        Optional<Role> optionalRole = roleService.findRoleById(request.getRoleId());
+        if (!optionalRole.isPresent()) {
+            throw new ResourceNotFoundException("Role: "+optionalRole.get()+ "not found");
+        }
+        //check exist email username
+        Optional <Users> checkExisted = userRepository.checkExistedUserByUsernameOrEmail(request.getUsername(),request.getEmail());
+        if(checkExisted.isPresent()){
+            throw new ResourceNotFoundException("Username or password is already existed!");
+        }
+        Users user = new Users();
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());
+        user.setRoleId(request.getRoleId());
+        user.create();
+        userRepository.save(user);
     }
 }
