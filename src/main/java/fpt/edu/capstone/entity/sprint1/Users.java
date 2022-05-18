@@ -8,15 +8,16 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "user")
+@Table(name="users")
 @Where(clause = "is_deleted=0")
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends BaseEntity {
+public class Users extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -32,10 +33,10 @@ public class User extends BaseEntity {
 
     @Column(name = "role_id")
     private long roleId;
-    //role =1 là customer
-    //role =2 là recruiter
-    //role =3 là admin
 
     @Column(name = "is_deleted")
     private int isDeleted = 0;
+
+    @Column(name = "last_login_time")
+    private LocalDateTime lastLoginTime;
 }

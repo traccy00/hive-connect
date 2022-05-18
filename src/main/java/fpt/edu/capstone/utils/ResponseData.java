@@ -1,13 +1,9 @@
 package fpt.edu.capstone.utils;
 
-/**
- * @author hungnd on 05-Feb-2021
- */
 public class ResponseData {
   protected Object data;
   protected String status;
   protected String message;
-  protected String ex;
 
   public ResponseData() {
   }
@@ -77,13 +73,5 @@ public class ResponseData {
 
   public void setMessage(String message) {
     this.message = message;
-  }
-
-  public String getEx() {
-    return ex;
-  }
-
-  public void setEx(String ex) {
-    this.ex = ex;
   }
 }

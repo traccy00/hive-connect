@@ -6,7 +6,7 @@ package fpt.edu.capstone.utils.enums;
 public class SystemEnum {
 
   public enum RoleType {
-    ADMIN("ADMIN"), MANAGER("MANAGER"), USER("USER"), CANDIDATE("CANDIDATE");
+    ADMIN("ADMIN"), RECRUITER("RECRUITER"),CANDIDATE("CANDIDATE");
 
     RoleType(String roleType) {
       this.roleType = roleType;

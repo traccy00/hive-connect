@@ -11,14 +11,9 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "admin")
-//@Where(clause = "is_deleted=0")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Admin {
-    /*
-    username : hive-connect-system
-    password : admin
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -30,5 +25,5 @@ public class Admin {
     private String fullName;
 
     @Transient
-    private User user;
+    private Users user;
 }

@@ -19,32 +19,12 @@ public class Enums {
 
   }
 
-  public enum RevenueStatus {
+  public enum DateTimeStatus {
     Today, Week, Month
   }
 
-  public enum ProductStatus {
-    Stock(1, "Available"), OutStocking(2, "Out of Stock");
-
-    private long id;
-    private String status;
-
-    ProductStatus(long id, String status) {
-      this.id = id;
-      this.status = status;
-    }
-
-    public String getStatus() {
-      return status;
-    }
-
-    public long getId() {
-      return id;
-    }
-  }
-
   public enum UserStatus {
-    Deleted(-1), Locked(0), Activated(1), Inactive(2);
+     Activated(0), Deleted(1),Inactive(2), Locked(3);
 
     UserStatus(int status) {
       this.status = status;
@@ -83,27 +63,12 @@ public class Enums {
     Withdraw, Deposit, Transfer, Advances, Allowance
   }
 
-  public enum JobName {
-    SUBSIDIZE("SUBSIDIZE"), SYNC_USER_LDAP("SYNC_USER_LDAP"), TRANSACTION_APPROVED("TRANSACTION_APPROVED");
-
-    JobName(String status) {
-      this.status = status;
-    }
-
-    public String job() {
-      return status;
-    }
-
-    private String status;
-
-  }
-
   public enum TransactionStatus {
     Completed, Pending, Reject, Approved, Canceled, Created, Refund, Receive, Bonus, AllowanceTransfer, Pending_Order
   }
 
   public enum SocialProvider {
-    TIME_BIRD, GOOGLE, FACEBOOK, ZALO, APPLE
+     GOOGLE, FACEBOOK, ZALO, APPLE
   }
 
   public enum OrderStatus {
