@@ -2,6 +2,7 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.login.LoginRequest;
+import fpt.edu.capstone.dto.register.ChangePasswordRequest;
 import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.entity.sprint1.Users;
 import fpt.edu.capstone.exception.ResourceNotFoundException;
@@ -21,12 +22,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -105,6 +104,25 @@ public class LoginController {
             }
             userService.registerUser(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @PostMapping("/password/{username}")
+    @Operation(summary = "change password user")
+    public ResponseData changePassword(@PathVariable(name = "username") String username, @RequestBody ChangePasswordRequest request) throws Exception {
+        try {
+            Optional<Users> optionalUsers = userService.findUserByUserName(username);
+            if (!optionalUsers.isPresent()) {
+                throw new ResourceNotFoundException("User: " + username + "not found");
+            }
+            Users user = optionalUsers.get();
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            userService.saveUser(user);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CHANGE_PASSWORD_SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
