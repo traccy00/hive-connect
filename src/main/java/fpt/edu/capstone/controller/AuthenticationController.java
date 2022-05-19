@@ -34,8 +34,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1")
 @AllArgsConstructor
-public class LoginController {
-    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+public class AuthenticationController {
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     private final UserService userService;
 
