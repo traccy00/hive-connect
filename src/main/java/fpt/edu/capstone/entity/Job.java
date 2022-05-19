@@ -3,6 +3,7 @@ package fpt.edu.capstone.entity;
 import fpt.edu.capstone.utils.BaseEntity;
 
 public class Job extends BaseEntity {
+    //Thieu location
     private long id;
     private long categoryId;
     private long companyId;
