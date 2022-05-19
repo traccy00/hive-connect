@@ -16,7 +16,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/candidate")
 public class CandidateController {
-    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private static final Logger logger = LoggerFactory.getLogger(Candidate.class);
     @Autowired
     private CandidateService candidateService;
 
@@ -30,7 +30,13 @@ public class CandidateController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
-
+/*
+không nên insert từng entity, nên insert từng đối tượng
+thiếu check condition
+insert cần lưu thêm created at
+cần check xem user này có tồn tại trong bảng user không
+luồng hoạt động sẽ là đăng kí tài khoản ( user) ---> khi đã có role thì cập nhật những thông tin tiếp theo cho user ( candidate)
+ */
     @PostMapping("/insert")
     public ResponseData inserCandidate(@RequestBody Candidate newCandidate){
        try{
