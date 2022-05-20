@@ -25,5 +25,5 @@ public class Admin {
     private String fullName;
 
     @Transient
-    private User user;
+    private Users user;
 }

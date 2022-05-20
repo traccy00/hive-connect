@@ -2,7 +2,7 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.admin.AdminResponse;
 import fpt.edu.capstone.entity.sprint1.Admin;
-import fpt.edu.capstone.entity.sprint1.User;
+import fpt.edu.capstone.entity.sprint1.Users;
 import fpt.edu.capstone.repository.AdminRepository;
 import fpt.edu.capstone.service.AdminService;
 import fpt.edu.capstone.service.UserService;
@@ -35,7 +35,7 @@ public class AdminServiceImpl implements AdminService {
         if (admin.hasContent()) {
             for (Admin a : admin.getContent()) {
                 long userId = a.getUserId();
-                User user = userService.getUserById(userId);
+                Users user = userService.getUserById(userId);
                 AdminResponse ar = AdminResponse.fromEntity(a, user);
                 adminResponse.add(ar);
             }

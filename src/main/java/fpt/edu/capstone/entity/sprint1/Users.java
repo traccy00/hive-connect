@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name="\"user\"")
+@Table(name="users")
 @Where(clause = "is_deleted=0")
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends BaseEntity {
+public class Users extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

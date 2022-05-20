@@ -1,7 +1,7 @@
 package fpt.edu.capstone.dto.admin;
 
 import fpt.edu.capstone.entity.sprint1.Admin;
-import fpt.edu.capstone.entity.sprint1.User;
+import fpt.edu.capstone.entity.sprint1.Users;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,10 +21,10 @@ public class AdminResponse {
     private String username;
     private String email;
     private long roleId;
-    private Date createdAt;
+    private LocalDateTime createdAt;
     private LocalDateTime lastLoginTime;
 
-    public static AdminResponse fromEntity(Admin entity, User user){
+    public static AdminResponse fromEntity(Admin entity, Users user){
         if(entity == null){
             return null;
         }

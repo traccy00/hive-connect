@@ -1,8 +1,5 @@
 package fpt.edu.capstone.controller;
 
-import fpt.edu.capstone.dto.admin.AdminResponse;
-import fpt.edu.capstone.entity.sprint1.Admin;
-import fpt.edu.capstone.entity.sprint1.User;
 import fpt.edu.capstone.service.AdminService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.utils.Enums;
