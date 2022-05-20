@@ -25,7 +25,7 @@ public interface ResponseMessageConstants {
     String CHANGE_PASSWORD_FAILED = "CHANGE_PASSWORD_FAILED";
 
     //USER
-    String USER_DOES_NOT_EXIST = "MSG_USER_DOES_NOT_EXIST";
+    String USER_DOES_NOT_EXIST = "USER_DOES_NOT_EXIST";
     String USER_IS_INACTIVE = "USER_IS_INACTIVE";
     String USER_IS_DELETED = "USER_IS_DELETED";
 
