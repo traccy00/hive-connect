@@ -34,4 +34,7 @@ public interface ResponseMessageConstants {
     String DELETE_FAILED = "MSG_DELETE_FAILED";
     String TOKEN_EXPIRED = "MSG_TOKEN_EXPIRED";
     String TOKEN_INVALID = "MSG_TOKEN_INVALID";
+
+    //JOB
+    String CREATE_JOB_SUCCESS = "CREATE_JOB_SUCCESS";
 }

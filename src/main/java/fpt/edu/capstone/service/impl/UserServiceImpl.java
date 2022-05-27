@@ -3,7 +3,7 @@ package fpt.edu.capstone.service.impl;
 import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.entity.sprint1.Role;
 import fpt.edu.capstone.entity.sprint1.Users;
-import fpt.edu.capstone.exception.ResourceNotFoundException;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.LoginService;
 import fpt.edu.capstone.service.RoleService;
@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -48,12 +47,12 @@ public class UserServiceImpl implements UserService {
     public void registerUser(RegisterRequest request) {
         Optional<Role> optionalRole = roleService.findRoleById(request.getRoleId());
         if (!optionalRole.isPresent()) {
-            throw new ResourceNotFoundException("Role: "+optionalRole.get()+ "not found");
+            throw new HiveConnectException("Role: "+optionalRole.get()+ "not found");
         }
         //check exist email username
         Optional <Users> checkExisted = userRepository.checkExistedUserByUsernameOrEmail(request.getUsername(),request.getEmail());
         if(checkExisted.isPresent()){
-            throw new ResourceNotFoundException("Username or password is already existed!");
+            throw new HiveConnectException("Username or password is already existed!");
         }
         Users user = new Users();
         user.setUsername(request.getUsername());
