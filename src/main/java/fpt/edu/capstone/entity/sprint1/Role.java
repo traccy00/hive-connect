@@ -3,7 +3,7 @@ package fpt.edu.capstone.entity.sprint1;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
