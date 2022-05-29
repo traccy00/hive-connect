@@ -37,4 +37,7 @@ public interface ResponseMessageConstants {
 
     //JOB
     String CREATE_JOB_SUCCESS = "CREATE_JOB_SUCCESS";
+
+    //CATEGORY
+    String CREATE_CATEGORY_SUCCESS = "CREATE_CATEGORY_SUCCESS";
 }
