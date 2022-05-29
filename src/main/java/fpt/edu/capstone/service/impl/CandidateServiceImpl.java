@@ -1,7 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.entity.sprint1.Candidate;
-import fpt.edu.capstone.repository.AdminRepository;
 import fpt.edu.capstone.repository.CandidateRepository;
 import fpt.edu.capstone.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CandidateServiceImpl implements CandidateService {
+public class CandidateServiceImpl implements CandidateService{
     @Autowired
     CandidateRepository candidateRepository;
     @Override
@@ -21,17 +20,25 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public void insertCandidate(long userId, String listTechStackId, String fullName, String phoneNumber, boolean gender, Date birthDate, Long socialId, long tapHistoryId, long wishLishId, long searchHistoryId, String cvUrl, long appliedJobId) {
-        candidateRepository.insertCandidate(userId,listTechStackId,fullName, phoneNumber, gender,birthDate ,socialId ,tapHistoryId ,wishLishId ,searchHistoryId ,cvUrl ,appliedJobId);
+    public void insertCandidate(Candidate candidate) {
+        candidateRepository.save(candidate );
     }
 
     @Override
-    public void updateCandidate(long userId, String listTechStackId, String fullName, String phoneNumber, boolean gender, Date birthDate, Long socialId, long tapHistoryId, long wishLishId, long searchHistoryId, String cvUrl, long appliedJobId, long id) {
-        candidateRepository.updateCandidate(userId,listTechStackId,fullName, phoneNumber, gender,birthDate ,socialId ,tapHistoryId ,wishLishId ,searchHistoryId ,cvUrl ,appliedJobId, id);
+    public void updateCandidate(Candidate newCandidate, Long id) {
+        Optional<Candidate> updatedCandidate = candidateRepository.findById(id).map(candidate->{
+                candidate.setBirthDate(newCandidate.getBirthDate());
+                candidate.setGender(newCandidate.isGender());
+                candidate.setFullName(newCandidate.getFullName());
+                candidate.setListTechStackId(newCandidate.getListTechStackId());
+                candidate.setPhoneNumber(newCandidate.getPhoneNumber());
+                return candidateRepository.save(candidate);
+        });
     }
 
     @Override
     public Optional<Candidate> findById(Long id){
         return candidateRepository.findById(id);
     }
+
 }
