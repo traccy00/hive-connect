@@ -50,15 +50,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] WEB_SECURITY_AUTH_LIST = {
-            "/v2/api-docs",
-            "/login",
-            "/api/v1/**",
-            "/configuration/ui",
-            "/swagger-resources/**",
-            "/configuration/security",
-            "/swagger-ui/**",
-            "/webjars/**",
-            "/swagger/**"
+//            "/v2/api-docs",
+//            "/configuration/ui",
+//            "/swagger-resources/**",
+//            "/configuration/security",
+//            "/swagger-ui/**",
+//            "/webjars/**",
+//            "/swagger/**"
     };
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

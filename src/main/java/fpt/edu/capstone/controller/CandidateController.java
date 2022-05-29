@@ -24,7 +24,7 @@ public class CandidateController {
     public ResponseData getAllCandidate() {
         try{
             List<Candidate> listAllCandidate = candidateService.getAllCandidate();
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), listAllCandidate);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "All of candidate", listAllCandidate);
         }catch (Exception ex){
             logger.error(ex.getMessage());
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
@@ -34,14 +34,12 @@ public class CandidateController {
 không nên insert từng entity, nên insert từng đối tượng
 thiếu check condition
 insert cần lưu thêm created at
-cần check xem user này có tồn tại trong bảng user không
-luồng hoạt động sẽ là đăng kí tài khoản ( user) ---> khi đã có role thì cập nhật những thông tin tiếp theo cho user ( candidate)
  */
     @PostMapping("/insert")
     public ResponseData inserCandidate(@RequestBody Candidate newCandidate){
        try{
            System.out.println(newCandidate.toString());
-           candidateService.insertCandidate(newCandidate.getUserId(), newCandidate.getListTechStackId(), newCandidate.getFullName(), newCandidate.getPhoneNumber(), newCandidate.isGender(), newCandidate.getBirthDate(), newCandidate.getSocialId(), newCandidate.getTapHistoryId(), newCandidate.getWishListId(), newCandidate.getSearchHistoryID(), newCandidate.getCvUrl(), newCandidate.getAppliedJobId());
+           candidateService.insertCandidate(newCandidate);
 
            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Add candicate successful");
         } catch (Exception ex) {
@@ -57,7 +55,7 @@ luồng hoạt động sẽ là đăng kí tài khoản ( user) ---> khi đã c�
         }
         try{
             System.out.println(newCandidate.toString());
-            candidateService.updateCandidate(newCandidate.getUserId(), newCandidate.getListTechStackId(), newCandidate.getFullName(), newCandidate.getPhoneNumber(), newCandidate.isGender(), newCandidate.getBirthDate(), newCandidate.getSocialId(), newCandidate.getTapHistoryId(), newCandidate.getWishListId(), newCandidate.getSearchHistoryID(), newCandidate.getCvUrl(), newCandidate.getAppliedJobId(), id);
+            candidateService.updateCandidate(newCandidate, id);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Edit candicate successful", newCandidate);
         } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());

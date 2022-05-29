@@ -1,5 +1,15 @@
 package fpt.edu.capstone.entity.sprint1;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 // thêm các job vào mục yêu thích
+
 public class Wishlist {
     private long id;
     private long postId; // lưu bài viết yêu thích
