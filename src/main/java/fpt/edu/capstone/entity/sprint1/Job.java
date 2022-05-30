@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -56,10 +57,10 @@ public class Job extends BaseEntity {
     private boolean gender; // male, female, ko yêu cầu...
 
     @Column(name = "start_date")
-    private long startDate; // ngày tuyển dụng
+    private LocalDateTime startDate; // ngày tuyển dụng
 
     @Column(name = "end_date")
-    private long endDate; // ngày kết thúc tuyển dụng
+    private LocalDateTime endDate; // ngày kết thúc tuyển dụng
 
     @Column(name = "work_place")
     private String workPlace;
