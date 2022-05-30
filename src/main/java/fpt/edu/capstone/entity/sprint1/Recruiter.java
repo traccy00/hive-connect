@@ -32,7 +32,7 @@ public class Recruiter {
     @Column(name = "position")
     private String position;
 
-    @Column(name = "linkedin_account")
+    @Column(name = "linkedin_url")
     private String linkedInAccount;
 
     @Column(name = "business_license")
@@ -43,6 +43,7 @@ public class Recruiter {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
 
     public long getId() {
         return id;

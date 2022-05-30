@@ -62,4 +62,9 @@ public class RecruiterServiceImpl implements RecruiterService {
     public boolean existById(long recId) {
         return recruiterRepository.existsById(recId);
     }
+
+    @Override
+    public Recruiter getRecruiterById(long id) {
+        return recruiterRepository.getById(id);
+    }
 }
