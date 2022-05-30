@@ -5,7 +5,7 @@ import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.entity.sprint1.Company;
 import fpt.edu.capstone.entity.sprint1.Recruiter;
 import fpt.edu.capstone.entity.sprint1.Users;
-import fpt.edu.capstone.exception.ResourceNotFoundException;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.CompanyRepository;
 import fpt.edu.capstone.repository.RecruiterRepository;
 import fpt.edu.capstone.repository.UserRepository;
@@ -31,7 +31,7 @@ public class RecruiterServiceImpl implements RecruiterService {
         long roleId = 2;
         Users user = userRepository.findById(userId);
         if(user == null) {
-            throw new ResourceNotFoundException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         RecruiterProfileResponse recruiterProfile = new RecruiterProfileResponse();
         Recruiter recruiter = recruiterRepository.getRecruiterProfile(userId);
@@ -56,5 +56,10 @@ public class RecruiterServiceImpl implements RecruiterService {
         recruiterProfile.setLinkedinAccount(recruiter.getLinkedInAccount());
         recruiterProfile.setBusinessLicense(recruiter.getBusinessLicense());
         return recruiterProfile;
+    }
+
+    @Override
+    public boolean existById(long recId) {
+        return recruiterRepository.existsById(recId);
     }
 }
