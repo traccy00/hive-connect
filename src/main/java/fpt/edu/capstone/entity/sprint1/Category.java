@@ -14,7 +14,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@SuperBuilder
 @Table(name = "category")
 @Where(clause = "is_deleted = 0")
 public class Category {

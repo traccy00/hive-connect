@@ -1,14 +1,15 @@
 package fpt.edu.capstone.dto.category;
 
-import fpt.edu.capstone.entity.sprint1.Category;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class CreateCategoryRequest {
+public class UpdateCategoryRequest {
+    private long id;
+
     @NotBlank(message = "Category name must not be blank")
     private String name;
 

@@ -120,8 +120,19 @@ public class AuthenticationController {
             if (!optionalUsers.isPresent()) {
                 throw new HiveConnectException("User: " + username + "not found");
             }
+            String oldPassword = request.getOldPassword();
+            String newPassword = request.getNewPassword();
+            String confirmPassword = request.getConfirmPassword();
+
             Users user = optionalUsers.get();
-            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            if(!passwordEncoder.matches(oldPassword,user.getPassword())){
+                throw new HiveConnectException("Old password does not matches");
+            }
+            if(!StringUtils.equals(newPassword,confirmPassword)){
+                throw new HiveConnectException("Confirm password does not matches");
+            }
+
+            user.setPassword(passwordEncoder.encode(newPassword));
             userService.saveUser(user);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CHANGE_PASSWORD_SUCCESS);
         } catch (Exception e) {

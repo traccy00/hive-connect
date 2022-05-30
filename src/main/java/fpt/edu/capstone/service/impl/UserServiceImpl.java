@@ -8,6 +8,7 @@ import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.LoginService;
 import fpt.edu.capstone.service.RoleService;
 import fpt.edu.capstone.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users saveUser(Users user) {
+        user.update();
         return userRepository.save(user);
     }
 
@@ -52,8 +54,13 @@ public class UserServiceImpl implements UserService {
         //check exist email username
         Optional <Users> checkExisted = userRepository.checkExistedUserByUsernameOrEmail(request.getUsername(),request.getEmail());
         if(checkExisted.isPresent()){
-            throw new HiveConnectException("Username or password is already existed!");
+            throw new HiveConnectException("Username or email is already existed!");
         }
+
+        if(!StringUtils.equals(request.getPassword(),request.getConfirmPassword())){
+            throw new HiveConnectException("Confirm password does not matches");
+        }
+
         Users user = new Users();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
