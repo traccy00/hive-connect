@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,8 +24,8 @@ public class CreateJobRequest {
     private String workForm;
     private String experience;
     private boolean gender;
-    private long startDate;
-    private long endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private String workPlace;
     private long jobViewCount;
     private String techStackRequire;
