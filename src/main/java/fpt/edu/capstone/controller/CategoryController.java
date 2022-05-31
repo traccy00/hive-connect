@@ -86,7 +86,7 @@ public class CategoryController {
     public ResponseData deleteCategory(@RequestParam(value = "id") long categoryId){
         try {
             categoryService.deleteCategory(categoryId);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_CATEGORY_SUCCESS);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.DELETE_CATEGORY_SUCCESS);
         } catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
