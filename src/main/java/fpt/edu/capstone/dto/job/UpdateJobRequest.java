@@ -1,6 +1,5 @@
 package fpt.edu.capstone.dto.job;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,10 +7,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class JobResponse {
+public class UpdateJobRequest {
     private long jobId;
     private long categoryId;
-    private long recruiterId;
     private String companyName;
     private String jobName;
     private String jobDescription;
@@ -29,5 +27,4 @@ public class JobResponse {
     private String techStackRequire;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private int isDeleted;
 }

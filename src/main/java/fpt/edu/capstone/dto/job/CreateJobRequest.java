@@ -27,7 +27,5 @@ public class CreateJobRequest {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String workPlace;
-    private long jobViewCount;
     private String techStackRequire;
-    private int isDeleted;
 }

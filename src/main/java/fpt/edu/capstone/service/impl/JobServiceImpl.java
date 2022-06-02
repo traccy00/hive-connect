@@ -2,6 +2,7 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.JobResponse;
+import fpt.edu.capstone.dto.job.UpdateJobRequest;
 import fpt.edu.capstone.entity.sprint1.Job;
 import fpt.edu.capstone.entity.sprint1.Recruiter;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -65,7 +67,6 @@ public class JobServiceImpl implements JobService {
         List <JobResponse> jobResponse = new ArrayList<>();
         if(jobs.hasContent()){
             for (Job j :jobs.getContent()){
-                //TODO: Bug here
                 JobResponse jr = modelMapper.map(j, JobResponse.class);
                 jobResponse.add(jr);
             }
@@ -81,6 +82,19 @@ public class JobServiceImpl implements JobService {
         responseDataPagination.setPagination(pagination);
 
         return responseDataPagination;
+    }
+
+    @Override
+    //TODO : fix insert for update function
+    public void updateJob(UpdateJobRequest request) {
+        Job job = jobRepository.getById(request.getJobId());
+        if(job == null){
+            throw new HiveConnectException("Job does not exist");
+        }
+        Object UpdateJobRequest = request;
+        job = modelMapper.map(UpdateJobRequest, Job.class);
+        job.update();
+        jobRepository.saveAndFlush(job);
     }
 
     @Override

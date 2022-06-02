@@ -2,6 +2,7 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.CreateJobRequest;
+import fpt.edu.capstone.dto.job.UpdateJobRequest;
 import fpt.edu.capstone.service.JobService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -38,8 +39,8 @@ public class JobController {
         }
     }
 
-    @GetMapping("/list-job")
-    public ResponseData searchListJobFilter(@RequestParam(defaultValue = "0") Integer pageNo,
+    @GetMapping("/find-job")
+    public ResponseData searchListJobFilter(@RequestParam(defaultValue = "1") Integer pageNo,
                                             @RequestParam(defaultValue = "10") Integer pageSize,
                                             @RequestParam(defaultValue = "0", value = "categoryId", required = false) long category,
                                             @RequestParam(defaultValue = StringUtils.EMPTY, value = "companyName", required = false) String companyName,
@@ -61,10 +62,16 @@ public class JobController {
         }
     }
 
-    //TODO : update job --> inprogess
     @PutMapping("update-job")
-    public ResponseData updateJob() {
-        return null;
+    public ResponseData updateJob(@RequestBody UpdateJobRequest request) {
+        try{
+            jobService.updateJob(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_JOB_SUCCESS);
+        } catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
     }
 
     @DeleteMapping("/delete-job")
