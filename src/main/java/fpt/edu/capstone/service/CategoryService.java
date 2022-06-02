@@ -1,6 +1,5 @@
 package fpt.edu.capstone.service;
 
-import fpt.edu.capstone.dto.category.CreateCategoryRequest;
 import fpt.edu.capstone.dto.category.UpdateCategoryRequest;
 import fpt.edu.capstone.entity.sprint1.Category;
 
