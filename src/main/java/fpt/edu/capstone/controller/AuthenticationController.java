@@ -4,10 +4,11 @@ import fpt.edu.capstone.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.login.LoginRequest;
 import fpt.edu.capstone.dto.register.ChangePasswordRequest;
 import fpt.edu.capstone.dto.register.RegisterRequest;
+import fpt.edu.capstone.entity.ConfirmToken;
 import fpt.edu.capstone.entity.sprint1.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.security.TokenUtils;
-import fpt.edu.capstone.service.RoleService;
+import fpt.edu.capstone.service.ConfirmTokenService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.SecurityUserServiceImpl;
 import fpt.edu.capstone.utils.Enums;
@@ -46,7 +47,7 @@ public class AuthenticationController {
 
     private final TokenUtils jwtTokenUtil;
 
-    private final RoleService roleService;
+    private final ConfirmTokenService confirmTokenService;
 
     @PostMapping("/login")
     @Operation(summary = "Login user")
@@ -96,6 +97,7 @@ public class AuthenticationController {
         try {
             String username = request.getUsername();
             String password = request.getPassword();
+            String email = request.getEmail();
 
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(password)) {
                 return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),
@@ -103,9 +105,48 @@ public class AuthenticationController {
             }
             userService.registerUser(request);
             final UserDetails userDetails = securityUserService.loadUserByUsername(username);
-            String token = jwtTokenUtil.generateToken(userDetails);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS,token);
+
+            //region: Handle verify email
+            Users user = userService.getByUserName(username);
+            ConfirmToken confirmToken = new ConfirmToken(user.getId());
+            confirmTokenService.saveConfirmToken(confirmToken); // Generate token and save to DB
+            ConfirmToken cf = confirmTokenService.getByUserId(user.getId()); // Cần lấy ra token để truyền vào url cho verify
+            String mailToken  = cf.getConfirmationToken();
+            confirmTokenService.verifyEmailUser(email, mailToken);
+            //endregion
+            String jwtToken = jwtTokenUtil.generateToken(userDetails);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS,jwtToken);
         } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+/*
+Expect : line 115 sau khi gọi đến verify email,
+người dùng cần verify mail xong mới trả lại cho người dùng thông báo đăng kí thành công và jwt token để đăng nhập vào hệ thống
+ */
+    @PostMapping("/confirm-account")
+    @Operation(summary = "confirm account")
+    public ResponseData confirmAccount(@RequestParam("token") String token){
+        try {
+            // Cần lấy ra token để truyền vào url cho verify
+            ConfirmToken cf = confirmTokenService.getByConfirmToken(token);
+            if(cf == null){
+                throw new HiveConnectException("Token invalid");
+            }
+            //So sánh time expire và time trong db nếu quá hạn thì ko cho sử dụng token
+            if(LocalDateTime.now().isBefore(cf.getExpiredTime()) ){
+                throw new HiveConnectException("Token has been expired");
+            }
+            String mailToken  = cf.getConfirmationToken();
+            Users user = userService.getUserById(cf.getUserId());
+            if(StringUtils.equals(token,mailToken)){
+                user.setVerifiedEmail(true);
+            }
+            userService.saveUser(user);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS);
+        }catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

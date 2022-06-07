@@ -66,7 +66,14 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setRoleId(request.getRoleId());
+        user.setVerifiedEmail(false);
+        user.setVerifiedPhone(false);
         user.create();
         userRepository.save(user);
+    }
+
+    @Override
+    public Users getByUserName(String username) {
+        return userRepository.getByUsername(username);
     }
 }

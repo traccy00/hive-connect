@@ -25,7 +25,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/category")
 public class CategoryController {
-    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
     @Autowired
     CategoryService categoryService;
