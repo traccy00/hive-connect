@@ -1,8 +1,12 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.dto.job.CandidateAppliedJobResponse;
 import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
+import fpt.edu.capstone.entity.sprint1.AppliedJob;
 import fpt.edu.capstone.utils.ResponseDataPagination;
+
+import java.util.List;
 
 public interface JobService {
     void createJob(CreateJobRequest request);
@@ -14,4 +18,8 @@ public interface JobService {
     void updateJob(UpdateJobRequest request);
 
     void deleteJob(long jobId);
+
+    boolean existsById(long id);
+
+    List<CandidateAppliedJobResponse> getCandidateAppliedJobList(long jobId);
 }

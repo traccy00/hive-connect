@@ -15,4 +15,6 @@ public interface UserService {
     void registerUser(RegisterRequest request);
 
     Users getByUserName(String username);
+
+    Users findById(long id);
 }

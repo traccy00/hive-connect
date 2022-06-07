@@ -16,16 +16,13 @@ public class FileUpLoadController {
     @Autowired
     private IOStorageService storageService;
 
-    @PostMapping("/tieumaiancut")
-    public ResponseData uploadFile(@RequestParam("file")MultipartFile file)
-    {       System.out.println("ahihiahi");
-        try{
-
+    @PostMapping("/uploadFile")
+    public ResponseData uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
             String generatedFileName = storageService.storeFile(file);
-
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Upload file success");
-        }catch (Exception ex){
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),"Can not upload file");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Upload file success");
+        } catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not upload file");
         }
     }
 }

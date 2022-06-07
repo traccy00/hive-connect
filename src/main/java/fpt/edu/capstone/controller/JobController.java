@@ -1,8 +1,11 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.job.CandidateAppliedJobResponse;
 import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
+import fpt.edu.capstone.entity.sprint1.AppliedJob;
+import fpt.edu.capstone.service.AppliedJobService;
 import fpt.edu.capstone.service.JobService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/job")
@@ -23,6 +27,9 @@ public class JobController {
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private AppliedJobService appliedJobService;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -85,4 +92,29 @@ public class JobController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+
+    @PostMapping("/apply-job")
+    public ResponseData applyJob(@RequestBody AppliedJob appliedJobObj) {
+        try {
+            appliedJobService.appliedJob(appliedJobObj);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
+                    appliedJobObj.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
+
+    @GetMapping("/list-candidate-applied-job")
+    public ResponseData getListCandidateAppliedJob(@RequestParam long jobId) {
+        try {
+            List<CandidateAppliedJobResponse> listCandidateAppliedJob = jobService.getCandidateAppliedJobList(jobId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listCandidateAppliedJob);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
+
 }

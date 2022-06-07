@@ -22,4 +22,6 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
     @Transactional
     @Query(value = "UPDATE public.candidate SET user_id=?1, list_tech_stack_id=?2, full_name=?3, phone_number=?4, gender=?5, birth_date=?6, social_id=?7, tap_history_id=?8, wish_list_id=?9, search_history_id=?10, cv_url=?11, applied_job_id=?12 WHERE id=?13", nativeQuery = true)
     void updateCandidate(long userId, String listTechStackId, String fullName, String phoneNumber, boolean gender, Date birthDate, Long socialId, long tapHistoryId, long wishLishId, long searchHistoryId, String cvUrl, long appliedJobId, long id);
+
+    boolean existsById(long id);
 }
