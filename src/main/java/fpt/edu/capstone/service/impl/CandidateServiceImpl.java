@@ -11,9 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CandidateServiceImpl implements CandidateService{
+public class CandidateServiceImpl implements CandidateService {
     @Autowired
     CandidateRepository candidateRepository;
+
     @Override
     public List<Candidate> getAllCandidate() throws Exception {
         return candidateRepository.findAll();
@@ -21,24 +22,34 @@ public class CandidateServiceImpl implements CandidateService{
 
     @Override
     public void insertCandidate(Candidate candidate) {
-        candidateRepository.save(candidate );
+        candidateRepository.save(candidate);
     }
 
     @Override
     public void updateCandidate(Candidate newCandidate, Long id) {
-        Optional<Candidate> updatedCandidate = candidateRepository.findById(id).map(candidate->{
-                candidate.setBirthDate(newCandidate.getBirthDate());
-                candidate.setGender(newCandidate.isGender());
-                candidate.setFullName(newCandidate.getFullName());
-                candidate.setListTechStackId(newCandidate.getListTechStackId());
-                candidate.setPhoneNumber(newCandidate.getPhoneNumber());
-                return candidateRepository.save(candidate);
+        Optional<Candidate> updatedCandidate = candidateRepository.findById(id).map(candidate -> {
+            candidate.setBirthDate(newCandidate.getBirthDate());
+            candidate.setGender(newCandidate.isGender());
+            candidate.setFullName(newCandidate.getFullName());
+            candidate.setListTechStackId(newCandidate.getListTechStackId());
+            candidate.setPhoneNumber(newCandidate.getPhoneNumber());
+            return candidateRepository.save(candidate);
         });
     }
 
     @Override
-    public Optional<Candidate> findById(Long id){
+    public Optional<Candidate> findById(Long id) {
         return candidateRepository.findById(id);
+    }
+
+    @Override
+    public boolean existsById(long id) {
+        return candidateRepository.existsById(id);
+    }
+
+    @Override
+    public Candidate findById(long id) {
+        return findById(id);
     }
 
 }

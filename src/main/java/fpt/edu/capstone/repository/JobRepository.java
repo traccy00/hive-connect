@@ -25,4 +25,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query("update Job c set c.isDeleted = 1 where c.id =:jobId")
     void deleteJob(@Param("jobId") long jobId);
+
+    boolean existsById(long id);
 }

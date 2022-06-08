@@ -13,7 +13,11 @@ public interface CandidateService  {
     void insertCandidate(Candidate candidate);
 
     void updateCandidate(Candidate candidate, Long id);
+
     Optional<Candidate> findById(Long id);
 
+    boolean existsById(long id);
+
+    Candidate findById(long id);
 
 }
