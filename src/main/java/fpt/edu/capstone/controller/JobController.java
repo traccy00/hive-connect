@@ -1,11 +1,10 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.job.CandidateAppliedJobResponse;
 import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
 import fpt.edu.capstone.entity.sprint1.AppliedJob;
-import fpt.edu.capstone.service.AppliedJobService;
+import fpt.edu.capstone.service.FindJobService;
 import fpt.edu.capstone.service.JobService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/job")
@@ -29,7 +27,7 @@ public class JobController {
 
     private final JobService jobService;
 
-    private final AppliedJobService appliedJobService;
+    private final FindJobService findJobService;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -97,7 +95,7 @@ public class JobController {
     @PostMapping("/apply-job")
     public ResponseData applyJob(@RequestBody AppliedJob appliedJobObj) {
         try {
-            appliedJobService.appliedJob(appliedJobObj);
+            findJobService.appliedJob(appliedJobObj);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
                     appliedJobObj.toString());
         } catch (Exception e) {

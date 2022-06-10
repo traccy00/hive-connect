@@ -12,16 +12,13 @@ import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +33,6 @@ public class JobServiceImpl implements JobService {
 
     private final JobRepository jobRepository;
 
-    private final AppliedJobService appliedJobService; //TODO: circular references . fix here
-
-    private final CandidateService candidateService;
-    
-    private final UserService userService;
-
     @Override
     public void createJob(CreateJobRequest request) {
         long categoryId = request.getCategoryId();
@@ -54,10 +45,10 @@ public class JobServiceImpl implements JobService {
         }
         Recruiter recruiter = recruiterService.getRecruiterById(recruiterId);
         Object CreateJobRequest = request;
-        Job job = modelMapper.map(CreateJobRequest,Job.class);
-        job.setCompanyName(recruiter.getCompanyName());
-        job.create();
-        jobRepository.save(job);
+        RecruiterPost recruiterPost = modelMapper.map(CreateJobRequest, RecruiterPost.class);
+        recruiterPost.setCompanyName(recruiter.getCompanyName());
+        recruiterPost.create();
+        jobRepository.save(recruiterPost);
     }
 
     @Override
@@ -66,10 +57,10 @@ public class JobServiceImpl implements JobService {
                                                       String workForm, String workPlace, String techStack) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<Job> jobs = jobRepository.searchListJobFilter(pageable,category,companyName,jobName,fromSalary,toSalary,rank,workForm,workPlace,techStack);
+        Page<RecruiterPost> jobs = jobRepository.searchListJobFilter(pageable,category,companyName,jobName,fromSalary,toSalary,rank,workForm,workPlace,techStack);
         List <JobResponse> jobResponse = new ArrayList<>();
         if(jobs.hasContent()){
-            for (Job j :jobs.getContent()){
+            for (RecruiterPost j :jobs.getContent()){
                 JobResponse jr = modelMapper.map(j, JobResponse.class);
                 jobResponse.add(jr);
             }
@@ -90,20 +81,20 @@ public class JobServiceImpl implements JobService {
     @Override
     //TODO : fix insert for update function
     public void updateJob(UpdateJobRequest request) {
-        Job job = jobRepository.getById(request.getJobId());
-        if(job == null){
+        RecruiterPost recruiterPost = jobRepository.getById(request.getJobId());
+        if(recruiterPost == null){
             throw new HiveConnectException("Job does not exist");
         }
         Object UpdateJobRequest = request;
-        job = modelMapper.map(UpdateJobRequest, Job.class);
-        job.update();
-        jobRepository.saveAndFlush(job);
+        recruiterPost = modelMapper.map(UpdateJobRequest, RecruiterPost.class);
+        recruiterPost.update();
+        jobRepository.saveAndFlush(recruiterPost);
     }
 
     @Override
     public void deleteJob(long jobId) {
-        Job job = jobRepository.getById(jobId);
-        if(job == null){
+        RecruiterPost recruiterPost = jobRepository.getById(jobId);
+        if(recruiterPost == null){
             throw new HiveConnectException("Job does not exist");
         }
         jobRepository.deleteJob(jobId);
@@ -114,24 +105,24 @@ public class JobServiceImpl implements JobService {
         return jobRepository.existsById(id);
     }
 
-    @Override
-    public List<CandidateAppliedJobResponse> getCandidateAppliedJobList(long jobId) {
-        List<CandidateAppliedJobResponse> responseList = new ArrayList<>();
-        CandidateAppliedJobResponse responseObj = new CandidateAppliedJobResponse();
-        List<AppliedJob> appliedJobs = appliedJobService.getListCandidateAppliedJob(jobId);
-        responseObj.setJobId(jobId);
-        for(AppliedJob appliedJob : appliedJobs) {
-            Candidate candidate = candidateService.getById(appliedJob.getCandidateId());
-            responseObj.setCandidateId(appliedJob.getCandidateId());
-            responseObj.setCandidateName(candidate.getFullName());
-            Users user = userService.findById(candidate.getUserId());
-            responseObj.setAvatar(user.getAvatar());
-//            responseObj.setExperienceYear();
-//            responseObj.setCareerGoal();
-            responseList.add(responseObj);
-        }
-        //responseObj.setRowCount();
-
-        return null;
-    }
+//    @Override
+//    public List<CandidateAppliedJobResponse> getCandidateAppliedJobList(long jobId) {
+//        List<CandidateAppliedJobResponse> responseList = new ArrayList<>();
+//        CandidateAppliedJobResponse responseObj = new CandidateAppliedJobResponse();
+//        List<AppliedJob> appliedJobs = null;//appliedJobService.getListCandidateAppliedJob(jobId);
+//        responseObj.setJobId(jobId);
+//        for(AppliedJob appliedJob : appliedJobs) {
+//            Candidate candidate = candidateService.getById(appliedJob.getCandidateId());
+//            responseObj.setCandidateId(appliedJob.getCandidateId());
+//            responseObj.setCandidateName(candidate.getFullName());
+//            Users user = userService.findById(candidate.getUserId());
+//            responseObj.setAvatar(user.getAvatar());
+////            responseObj.setExperienceYear();
+////            responseObj.setCareerGoal();
+//            responseList.add(responseObj);
+//        }
+//        //responseObj.setRowCount();
+//
+//        return null;
+//    }
 }
