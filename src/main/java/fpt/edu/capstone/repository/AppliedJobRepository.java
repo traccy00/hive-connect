@@ -9,9 +9,10 @@ import java.util.List;
 
 @Repository
 public interface AppliedJobRepository extends JpaRepository<AppliedJob, Long> {
+
     boolean existsByCandidateId(long candidateId);
-
-    @Query(value = "select * from applied_job aj where job_id = ?1", nativeQuery = true)
-    List<AppliedJob> getListCandidateAppliedJob(long jobId);
-
+//
+//    @Query(value = "select * from applied_job aj where job_id = ?1", nativeQuery = true)
+//    List<AppliedJob> getListCandidateAppliedJob(long jobId);
+//
 }
