@@ -6,6 +6,7 @@ import fpt.edu.capstone.repository.AppliedJobRepository;
 import fpt.edu.capstone.service.AppliedJobService;
 import fpt.edu.capstone.service.CandidateService;
 import fpt.edu.capstone.service.JobService;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,16 +14,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class AppliedJobServiceImpl implements AppliedJobService {
 
-    @Autowired
-    private AppliedJobRepository appliedJobRepository;
+    private final AppliedJobRepository appliedJobRepository;
 
-    @Autowired
-    private CandidateService candidateService;
+    private final CandidateService candidateService;
 
-    @Autowired
-    private JobService jobService;
+    private final JobService jobService;
 
     @Override
     public void appliedJob(AppliedJob appliedJob) throws Exception {

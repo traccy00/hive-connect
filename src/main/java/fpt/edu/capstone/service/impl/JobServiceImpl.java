@@ -11,6 +11,7 @@ import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,27 +26,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class JobServiceImpl implements JobService {
-    @Autowired
-    ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    CategoryService categoryService;
+    private final CategoryService categoryService;
 
-    @Autowired
-    RecruiterService recruiterService;
+    private final RecruiterService recruiterService;
 
-    @Autowired
-    JobRepository jobRepository;
+    private final JobRepository jobRepository;
 
-    @Autowired
-    private AppliedJobService appliedJobService;
+    private final AppliedJobService appliedJobService; //TODO: circular references . fix here
 
-    @Autowired
-    private CandidateService candidateService;
-
-    @Autowired
-    private UserService userService;
+    private final CandidateService candidateService;
+    
+    private final UserService userService;
 
     @Override
     public void createJob(CreateJobRequest request) {
@@ -126,7 +121,7 @@ public class JobServiceImpl implements JobService {
         List<AppliedJob> appliedJobs = appliedJobService.getListCandidateAppliedJob(jobId);
         responseObj.setJobId(jobId);
         for(AppliedJob appliedJob : appliedJobs) {
-            Candidate candidate = candidateService.findById(appliedJob.getCandidateId());
+            Candidate candidate = candidateService.getById(appliedJob.getCandidateId());
             responseObj.setCandidateId(appliedJob.getCandidateId());
             responseObj.setCandidateName(candidate.getFullName());
             Users user = userService.findById(candidate.getUserId());

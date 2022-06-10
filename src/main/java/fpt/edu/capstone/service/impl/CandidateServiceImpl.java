@@ -26,7 +26,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public void updateCandidate(Candidate newCandidate, Long id) {
+    public void updateCandidate(Candidate newCandidate, long id) {
         Optional<Candidate> updatedCandidate = candidateRepository.findById(id).map(candidate -> {
             candidate.setBirthDate(newCandidate.getBirthDate());
             candidate.setGender(newCandidate.isGender());
@@ -38,7 +38,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Optional<Candidate> findById(Long id) {
+    public Optional<Candidate> findById(long id) {
         return candidateRepository.findById(id);
     }
 
@@ -48,8 +48,8 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Candidate findById(long id) {
-        return findById(id);
+    public Candidate getById(long id) {
+        return candidateRepository.getById(id);
     }
 
 }
