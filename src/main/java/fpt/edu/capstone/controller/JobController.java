@@ -11,6 +11,7 @@ import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +23,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/job")
+@AllArgsConstructor
 public class JobController {
     private static final Logger logger = LoggerFactory.getLogger(JobController.class);
 
-    @Autowired
-    private JobService jobService;
+    private final JobService jobService;
 
-    @Autowired
-    private AppliedJobService appliedJobService;
+    private final AppliedJobService appliedJobService;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -106,15 +106,15 @@ public class JobController {
         }
     }
 
-    @GetMapping("/list-candidate-applied-job")
-    public ResponseData getListCandidateAppliedJob(@RequestParam long jobId) {
-        try {
-            List<CandidateAppliedJobResponse> listCandidateAppliedJob = jobService.getCandidateAppliedJobList(jobId);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listCandidateAppliedJob);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
-        }
-    }
+//    @GetMapping("/list-candidate-applied-job")
+//    public ResponseData getListCandidateAppliedJob(@RequestParam long jobId) {
+//        try {
+//            List<CandidateAppliedJobResponse> listCandidateAppliedJob = jobService.getCandidateAppliedJobList(jobId);
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listCandidateAppliedJob);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+//        }
+//    }
 
 }
