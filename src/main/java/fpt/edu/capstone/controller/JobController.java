@@ -91,7 +91,6 @@ public class JobController {
         }
     }
 
-
     @PostMapping("/apply-job")
     public ResponseData applyJob(@RequestBody AppliedJob appliedJobObj) {
         try {
