@@ -69,10 +69,10 @@ public class JobController {
 
     @PutMapping("update-job")
     public ResponseData updateJob(@RequestBody UpdateJobRequest request) {
-        try{
+        try {
             jobService.updateJob(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_JOB_SUCCESS);
-        } catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -84,7 +84,7 @@ public class JobController {
         try {
             jobService.deleteJob(jobId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_CATEGORY_SUCCESS);
-        } catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -114,4 +114,51 @@ public class JobController {
 //        }
 //    }
 
+    @GetMapping("/popular-job")
+    public ResponseData getPopularJob() {
+        // get list lấy ra công việc phỏ biến
+        return null;
+    }
+
+    @GetMapping("/new-job")
+    public ResponseData getListNewJob() {
+        // get list lấy ra công việc mới nhất
+        //sort by created At
+        return null;
+    }
+
+    @GetMapping("/urgent-job")
+    public ResponseData getListUrgentJob() {
+        // get list lấy ra công việc cần gấpt
+        return null;
+    }
+
+    @GetMapping("/suggest-job")
+    public ResponseData getListSuggestJobByCV() {
+        // get list lấy ra công việc gợi ý theo cv của candidate
+        return null;
+    }
+
+    @GetMapping("/remote-job")
+    public ResponseData getListRemoteJob() {
+        // get list lấy ra công việc remote
+        return null;
+    }
+
+    @GetMapping("/fulltime-job")
+    public ResponseData getListFulltimeJob() {
+        // get list lấy ra công việc remote
+        return null;
+    }
+
+    @GetMapping("/parttime-job")
+    public ResponseData getListParttimeJob() {
+        // get list lấy ra công việc remote
+        return null;
+    }
+
+    @GetMapping("/job-by-career")
+    public ResponseData getJobByCareer(@RequestParam long careerId) {
+        return null;
+    }
 }

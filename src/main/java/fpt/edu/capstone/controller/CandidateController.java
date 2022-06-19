@@ -62,5 +62,34 @@ insert cần lưu thêm created at
         }
     }
 
+    @PostMapping("/insert-education")
+    public ResponseData insertEducation(){
+        //tạo ra 1 bảng học vấn để lưu thông tin học vấn của candidate
+        return null;
+    }
+
+    @PostMapping("/insert-work-exp")
+    public ResponseData insertWorkExp(){
+        //tạo ra 1 bảng kinh nghiệm làm việc để lưu thông tin knlv của candidate
+        return null;
+    }
+
+    @PostMapping("/insert-language")
+    public ResponseData insertLanguage(){
+        //tạo ra 1 bảng language  để lưu thông tin language của candidate
+        return null;
+    }
+
+    @PostMapping("/insert-skill")
+    public ResponseData insertSkill(){
+        //tạo ra 1 bảng Skill  để lưu thông tin skill của candidate
+        return null;
+    }
+
+    @PostMapping("/insert-certificate")
+    public ResponseData insertCert(){
+        //tạo ra 1 bảng cert  để lưu thông tin cert của candidate
+        return null;
+    }
 }
 
