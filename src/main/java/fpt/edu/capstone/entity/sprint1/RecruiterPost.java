@@ -29,6 +29,9 @@ public class RecruiterPost extends BaseEntity {
     @Column(name = "recruiter_id")
     private long recruiterId;
 
+    @Column(name = "company_id")
+    private long companyId;
+
     @Column(name = "company_name")
     private String companyName;
 

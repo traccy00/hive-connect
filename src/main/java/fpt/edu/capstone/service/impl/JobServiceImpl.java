@@ -105,24 +105,4 @@ public class JobServiceImpl implements JobService {
         return jobRepository.existsById(id);
     }
 
-//    @Override
-//    public List<CandidateAppliedJobResponse> getCandidateAppliedJobList(long jobId) {
-//        List<CandidateAppliedJobResponse> responseList = new ArrayList<>();
-//        CandidateAppliedJobResponse responseObj = new CandidateAppliedJobResponse();
-//        List<AppliedJob> appliedJobs = null;//appliedJobService.getListCandidateAppliedJob(jobId);
-//        responseObj.setJobId(jobId);
-//        for(AppliedJob appliedJob : appliedJobs) {
-//            Candidate candidate = candidateService.getById(appliedJob.getCandidateId());
-//            responseObj.setCandidateId(appliedJob.getCandidateId());
-//            responseObj.setCandidateName(candidate.getFullName());
-//            Users user = userService.findById(candidate.getUserId());
-//            responseObj.setAvatar(user.getAvatar());
-////            responseObj.setExperienceYear();
-////            responseObj.setCareerGoal();
-//            responseList.add(responseObj);
-//        }
-//        //responseObj.setRowCount();
-//
-//        return null;
-//    }
 }

@@ -30,12 +30,6 @@ public class AppliedJob extends BaseEntity {
     @Column(name = "is_applied")
     private boolean isApplied;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
     //approved, rejected
     @Length(max = 15)
     @Column(name = "approval_status")

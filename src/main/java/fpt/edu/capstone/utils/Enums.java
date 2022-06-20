@@ -15,4 +15,14 @@ public class Enums {
         private String status;
 
     }
+
+    public enum ApprovalStatus {
+        APPROVED("Approved"), REJECT("Reject");
+
+        ApprovalStatus(String status) {this.status = status;}
+
+        public String getStatus() {return status;}
+
+        private String status;
+    }
 }
