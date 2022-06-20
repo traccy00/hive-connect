@@ -1,8 +1,7 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.job.CreateJobRequest;
-import fpt.edu.capstone.dto.job.UpdateJobRequest;
+import fpt.edu.capstone.dto.job.*;
 import fpt.edu.capstone.entity.sprint1.AppliedJob;
 import fpt.edu.capstone.service.FindJobService;
 import fpt.edu.capstone.service.JobService;
@@ -18,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/job")
@@ -92,27 +92,38 @@ public class JobController {
     }
 
     @PostMapping("/apply-job")
-    public ResponseData applyJob(@RequestBody AppliedJob appliedJobObj) {
+    public ResponseData applyJob(@RequestBody AppliedJobRequest request) {
         try {
-            findJobService.appliedJob(appliedJobObj);
+            findJobService.appliedJob(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
-                    appliedJobObj.toString());
+                    request.toString());
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
 
-//    @GetMapping("/list-candidate-applied-job")
-//    public ResponseData getListCandidateAppliedJob(@RequestParam long jobId) {
-//        try {
-//            List<CandidateAppliedJobResponse> listCandidateAppliedJob = jobService.getCandidateAppliedJobList(jobId);
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listCandidateAppliedJob);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
-//        }
-//    }
+    @GetMapping("/list-candidate-applied-job")
+    public ResponseData getListCandidateAppliedJob(@RequestParam long jobId) {
+        try {
+            List<CandidateAppliedJobResponse> listCandidateAppliedJob = findJobService.getCandidateAppliedJobList(jobId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listCandidateAppliedJob);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
+
+    @GetMapping("/get-recruiter-posts")
+    public ResponseData getRecruiterPosts(@RequestParam long recruiterId) {
+        try {
+            List<RecruiterPostResponse> responseList = findJobService.getRecruiterPosts(recruiterId);
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
 
     @GetMapping("/popular-job")
     public ResponseData getPopularJob() {

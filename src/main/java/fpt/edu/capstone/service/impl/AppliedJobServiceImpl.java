@@ -1,24 +1,31 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.entity.sprint1.AppliedJob;
-import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.AppliedJobRepository;
 import fpt.edu.capstone.service.AppliedJobService;
-import fpt.edu.capstone.service.CandidateService;
-import fpt.edu.capstone.service.JobService;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//
+
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class AppliedJobServiceImpl implements AppliedJobService {
 
-//    @Override
-//    public List<AppliedJob> getListCandidateAppliedJob(long jobId) {
-//        return appliedJobRepository.getListCandidateAppliedJob(jobId);
-//    }
+    private final AppliedJobRepository appliedJobRepository;
+
+    @Override
+    public boolean appliedJobBefore(long candidateId, long jobId) {
+        return appliedJobRepository.existsByCandidateIdAndJobId(candidateId, jobId);
+    }
+
+    @Override
+    public AppliedJob getAppliedJobBefore(long candidateId, long jobId) {
+        return appliedJobRepository.findByCandidateIdAndJobId(candidateId, jobId);
+    }
+
+    @Override
+    public List<AppliedJob> getListCandidateAppliedJob(long jobId, boolean isApplied) {
+        return appliedJobRepository.getListCandidateAppliedJob(jobId, isApplied);
+    }
 }

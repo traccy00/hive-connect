@@ -21,5 +21,4 @@ public interface JobService {
 
     boolean existsById(long id);
 
-//    List<CandidateAppliedJobResponse> getCandidateAppliedJobList(long jobId);
 }
