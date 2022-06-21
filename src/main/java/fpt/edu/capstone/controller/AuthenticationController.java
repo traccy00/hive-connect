@@ -14,6 +14,7 @@ import fpt.edu.capstone.service.impl.SecurityUserServiceImpl;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
+import fpt.edu.capstone.utils.ResponseDataUser;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -51,13 +52,13 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     @Operation(summary = "Login user")
-    public ResponseData login(@RequestBody @Valid LoginRequest request) throws Exception {
+    public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
             authenticate(request.getUsername(), request.getPassword());
             String username = request.getUsername();
             logger.info("login with username {}", username);
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(request.getPassword())) {
-                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),
+                return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
                         ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
             }
 
@@ -72,12 +73,12 @@ public class AuthenticationController {
 
             user.setLastLoginTime(LocalDateTime.now());
             userService.saveUser(user);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS, token);
+            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS,user, token);
 
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+            return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 
@@ -93,14 +94,14 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     @Operation(summary = "register user")
-    public ResponseData register(@RequestBody RegisterRequest request) throws Exception {
+    public ResponseDataUser register(@RequestBody RegisterRequest request) throws Exception {
         try {
             String username = request.getUsername();
             String password = request.getPassword();
             String email = request.getEmail();
 
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(password)) {
-                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),
+                return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
                         ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
             }
             userService.registerUser(request);
@@ -115,11 +116,11 @@ public class AuthenticationController {
             confirmTokenService.verifyEmailUser(email, mailToken);
             //endregion
             String jwtToken = jwtTokenUtil.generateToken(userDetails);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS,jwtToken);
+            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS,user,jwtToken);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+            return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 /*
