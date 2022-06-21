@@ -1,11 +1,14 @@
 package fpt.edu.capstone.repository;
 
+import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.entity.RecruiterPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface JobRepository extends JpaRepository<RecruiterPost, Long> {
 
@@ -27,4 +30,7 @@ public interface JobRepository extends JpaRepository<RecruiterPost, Long> {
     void deleteJob(@Param("jobId") long jobId);
 
     boolean existsById(long id);
+
+    @Query(value = "select * from Job where work_form like  lower(concat('%', :workForm ,'%'))", nativeQuery = true)
+    List<JobResponse> getListJobByWorkForm(@Param("workForm") String workForm);
 }

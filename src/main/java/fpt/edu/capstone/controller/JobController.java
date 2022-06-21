@@ -150,24 +150,45 @@ public class JobController {
 
     @GetMapping("/remote-job")
     public ResponseData getListRemoteJob() {
-        // get list lấy ra công việc remote
-        return null;
+        try {
+            List <JobResponse> listRemoteJob = jobService.getListJobByWorkForm("REMOTE");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listRemoteJob);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
     }
 
     @GetMapping("/fulltime-job")
     public ResponseData getListFulltimeJob() {
-        // get list lấy ra công việc remote
-        return null;
+        try {
+            List <JobResponse> listFulltimeJob = jobService.getListJobByWorkForm("FULLTIME");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listFulltimeJob);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
     }
 
     @GetMapping("/parttime-job")
     public ResponseData getListParttimeJob() {
-        // get list lấy ra công việc remote
-        return null;
+        try {
+            List <JobResponse> listParttimeJob = jobService.getListJobByWorkForm("PARTTIME");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listParttimeJob);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
     }
 
     @GetMapping("/job-by-career")
-    public ResponseData getJobByCareer(@RequestParam long careerId) {
-        return null;
+    public ResponseData getJobByCareer(@RequestParam(value = "id") long careerId) {
+        try {
+//           List<JobResponse> listByCareer = jobService.
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
     }
 }

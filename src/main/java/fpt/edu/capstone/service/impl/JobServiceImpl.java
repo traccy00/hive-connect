@@ -104,4 +104,9 @@ public class JobServiceImpl implements JobService {
         return jobRepository.existsById(id);
     }
 
+    @Override
+    public List<JobResponse> getListJobByWorkForm(String workForm) {
+        return jobRepository.getListJobByWorkForm(workForm);
+    }
+
 }
