@@ -1,6 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.entity.Candidate;
+import fpt.edu.capstone.atmpCandidate.Candidate;
 import fpt.edu.capstone.repository.CandidateRepository;
 import fpt.edu.capstone.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +26,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public void updateCandidate(Candidate newCandidate, long id) {
-        Optional<Candidate> updatedCandidate = candidateRepository.findById(id).map(candidate -> {
-            candidate.setBirthDate(newCandidate.getBirthDate());
-            candidate.setGender(newCandidate.isGender());
-            candidate.setFullName(newCandidate.getFullName());
-            candidate.setListTechStackId(newCandidate.getListTechStackId());
-            candidate.setPhoneNumber(newCandidate.getPhoneNumber());
-            return candidateRepository.save(candidate);
-        });
+
     }
 
     @Override

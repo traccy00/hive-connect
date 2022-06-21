@@ -1,6 +1,6 @@
 package fpt.edu.capstone.repository;
 
-import fpt.edu.capstone.entity.Candidate;
+import fpt.edu.capstone.atmpCandidate.Candidate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

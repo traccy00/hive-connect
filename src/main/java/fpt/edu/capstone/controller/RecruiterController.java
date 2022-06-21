@@ -1,6 +1,6 @@
 package fpt.edu.capstone.controller;
 
-import fpt.edu.capstone.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.utils.Enums;

@@ -1,4 +1,4 @@
-package fpt.edu.capstone.common;
+package fpt.edu.capstone.dto.common;
 
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
