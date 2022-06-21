@@ -1,7 +1,7 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.register.RegisterRequest;
-import fpt.edu.capstone.entity.sprint1.Users;
+import fpt.edu.capstone.entity.Users;
 
 import java.util.Optional;
 

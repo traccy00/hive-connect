@@ -1,6 +1,6 @@
 package fpt.edu.capstone.repository;
 
-import fpt.edu.capstone.entity.sprint1.RecruiterPost;
+import fpt.edu.capstone.entity.RecruiterPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

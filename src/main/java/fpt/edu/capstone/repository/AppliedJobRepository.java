@@ -1,6 +1,6 @@
 package fpt.edu.capstone.repository;
 
-import fpt.edu.capstone.entity.sprint1.AppliedJob;
+import fpt.edu.capstone.entity.AppliedJob;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

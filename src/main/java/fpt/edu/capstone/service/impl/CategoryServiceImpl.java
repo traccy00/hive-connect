@@ -1,8 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.dto.category.CreateCategoryRequest;
 import fpt.edu.capstone.dto.category.UpdateCategoryRequest;
-import fpt.edu.capstone.entity.sprint1.Category;
+import fpt.edu.capstone.entity.Category;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.CategoryRepository;
 import fpt.edu.capstone.service.CategoryService;

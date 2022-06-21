@@ -2,9 +2,9 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
-import fpt.edu.capstone.entity.sprint1.Company;
-import fpt.edu.capstone.entity.sprint1.Recruiter;
-import fpt.edu.capstone.entity.sprint1.Users;
+import fpt.edu.capstone.entity.Company;
+import fpt.edu.capstone.entity.Recruiter;
+import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.CompanyRepository;
 import fpt.edu.capstone.repository.RecruiterRepository;

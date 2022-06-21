@@ -1,7 +1,7 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.category.UpdateCategoryRequest;
-import fpt.edu.capstone.entity.sprint1.Category;
+import fpt.edu.capstone.entity.Category;
 
 import java.util.List;
 import java.util.Optional;

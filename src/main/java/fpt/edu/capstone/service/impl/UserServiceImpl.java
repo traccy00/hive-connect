@@ -1,8 +1,8 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.register.RegisterRequest;
-import fpt.edu.capstone.entity.sprint1.Role;
-import fpt.edu.capstone.entity.sprint1.Users;
+import fpt.edu.capstone.entity.Role;
+import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.LoginService;

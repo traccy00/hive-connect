@@ -1,8 +1,8 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.admin.AdminResponse;
-import fpt.edu.capstone.entity.sprint1.Admin;
-import fpt.edu.capstone.entity.sprint1.Users;
+import fpt.edu.capstone.entity.Admin;
+import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.repository.AdminRepository;
 import fpt.edu.capstone.service.AdminService;
 import fpt.edu.capstone.service.UserService;

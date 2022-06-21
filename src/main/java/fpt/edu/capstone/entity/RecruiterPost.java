@@ -1,4 +1,4 @@
-package fpt.edu.capstone.entity.sprint1;
+package fpt.edu.capstone.entity;
 
 import fpt.edu.capstone.utils.BaseEntity;
 import lombok.AllArgsConstructor;

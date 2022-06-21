@@ -1,7 +1,6 @@
 package fpt.edu.capstone.repository;
 
-import fpt.edu.capstone.entity.sprint1.Candidate;
-import org.springframework.data.annotation.ReadOnlyProperty;
+import fpt.edu.capstone.entity.Candidate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.Date;
-import java.util.List;
 
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {

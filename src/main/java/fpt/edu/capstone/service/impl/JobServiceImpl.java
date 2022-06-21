@@ -1,10 +1,10 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.dto.job.CandidateAppliedJobResponse;
 import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
-import fpt.edu.capstone.entity.sprint1.*;
+import fpt.edu.capstone.entity.Recruiter;
+import fpt.edu.capstone.entity.RecruiterPost;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.JobRepository;
 import fpt.edu.capstone.service.*;
@@ -13,7 +13,6 @@ import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

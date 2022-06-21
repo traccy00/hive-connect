@@ -5,7 +5,7 @@ import fpt.edu.capstone.dto.login.LoginRequest;
 import fpt.edu.capstone.dto.register.ChangePasswordRequest;
 import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.entity.ConfirmToken;
-import fpt.edu.capstone.entity.sprint1.Users;
+import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.security.TokenUtils;
 import fpt.edu.capstone.service.ConfirmTokenService;

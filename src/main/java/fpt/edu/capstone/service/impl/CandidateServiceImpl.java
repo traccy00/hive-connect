@@ -1,12 +1,11 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.entity.sprint1.Candidate;
+import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.repository.CandidateRepository;
 import fpt.edu.capstone.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

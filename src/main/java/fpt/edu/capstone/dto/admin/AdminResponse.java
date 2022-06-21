@@ -1,14 +1,13 @@
 package fpt.edu.capstone.dto.admin;
 
-import fpt.edu.capstone.entity.sprint1.Admin;
-import fpt.edu.capstone.entity.sprint1.Users;
+import fpt.edu.capstone.entity.Admin;
+import fpt.edu.capstone.entity.Users;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @SuperBuilder

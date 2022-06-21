@@ -1,9 +1,7 @@
 package fpt.edu.capstone.service;
 
-import fpt.edu.capstone.entity.sprint1.Candidate;
-import org.springframework.data.jpa.repository.JpaRepository;
+import fpt.edu.capstone.entity.Candidate;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
