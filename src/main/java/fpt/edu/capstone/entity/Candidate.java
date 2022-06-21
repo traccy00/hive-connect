@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -24,70 +24,42 @@ public class Candidate {
     @Column(name = "user_id")
     private long userId;
 
-    @Column(name = "list_tech_stack_id")
-    private String listTechStackId;
-
-    @Column(name = "full_name")
-    private String fullName;
-
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
     @Column(name = "gender")
     private boolean gender;
 
     @Column(name = "birth_date")
     private Date birthDate;
 
-    @Column(name = "social_id")
-    private long socialId;
+    @Column(name = "search_history")
+    private  String searchHistory;
 
-    @Column(name = "tap_history_id")
-    private long tapHistoryId;
+    @Column(name = "country")
+    private String country;
 
-    @Column(name = "wish_list_id")
-    private long wishListId;
+    @Column(name = "full_name")
+    private String fullName;
 
-    @Column(name = "search_history_id")
-    private  long searchHistoryID;
+    @Column(name = "address")
+    private String address;
 
-    @Column(name = "cv_url")
-    private  String cvUrl;
+    @Column(name = "social_link")
+    private String socialLink;
 
-    @Column(name = "applied_job_id")
-    private long appliedJobId;
+    @Column(name = "wishlist_job_id_list")
+    private String wishlistJobIdList;
 
-    public Candidate(long userId, String listTechStackId, String fullName, String phoneNumber, boolean gender, Date birthDate, long socialId, long tapHistoryId, long wishListId, long searchHistoryID, String cvUrl, long appliedJobId) {
-        this.userId = userId;
-        this.listTechStackId = listTechStackId;
-        this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
-        this.gender = gender;
-        this.birthDate = birthDate;
-        this.socialId = socialId;
-        this.tapHistoryId = tapHistoryId;
-        this.wishListId = wishListId;
-        this.searchHistoryID = searchHistoryID;
-        this.cvUrl = cvUrl;
-        this.appliedJobId = appliedJobId;
-    }
+    @Column(name = "tap_history_id_list")
+    private String tapHistoryIdList;
 
-    @Override
-    public String toString() {
-        return "Candidate{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", listTechStackId='" + listTechStackId + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", gender=" + gender +
-                ", birthDate=" + birthDate +
-                ", socialId=" + socialId +
-                ", tapHistoryId=" + tapHistoryId +
-                ", wishListId=" + wishListId +
-                ", searchHistoryID=" + searchHistoryID +
-                ", cvUrl='" + cvUrl + '\'' +
-                ", appliedJobId=" + appliedJobId +
-                '}';
-    }
+    @Column(name = "is_need_job")
+    private boolean isNeedJob;
+
+    @Column(name = "experience_level")
+    private String experienceLevel;
+
+    @Column(name = "introduction")
+    private String introduction;
+
+
+
 }
