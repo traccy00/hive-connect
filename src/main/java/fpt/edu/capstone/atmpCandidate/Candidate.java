@@ -1,4 +1,4 @@
-package fpt.edu.capstone.entity;
+package fpt.edu.capstone.atmpCandidate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

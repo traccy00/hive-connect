@@ -1,4 +1,4 @@
-package fpt.edu.capstone.common;
+package fpt.edu.capstone.dto.common;
 
 public interface ResponseMessageConstants {
     String SUCCESS = "MSG_SUCCESS";

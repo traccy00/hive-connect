@@ -1,6 +1,6 @@
 package fpt.edu.capstone.controller;
 
-import fpt.edu.capstone.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.login.LoginRequest;
 import fpt.edu.capstone.dto.register.ChangePasswordRequest;
 import fpt.edu.capstone.dto.register.RegisterRequest;

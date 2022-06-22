@@ -1,6 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Recruiter;

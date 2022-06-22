@@ -1,6 +1,6 @@
 package fpt.edu.capstone.controller;
 
-import fpt.edu.capstone.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.category.CreateCategoryRequest;
 import fpt.edu.capstone.dto.category.UpdateCategoryRequest;
 import fpt.edu.capstone.entity.Category;
