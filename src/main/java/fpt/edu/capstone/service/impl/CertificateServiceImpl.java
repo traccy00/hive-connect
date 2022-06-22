@@ -16,4 +16,9 @@ public class CertificateServiceImpl implements CertificateService {
     public List<Certificate> getListCertificateByCvId(Long cvId) {
         return certificateRepository.getListCertificateByCvId(cvId);
     }
+
+    @Override
+    public void insertCertificate(String certificateName, String certificateUrl, long status, long cvId) {
+        certificateRepository.insertCertificate(certificateName, certificateUrl, status, cvId);
+    }
 }

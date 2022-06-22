@@ -25,7 +25,7 @@ public class Certificate {
     private String certificateUrl;
 
     @Column(name = "status")
-    private String status;
+    private long status;
 
     @Column(name = "cv_id")
     private long cvId;

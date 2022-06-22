@@ -17,4 +17,9 @@ public class OtherSkillServiceImpl implements OtherSkillService {
     public List<OtherSkill> getListOtherSkillByCvId(Long cvId) {
         return otherSkillReposiroty.getListOtherSkillByCvId(cvId);
     }
+
+    @Override
+    public void insertOtherSkill(String skillName, long cvId, String level) {
+        otherSkillReposiroty.insertOtherSkill(skillName, cvId, level);
+    }
 }

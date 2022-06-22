@@ -16,7 +16,7 @@ import java.util.List;
 public class CVResponse {
     private long id;
     private long candidateId;
-    private boolean isDeleted;
+    private long isDeleted;
     private String summary;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -39,7 +39,7 @@ public class CVResponse {
         }
         return CVResponse.builder().id(cv.getId())
                 .candidateId(cv.getCandidateId())
-                .isDeleted(cv.isDeleted())
+                .isDeleted(cv.getIsDeleted())
                 .summary(cv.getSummary())
                 .createdAt(cv.getCreatedAt())
                 .updatedAt(cv.getUpdatedAt())
