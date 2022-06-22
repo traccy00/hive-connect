@@ -14,7 +14,7 @@ public class JobResponse {
     private long companyId;
     private long recruiterId;
     private long careerId;
-    private long careerName;
+    private String careerName;
     private List<String> listHashtag;
     private String companyName;
     private String jobName;
