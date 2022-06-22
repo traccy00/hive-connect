@@ -1,6 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.atmpCandidate.Candidate;
+import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.repository.CandidateRepository;
 import fpt.edu.capstone.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;

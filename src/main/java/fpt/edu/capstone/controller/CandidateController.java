@@ -1,8 +1,6 @@
 package fpt.edu.capstone.controller;
 
-import fpt.edu.capstone.atmpCandidate.Candidate;
-import fpt.edu.capstone.atmpCandidate.Education;
-import fpt.edu.capstone.repository.EducationReposiroty;
+import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.service.CandidateService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;

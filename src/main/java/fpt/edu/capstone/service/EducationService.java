@@ -1,6 +1,6 @@
 package fpt.edu.capstone.service;
 
-import fpt.edu.capstone.atmpCandidate.Education;
+import fpt.edu.capstone.entity.Education;
 
 import java.util.List;
 

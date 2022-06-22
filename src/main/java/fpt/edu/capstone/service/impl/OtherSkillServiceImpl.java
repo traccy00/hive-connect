@@ -1,7 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.atmpCandidate.Language;
-import fpt.edu.capstone.atmpCandidate.OtherSkill;
+import fpt.edu.capstone.entity.OtherSkill;
 import fpt.edu.capstone.repository.OtherSkillReposiroty;
 import fpt.edu.capstone.service.OtherSkillService;
 import org.springframework.beans.factory.annotation.Autowired;

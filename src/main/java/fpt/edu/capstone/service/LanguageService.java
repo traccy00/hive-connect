@@ -1,6 +1,6 @@
 package fpt.edu.capstone.service;
 
-import fpt.edu.capstone.atmpCandidate.Language;
+import fpt.edu.capstone.entity.Language;
 
 import java.util.List;
 

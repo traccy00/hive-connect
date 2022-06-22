@@ -1,7 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.atmpCandidate.Major;
-import fpt.edu.capstone.atmpCandidate.MajorLevel;
+import fpt.edu.capstone.entity.MajorLevel;
 import fpt.edu.capstone.repository.MajorLevelRepository;
 import fpt.edu.capstone.service.MajorLevelService;
 import org.springframework.beans.factory.annotation.Autowired;

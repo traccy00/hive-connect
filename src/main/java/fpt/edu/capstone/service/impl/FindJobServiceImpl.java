@@ -4,7 +4,7 @@ import fpt.edu.capstone.dto.job.AppliedJobRequest;
 import fpt.edu.capstone.dto.job.CandidateAppliedJobResponse;
 import fpt.edu.capstone.dto.job.RecruiterPostResponse;
 import fpt.edu.capstone.entity.AppliedJob;
-import fpt.edu.capstone.atmpCandidate.Candidate;
+import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.AppliedJobRepository;
