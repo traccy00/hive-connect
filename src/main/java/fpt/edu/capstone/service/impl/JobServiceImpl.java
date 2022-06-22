@@ -3,6 +3,7 @@ package fpt.edu.capstone.service.impl;
 import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
+import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.RecruiterPost;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -32,72 +33,72 @@ public class JobServiceImpl implements JobService {
 
     private final JobRepository jobRepository;
 
-    @Override
-    public void createJob(CreateJobRequest request) {
-        long categoryId = request.getCategoryId();
-        long recruiterId = request.getRecruiterId();
-        if(!categoryService.existById(categoryId)){
-            throw new HiveConnectException("Category not found!");
-        }
-        if(!recruiterService.existById(recruiterId)){
-            throw new HiveConnectException("Recruiter not found!");
-        }
-        Recruiter recruiter = recruiterService.getRecruiterById(recruiterId);
-        Object CreateJobRequest = request;
-        RecruiterPost recruiterPost = modelMapper.map(CreateJobRequest, RecruiterPost.class);
-        recruiterPost.setCompanyName(recruiter.getCompanyName());
-        recruiterPost.create();
-        jobRepository.save(recruiterPost);
-    }
+//    @Override
+//    public void createJob(CreateJobRequest request) {
+//        long categoryId = request.getCategoryId();
+//        long recruiterId = request.getRecruiterId();
+//        if(!categoryService.existById(categoryId)){
+//            throw new HiveConnectException("Category not found!");
+//        }
+//        if(!recruiterService.existById(recruiterId)){
+//            throw new HiveConnectException("Recruiter not found!");
+//        }
+//        Recruiter recruiter = recruiterService.getRecruiterById(recruiterId);
+//        Object CreateJobRequest = request;
+//        RecruiterPost recruiterPost = modelMapper.map(CreateJobRequest, RecruiterPost.class);
+//        recruiterPost.setCompanyName(recruiter.getCompanyName());
+//        recruiterPost.create();
+//        jobRepository.save(recruiterPost);
+//    }
 
-    @Override
-    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long category, String companyName,
-                                                      String jobName, long fromSalary, long toSalary, String rank,
-                                                      String workForm, String workPlace, String techStack) {
-        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
-        Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<RecruiterPost> jobs = jobRepository.searchListJobFilter(pageable,category,companyName,jobName,fromSalary,toSalary,rank,workForm,workPlace,techStack);
-        List <JobResponse> jobResponse = new ArrayList<>();
-        if(jobs.hasContent()){
-            for (RecruiterPost j :jobs.getContent()){
-                JobResponse jr = modelMapper.map(j, JobResponse.class);
-                jobResponse.add(jr);
-            }
-        }
-        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-        Pagination pagination = new Pagination();
-        responseDataPagination.setData(jobResponse);
-        pagination.setCurrentPage(pageNo);
-        pagination.setPageSize(pageSize);
-        pagination.setTotalPage(jobs.getTotalPages());
-        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
-        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-        responseDataPagination.setPagination(pagination);
+//    @Override
+//    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long category, String companyName,
+//                                                      String jobName, long fromSalary, long toSalary, String rank,
+//                                                      String workForm, String workPlace, String techStack) {
+//        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+//        Pageable pageable = PageRequest.of(pageReq, pageSize);
+//        Page<RecruiterPost> jobs = jobRepository.searchListJobFilter(pageable,category,companyName,jobName,fromSalary,toSalary,rank,workForm,workPlace,techStack);
+//        List <JobResponse> jobResponse = new ArrayList<>();
+//        if(jobs.hasContent()){
+//            for (RecruiterPost j :jobs.getContent()){
+//                JobResponse jr = modelMapper.map(j, JobResponse.class);
+//                jobResponse.add(jr);
+//            }
+//        }
+//        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+//        Pagination pagination = new Pagination();
+//        responseDataPagination.setData(jobResponse);
+//        pagination.setCurrentPage(pageNo);
+//        pagination.setPageSize(pageSize);
+//        pagination.setTotalPage(jobs.getTotalPages());
+//        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
+//        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+//        responseDataPagination.setPagination(pagination);
+//
+//        return responseDataPagination;
+//    }
 
-        return responseDataPagination;
-    }
+//    @Override
+//    //TODO : fix insert for update function
+//    public void updateJob(UpdateJobRequest request) {
+//        RecruiterPost recruiterPost = jobRepository.getById(request.getJobId());
+//        if(recruiterPost == null){
+//            throw new HiveConnectException("Job does not exist");
+//        }
+//        Object UpdateJobRequest = request;
+//        recruiterPost = modelMapper.map(UpdateJobRequest, RecruiterPost.class);
+//        recruiterPost.update();
+//        jobRepository.saveAndFlush(recruiterPost);
+//    }
 
-    @Override
-    //TODO : fix insert for update function
-    public void updateJob(UpdateJobRequest request) {
-        RecruiterPost recruiterPost = jobRepository.getById(request.getJobId());
-        if(recruiterPost == null){
-            throw new HiveConnectException("Job does not exist");
-        }
-        Object UpdateJobRequest = request;
-        recruiterPost = modelMapper.map(UpdateJobRequest, RecruiterPost.class);
-        recruiterPost.update();
-        jobRepository.saveAndFlush(recruiterPost);
-    }
-
-    @Override
-    public void deleteJob(long jobId) {
-        RecruiterPost recruiterPost = jobRepository.getById(jobId);
-        if(recruiterPost == null){
-            throw new HiveConnectException("Job does not exist");
-        }
-        jobRepository.deleteJob(jobId);
-    }
+//    @Override
+//    public void deleteJob(long jobId) {
+//        RecruiterPost recruiterPost = jobRepository.getById(jobId);
+//        if(recruiterPost == null){
+//            throw new HiveConnectException("Job does not exist");
+//        }
+//        jobRepository.deleteJob(jobId);
+//    }
 
     @Override
     public boolean existsById(long id) {
@@ -106,7 +107,13 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobResponse> getListJobByWorkForm(String workForm) {
-        return jobRepository.getListJobByWorkForm(workForm);
+//        return jobRepository.getListJobByWorkForm(workForm);
+        return null;
+    }
+
+    @Override
+    public List<Job> getNewestJobList() {
+        return jobRepository.getNewestJob(true, 0);
     }
 
 }
