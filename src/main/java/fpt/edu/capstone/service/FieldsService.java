@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface FieldsService {
     List<Fields> getAll();
+
+    boolean existById(long id);
 }

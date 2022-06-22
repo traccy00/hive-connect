@@ -9,7 +9,7 @@ import fpt.edu.capstone.utils.ResponseDataPagination;
 import java.util.List;
 
 public interface JobService {
-//    void createJob(CreateJobRequest request);
+    void createJob(CreateJobRequest request);
 
 //    ResponseDataPagination searchListJobFilter(Integer pageNo,Integer pageSize, long category, String companyName,
 //                                               String jobName, long fromSalary, long toSalary, String rank,

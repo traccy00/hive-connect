@@ -16,4 +16,9 @@ public class FieldsServiceImpl implements FieldsService {
     public List<Fields> getAll() {
         return fieldRepository.findAll();
     }
+
+    @Override
+    public boolean existById(long id) {
+        return fieldRepository.existsById(id);
+    }
 }

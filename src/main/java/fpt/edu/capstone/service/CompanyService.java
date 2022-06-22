@@ -5,4 +5,6 @@ import fpt.edu.capstone.entity.Company;
 public interface CompanyService {
 
     Company getCompanyById(long id);
+
+    boolean existById(long id);
 }

@@ -16,4 +16,9 @@ public class CompanyServiceImpl implements CompanyService {
     public Company getCompanyById(long id) {
         return companyRepository.getCompanyById(id);
     }
+
+    @Override
+    public boolean existById(long id) {
+        return companyRepository.existsById(id);
+    }
 }

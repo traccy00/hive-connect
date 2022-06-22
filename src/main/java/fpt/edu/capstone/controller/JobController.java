@@ -30,20 +30,20 @@ public class JobController {
 
     private final CandidateJobService candidateJobService;
 
-//    @PostMapping("/create-job")
-//    public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
-//        try {
-//            if (request == null) {
-//                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.DATA_INVALID);
-//            }
-//            jobService.createJob(request);
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CREATE_JOB_SUCCESS);
-//        } catch (Exception e) {
-//            String msg = LogUtils.printLogStackTrace(e);
-//            logger.error(msg);
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
-//        }
-//    }
+    @PostMapping("/create-job")
+    public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
+        try {
+            if (request == null) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.DATA_INVALID);
+            }
+            jobService.createJob(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CREATE_JOB_SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
 
 //    @GetMapping("/find-job")
 //    public ResponseData searchListJobFilter(@RequestParam(defaultValue = "1") Integer pageNo,

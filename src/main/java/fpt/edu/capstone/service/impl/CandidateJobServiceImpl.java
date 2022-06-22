@@ -42,7 +42,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
             jobResponse.setJobId(job.getId());
             jobResponse.setCompanyId(job.getCompanyId());
             jobResponse.setRecruiterId(job.getRecruiterId());
-            jobResponse.setCareerId(job.getCareerId());
+            jobResponse.setCareerId(job.getFieldId());
 //            Career career = careerService.getCareerById(job.getCareerId());
 //            jobResponse.setCareerName(career.getJobType());
 //            List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());

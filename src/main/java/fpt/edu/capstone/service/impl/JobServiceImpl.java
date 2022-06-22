@@ -25,7 +25,7 @@ import java.util.List;
 public class JobServiceImpl implements JobService {
     private final ModelMapper modelMapper;
 
-    private final CategoryService categoryService;
+    private final CompanyService companyService;
 
     private final RecruiterService recruiterService;
 
@@ -37,23 +37,29 @@ public class JobServiceImpl implements JobService {
 
     private final MajorLevelService majorLevelService;
 
-//    @Override
-//    public void createJob(CreateJobRequest request) {
-//        long categoryId = request.getCategoryId();
-//        long recruiterId = request.getRecruiterId();
-//        if(!categoryService.existById(categoryId)){
-//            throw new HiveConnectException("Category not found!");
-//        }
-//        if(!recruiterService.existById(recruiterId)){
-//            throw new HiveConnectException("Recruiter not found!");
-//        }
-//        Recruiter recruiter = recruiterService.getRecruiterById(recruiterId);
-//        Object CreateJobRequest = request;
-//        RecruiterPost recruiterPost = modelMapper.map(CreateJobRequest, RecruiterPost.class);
-//        recruiterPost.setCompanyName(recruiter.getCompanyName());
-//        recruiterPost.create();
-//        jobRepository.save(recruiterPost);
-//    }
+    private final FieldsService fieldsService;
+
+    @Override
+    public void createJob(CreateJobRequest request) {
+        long companyId = request.getCompanyId();
+        long recruiterId = request.getRecruiterId();
+        long fieldId = request.getFieldId();
+        if(!companyService.existById(companyId)){
+            throw new HiveConnectException("Company not found!");
+        }
+        if(!recruiterService.existById(recruiterId)){
+            throw new HiveConnectException("Recruiter not found!");
+        }
+        if(!fieldsService.existById(fieldId)){
+            throw new HiveConnectException("Field not found!");
+        }
+        Recruiter recruiter = recruiterService.getRecruiterById(recruiterId);
+        Object CreateJobRequest = request;
+        Job job = modelMapper.map(CreateJobRequest, Job.class);
+//        job.setCompanyName(recruiter.getCompanyName());
+        job.create();
+        jobRepository.save(job);
+    }
 
 //    @Override
 //    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long category, String companyName,
@@ -111,8 +117,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobResponse> getListJobByWorkForm(String workForm) {
-//        return jobRepository.getListJobByWorkForm(workForm);
-        return null;
+        return jobRepository.getListJobByWorkForm(workForm);
     }
 
     @Override

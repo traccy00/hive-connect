@@ -33,7 +33,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     boolean existsById(long id);
 
     @Query(value = "select * from Job where work_form like  lower(concat('%', :workForm ,'%'))", nativeQuery = true)
-    List<Job> getListJobByWorkForm(@Param("workForm") String workForm);
+    List<JobResponse> getListJobByWorkForm(@Param("workForm") String workForm);
 
     @Query(value = "select * from job", nativeQuery = true)
     List<Job> getNewestJob(boolean isNewJob, int isDeleted);
