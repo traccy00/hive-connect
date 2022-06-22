@@ -1,7 +1,7 @@
 package fpt.edu.capstone.repository;
 
 
-import fpt.edu.capstone.atmpCandidate.MajorLevel;
+import fpt.edu.capstone.entity.MajorLevel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

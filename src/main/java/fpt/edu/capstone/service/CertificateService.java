@@ -1,7 +1,6 @@
 package fpt.edu.capstone.service;
 
-import fpt.edu.capstone.atmpCandidate.CV;
-import fpt.edu.capstone.atmpCandidate.Certificate;
+import fpt.edu.capstone.entity.Certificate;
 
 import java.util.List;
 

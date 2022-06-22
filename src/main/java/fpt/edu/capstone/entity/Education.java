@@ -1,4 +1,4 @@
-package fpt.edu.capstone.atmpCandidate;
+package fpt.edu.capstone.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,29 +11,31 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "work_experience")
+@Table(name = "education")
 @AllArgsConstructor
 @NoArgsConstructor
-public class WorkExperience {
-
+public class Education {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "cv_id")
-    private Long cvId;
+    private long cvId;
 
-    @Column(name = "company_name")
-    private String companyName;
+    @Column(name = "school")
+    private String school;
 
-    @Column(name = "position")
-    private String position;
+    @Column(name = "major")
+    private String major;
 
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
     @Column(name = "end_date")
     private LocalDateTime endDate;
+
+    @Column(name = "is_studying")
+    private boolean isStudying;
 
     @Column(name = "description")
     private String description;

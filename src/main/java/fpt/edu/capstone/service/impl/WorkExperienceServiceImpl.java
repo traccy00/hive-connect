@@ -1,6 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.atmpCandidate.WorkExperience;
+import fpt.edu.capstone.entity.WorkExperience;
 import fpt.edu.capstone.repository.WorkExperienceRepository;
 import fpt.edu.capstone.service.WorkExperienceService;
 import org.springframework.beans.factory.annotation.Autowired;

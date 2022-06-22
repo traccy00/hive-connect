@@ -1,6 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.atmpCandidate.Language;
+import fpt.edu.capstone.entity.Language;
 import fpt.edu.capstone.repository.LanguageRepository;
 import fpt.edu.capstone.service.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;

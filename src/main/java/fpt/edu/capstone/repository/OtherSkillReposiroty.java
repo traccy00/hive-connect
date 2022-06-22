@@ -1,7 +1,6 @@
 package fpt.edu.capstone.repository;
 
-import fpt.edu.capstone.atmpCandidate.Language;
-import fpt.edu.capstone.atmpCandidate.OtherSkill;
+import fpt.edu.capstone.entity.OtherSkill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

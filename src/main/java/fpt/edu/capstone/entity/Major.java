@@ -1,4 +1,4 @@
-package fpt.edu.capstone.atmpCandidate;
+package fpt.edu.capstone.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,21 +10,21 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "language")
+@Table(name = "major")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Language {
+public class Major {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "language")
-    private String language;
+    @Column(name = "field_id")
+    private long fieldId;
 
-    @Column(name = "level")
-    private String level;
+    @Column(name = "major_name")
+    private String major_name;
 
-    @Column(name = "cv_id")
-    private long cvId;
+    @Column(name = "status")
+    private String status;
 }
