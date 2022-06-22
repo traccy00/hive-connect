@@ -23,4 +23,8 @@ public class MajorLevelServiceImpl implements MajorLevelService {
         majorLevelRepository.insertNewMajorLevel(majorLevel.getFiledId(), majorLevel.getMajorId(), majorLevel.getCvId(), majorLevel.getLevel(), majorLevel.isStatus());
     }
 
+    @Override
+    public MajorLevel getByCvId(long cvId) {
+        return majorLevelRepository.getByCvId(cvId);
+    }
 }

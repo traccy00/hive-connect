@@ -151,10 +151,17 @@ public class JobController {
         return null;
     }
 
-    @GetMapping("/suggest-job")
-    public ResponseData getListSuggestJobByCV() {
+    @GetMapping("/suggest-job/{id}")
+    public ResponseData getListSuggestJobByCV(@PathVariable("id")long candidateId) {
         // get list lấy ra công việc gợi ý theo cv của candidate
-        return null;
+        //dựa theo major-level của candidate
+        try {
+            List<JobResponse> listSuggestJob = jobService.getListSuggestJobByCv(candidateId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listSuggestJob);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
     }
 
     @GetMapping("/remote-job")
@@ -190,12 +197,12 @@ public class JobController {
         }
     }
 
-    @GetMapping("/job-by-career")
-    public ResponseData getJobByCareer(@RequestParam(value = "id") long careerId) {
+    @GetMapping("/job-by-field")
+    public ResponseData getJobByCareer(@RequestParam(value = "id") long fieldId) {
         try {
-//           List<JobResponse> listByCareer = jobService.
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
-        } catch (Exception e){
+            List<JobResponse> listByCareer = jobService.getJobByFieldId(fieldId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,listByCareer);
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }

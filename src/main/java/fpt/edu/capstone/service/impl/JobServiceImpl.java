@@ -3,9 +3,7 @@ package fpt.edu.capstone.service.impl;
 import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.Recruiter;
-import fpt.edu.capstone.entity.RecruiterPost;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.JobRepository;
 import fpt.edu.capstone.service.*;
@@ -32,6 +30,12 @@ public class JobServiceImpl implements JobService {
     private final RecruiterService recruiterService;
 
     private final JobRepository jobRepository;
+
+    private final CVService cvService;
+
+    private final MajorService majorService;
+
+    private final MajorLevelService majorLevelService;
 
 //    @Override
 //    public void createJob(CreateJobRequest request) {
@@ -116,4 +120,26 @@ public class JobServiceImpl implements JobService {
         return jobRepository.getNewestJob(true, 0);
     }
 
+    @Override
+    public List<JobResponse> getJobByFieldId(long id) {
+        return jobRepository.getListJobByFieldId(id);
+    }
+
+    @Override
+    public List<JobResponse> getListSuggestJobByCv(long candidateId) {
+        CV cv = cvService.getCVByCandidateId(candidateId);
+//cần lấy ra được chuyên môn của thằng candidate đó,
+        //sau đó đề xuất những công việc theo lĩnh vực và chuyên môn đó
+        MajorLevel majorLevel = majorLevelService.getByCvId(cv.getId());
+        String majorName = majorService.getNameByMajorId(majorLevel.getMajorId());
+        //khi đã có được name rồi thì cầm vào để query search like "java" trong bảng job
+        List <Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
+        List<JobResponse> responses = new ArrayList<>();
+
+        for (Job j : jobList){
+            JobResponse jr = modelMapper.map(j, JobResponse.class);
+            responses.add(jr);
+        }
+        return responses;
+    }
 }

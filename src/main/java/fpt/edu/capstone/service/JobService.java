@@ -25,4 +25,9 @@ public interface JobService {
 
     List<Job> getNewestJobList();
 
+    List<JobResponse> getJobByFieldId(long id);
+
+    List<JobResponse> getListSuggestJobByCv(long candidateId);
+
+
 }

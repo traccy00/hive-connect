@@ -37,4 +37,11 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query(value = "select * from job", nativeQuery = true)
     List<Job> getNewestJob(boolean isNewJob, int isDeleted);
+
+    @Query("Select c from Job c where c.fieldId = :fieldId and c.isDeleted = 0")
+    List<JobResponse> getListJobByFieldId(@Param("fieldId") long fieldId);
+
+    @Query("select c from Job c where (c.jobDescription like lower(concat('%', :majorName ,'%'))) or (c.jobRequirement like  lower(concat('%', :majorName ,'%')))")
+    List <Job> getListSuggestJobByCv(String majorName);
+
 }
