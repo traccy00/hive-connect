@@ -2,6 +2,7 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
+import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.service.CandidateJobService;
 import fpt.edu.capstone.service.FindJobService;
 import fpt.edu.capstone.service.JobService;
@@ -45,28 +46,26 @@ public class JobController {
         }
     }
 
-//    @GetMapping("/find-job")
-//    public ResponseData searchListJobFilter(@RequestParam(defaultValue = "1") Integer pageNo,
-//                                            @RequestParam(defaultValue = "10") Integer pageSize,
-//                                            @RequestParam(defaultValue = "0", value = "categoryId", required = false) long category,
-//                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "companyName", required = false) String companyName,
-//                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "jobName", required = false) String jobName,
-//                                            @RequestParam(defaultValue = "0", value = "fromSalary", required = false) long fromSalary,
-//                                            @RequestParam(defaultValue = "0", value = "toSalary", required = false) long toSalary,
-//                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "rank", required = false) String rank,
-//                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "workForm", required = false) String workForm,
-//                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "workPlace", required = false) String workPlace,
-//                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "techStack", required = false) String techStack) {
-//        try {
-//            ResponseDataPagination pagination = jobService.searchListJobFilter(pageNo, pageSize, category, companyName,
-//                    jobName, fromSalary, toSalary, rank, workForm, workPlace, techStack);
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), pagination);
-//        } catch (Exception e) {
-//            String msg = LogUtils.printLogStackTrace(e);
-//            logger.error(msg);
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
-//        }
-//    }
+    @GetMapping("/find-job")
+    public ResponseData searchListJobFilter(@RequestParam(defaultValue = "1") Integer pageNo,
+                                            @RequestParam(defaultValue = "10") Integer pageSize,
+                                            @RequestParam(defaultValue = "0", value = "fieldName", required = false) long fieldName,
+                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "jobName", required = false) String jobName,
+                                            @RequestParam(defaultValue = "0", value = "fromSalary", required = false) long fromSalary,
+                                            @RequestParam(defaultValue = "0", value = "toSalary", required = false) long toSalary,
+                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "rank", required = false) String rank,
+                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "workForm", required = false) String workForm,
+                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "workPlace", required = false) String workPlace){
+        try {
+            ResponseDataPagination pagination = jobService.searchListJobFilter(pageNo, pageSize, fieldName,
+                    jobName, fromSalary, toSalary, rank, workForm, workPlace);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), pagination);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
 
 //    @PutMapping("update-job")
 //    public ResponseData updateJob(@RequestBody UpdateJobRequest request) {
@@ -182,7 +181,7 @@ public class JobController {
     @GetMapping("/remote-job")
     public ResponseData getListRemoteJob() {
         try {
-            List <JobResponse> listRemoteJob = jobService.getListJobByWorkForm("REMOTE");
+            List <Job> listRemoteJob = jobService.getListJobByWorkForm("REMOTE");
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listRemoteJob);
         } catch (Exception e){
             e.printStackTrace();
@@ -193,7 +192,7 @@ public class JobController {
     @GetMapping("/fulltime-job")
     public ResponseData getListFulltimeJob() {
         try {
-            List <JobResponse> listFulltimeJob = jobService.getListJobByWorkForm("FULLTIME");
+            List <Job> listFulltimeJob = jobService.getListJobByWorkForm("FULLTIME");
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listFulltimeJob);
         } catch (Exception e){
             e.printStackTrace();
@@ -204,7 +203,7 @@ public class JobController {
     @GetMapping("/parttime-job")
     public ResponseData getListParttimeJob() {
         try {
-            List <JobResponse> listParttimeJob = jobService.getListJobByWorkForm("PARTTIME");
+            List <Job> listParttimeJob = jobService.getListJobByWorkForm("PARTTIME");
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listParttimeJob);
         } catch (Exception e){
             e.printStackTrace();
@@ -215,7 +214,7 @@ public class JobController {
     @GetMapping("/job-by-field")
     public ResponseData getJobByCareer(@RequestParam(value = "id") long fieldId) {
         try {
-            List<JobResponse> listByCareer = jobService.getJobByFieldId(fieldId);
+            List<Job> listByCareer = jobService.getJobByFieldId(fieldId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,listByCareer);
         } catch (Exception e) {
             e.printStackTrace();

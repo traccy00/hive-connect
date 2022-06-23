@@ -61,32 +61,31 @@ public class JobServiceImpl implements JobService {
         jobRepository.save(job);
     }
 
-//    @Override
-//    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long category, String companyName,
-//                                                      String jobName, long fromSalary, long toSalary, String rank,
-//                                                      String workForm, String workPlace, String techStack) {
-//        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
-//        Pageable pageable = PageRequest.of(pageReq, pageSize);
-//        Page<RecruiterPost> jobs = jobRepository.searchListJobFilter(pageable,category,companyName,jobName,fromSalary,toSalary,rank,workForm,workPlace,techStack);
-//        List <JobResponse> jobResponse = new ArrayList<>();
-//        if(jobs.hasContent()){
-//            for (RecruiterPost j :jobs.getContent()){
-//                JobResponse jr = modelMapper.map(j, JobResponse.class);
-//                jobResponse.add(jr);
-//            }
-//        }
-//        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-//        Pagination pagination = new Pagination();
-//        responseDataPagination.setData(jobResponse);
-//        pagination.setCurrentPage(pageNo);
-//        pagination.setPageSize(pageSize);
-//        pagination.setTotalPage(jobs.getTotalPages());
-//        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
-//        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-//        responseDataPagination.setPagination(pagination);
-//
-//        return responseDataPagination;
-//    }
+    @Override
+    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long fieldName, String jobName,
+                                                      long fromSalary, long toSalary, String rank, String workForm, String workPlace) {
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+        Page<Job> jobs = jobRepository.searchListJobFilter(pageable,fieldName,jobName,fromSalary,toSalary,rank,workForm,workPlace);
+        List <JobResponse> jobResponse = new ArrayList<>();
+        if(jobs.hasContent()){
+            for (Job j :jobs.getContent()){
+                JobResponse jr = modelMapper.map(j, JobResponse.class);
+                jobResponse.add(jr);
+            }
+        }
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(jobResponse);
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(jobs.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+
+        return responseDataPagination;
+    }
 
 //    @Override
 //    //TODO : fix insert for update function
@@ -116,7 +115,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobResponse> getListJobByWorkForm(String workForm) {
+    public List<Job> getListJobByWorkForm(String workForm) {
         return jobRepository.getListJobByWorkForm(workForm);
     }
 
@@ -136,7 +135,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobResponse> getJobByFieldId(long id) {
+    public List<Job> getJobByFieldId(long id) {
         return jobRepository.getListJobByFieldId(id);
     }
 

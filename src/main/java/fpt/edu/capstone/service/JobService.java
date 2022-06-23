@@ -13,9 +13,9 @@ import java.util.List;
 public interface JobService {
     void createJob(CreateJobRequest request);
 
-//    ResponseDataPagination searchListJobFilter(Integer pageNo,Integer pageSize, long category, String companyName,
-//                                               String jobName, long fromSalary, long toSalary, String rank,
-//                                               String workForm, String workPlace, String techStack);
+    ResponseDataPagination searchListJobFilter(Integer pageNo,Integer pageSize, long fieldName,
+                                               String jobName, long fromSalary, long toSalary, String rank,
+                                               String workForm, String workPlace);
 
 //    void updateJob(UpdateJobRequest request);
 
@@ -23,11 +23,11 @@ public interface JobService {
 
     boolean existsById(long id);
 
-    List<JobResponse> getListJobByWorkForm(String workForm);
+    List<Job> getListJobByWorkForm(String workForm);
 
     Page<Job> getNewestJobList(Pageable pageable);
 
-    List<JobResponse> getJobByFieldId(long id);
+    List<Job> getJobByFieldId(long id);
 
     List<JobResponse> getListSuggestJobByCv(long candidateId);
 
