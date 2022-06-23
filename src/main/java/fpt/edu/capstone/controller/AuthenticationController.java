@@ -73,7 +73,7 @@ public class AuthenticationController {
 
             user.setLastLoginTime(LocalDateTime.now());
             userService.saveUser(user);
-            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS,user, token);
+            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS, user, token);
 
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -112,42 +112,59 @@ public class AuthenticationController {
             ConfirmToken confirmToken = new ConfirmToken(user.getId());
             confirmTokenService.saveConfirmToken(confirmToken); // Generate token and save to DB
             ConfirmToken cf = confirmTokenService.getByUserId(user.getId()); // Cần lấy ra token để truyền vào url cho verify
-            String mailToken  = cf.getConfirmationToken();
+            String mailToken = cf.getConfirmationToken();
             confirmTokenService.verifyEmailUser(email, mailToken);
             //endregion
             String jwtToken = jwtTokenUtil.generateToken(userDetails);
-            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS,user,jwtToken);
+            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS, user, jwtToken);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
-/*
-Expect : line 115 sau khi gọi đến verify email,
-người dùng cần verify mail xong mới trả lại cho người dùng thông báo đăng kí thành công và jwt token để đăng nhập vào hệ thống
- */
+
+    @PostMapping("/resend-email/{username}")
+    @Operation(summary = "resend email ")
+    public ResponseData resendEmail(@PathVariable("username") String username) {
+        try {
+            Users user = userService.getByUserName(username);
+            ConfirmToken cf = confirmTokenService.getByUserId(user.getId());
+            String mailToken = cf.getConfirmationToken();
+            confirmTokenService.verifyEmailUser(user.getEmail(), mailToken);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.RESEND_EMAIL_SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    /*
+    Expect : line 115 sau khi gọi đến verify email,
+    người dùng cần verify mail xong mới trả lại cho người dùng thông báo đăng kí thành công và jwt token để đăng nhập vào hệ thống
+     */
     @PostMapping("/confirm-account")
     @Operation(summary = "confirm account")
-    public ResponseData confirmAccount(@RequestParam("token") String token){
+    public ResponseData confirmAccount(@RequestParam("token") String token) {
         try {
             // Cần lấy ra token để truyền vào url cho verify
             ConfirmToken cf = confirmTokenService.getByConfirmToken(token);
-            if(cf == null){
+            if (cf == null) {
                 throw new HiveConnectException("Token invalid");
             }
             //So sánh time expire và time trong db nếu quá hạn thì ko cho sử dụng token
-            if(LocalDateTime.now().isBefore(cf.getExpiredTime()) ){
+            if (LocalDateTime.now().isBefore(cf.getExpiredTime())) {
                 throw new HiveConnectException("Token has been expired");
             }
-            String mailToken  = cf.getConfirmationToken();
+            String mailToken = cf.getConfirmationToken();
             Users user = userService.getUserById(cf.getUserId());
-            if(StringUtils.equals(token,mailToken)){
+            if (StringUtils.equals(token, mailToken)) {
                 user.setVerifiedEmail(true);
             }
             userService.saveUser(user);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -167,10 +184,10 @@ người dùng cần verify mail xong mới trả lại cho người dùng thôn
             String confirmPassword = request.getConfirmPassword();
 
             Users user = optionalUsers.get();
-            if(!passwordEncoder.matches(oldPassword,user.getPassword())){
+            if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
                 throw new HiveConnectException("Old password does not matches");
             }
-            if(!StringUtils.equals(newPassword,confirmPassword)){
+            if (!StringUtils.equals(newPassword, confirmPassword)) {
                 throw new HiveConnectException("Confirm password does not matches");
             }
 

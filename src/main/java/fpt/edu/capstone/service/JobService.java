@@ -34,4 +34,6 @@ public interface JobService {
     Page<Job> getUrgentJobList(Pageable pageable);
 
     Page<Job> getPopularJobList(Pageable pageable);
+
+    Job getJobById(long jobId);
 }

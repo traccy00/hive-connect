@@ -67,6 +67,18 @@ public class JobController {
         }
     }
 
+    @GetMapping("/job-detail/{id}")
+    public ResponseData getJobDetail(@PathVariable("id") long jobId){
+        try {
+            Job job = jobService.getJobById(jobId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), job);
+        }catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
 //    @PutMapping("update-job")
 //    public ResponseData updateJob(@RequestBody UpdateJobRequest request) {
 //        try {
