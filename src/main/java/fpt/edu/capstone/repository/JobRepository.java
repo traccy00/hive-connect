@@ -35,13 +35,18 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query(value = "select * from Job where work_form like  lower(concat('%', :workForm ,'%'))", nativeQuery = true)
     List<JobResponse> getListJobByWorkForm(@Param("workForm") String workForm);
 
-    @Query(value = "select * from job", nativeQuery = true)
-    List<Job> getNewestJob(boolean isNewJob, int isDeleted);
+    @Query(value = "select * from job where is_new_job = ?1 and (is_deleted = ?2 or is_deleted is null)", nativeQuery = true)
+    Page<Job> getNewestJob(Pageable pageable, boolean isNewJob, int isDeleted);
+
+    @Query(value = "select * from job where is_urgent_job = ?1 and (is_deleted = ?2 or is_deleted is null)", nativeQuery = true)
+    Page<Job> getUrgentJob(Pageable pageable, boolean isUrgentJob, int isDeleted);
+
+    @Query(value = "select * from job where is_popular_job = ?1 and (is_deleted = ?2 or is_deleted is null)", nativeQuery = true)
+    Page<Job> getPopularJob(Pageable pageable, boolean b, int i);
 
     @Query("Select c from Job c where c.fieldId = :fieldId and c.isDeleted = 0")
     List<JobResponse> getListJobByFieldId(@Param("fieldId") long fieldId);
 
     @Query("select c from Job c where (c.jobDescription like lower(concat('%', :majorName ,'%'))) or (c.jobRequirement like  lower(concat('%', :majorName ,'%')))")
     List <Job> getListSuggestJobByCv(String majorName);
-
 }

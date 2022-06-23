@@ -121,8 +121,18 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> getNewestJobList() {
-        return jobRepository.getNewestJob(true, 0);
+    public Page<Job> getNewestJobList(Pageable pageable) {
+        return jobRepository.getNewestJob(pageable, true, 0);
+    }
+
+    @Override
+    public Page<Job> getUrgentJobList(Pageable pageable) {
+        return jobRepository.getUrgentJob(pageable, true, 0);
+    }
+
+    @Override
+    public Page<Job> getPopularJobList(Pageable pageable) {
+        return jobRepository.getPopularJob(pageable, true, 0);
     }
 
     @Override
