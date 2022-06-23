@@ -127,18 +127,26 @@ public class JobController {
     }
 
     @GetMapping("/popular-job")
-    public ResponseData getPopularJob() {
+    public ResponseData getPopularJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                      @RequestParam(defaultValue = "10") Integer pageSize) {
         // get list lấy ra công việc phỏ biến
-        return null;
+        try {
+            ResponseDataPagination pagination = candidateJobService.getPopularJob(pageNo, pageSize);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
     }
 
     @GetMapping("/new-job")
-    public ResponseData getListNewJob() {
+    public ResponseData getListNewJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                      @RequestParam(defaultValue = "10") Integer pageSize) {
         // get list lấy ra công việc mới nhất
         //sort by created At
         try {
-            List<JobResponse> responseList = candidateJobService.getNewestJob();
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, responseList);
+            ResponseDataPagination pagination = candidateJobService.getNewestJob(pageNo, pageSize);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         }catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
@@ -146,9 +154,16 @@ public class JobController {
     }
 
     @GetMapping("/urgent-job")
-    public ResponseData getListUrgentJob() {
-        // get list lấy ra công việc cần gấpt
-        return null;
+    public ResponseData getListUrgentJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                         @RequestParam(defaultValue = "10") Integer pageSize) {
+        // get list lấy ra công việc cần tuyển gấp
+        try {
+            ResponseDataPagination pagination = candidateJobService.getUrgentJob(pageNo, pageSize);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
     }
 
     @GetMapping("/suggest-job/{id}")
