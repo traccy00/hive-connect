@@ -10,12 +10,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/CV")
 public class CVController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 
     @Autowired
     private CVService cvService;
@@ -38,81 +46,109 @@ public class CVController {
     @Autowired
     private WorkExperienceService workExperienceService;
 
+    //Them phan add summary
 
     @GetMapping("/get-list-CV")
-    public ResponseData getListCompany(){
+    public ResponseData getListCompany() {
         return null;
     }
 
     @GetMapping("/get-cv")
-    public ResponseData findCvByCandidateID(@RequestParam Long candidateId){
+    public ResponseData findCvByCandidateID(@RequestParam long candidateId) {
         try {
-            CV cv = cvService.findCvByCandidateId(candidateId);
-            if(cv != null){
-                List<Certificate> certificates = certificateService.getListCertificateByCvId(cv.getId());
-                List<Education> educations = educationService.getListEducationByCvId(cv.getId());
-                List<Language> languages = languageService.getListLanguageByCvId(cv.getId());
-                List<MajorLevel> majorLevels = majorLevelService.getListMajorLevelByCvId(cv.getId());
-                List<OtherSkill> otherSkills = otherSkillService.getListOtherSkillByCvId(cv.getId());
-                List<WorkExperience> workExperiences = workExperienceService.getListWorkExperienceByCvId(cv.getId());
+            List<CV> cv = cvService.findCvByCandidateId(candidateId);
+            if (cv != null) {
+                List<Certificate> certificates = certificateService.getListCertificateByCvId(cv.get(0).getId());
+                List<Education> educations = educationService.getListEducationByCvId(cv.get(0).getId());
+                List<Language> languages = languageService.getListLanguageByCvId(cv.get(0).getId());
+                List<MajorLevel> majorLevels = majorLevelService.getListMajorLevelByCvId(cv.get(0).getId());
+                List<OtherSkill> otherSkills = otherSkillService.getListOtherSkillByCvId(cv.get(0).getId());
+                List<WorkExperience> workExperiences = workExperienceService.getListWorkExperienceByCvId(cv.get(0).getId());
                 CVResponse cvResponse = new CVResponse();
                 cvResponse.setCandidateId(candidateId);
-                cvResponse.setCreatedAt(cv.getCreatedAt());
-                cvResponse.setUpdatedAt(cv.getUpdatedAt());
+                cvResponse.setCreatedAt(cv.get(0).getCreatedAt());
+                cvResponse.setUpdatedAt(cv.get(0).getUpdatedAt());
                 cvResponse.setCertificates(certificates);
-                cvResponse.setDeleted(cv.isDeleted());
+                cvResponse.setIsDeleted(cv.get(0).getIsDeleted());
                 cvResponse.setEducations(educations);
-                cvResponse.setId(cv.getId());
+                cvResponse.setId(cv.get(0).getId());
                 cvResponse.setLanguages(languages);
-                cvResponse.setSummary(cv.getSummary());
+                cvResponse.setSummary(cv.get(0).getSummary());
                 cvResponse.setMajorLevels(majorLevels);
                 cvResponse.setOtherSkills(otherSkills);
                 cvResponse.setWorkExperiences(workExperiences);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Success", cvResponse);
-            }else {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"No CV be found", null);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Success", cvResponse);
+            } else {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No CV be found", null);
             }
-        }catch (Exception ex){
-            return null;
+        } catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
 
-    @GetMapping("/create-cv")
-    public ResponseData createCV(@RequestParam Long candidateId){
-        CV cv = cvService.findCvByCandidateId(candidateId);
-        if(cv != null) {
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "You have CV already", null);
+    @GetMapping("/create-cv{candidateId}")
+    public ResponseData createCV(@RequestParam long candidateId) {
+        try {
+            List<CV> cv = cvService.findCvByCandidateId(candidateId);
+            if (!cv.isEmpty()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "You have CV already", null);
+            }
+        } catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
-
-        return null;
+        LocalDateTime nowDate = LocalDateTime.now();
+        cvService.insertCv(candidateId, 0, "", nowDate, nowDate);
+        List<CV> cvs = cvService.findCvByCandidateId(candidateId);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create CV successful", cvs.get(0));
     }
+
     @PostMapping("/insert-education")
-    public ResponseData insertEducation(@RequestBody Education newEdudation){
-
-        return null;
+    public ResponseData insertEducation(@RequestBody Education newEdudation) {
+        Optional<CV> cv = cvService.findCvById(newEdudation.getCvId());
+        if(!cv.isPresent()) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+        }
+        educationService.insertEducation(newEdudation.getCvId(), newEdudation.getSchool(), newEdudation.getMajor(), newEdudation.getStartDate(), newEdudation.getEndDate(), newEdudation.getDescription(), newEdudation.isStudying());
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Education Success", newEdudation);
     }
 
     @PostMapping("/insert-work-exp")
-    public ResponseData insertWorkExp(){
-        //tạo ra 1 bảng kinh nghiệm làm việc để lưu thông tin knlv của candidate
-        return null;
+    public ResponseData insertWorkExp(@RequestBody WorkExperience newWorkExperience) {
+        Optional<CV> cv = cvService.findCvById(newWorkExperience.getCvId());
+        if(!cv.isPresent()) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+        }
+        workExperienceService.insertWorkExperience(newWorkExperience.getCvId(), newWorkExperience.getCompanyName(), newWorkExperience.getPosition(), newWorkExperience.getStartDate(), newWorkExperience.getEndDate(), newWorkExperience.getDescription());
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Work Experience Success", newWorkExperience);
     }
 
     @PostMapping("/insert-language")
-    public ResponseData insertLanguage(){
-        //tạo ra 1 bảng language  để lưu thông tin language của candidate
-        return null;
+    public ResponseData insertLanguage(@RequestBody Language newLanguage) {
+        Optional<CV> cv = cvService.findCvById(newLanguage.getCvId());
+        if(!cv.isPresent()) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+        }
+        languageService.insertLanguage(newLanguage.getLanguage(), newLanguage.getLevel(), newLanguage.getCvId());
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create New Language Success", newLanguage);
     }
 
     @PostMapping("/insert-skill")
-    public ResponseData insertSkill(){
-        //tạo ra 1 bảng Skill  để lưu thông tin skill của candidate
-        return null;
+    public ResponseData insertSkill(@RequestBody OtherSkill newOtherSkill) {
+        Optional<CV> cv = cvService.findCvById(newOtherSkill.getCvId());
+        if(!cv.isPresent()) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+        }
+        otherSkillService.insertOtherSkill(newOtherSkill.getSkillName(), newOtherSkill.getCvId(), newOtherSkill.getLevel());
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Other Skill Success", newOtherSkill);
     }
 
     @PostMapping("/insert-certificate")
-    public ResponseData insertCert(){
-        //tạo ra 1 bảng cert  để lưu thông tin cert của candidate
-        return null;
+    public ResponseData insertCert(@RequestBody Certificate newCertificate) {
+        Optional<CV> cv = cvService.findCvById(newCertificate.getCvId());
+        if(!cv.isPresent()) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+        }
+        certificateService.insertCertificate(newCertificate.getCertificateName(), newCertificate.getCertificateUrl(), 0, newCertificate.getCvId());
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Certificate Success", newCertificate);
     }
 }

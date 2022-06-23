@@ -17,4 +17,9 @@ public class LanguageServiceImpl implements LanguageService {
     public List<Language> getListLanguageByCvId(Long cvId) {
         return languageRepository.getListLanguageByCvId(cvId);
     }
+
+    @Override
+    public void insertLanguage(String language, String level, long cvId) {
+        languageRepository.insertLanguage(language, level, cvId);
+    }
 }

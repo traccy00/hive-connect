@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface LanguageService {
     List<Language> getListLanguageByCvId(Long cvId);
+
+    void insertLanguage(String language, String level, long cvId);
 }

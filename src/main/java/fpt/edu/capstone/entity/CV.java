@@ -24,7 +24,7 @@ public class CV {
     private long candidateId;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private long isDeleted;
 
     @Column(name = "summary")
     private String summary;

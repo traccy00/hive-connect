@@ -7,4 +7,6 @@ import java.util.List;
 public interface CertificateService {
 
     List<Certificate> getListCertificateByCvId(Long cvId);
+
+    void insertCertificate(String certificateName, String certificateUrl, long status, long cvId);
 }
