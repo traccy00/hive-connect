@@ -9,6 +9,7 @@ import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.AppliedJobRepository;
 import fpt.edu.capstone.service.*;
+import fpt.edu.capstone.utils.Enums;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,7 @@ public class FindJobServiceImpl implements FindJobService {
             } else {
                 appliedJob1.setApplied(true);
             }
+            appliedJob1.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
             appliedJob1.update();
             appliedJobRepository.save(appliedJob1);
         } else {

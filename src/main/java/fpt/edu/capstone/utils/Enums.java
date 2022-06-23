@@ -17,7 +17,7 @@ public class Enums {
     }
 
     public enum ApprovalStatus {
-        APPROVED("Approved"), REJECT("Reject");
+        APPROVED("Approved"), REJECT("Reject"), PENDING("Pending");
 
         ApprovalStatus(String status) {this.status = status;}
 
