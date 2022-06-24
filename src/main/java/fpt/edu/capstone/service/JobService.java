@@ -13,7 +13,7 @@ import java.util.List;
 public interface JobService {
     void createJob(CreateJobRequest request);
 
-    ResponseDataPagination searchListJobFilter(Integer pageNo,Integer pageSize, long fieldName,
+    ResponseDataPagination searchListJobFilter(Integer pageNo,Integer pageSize, long fieldId, long countryId,
                                                String jobName, long fromSalary, long toSalary, String rank,
                                                String workForm, String workPlace);
 

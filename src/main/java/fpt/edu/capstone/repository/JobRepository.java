@@ -14,13 +14,14 @@ import java.util.List;
 public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query(value = "select j from Job j where j.fieldId =:fieldId or 0 =:fieldId " +
+            "and j.countryId =:countryId or 0 =:countryId " +
             "and (lower(j.jobName) like lower(concat('%', :jobName ,'%')) or :jobName is null or :jobName ='')" +
             "and j.fromSalary =:fromSalary or 0 =:fromSalary " +
             "and j.toSalary =:toSalary or 0 =:toSalary " +
             "and (lower(j.rank) like lower(concat('%', :rank ,'%')) or :rank is null or :rank ='')" +
             "and (lower(j.workForm) like lower(concat('%', :workForm ,'%')) or :workForm is null or :workForm ='')" +
             "and (lower(j.workPlace) like lower(concat('%', :workPlace ,'%')) or :workPlace is null or :workPlace ='')")
-    Page<Job> searchListJobFilter(Pageable pageable, @Param("fieldId") long fieldId, @Param("jobName") String jobName,
+    Page<Job> searchListJobFilter(Pageable pageable, @Param("fieldId") long fieldId,@Param("countryId") long countryId, @Param("jobName") String jobName,
                                             @Param("fromSalary") long fromSalary, @Param("toSalary") long toSalary,
                                             @Param("rank") String rank, @Param("workForm") String workForm,
                                             @Param("workPlace") String workPlace);

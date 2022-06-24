@@ -58,16 +58,16 @@ public class CandidateController {
         }
     }
 
-    @PostMapping("/insert")
-    public ResponseData insertCandidate(@RequestBody Candidate newCandidate){
-       try{
-           System.out.println(newCandidate.toString());
-           candidateService.insertCandidate(newCandidate);
-           return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Add candicate successful");
-        } catch (Exception ex) {
-           return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
-       }
-    }
+//    @PostMapping("/insert")
+//    public ResponseData insertCandidate(@RequestBody Candidate newCandidate){
+//       try{
+//           System.out.println(newCandidate.toString());
+//           candidateService.insertCandidate(newCandidate);
+//           return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Add candicate successful");
+//        } catch (Exception ex) {
+//           return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
+//       }
+//    }
 
     @PutMapping("/{id}")
     public ResponseData updateCandidate(@RequestBody Candidate newCandidate, @PathVariable long id){

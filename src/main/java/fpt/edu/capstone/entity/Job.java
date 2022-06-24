@@ -82,4 +82,10 @@ public class Job extends BaseEntity {
 
     @Column(name = "recruiter_id")
     private long recruiterId;
+
+    @Column(name = "weekday")
+    private String weekday;
+
+    @Column(name = "vietnam_country_id")
+    private long countryId;
 }

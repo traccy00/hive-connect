@@ -6,6 +6,8 @@ import fpt.edu.capstone.service.CompanyService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
@@ -20,5 +22,10 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public boolean existById(long id) {
         return companyRepository.existsById(id);
+    }
+
+    @Override
+    public List<Company> getAllCompany() {
+        return companyRepository.findAll();
     }
 }

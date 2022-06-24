@@ -62,11 +62,11 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long fieldName, String jobName,
+    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long fieldId, long countryId, String jobName,
                                                       long fromSalary, long toSalary, String rank, String workForm, String workPlace) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<Job> jobs = jobRepository.searchListJobFilter(pageable,fieldName,jobName,fromSalary,toSalary,rank,workForm,workPlace);
+        Page<Job> jobs = jobRepository.searchListJobFilter(pageable,fieldId, countryId,jobName,fromSalary,toSalary,rank,workForm,workPlace);
         List <JobResponse> jobResponse = new ArrayList<>();
         if(jobs.hasContent()){
             for (Job j :jobs.getContent()){
@@ -146,21 +146,19 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobResponse> getListSuggestJobByCv(long candidateId) {
-//        CV cv = cvService.getCVByCandidateId(candidateId);
-//cần lấy ra được chuyên môn của thằng candidate đó,
+        CV cv = cvService.getCVByCandidateId(candidateId);
+        //cần lấy ra được chuyên môn của thằng candidate đó,
         //sau đó đề xuất những công việc theo lĩnh vực và chuyên môn đó
-//        MajorLevel majorLevel = majorLevelService.getByCvId(cv.getId());
-        //getAllMajorByCvId()
-//        String majorName = majorService.getNameByMajorId(majorLevel.getMajorId());
-        //khi đã có được name rồi thì cầm vào để query search like "java" trong bảng job
-//        List <Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
-//        List<JobResponse> responses = new ArrayList<>();
-//
-//        for (Job j : jobList){
-//            JobResponse jr = modelMapper.map(j, JobResponse.class);
-//            responses.add(jr);
-//        }
-//        return responses;
-        return null;
+        List <MajorLevel> majorLevel = majorLevelService.getListMajorLevelByCvId(cv.getId());
+        List<JobResponse> responses = new ArrayList<>();
+        for (MajorLevel ml : majorLevel){
+            String majorName = majorService.getNameByMajorId(ml.getMajorId());
+            List <Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
+            for (Job j : jobList){
+                JobResponse jr = modelMapper.map(j, JobResponse.class);
+                responses.add(jr);
+            }
+        }
+        return responses;
     }
 }

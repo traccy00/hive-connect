@@ -17,6 +17,7 @@ public class CreateJobRequest {
     private long companyId;
     private long recruiterId;
     private long fieldId;
+    private long countryId;
     private String jobName;
     private String workPlace;
     private String workForm;
@@ -31,6 +32,7 @@ public class CreateJobRequest {
     private String jobDescription;
     private String jobRequirement;
     private String benifit;
+    private String weekday;
     private boolean isPopularJob;
     private boolean isNewJob;
     private boolean isUrgentJob;

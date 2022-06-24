@@ -21,8 +21,8 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public void insertCandidate(Candidate candidate) {
-        candidateRepository.insertCandidate(candidate.getUserId(), candidate.isGender(), candidate.getBirthDate(), candidate.getSearchHistory() ,candidate.getCountry(), candidate.getFullName(), candidate.getAddress(), candidate.getSocialLink(), candidate.getAvatarUrl(), candidate.getWishlistJobIdList(), candidate.getTapHistoryIdList(), candidate.isNeedJob(), candidate.getExperienceLevel(), candidate.getIntroduction());
+    public void insertCandidate(long userId) {
+        candidateRepository.insertCandidate(userId);
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface CandidateService  {
     List<Candidate> getAllCandidate() throws Exception;
 
-    void insertCandidate(Candidate candidate);
+    void insertCandidate( long userId);
 
     void updateCandidate(Candidate candidate, long id);
 

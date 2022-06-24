@@ -49,7 +49,8 @@ public class JobController {
     @GetMapping("/find-job")
     public ResponseData searchListJobFilter(@RequestParam(defaultValue = "1") Integer pageNo,
                                             @RequestParam(defaultValue = "10") Integer pageSize,
-                                            @RequestParam(defaultValue = "0", value = "fieldName", required = false) long fieldName,
+                                            @RequestParam(defaultValue = "0", value = "fieldId", required = false) long fieldId,
+                                            @RequestParam(defaultValue = "0", value = "countryId", required = false) long countryId,
                                             @RequestParam(defaultValue = StringUtils.EMPTY, value = "jobName", required = false) String jobName,
                                             @RequestParam(defaultValue = "0", value = "fromSalary", required = false) long fromSalary,
                                             @RequestParam(defaultValue = "0", value = "toSalary", required = false) long toSalary,
@@ -57,7 +58,7 @@ public class JobController {
                                             @RequestParam(defaultValue = StringUtils.EMPTY, value = "workForm", required = false) String workForm,
                                             @RequestParam(defaultValue = StringUtils.EMPTY, value = "workPlace", required = false) String workPlace){
         try {
-            ResponseDataPagination pagination = jobService.searchListJobFilter(pageNo, pageSize, fieldName,
+            ResponseDataPagination pagination = jobService.searchListJobFilter(pageNo, pageSize, fieldId, countryId,
                     jobName, fromSalary, toSalary, rank, workForm, workPlace);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), pagination);
         } catch (Exception e) {

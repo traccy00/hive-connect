@@ -4,10 +4,12 @@ import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.login.LoginRequest;
 import fpt.edu.capstone.dto.register.ChangePasswordRequest;
 import fpt.edu.capstone.dto.register.RegisterRequest;
+import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.entity.ConfirmToken;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.security.TokenUtils;
+import fpt.edu.capstone.service.CandidateService;
 import fpt.edu.capstone.service.ConfirmTokenService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.SecurityUserServiceImpl;
@@ -39,6 +41,8 @@ public class AuthenticationController {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     private final UserService userService;
+
+    private final CandidateService candidateService;
 
     private final AuthenticationManager authenticationManager;
 
@@ -105,10 +109,14 @@ public class AuthenticationController {
                         ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
             }
             userService.registerUser(request);
+            Users user = userService.getByUserName(username);
+            if(user.getRoleId() == 3){
+                candidateService.insertCandidate(user.getId());
+            }
+            //Handle case = 2 1
             final UserDetails userDetails = securityUserService.loadUserByUsername(username);
 
             //region: Handle verify email
-            Users user = userService.getByUserName(username);
             ConfirmToken confirmToken = new ConfirmToken(user.getId());
             confirmTokenService.saveConfirmToken(confirmToken); // Generate token and save to DB
             ConfirmToken cf = confirmTokenService.getByUserId(user.getId()); // Cần lấy ra token để truyền vào url cho verify
