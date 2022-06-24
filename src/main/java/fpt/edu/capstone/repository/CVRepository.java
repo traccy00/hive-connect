@@ -21,4 +21,10 @@ public interface CVRepository extends JpaRepository<CV,Long> {
     @Transactional
     @Query(value = "INSERT INTO public.cv (candidate_id, is_deleted, summary, created_at, updated_at) VALUES( ?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
     void insertCv(Long candidateId, Long isDeleted, String summary, LocalDateTime createAt, LocalDateTime updateAt);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE public.cv SET summary='?2' WHERE id=?1", nativeQuery = true)
+    void updateSummary(long cvId, String newSummary);
+
 }

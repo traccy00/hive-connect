@@ -16,4 +16,6 @@ public interface CVService {
 
     //giu
     Optional<CV> findCvById(long id);
+
+    void updateSummary(long cvId, String newSummary);
 }

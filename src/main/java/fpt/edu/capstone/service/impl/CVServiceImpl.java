@@ -30,6 +30,11 @@ public class CVServiceImpl implements CVService {
         return cvRepository.findById(id);
     }
 
+    @Override
+    public void updateSummary(long cvId, String newSummary) {
+        cvRepository.updateSummary(cvId, newSummary);
+    }
+
     public CV getCVByCandidateId(long candidateId) { //Nam
         return cvRepository.getByCandidateId(candidateId);
     }

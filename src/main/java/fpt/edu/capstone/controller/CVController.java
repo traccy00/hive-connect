@@ -1,19 +1,21 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.CV.CVResponse;
+import fpt.edu.capstone.dto.CV.UpdateCVSummaryRequest;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
+import org.hibernate.sql.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +47,12 @@ public class CVController {
 
     @Autowired
     private WorkExperienceService workExperienceService;
+
+    @Autowired
+    private FieldsService fieldsService;
+
+    @Autowired
+    private MajorService majorService;
 
     //Them phan add summary
 
@@ -150,5 +158,41 @@ public class CVController {
         }
         certificateService.insertCertificate(newCertificate.getCertificateName(), newCertificate.getCertificateUrl(), 0, newCertificate.getCvId());
         return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Certificate Success", newCertificate);
+    }
+
+    @GetMapping("/get-all-field")
+    public ResponseData getAllField() {
+        List<Fields> fields = fieldsService.getAllField();
+        if(fields.isEmpty()) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),"Have no any field", null);
+        }
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Success", fields);
+    }
+
+    @GetMapping("/get-major-by-field")
+    public ResponseData getMajorByFieldId(@RequestParam long fieldId) {
+        try {
+            List<Major> majors = majorService.getAllMajorByFieldId(fieldId);
+            if (majors.isEmpty()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Major is empty", null);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Success", majors);
+        } catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/update-cv-summary")
+    public ResponseData updateCvSummary(@RequestBody UpdateCVSummaryRequest updateCVSummaryRequest) {
+        try{
+            Optional<CV> cv = cvService.findCvById(updateCVSummaryRequest.getCvId());
+            if(cv.isPresent()) {
+                cvService.updateSummary(updateCVSummaryRequest.getCvId(), updateCVSummaryRequest.getNewSummary());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update Summary Success", updateCVSummaryRequest.getNewSummary());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not fnid this cv", updateCVSummaryRequest.getCvId());
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package fpt.edu.capstone.controller;
 
+import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
 import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.service.CandidateService;
 import fpt.edu.capstone.utils.Enums;
@@ -30,8 +31,35 @@ public class CandidateController {
         }
     }
 
+    @GetMapping("/find-by-userid")
+    public ResponseData getCandidateById(@RequestParam long userId) {
+        try{
+            Optional<Candidate> candidate = candidateService.findCandidateByUserId(userId);
+            if(candidate.isPresent()){
+                CandidateBaseInformationResponse response = new CandidateBaseInformationResponse();
+                Candidate candidateNN = candidate.get();
+                response.setAddress(candidateNN.getAddress());
+                response.setAvatarUrl(candidateNN.getAvatarUrl());
+                response.setCountry(candidateNN.getCountry());
+                response.setBirthDate(candidateNN.getBirthDate());
+                response.setId(candidateNN.getId());
+                response.setExperienceLevel(candidateNN.getExperienceLevel());
+                response.setFullName(candidateNN.getFullName());
+                response.setGender(candidateNN.isGender());
+                response.setIntroduction(candidateNN.getIntroduction());
+                response.setNeedJob(candidateNN.isNeedJob());
+                response.setSocialLink(candidateNN.getSocialLink());
+                response.setUserId(candidateNN.getUserId());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Find candidate successful", response);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find candidate by this user id", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
     @PostMapping("/insert")
-    public ResponseData inserCandidate(@RequestBody Candidate newCandidate){
+    public ResponseData insertCandidate(@RequestBody Candidate newCandidate){
        try{
            System.out.println(newCandidate.toString());
            candidateService.insertCandidate(newCandidate);

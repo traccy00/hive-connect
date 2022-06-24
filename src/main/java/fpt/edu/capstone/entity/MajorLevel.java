@@ -20,7 +20,7 @@ public class MajorLevel {
     private long id;
 
     @Column(name = "field_id")
-    private long filedId;
+    private long fieldId;
 
     @Column(name = "major_id")
     private long majorId;
