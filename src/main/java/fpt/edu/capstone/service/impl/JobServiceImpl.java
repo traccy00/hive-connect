@@ -135,6 +135,11 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public Page<Job> getJobOfRecruiter(Pageable pageable, long recruiterId) {
+        return jobRepository.getAllByRecruiterId(pageable, recruiterId);
+    }
+
+    @Override
     public Job getJobById(long jobId) {
         return jobRepository.getById(jobId);
     }

@@ -1,10 +1,13 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.job.ApprovalJobRequest;
 import fpt.edu.capstone.dto.job.JobResponse;
-//import fpt.edu.capstone.entity.Career;
+import fpt.edu.capstone.entity.AppliedJob;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.JobHashtag;
+import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.repository.AppliedJobRepository;
 import fpt.edu.capstone.repository.JobRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
@@ -35,6 +38,10 @@ public class CandidateJobServiceImpl implements CandidateJobService {
 
     private final CompanyService companyService;
 
+    private final AppliedJobService appliedJobService;
+
+    private final AppliedJobRepository appliedJobRepository;
+
     @Override
     public ResponseDataPagination getNewestJob(Integer pageNo, Integer pageSize) {
         List<JobResponse> responseList = new ArrayList<>();
@@ -44,7 +51,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
 
         Page<Job> jobs = jobService.getNewestJobList(pageable);
         JobResponse jobResponse = new JobResponse();
-        if(jobs.hasContent()) {
+        if (jobs.hasContent()) {
             for (Job job : jobs) {
 //            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
 //            responseList.add(jobResponse);
@@ -102,7 +109,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
 
         Page<Job> jobs = jobService.getUrgentJobList(pageable);
         JobResponse jobResponse = new JobResponse();
-        if(jobs.hasContent()) {
+        if (jobs.hasContent()) {
             for (Job job : jobs) {
 //            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
 //            responseList.add(jobResponse);
@@ -160,7 +167,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
 
         Page<Job> jobs = jobService.getPopularJobList(pageable);
         JobResponse jobResponse = new JobResponse();
-        if(jobs.hasContent()) {
+        if (jobs.hasContent()) {
             for (Job job : jobs) {
 //            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
 //            responseList.add(jobResponse);
@@ -207,5 +214,22 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
+    }
+
+    @Override
+    public void approveJob(ApprovalJobRequest request) {
+        AppliedJob appliedJob = appliedJobService.getAppliedJobPendingApproval(request.getJobId(), request.getCandidateId());
+        if(appliedJob == null) {
+            throw new HiveConnectException("This CV does not exist");
+        }
+        if (appliedJob.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus()) &&
+                request.getApprovalStatus().equals("Approved")) {
+            appliedJob.setApprovalStatus(Enums.ApprovalStatus.APPROVED.getStatus());
+        } else if (appliedJob.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus()) &&
+                request.getApprovalStatus().equals("Reject")) {
+            appliedJob.setApprovalStatus(Enums.ApprovalStatus.REJECT.getStatus());
+        }
+        appliedJob.update();
+        appliedJobRepository.save(appliedJob);
     }
 }

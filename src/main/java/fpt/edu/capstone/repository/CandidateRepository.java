@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO public.candidate (user_id, gender, birth_date, search_history, country, full_name, address, social_link, avatar_url, wishlist_job_id_list, tap_history_id_list, is_need_job, experience_level, introduction) VALUES(?1, null, null, null, null, null, null, null, null, null, null, null, 0, null)", nativeQuery = true)
+    @Query(value = "INSERT INTO public.candidate (user_id, gender, birth_date, search_history, country, full_name, address, social_link, avatar_url, wishlist_job_id_list, tap_history_id_list, is_need_job, experience_level, introduction) VALUES(?1, true, null, null, null, null, null, null, null, null, null, true, 0, null)", nativeQuery = true)
     void insertCandidate(long userId);
 
 
