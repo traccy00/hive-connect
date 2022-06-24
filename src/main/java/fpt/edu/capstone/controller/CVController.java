@@ -6,14 +6,11 @@ import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
-import org.hibernate.sql.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -90,11 +87,11 @@ public class CVController {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No CV be found", null);
             }
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No cv be founded", null);
         }
     }
 
-    @GetMapping("/create-cv{candidateId}")
+    @GetMapping("/create-cv")
     public ResponseData createCV(@RequestParam long candidateId) {
         try {
             List<CV> cv = cvService.findCvByCandidateId(candidateId);
@@ -195,4 +192,53 @@ public class CVController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
+
+    @PutMapping("/update-updated-date-of-cv")
+    public ResponseData updateUpdatedDateOfCv(@RequestBody long id) {
+        try {
+            Optional<CV> cv = cvService.findCvById(id);
+            if(cv.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                cvService.updateUpdatedDateOfCV(id, nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update updated date success", nowDate);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"CV is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @PutMapping("/update-education")
+    public ResponseData updateEducationById(@RequestBody Education updateEducation) {
+        try {
+            Optional<Education> education = educationService.getEducationById(updateEducation.getId());
+            if(education.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                educationService.updateEducation(updateEducation);
+                cvService.updateUpdatedDateOfCV(updateEducation.getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update education success", updateEducation);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Education is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @PutMapping("/delete-education")
+    public ResponseData deleteEducationById(@RequestBody long id) {
+        try {
+            Optional<Education> education = educationService.getEducationById(id);
+            if(education.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                educationService.deleteEducation(education.get().getId());
+                cvService.updateUpdatedDateOfCV(education.get().getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update education success", education);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Education is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+
 }

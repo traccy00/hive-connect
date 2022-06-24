@@ -21,4 +21,6 @@ public interface CandidateService  {
 
     Optional<Candidate> findCandidateByUserId(long userId);
 
+    void updateCandidateInformation(Candidate updatedCandidate);
+
 }

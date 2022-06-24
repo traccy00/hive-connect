@@ -35,6 +35,11 @@ public class CVServiceImpl implements CVService {
         cvRepository.updateSummary(cvId, newSummary);
     }
 
+    @Override
+    public void updateUpdatedDateOfCV(long id, LocalDateTime updatedDate) {
+        cvRepository.updateUpdatedDateOfCV(id,updatedDate);
+    }
+
     public CV getCVByCandidateId(long candidateId) { //Nam
         return cvRepository.getByCandidateId(candidateId);
     }

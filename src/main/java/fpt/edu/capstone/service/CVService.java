@@ -18,4 +18,6 @@ public interface CVService {
     Optional<CV> findCvById(long id);
 
     void updateSummary(long cvId, String newSummary);
+
+    void updateUpdatedDateOfCV(long id, LocalDateTime updatedDate);
 }

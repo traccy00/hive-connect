@@ -50,4 +50,9 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateRepository.findCandidateByUserId(userId);
     }
 
+    @Override
+    public void updateCandidateInformation(Candidate updatedCandidate) {
+        candidateRepository.updateCandidateInformation(updatedCandidate.isGender(), updatedCandidate.getBirthDate(), updatedCandidate.getCountry(), updatedCandidate.getFullName(), updatedCandidate.getAddress(), updatedCandidate.getSocialLink(), updatedCandidate.getIntroduction(), updatedCandidate.getId());
+    }
+
 }
