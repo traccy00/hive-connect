@@ -2,6 +2,7 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.login.LoginRequest;
+import fpt.edu.capstone.dto.login.UserInforResponse;
 import fpt.edu.capstone.dto.register.ChangePasswordRequest;
 import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.entity.Candidate;
@@ -77,7 +78,16 @@ public class AuthenticationController {
 
             user.setLastLoginTime(LocalDateTime.now());
             userService.saveUser(user);
-            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS, user, token);
+
+            //Lưu data user infor để trả cho FE
+            UserInforResponse response = new UserInforResponse();
+            Optional<Candidate> candidate = candidateService.findCandidateByUserId(user.getId());
+            response.setUser(user);
+            if(user.getRoleId() == 3){
+                response.setCandidate(candidate.get());
+            } //xử lý trường hợp ==2 1
+
+            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS, response, token);
 
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
