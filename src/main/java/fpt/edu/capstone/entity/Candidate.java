@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -28,7 +29,7 @@ public class Candidate {
     private boolean gender;
 
     @Column(name = "birth_date")
-    private Date birthDate;
+    private LocalDateTime birthDate;
 
     @Column(name = "search_history")
     private  String searchHistory;
@@ -45,6 +46,9 @@ public class Candidate {
     @Column(name = "social_link")
     private String socialLink;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @Column(name = "wishlist_job_id_list")
     private String wishlistJobIdList;
 
@@ -55,11 +59,9 @@ public class Candidate {
     private boolean isNeedJob;
 
     @Column(name = "experience_level")
-    private String experienceLevel;
+    private long experienceLevel;
 
     @Column(name = "introduction")
     private String introduction;
-
-
 
 }

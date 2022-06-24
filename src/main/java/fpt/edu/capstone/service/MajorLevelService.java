@@ -8,6 +8,4 @@ public interface MajorLevelService {
     List<MajorLevel> getListMajorLevelByCvId(Long cvId);
 
     void insertNewMajorLevel(MajorLevel majorLevel);
-
-    MajorLevel getByCvId(long cvId);
 }

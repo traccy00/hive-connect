@@ -21,7 +21,7 @@ public class CommonController {
     @GetMapping("/get-list-field")
     public ResponseData getListCareer(){
         try {
-            List<Fields> careers = fieldsService.getAll();
+            List<Fields> careers = fieldsService.getAllField();
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, careers);
         } catch (Exception e){
             e.printStackTrace();

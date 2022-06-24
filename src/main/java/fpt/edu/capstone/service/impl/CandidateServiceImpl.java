@@ -6,6 +6,7 @@ import fpt.edu.capstone.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public void insertCandidate(Candidate candidate) {
-        candidateRepository.save(candidate);
+        candidateRepository.insertCandidate(candidate.getUserId(), candidate.isGender(), candidate.getBirthDate(), candidate.getSearchHistory() ,candidate.getCountry(), candidate.getFullName(), candidate.getAddress(), candidate.getSocialLink(), candidate.getAvatarUrl(), candidate.getWishlistJobIdList(), candidate.getTapHistoryIdList(), candidate.isNeedJob(), candidate.getExperienceLevel(), candidate.getIntroduction());
     }
 
     @Override
@@ -42,6 +43,11 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public Candidate getById(long id) {
         return candidateRepository.getById(id);
+    }
+
+    @Override
+    public Optional<Candidate> findCandidateByUserId(long userId) {
+        return candidateRepository.findCandidateByUserId(userId);
     }
 
 }

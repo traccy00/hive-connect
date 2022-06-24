@@ -146,19 +146,21 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobResponse> getListSuggestJobByCv(long candidateId) {
-        CV cv = cvService.getCVByCandidateId(candidateId);
+//        CV cv = cvService.getCVByCandidateId(candidateId);
 //cần lấy ra được chuyên môn của thằng candidate đó,
         //sau đó đề xuất những công việc theo lĩnh vực và chuyên môn đó
-        MajorLevel majorLevel = majorLevelService.getByCvId(cv.getId());
-        String majorName = majorService.getNameByMajorId(majorLevel.getMajorId());
+//        MajorLevel majorLevel = majorLevelService.getByCvId(cv.getId());
+        //getAllMajorByCvId()
+//        String majorName = majorService.getNameByMajorId(majorLevel.getMajorId());
         //khi đã có được name rồi thì cầm vào để query search like "java" trong bảng job
-        List <Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
-        List<JobResponse> responses = new ArrayList<>();
-
-        for (Job j : jobList){
-            JobResponse jr = modelMapper.map(j, JobResponse.class);
-            responses.add(jr);
-        }
-        return responses;
+//        List <Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
+//        List<JobResponse> responses = new ArrayList<>();
+//
+//        for (Job j : jobList){
+//            JobResponse jr = modelMapper.map(j, JobResponse.class);
+//            responses.add(jr);
+//        }
+//        return responses;
+        return null;
     }
 }
