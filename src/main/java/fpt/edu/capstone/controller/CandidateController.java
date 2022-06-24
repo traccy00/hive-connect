@@ -84,6 +84,21 @@ public class CandidateController {
         }
     }
 
+    @PutMapping("/update-candidate-base-information")
+    public ResponseData updateCandidateBaseInformation(@RequestBody Candidate updateCandidate) {
+        try {
+            Optional<Candidate> candidate = candidateService.findById(updateCandidate.getId());
+            if(candidate.isPresent()) {
+              candidateService.updateCandidateInformation(updateCandidate);
+              return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update successful", updateCandidate);
+            }
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", updateCandidate.getId());
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+
+    }
+
 
 }
 

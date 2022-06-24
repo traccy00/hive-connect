@@ -23,7 +23,7 @@ public class Major {
     private long fieldId;
 
     @Column(name = "major_name")
-    private String major_name;
+    private String majorName;
 
     @Column(name = "status")
     private String status;
