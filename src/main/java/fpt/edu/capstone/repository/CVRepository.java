@@ -14,6 +14,7 @@ public interface CVRepository extends JpaRepository<CV,Long> {
     List<CV> findCvByCandidateId(Long candidateId);
 
     CV getByCandidateId(long candidateId);
+
     @Query(value = "SELECT * FROM public.cv WHERE id=?1", nativeQuery = true)
     Optional<CV> findCvById(long id);
 

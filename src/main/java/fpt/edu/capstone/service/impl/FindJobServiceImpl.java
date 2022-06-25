@@ -6,6 +6,8 @@ import fpt.edu.capstone.dto.job.RecruiterPostResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.AppliedJobRepository;
+import fpt.edu.capstone.repository.CVRepository;
+import fpt.edu.capstone.repository.EducationRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import lombok.AllArgsConstructor;
@@ -34,6 +36,10 @@ public class FindJobServiceImpl implements FindJobService {
     private final UserService userService;
 
     private final WorkExperienceService workExperienceService;
+
+    private final CVRepository cvRepository;
+
+    private final EducationRepository educationRepository;
 
     @Override
     public void appliedJob(AppliedJobRequest request) throws Exception {
@@ -85,7 +91,9 @@ public class FindJobServiceImpl implements FindJobService {
             throw new HiveConnectException("Job doesn't exist");
         }
         List<AppliedJob> appliedJobs = appliedJobService.getCvAppliedJob(jobId, true);
-
+        if(appliedJobs.isEmpty()) {
+            throw new HiveConnectException("No CV applies");
+        }
         CvAppliedJobResponse responseObj = new CvAppliedJobResponse();
         responseObj.setJobId(jobId);
         for (AppliedJob appliedJob : appliedJobs) {
@@ -95,11 +103,32 @@ public class FindJobServiceImpl implements FindJobService {
 
             Users user = userService.findById(candidate.getUserId());
             responseObj.setAvatar(user.getAvatar());
+            if(appliedJob.isUploadCv()) {
+                //upload CV
+                responseObj.setCvUrl(appliedJob.getCvUploadUrl());
+            }
+            CV cv = cvRepository.getByCandidateId(appliedJob.getCandidateId());
+            if(cv == null) {
+                if(!appliedJob.isUploadCv()) {
+                    //Profile không tồn tại mà
+                    throw new HiveConnectException("Please try to contact administrator");
+                }
+            }
+            List<WorkExperience> workExperiencesOfCv = workExperienceService.getListWorkExperienceByCvId(cv.getId());
+            if(!workExperiencesOfCv.isEmpty()) {
+                List<String> experienceDesc = workExperiencesOfCv.stream().map(WorkExperience::getPosition).collect(Collectors.toList());
+                responseObj.setExperienceDesc(experienceDesc);
+            }
+            List<Education> educations = educationRepository.getListEducationByCvId(cv.getId());
+            if(!educations.isEmpty()) {
+                List<String> schools = educations.stream().map(Education::getSchool).collect(Collectors.toList());
+                responseObj.setEducations(schools);
+            }
+            responseObj.setCareerGoal(candidate.getIntroduction());
+            responseObj.setAddress(candidate.getAddress());
+//            responseObj.setExperienceYear();
 
-
-//            List<WorkExperience> workExperiencesOfCv = workExperienceService.getListWorkExperienceByCvId();
-//            List<String> experienceDesc = workExperiencesOfCv.stream().map(WorkExperience::getPosition).collect(Collectors.toList());
-//            responseObj.setExperienceDesc();
+            responseObj.setApprovalStatus(appliedJob.getApprovalStatus());
             responseList.add(responseObj);
         }
         return responseList;

@@ -13,11 +13,10 @@ public class CvAppliedJobResponse {
     private String avatar;
     private List<String> experienceDesc;
     private List<String> educations;
-    private String education;
     private String careerGoal;
     private String address;
-    private String experienceYear;
-    private String lastUpdateTime;
+//    private String experienceYear;
     private String approvalStatus;
+    private String cvUrl;
 }
 

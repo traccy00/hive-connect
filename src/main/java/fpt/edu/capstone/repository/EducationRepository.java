@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface EducationReposiroty extends JpaRepository<Education,Long> {
+public interface EducationRepository extends JpaRepository<Education,Long> {
 
     @Override
     Optional<Education> findById(Long aLong);
