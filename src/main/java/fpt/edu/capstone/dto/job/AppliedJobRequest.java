@@ -8,4 +8,5 @@ import lombok.Setter;
 public class AppliedJobRequest {
     private long jobId;
     private long candidateId;
+    private boolean isUploadCv;
 }
