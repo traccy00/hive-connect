@@ -113,10 +113,10 @@ public class JobController {
         try {
             findJobService.appliedJob(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
-                    request.toString());
+                   new ObjectMapper().writeValueAsString(request));
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 

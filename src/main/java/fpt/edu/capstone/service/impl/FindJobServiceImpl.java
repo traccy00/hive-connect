@@ -43,12 +43,23 @@ public class FindJobServiceImpl implements FindJobService {
         if (!candidateService.existsById(request.getCandidateId())) {
             throw new HiveConnectException("Candidate doesn't exist.");
         }
-        Object AppliedJobRequest = request;
         //if exists candidate account, candidate has already applied the job
         AppliedJob appliedJob1 = appliedJobService.getAppliedJobBefore(request.getCandidateId(), request.getJobId());
         if (appliedJob1 != null) {
             if (appliedJob1.isApplied()) {
-                appliedJob1.setApplied(false);
+                if(appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
+                    appliedJob1.setApplied(false);
+                } else if(appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+                    throw new HiveConnectException("This CV has been approved");
+                } else if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT.getStatus())) {
+                    Object AppliedJobRequest = request;
+                    AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
+                    appliedJob.setApplied(true);
+                    appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+                    appliedJob.create();
+                    appliedJobRepository.save(appliedJob);
+                    return;
+                }
             } else {
                 appliedJob1.setApplied(true);
             }
@@ -56,8 +67,10 @@ public class FindJobServiceImpl implements FindJobService {
             appliedJob1.update();
             appliedJobRepository.save(appliedJob1);
         } else {
+            Object AppliedJobRequest = request;
             AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
             appliedJob.setApplied(true);
+            appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
             appliedJob.create();
             appliedJobRepository.save(appliedJob);
         }
