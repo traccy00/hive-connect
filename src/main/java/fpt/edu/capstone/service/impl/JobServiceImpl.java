@@ -30,6 +30,8 @@ public class JobServiceImpl implements JobService {
 
     private final RecruiterService recruiterService;
 
+    private final CandidateService candidateService;
+
     private final JobRepository jobRepository;
 
     private final CVService cvService;
@@ -157,13 +159,14 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobResponse> getListSuggestJobByCv(long candidateId) {
+        if(!candidateService.existsById(candidateId)){
+            throw new HiveConnectException("Candidate does not exist");
+        }
         CV cv = cvService.getCVByCandidateId(candidateId);
-        //cần lấy ra được chuyên môn của thằng candidate đó,
-        //sau đó đề xuất những công việc theo lĩnh vực và chuyên môn đó
-        List <MajorLevel> majorLevel = majorLevelService.getListMajorLevelByCvId(cv.getId());
+        List <MajorLevel> majorLevel = majorLevelService.getListMajorLevelByCvId(cv.getId()); // lấy ra major của candidate để filter
         List<JobResponse> responses = new ArrayList<>();
         for (MajorLevel ml : majorLevel){
-            String majorName = majorService.getNameByMajorId(ml.getMajorId());
+            String majorName = majorService.getNameByMajorId(ml.getMajorId()).toLowerCase();
             List <Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
             for (Job j : jobList){
                 JobResponse jr = modelMapper.map(j, JobResponse.class);

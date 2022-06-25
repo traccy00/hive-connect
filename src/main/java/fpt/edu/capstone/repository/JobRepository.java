@@ -47,7 +47,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query("Select c from Job c where c.fieldId = :fieldId and c.isDeleted = 0")
     List<Job> getListJobByFieldId(@Param("fieldId") long fieldId);
 
-    @Query("select c from Job c where (c.jobDescription like lower(concat('%', :majorName ,'%'))) or (c.jobRequirement like  lower(concat('%', :majorName ,'%')))")
+    @Query("select c from Job c where c.jobDescription like lower(concat('%', :majorName ,'%')) or c.jobRequirement like  lower(concat('%', :majorName ,'%'))")
     List <Job> getListSuggestJobByCv(String majorName);
 
     Page<Job> getAllByRecruiterId(Pageable pageable, long recruiterId);
