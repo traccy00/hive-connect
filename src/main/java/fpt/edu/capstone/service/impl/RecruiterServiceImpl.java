@@ -13,6 +13,8 @@ import fpt.edu.capstone.service.RecruiterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class RecruiterServiceImpl implements RecruiterService {
 
@@ -66,5 +68,15 @@ public class RecruiterServiceImpl implements RecruiterService {
     @Override
     public Recruiter getRecruiterById(long id) {
         return recruiterRepository.getById(id);
+    }
+
+    @Override
+    public Optional<Recruiter> findRecruiterByUserId(long userId) {
+        return recruiterRepository.findById(userId);
+    }
+
+    @Override
+    public void insertRecruiter(long userId) {
+        recruiterRepository.insertRecruiter(userId);
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -51,5 +52,15 @@ public class AdminServiceImpl implements AdminService {
         responseDataPagination.setPagination(pagination);
 
         return responseDataPagination;
+    }
+
+    @Override
+    public Optional<Admin> findAdminByUserId(long userId) {
+        return adminRepository.findById(userId);
+    }
+
+    @Override
+    public void insertAdmin(long userId) {
+        adminRepository.insertAdmin(userId);
     }
 }

@@ -5,14 +5,10 @@ import fpt.edu.capstone.dto.login.LoginRequest;
 import fpt.edu.capstone.dto.login.UserInforResponse;
 import fpt.edu.capstone.dto.register.ChangePasswordRequest;
 import fpt.edu.capstone.dto.register.RegisterRequest;
-import fpt.edu.capstone.entity.Candidate;
-import fpt.edu.capstone.entity.ConfirmToken;
-import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.security.TokenUtils;
-import fpt.edu.capstone.service.CandidateService;
-import fpt.edu.capstone.service.ConfirmTokenService;
-import fpt.edu.capstone.service.UserService;
+import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.service.impl.SecurityUserServiceImpl;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -31,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -44,6 +41,10 @@ public class AuthenticationController {
     private final UserService userService;
 
     private final CandidateService candidateService;
+
+    private final RecruiterService recruiterService;
+
+    private final AdminService adminService;
 
     private final AuthenticationManager authenticationManager;
 
@@ -79,13 +80,21 @@ public class AuthenticationController {
             user.setLastLoginTime(LocalDateTime.now());
             userService.saveUser(user);
 
-            //Lưu data user infor để trả cho FE
             UserInforResponse response = new UserInforResponse();
-            Optional<Candidate> candidate = candidateService.findCandidateByUserId(user.getId());
             response.setUser(user);
+
             if(user.getRoleId() == 3){
+                Optional<Candidate> candidate = candidateService.findCandidateByUserId(user.getId());
                 response.setCandidate(candidate.get());
-            } //xử lý trường hợp ==2 1
+            }
+            if(user.getRoleId() == 2){
+                Optional<Recruiter> recruiter = recruiterService.findRecruiterByUserId(user.getId());
+                response.setRecruiter(recruiter.get());
+            }
+            if(user.getRoleId() == 1){
+                Optional<Admin> admin = adminService.findAdminByUserId(user.getId());
+                response.setAdmin(admin.get());
+            }
 
             return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS, response, token);
 
@@ -108,6 +117,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     @Operation(summary = "register user")
+    @Transactional(rollbackOn = HiveConnectException.class)
     public ResponseDataUser register(@RequestBody RegisterRequest request) throws Exception {
         try {
             String username = request.getUsername();
@@ -123,7 +133,12 @@ public class AuthenticationController {
             if(user.getRoleId() == 3){
                 candidateService.insertCandidate(user.getId());
             }
-            //Handle case = 2 1
+            if(user.getRoleId() == 2){
+                recruiterService.insertRecruiter(user.getId());
+            }
+            if(user.getRoleId() == 1){
+                adminService.insertAdmin(user.getId());
+            }
             final UserDetails userDetails = securityUserService.loadUserByUsername(username);
 
             //region: Handle verify email
