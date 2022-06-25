@@ -12,6 +12,6 @@ public interface AppliedJobService {
 
     AppliedJob getAppliedJobBefore(long candidateId, long jobId);
 
-    List<AppliedJob> getListCandidateAppliedJob(long jobId, boolean isApplied);
+    List<AppliedJob> getCvAppliedJob(long jobId, boolean isApplied);
 
 }

@@ -120,14 +120,16 @@ public class JobController {
         }
     }
 
-    @GetMapping("/list-candidate-applied-job")
+    //Recruiter: Get list CV applied a job
+    @GetMapping("/list-cv-applied-a-job")
     public ResponseData getListCandidateAppliedJob(@RequestParam long jobId) {
         try {
-            List<CandidateAppliedJobResponse> listCandidateAppliedJob = findJobService.getCandidateAppliedJobList(jobId);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listCandidateAppliedJob);
+            List<CvAppliedJobResponse> listCandidateAppliedJob = findJobService.getCvListAppliedJob(jobId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                    ResponseMessageConstants.SUCCESS, listCandidateAppliedJob);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 
@@ -259,13 +261,8 @@ public class JobController {
             ResponseDataPagination pagination = recruiterJobService.getJobOfRecruiter(pageNo, pageSize, recruiterId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         }catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
-    }
-
-    @GetMapping("/get-list-applied-CV by job")
-    public ResponseData getListAppliedCVByJob() {
-        return null;
     }
 }

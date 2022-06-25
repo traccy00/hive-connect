@@ -1,11 +1,9 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.job.AppliedJobRequest;
-import fpt.edu.capstone.dto.job.CandidateAppliedJobResponse;
+import fpt.edu.capstone.dto.job.CvAppliedJobResponse;
 import fpt.edu.capstone.dto.job.RecruiterPostResponse;
-import fpt.edu.capstone.entity.AppliedJob;
-import fpt.edu.capstone.entity.Candidate;
-import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.AppliedJobRepository;
 import fpt.edu.capstone.service.*;
@@ -16,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -32,6 +32,8 @@ public class FindJobServiceImpl implements FindJobService {
     private final JobService jobService;
 
     private final UserService userService;
+
+    private final WorkExperienceService workExperienceService;
 
     @Override
     public void appliedJob(AppliedJobRequest request) throws Exception {
@@ -62,24 +64,32 @@ public class FindJobServiceImpl implements FindJobService {
     }
 
     @Override
-    public List<CandidateAppliedJobResponse> getCandidateAppliedJobList(long jobId) {
-        List<CandidateAppliedJobResponse> responseList = new ArrayList<>();
-        CandidateAppliedJobResponse responseObj = new CandidateAppliedJobResponse();
-        List<AppliedJob> appliedJobs = null;//appliedJobService.getListCandidateAppliedJob(jobId);
+    public List<CvAppliedJobResponse> getCvListAppliedJob(long jobId) {
+        List<CvAppliedJobResponse> responseList = new ArrayList<>();
+
+        Optional<Job> job = jobService.findById(jobId);
+        if(!job.isPresent()) {
+            throw new HiveConnectException("Job doesn't exist");
+        }
+        List<AppliedJob> appliedJobs = appliedJobService.getCvAppliedJob(jobId, true);
+
+        CvAppliedJobResponse responseObj = new CvAppliedJobResponse();
         responseObj.setJobId(jobId);
         for (AppliedJob appliedJob : appliedJobs) {
             Candidate candidate = candidateService.getById(appliedJob.getCandidateId());
             responseObj.setCandidateId(appliedJob.getCandidateId());
             responseObj.setCandidateName(candidate.getFullName());
+
             Users user = userService.findById(candidate.getUserId());
             responseObj.setAvatar(user.getAvatar());
-//            responseObj.setExperienceYear();
-//            responseObj.setCareerGoal();
+
+
+//            List<WorkExperience> workExperiencesOfCv = workExperienceService.getListWorkExperienceByCvId();
+//            List<String> experienceDesc = workExperiencesOfCv.stream().map(WorkExperience::getPosition).collect(Collectors.toList());
+//            responseObj.setExperienceDesc();
             responseList.add(responseObj);
         }
-        //responseObj.setRowCount();
-
-        return null;
+        return responseList;
     }
 
     @Override

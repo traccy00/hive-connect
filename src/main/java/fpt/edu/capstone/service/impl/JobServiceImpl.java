@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -137,6 +138,11 @@ public class JobServiceImpl implements JobService {
     @Override
     public Page<Job> getJobOfRecruiter(Pageable pageable, long recruiterId) {
         return jobRepository.getAllByRecruiterId(pageable, recruiterId);
+    }
+
+    @Override
+    public Optional<Job> findById(long id) {
+        return jobRepository.findById(id);
     }
 
     @Override
