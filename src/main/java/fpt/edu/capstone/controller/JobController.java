@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/job")
@@ -75,7 +76,7 @@ public class JobController {
     @GetMapping("/job-detail/{id}")
     public ResponseData getJobDetail(@PathVariable("id") long jobId){
         try {
-            Job job = jobService.getJobById(jobId);
+            Optional<Job> job = jobService.findById(jobId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), job);
         }catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);

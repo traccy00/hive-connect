@@ -144,7 +144,11 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Optional<Job> findById(long id) {
-        return jobRepository.findById(id);
+        Optional<Job> job = jobRepository.findById(id);
+        if (job.isPresent()) {
+            return job;
+        }
+        throw new HiveConnectException("Job doesn't exist");
     }
 
     @Override
