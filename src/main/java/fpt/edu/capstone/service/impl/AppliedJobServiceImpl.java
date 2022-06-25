@@ -33,7 +33,7 @@ public class AppliedJobServiceImpl implements AppliedJobService {
     }
 
     @Override
-    public List<AppliedJob> getListCandidateAppliedJob(long jobId, boolean isApplied) {
-        return appliedJobRepository.getListCandidateAppliedJob(jobId, isApplied);
+    public List<AppliedJob> getCvAppliedJob(long jobId, boolean isApplied) {
+        return appliedJobRepository.getCvAppliedJob(jobId, isApplied);
     }
 }

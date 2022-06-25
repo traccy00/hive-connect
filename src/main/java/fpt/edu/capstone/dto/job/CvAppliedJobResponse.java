@@ -6,16 +6,18 @@ import lombok.Setter;
 import java.util.List;
 @Getter
 @Setter
-public class CandidateAppliedJobResponse {
+public class CvAppliedJobResponse {
     private long jobId;
     private long candidateId;
     private String candidateName;
     private String avatar;
-    private String experienceYear;
-    private List<String> experienceDescription;
+    private List<String> experienceDesc;
+    private List<String> educations;
     private String education;
     private String careerGoal;
-    List<CandidateAppliedInfor> list;
-    private long rowCount;
+    private String address;
+    private String experienceYear;
+    private String lastUpdateTime;
+    private String approvalStatus;
 }
 

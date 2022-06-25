@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface JobRepository extends JpaRepository<Job, Long> {
 
@@ -50,4 +51,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List <Job> getListSuggestJobByCv(String majorName);
 
     Page<Job> getAllByRecruiterId(Pageable pageable, long recruiterId);
+
+    Optional<Job> findById(long id);
 }

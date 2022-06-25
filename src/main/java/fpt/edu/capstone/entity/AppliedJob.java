@@ -34,4 +34,10 @@ public class AppliedJob extends BaseEntity {
     @Length(max = 15)
     @Column(name = "approval_status")
     private String approvalStatus;
+
+    @Column(name = "is_upload_cv")
+    private boolean isUploadCv;
+
+    @Column(name = "cv_upload_url")
+    private String cvUploadUrl;
 }
