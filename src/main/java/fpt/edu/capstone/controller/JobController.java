@@ -1,11 +1,13 @@
 package fpt.edu.capstone.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
 import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.service.CandidateJobService;
 import fpt.edu.capstone.service.FindJobService;
 import fpt.edu.capstone.service.JobService;
+import fpt.edu.capstone.service.RecruiterJobService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
@@ -30,6 +32,8 @@ public class JobController {
     private final FindJobService findJobService;
 
     private final CandidateJobService candidateJobService;
+
+    private final RecruiterJobService recruiterJobService;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -233,5 +237,35 @@ public class JobController {
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
+    }
+
+    @PutMapping("/approve-job")
+    public ResponseData approveJob(@RequestBody ApprovalJobRequest approvalJobRequest) {
+        try {
+            candidateJobService.approveJob(approvalJobRequest);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
+                    new ObjectMapper().writeValueAsString(approvalJobRequest));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-jobs-of-recruiter")
+    public ResponseData getJobListOfRecruiter(@RequestParam(defaultValue = "1") Integer pageNo,
+                                              @RequestParam(defaultValue = "10") Integer pageSize,
+                                              @RequestParam("recruiterId") long recruiterId) {
+        try {
+            ResponseDataPagination pagination = recruiterJobService.getJobOfRecruiter(pageNo, pageSize, recruiterId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
+        }catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
+
+    @GetMapping("/get-list-applied-CV by job")
+    public ResponseData getListAppliedCVByJob() {
+        return null;
     }
 }

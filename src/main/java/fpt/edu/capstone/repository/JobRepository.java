@@ -48,4 +48,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query("select c from Job c where (c.jobDescription like lower(concat('%', :majorName ,'%'))) or (c.jobRequirement like  lower(concat('%', :majorName ,'%')))")
     List <Job> getListSuggestJobByCv(String majorName);
+
+    Page<Job> getAllByRecruiterId(Pageable pageable, long recruiterId);
 }

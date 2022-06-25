@@ -36,4 +36,6 @@ public interface JobService {
     Page<Job> getPopularJobList(Pageable pageable);
 
     Job getJobById(long jobId);
+
+    Page<Job> getJobOfRecruiter(Pageable pageable, long recruiterId);
 }

@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface AppliedJobService {
 
-    boolean appliedJobBefore(long candidateId, long jobId);
+    boolean existsAppliedJob(long candidateId, long jobId);
+
+    AppliedJob getAppliedJobPendingApproval(long jobId, long candidateId);
 
     AppliedJob getAppliedJobBefore(long candidateId, long jobId);
 
