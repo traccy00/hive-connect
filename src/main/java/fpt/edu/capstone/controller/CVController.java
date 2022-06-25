@@ -1,5 +1,6 @@
 package fpt.edu.capstone.controller;
 
+import com.sendgrid.helpers.mail.objects.Email;
 import fpt.edu.capstone.dto.CV.CVResponse;
 import fpt.edu.capstone.dto.CV.UpdateCVSummaryRequest;
 import fpt.edu.capstone.entity.*;
@@ -224,6 +225,20 @@ public class CVController {
         }
     }
 
+    @PostMapping("/insert-major-level")
+    public ResponseData insertMajorLevel(@RequestBody  MajorLevel newMajorLevel) {
+        try{
+            Optional<CV> cv = cvService.findCvById(newMajorLevel.getCvId());
+            if(!cv.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+            }
+            majorLevelService.insertNewMajorLevel(newMajorLevel);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Major Level Success", newMajorLevel);
+
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ex.getMessage(), null);
+        }
+    }
     @PutMapping("/delete-education")
     public ResponseData deleteEducationById(@RequestBody long id) {
         try {
