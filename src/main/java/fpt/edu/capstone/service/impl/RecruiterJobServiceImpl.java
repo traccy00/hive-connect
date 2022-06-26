@@ -45,9 +45,9 @@ public class RecruiterJobServiceImpl implements RecruiterJobService {
             throw new HiveConnectException("Recruiter doesn't exist");
         }
         Page<Job> jobsListOfRecruiter = jobService.getJobOfRecruiter(pageable, recruiterId);
-        JobForRecruiterResponse response = new JobForRecruiterResponse();
         if(jobsListOfRecruiter.hasContent()) {
             for(Job job : jobsListOfRecruiter) {
+                JobForRecruiterResponse response = new JobForRecruiterResponse();
 //                response = modelMapper.map(job, JobForRecruiterResponse.class);
                 response.setJobId(job.getId());
                 response.setJobName(job.getJobName());
