@@ -50,9 +50,9 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
         Page<Job> jobs = jobService.getNewestJobList(pageable);
-        JobResponse jobResponse = new JobResponse();
         if (jobs.hasContent()) {
             for (Job job : jobs) {
+                JobResponse jobResponse = new JobResponse();
 //            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
 //            responseList.add(jobResponse);
                 jobResponse.setJobId(job.getId());
@@ -108,9 +108,9 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
         Page<Job> jobs = jobService.getUrgentJobList(pageable);
-        JobResponse jobResponse = new JobResponse();
         if (jobs.hasContent()) {
             for (Job job : jobs) {
+                JobResponse jobResponse = new JobResponse();
 //            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
 //            responseList.add(jobResponse);
                 jobResponse.setJobId(job.getId());
@@ -166,9 +166,9 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
         Page<Job> jobs = jobService.getPopularJobList(pageable);
-        JobResponse jobResponse = new JobResponse();
         if (jobs.hasContent()) {
             for (Job job : jobs) {
+                JobResponse jobResponse = new JobResponse();
 //            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
 //            responseList.add(jobResponse);
                 jobResponse.setJobId(job.getId());
