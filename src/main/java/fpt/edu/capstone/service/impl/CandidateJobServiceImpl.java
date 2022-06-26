@@ -1,11 +1,9 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.job.ApprovalJobRequest;
+import fpt.edu.capstone.dto.job.JobDetailResponse;
 import fpt.edu.capstone.dto.job.JobResponse;
-import fpt.edu.capstone.entity.AppliedJob;
-import fpt.edu.capstone.entity.Company;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.JobHashtag;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.AppliedJobRepository;
 import fpt.edu.capstone.repository.JobRepository;
@@ -41,6 +39,8 @@ public class CandidateJobServiceImpl implements CandidateJobService {
     private final AppliedJobService appliedJobService;
 
     private final AppliedJobRepository appliedJobRepository;
+
+    private final FieldsService fieldsService;
 
     @Override
     public ResponseDataPagination getNewestJob(Integer pageNo, Integer pageSize) {
@@ -231,5 +231,44 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         }
         appliedJob.update();
         appliedJobRepository.save(appliedJob);
+    }
+
+    @Override
+    public JobDetailResponse getJobDetail(long jobId) {
+        JobDetailResponse detail = new JobDetailResponse();
+        Job job = jobService.getJobById(jobId);
+
+        Company company = companyService.getCompanyById(job.getCompanyId());
+        Fields fields = fieldsService.getById(job.getFieldId());
+        detail.setJobId(jobId);
+        detail.setRecruiterId(job.getRecruiterId());
+        detail.setCompanyName(company.getName());
+        detail.setJobName(job.getJobName());
+        detail.setFromSalary(job.getFromSalary());
+        detail.setToSalary(job.getToSalary());
+        detail.setNumberRecruits(job.getNumberRecruits());
+        detail.setWorkForm(job.getWorkForm());
+        detail.setRank(job.getRank());
+        detail.setGender(job.isGender());
+        detail.setExperience(job.getExperience());
+        detail.setWorkPlace(job.getWorkPlace());
+        detail.setJobDescription(job.getJobDescription());
+        detail.setJobRequirement(job.getJobRequirement());
+        detail.setStartDate(job.getStartDate());
+        detail.setEndDate(job.getEndDate());
+        detail.setBenifit(job.getBenifit());
+        detail.setFieldId(job.getFieldId());
+        detail.setFieldName(fields.getFieldName());
+        detail.setCreatedAt(job.getCreatedAt());
+        detail.setUpdatedAt(job.getUpdatedAt());
+        detail.setIsDeleted(job.getIsDeleted());
+        detail.setPopularJob(job.isPopularJob());
+        detail.setNewJob(job.isNewJob());
+        detail.setUrgentJob(job.isUrgentJob());
+        detail.setWeekday(job.getWeekday());
+        detail.setCountryId(job.getCountryId());
+        detail.setCompanyId(job.getCompanyId());
+        detail.setCompany(company);
+        return detail;
     }
 }

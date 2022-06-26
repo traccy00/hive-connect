@@ -13,14 +13,21 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class FieldsServiceImpl implements FieldsService {
+
     private final FieldsReposiroty fieldsReposiroty;
+
     @Override
-    public List<Fields> getAllField(){
+    public List<Fields> getAllField() {
         return fieldsReposiroty.getAllField();
     }
 
     @Override
     public boolean existById(long id) {
         return fieldsReposiroty.existsById(id);
+    }
+
+    @Override
+    public Fields getById(long id) {
+        return fieldsReposiroty.getById(id);
     }
 }

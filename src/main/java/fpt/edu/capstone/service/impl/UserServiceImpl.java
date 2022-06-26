@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     public void registerUser(RegisterRequest request) {
         Optional<Role> optionalRole = roleService.findRoleById(request.getRoleId());
         if (!optionalRole.isPresent()) {
-            throw new HiveConnectException("Role: "+optionalRole.get()+ "not found");
+            throw new HiveConnectException("Role: "+ request.getRoleId() + "not found");
         }
         //check exist email username
         Optional <Users> checkExisted = userRepository.checkExistedUserByUsernameOrEmail(request.getUsername(),request.getEmail());
