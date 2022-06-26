@@ -31,7 +31,7 @@ public class CreateJobRequest {
     private boolean gender;
     private String jobDescription;
     private String jobRequirement;
-    private String benifit;
+    private String benefit;
     private String weekday;
     private boolean isPopularJob;
     private boolean isNewJob;
