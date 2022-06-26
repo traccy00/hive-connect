@@ -18,7 +18,7 @@ public interface JobService {
                                                String jobName, long fromSalary, long toSalary, String rank,
                                                String workForm, String workPlace);
 
-//    void updateJob(UpdateJobRequest request);
+    void updateJob(UpdateJobRequest request);
 
 //    void deleteJob(long jobId);
 

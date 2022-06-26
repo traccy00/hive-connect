@@ -9,22 +9,25 @@ import java.time.LocalDateTime;
 @Setter
 public class UpdateJobRequest {
     private long jobId;
-    private long categoryId;
-    private String companyName;
+    private long fieldId;
+    private long countryId;
     private String jobName;
-    private String jobDescription;
+    private String workPlace;
+    private String workForm;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private long fromSalary;
     private long toSalary;
     private long numberRecruits;
     private String rank;
-    private String workForm;
     private String experience;
     private boolean gender;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private String workPlace;
-    private long jobViewCount;
-    private String techStackRequire;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String jobDescription;
+    private String jobRequirement;
+    private String benefit;
+    private String weekday;
+    //ADMIN mới được quyền chỉnh sửa những trường này
+//    private boolean isPopularJob;
+//    private boolean isNewJob;
+//    private boolean isUrgentJob;
 }

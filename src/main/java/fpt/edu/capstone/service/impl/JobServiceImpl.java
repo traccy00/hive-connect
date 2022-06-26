@@ -90,18 +90,18 @@ public class JobServiceImpl implements JobService {
         return responseDataPagination;
     }
 
-//    @Override
-//    //TODO : fix insert for update function
-//    public void updateJob(UpdateJobRequest request) {
-//        RecruiterPost recruiterPost = jobRepository.getById(request.getJobId());
-//        if(recruiterPost == null){
-//            throw new HiveConnectException("Job does not exist");
-//        }
-//        Object UpdateJobRequest = request;
-//        recruiterPost = modelMapper.map(UpdateJobRequest, RecruiterPost.class);
-//        recruiterPost.update();
-//        jobRepository.saveAndFlush(recruiterPost);
-//    }
+    @Override
+    //TODO : fix insert for update function
+    public void updateJob(UpdateJobRequest request) {
+        Job job = jobRepository.getById(request.getJobId());
+        if(job == null){
+            throw new HiveConnectException("Job does not exist");
+        }
+        Object UpdateJobRequest = request;
+        job = modelMapper.map(UpdateJobRequest, Job.class);
+        job.update();
+        jobRepository.saveAndFlush(job);
+    }
 
 //    @Override
 //    public void deleteJob(long jobId) {

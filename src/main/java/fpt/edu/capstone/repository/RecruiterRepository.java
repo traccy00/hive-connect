@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Repository
 public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
@@ -20,4 +21,6 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
             "position,linkedin_url,business_license, user_id, created_at,updated_at,is_deleted,phone_number, company_name, company_address) " +
             "VALUES(0,null,false,false,true,null,null,null,?1,null,null,false,null,null,null)", nativeQuery = true)
     void insertRecruiter(long userId);
+
+    Optional <Recruiter> findByUserId(long userId);
 }

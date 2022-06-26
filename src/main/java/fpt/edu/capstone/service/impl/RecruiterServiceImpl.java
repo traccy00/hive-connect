@@ -72,7 +72,7 @@ public class RecruiterServiceImpl implements RecruiterService {
 
     @Override
     public Optional<Recruiter> findRecruiterByUserId(long userId) {
-        return recruiterRepository.findById(userId);
+        return recruiterRepository.findByUserId(userId);
     }
 
     @Override

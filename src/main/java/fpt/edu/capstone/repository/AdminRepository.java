@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 public interface AdminRepository extends JpaRepository<Admin, Long> {
 
@@ -18,4 +19,6 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     @Transactional
     @Query(value = "INSERT INTO public.admin (user_id, full_name) VALUES(?1, null)", nativeQuery = true)
     void insertAdmin(long userId);
+
+    Optional <Admin> findByUserId(long userId);
 }
