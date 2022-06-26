@@ -11,8 +11,8 @@ import javax.transaction.Transactional;
 @Repository
 public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
 
-    @Query(value = "select * from recruiter r where r.user_id = ? and is_deleted = false", nativeQuery = true)
-    Recruiter getRecruiterProfile(long userId);
+    @Query(value = "select * from recruiter r where r.user_id = ?", nativeQuery = true)
+    Recruiter getRecruiterProfileByUserId(long userId);
 
     @Modifying
     @Transactional

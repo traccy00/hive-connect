@@ -26,7 +26,7 @@ public class RecruiterController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), recruiterProfile);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 

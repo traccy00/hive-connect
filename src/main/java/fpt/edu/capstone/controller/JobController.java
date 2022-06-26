@@ -133,16 +133,16 @@ public class JobController {
         }
     }
 
-    @GetMapping("/get-recruiter-posts")
-    public ResponseData getRecruiterPosts(@RequestParam long recruiterId) {
-        try {
-            List<RecruiterPostResponse> responseList = findJobService.getRecruiterPosts(recruiterId);
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
-        }
-    }
+//    @GetMapping("/get-recruiter-posts")
+//    public ResponseData getRecruiterPosts(@RequestParam long recruiterId) {
+//        try {
+//            List<RecruiterPostResponse> responseList = findJobService.getRecruiterPosts(recruiterId);
+//            return null;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+//        }
+//    }
 
     @GetMapping("/popular-job")
     public ResponseData getPopularJob(@RequestParam(defaultValue = "1") Integer pageNo,

@@ -1,9 +1,14 @@
 package fpt.edu.capstone.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "recruiter")
+@Getter
+@Setter
 public class Recruiter {
 
     @Id
@@ -44,100 +49,6 @@ public class Recruiter {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getCompanyId() {
-        return companyId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public void setCompanyId(long companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public boolean isVerifyAccount() {
-        return verifyAccount;
-    }
-
-    public void setVerifyAccount(boolean verifyAccount) {
-        this.verifyAccount = verifyAccount;
-    }
-
-    public boolean isVerifyPhoneNumber() {
-        return verifyPhoneNumber;
-    }
-
-    public void setVerifyPhoneNumber(boolean verifyPhoneNumber) {
-        this.verifyPhoneNumber = verifyPhoneNumber;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getLinkedInAccount() {
-        return linkedInAccount;
-    }
-
-    public void setLinkedInAccount(String linkedInAccount) {
-        this.linkedInAccount = linkedInAccount;
-    }
-
-    public String getBusinessLicense() {
-        return businessLicense;
-    }
-
-    public void setBusinessLicense(String businessLicense) {
-        this.businessLicense = businessLicense;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 }
