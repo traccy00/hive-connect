@@ -70,7 +70,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setJobName(job.getJobName());
                 jobResponse.setJobDescription(job.getJobDescription());
                 jobResponse.setJobRequirement(job.getJobRequirement());
-                jobResponse.setBenefit(job.getBenifit());
+                jobResponse.setBenefit(job.getBenefit());
                 jobResponse.setFromSalary(job.getFromSalary());
                 jobResponse.setToSalary(job.getToSalary());
                 jobResponse.setNumberRecruits(job.getNumberRecruits());
@@ -128,7 +128,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setJobName(job.getJobName());
                 jobResponse.setJobDescription(job.getJobDescription());
                 jobResponse.setJobRequirement(job.getJobRequirement());
-                jobResponse.setBenefit(job.getBenifit());
+                jobResponse.setBenefit(job.getBenefit());
                 jobResponse.setFromSalary(job.getFromSalary());
                 jobResponse.setToSalary(job.getToSalary());
                 jobResponse.setNumberRecruits(job.getNumberRecruits());
@@ -186,7 +186,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setJobName(job.getJobName());
                 jobResponse.setJobDescription(job.getJobDescription());
                 jobResponse.setJobRequirement(job.getJobRequirement());
-                jobResponse.setBenefit(job.getBenifit());
+                jobResponse.setBenefit(job.getBenefit());
                 jobResponse.setFromSalary(job.getFromSalary());
                 jobResponse.setToSalary(job.getToSalary());
                 jobResponse.setNumberRecruits(job.getNumberRecruits());

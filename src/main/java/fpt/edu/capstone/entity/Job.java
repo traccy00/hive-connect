@@ -62,8 +62,8 @@ public class Job extends BaseEntity {
     @Column(name = "job_requirement")
     private String jobRequirement;
 
-    @Column(name = "benifit")
-    private String benifit;
+    @Column(name = "benefit")
+    private String benefit;
 
     @Column(name = "field_id")
     private long fieldId;
