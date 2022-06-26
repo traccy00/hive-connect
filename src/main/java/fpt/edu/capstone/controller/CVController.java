@@ -103,9 +103,8 @@ public class CVController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
         LocalDateTime nowDate = LocalDateTime.now();
-        cvService.insertCv(candidateId, 0, "", nowDate, nowDate);
-        List<CV> cvs = cvService.findCvByCandidateId(candidateId);
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create CV successful", cvs.get(0));
+        CV cv = cvService.insertCv(candidateId, 0, "", nowDate, nowDate);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create CV successful", cv);
     }
 
     @PostMapping("/insert-education")
@@ -114,8 +113,8 @@ public class CVController {
         if(!cv.isPresent()) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
         }
-        educationService.insertEducation(newEdudation.getCvId(), newEdudation.getSchool(), newEdudation.getMajor(), newEdudation.getStartDate(), newEdudation.getEndDate(), newEdudation.getDescription(), newEdudation.isStudying());
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Education Success", newEdudation);
+        Education ed =  educationService.insertEducation(newEdudation);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Education Success", ed);
     }
 
     @PostMapping("/insert-work-exp")
@@ -124,8 +123,8 @@ public class CVController {
         if(!cv.isPresent()) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
         }
-        workExperienceService.insertWorkExperience(newWorkExperience.getCvId(), newWorkExperience.getCompanyName(), newWorkExperience.getPosition(), newWorkExperience.getStartDate(), newWorkExperience.getEndDate(), newWorkExperience.getDescription());
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Work Experience Success", newWorkExperience);
+        WorkExperience workExperience =  workExperienceService.insertWorkExperience(newWorkExperience);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Work Experience Success", workExperience);
     }
 
     @PostMapping("/insert-language")
@@ -134,18 +133,18 @@ public class CVController {
         if(!cv.isPresent()) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
         }
-        languageService.insertLanguage(newLanguage.getLanguage(), newLanguage.getLevel(), newLanguage.getCvId());
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create New Language Success", newLanguage);
+        Language language = languageService.insertLanguage(newLanguage);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create New Language Success", language);
     }
 
-    @PostMapping("/insert-skill")
-    public ResponseData insertSkill(@RequestBody OtherSkill newOtherSkill) {
+    @PostMapping("/insert-other-skill")
+    public ResponseData insertOtherSkill(@RequestBody OtherSkill newOtherSkill) {
         Optional<CV> cv = cvService.findCvById(newOtherSkill.getCvId());
         if(!cv.isPresent()) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
         }
-        otherSkillService.insertOtherSkill(newOtherSkill.getSkillName(), newOtherSkill.getCvId(), newOtherSkill.getLevel());
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Other Skill Success", newOtherSkill);
+        OtherSkill otherSkill = otherSkillService.insertOtherSkill(newOtherSkill);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Other Skill Success", otherSkill);
     }
 
     @PostMapping("/insert-certificate")
@@ -154,8 +153,8 @@ public class CVController {
         if(!cv.isPresent()) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
         }
-        certificateService.insertCertificate(newCertificate.getCertificateName(), newCertificate.getCertificateUrl(), 0, newCertificate.getCvId());
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Certificate Success", newCertificate);
+        Certificate certificate = certificateService.insertCertificate(newCertificate);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Certificate Success", certificate);
     }
 
     @GetMapping("/get-all-field")
@@ -177,6 +176,21 @@ public class CVController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Success", majors);
         } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/insert-major-level")
+    public ResponseData insertMajorLevel(@RequestBody  MajorLevel newMajorLevel) {
+        try{
+            Optional<CV> cv = cvService.findCvById(newMajorLevel.getCvId());
+            if(!cv.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+            }
+            MajorLevel majorLevel = majorLevelService.insertNewMajorLevel(newMajorLevel);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Major Level Success", majorLevel);
+
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ex.getMessage(), null);
         }
     }
 
@@ -225,35 +239,186 @@ public class CVController {
         }
     }
 
-    @PostMapping("/insert-major-level")
-    public ResponseData insertMajorLevel(@RequestBody  MajorLevel newMajorLevel) {
-        try{
-            Optional<CV> cv = cvService.findCvById(newMajorLevel.getCvId());
-            if(!cv.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
-            }
-            majorLevelService.insertNewMajorLevel(newMajorLevel);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Major Level Success", newMajorLevel);
-
-        }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ex.getMessage(), null);
-        }
-    }
-    @PutMapping("/delete-education")
-    public ResponseData deleteEducationById(@RequestBody long id) {
+    @DeleteMapping("/delete-education")
+    public ResponseData deleteEducationById(@RequestParam(value = "id") long id) {
         try {
             Optional<Education> education = educationService.getEducationById(id);
             if(education.isPresent()) {
                 LocalDateTime nowDate = LocalDateTime.now();
                 educationService.deleteEducation(education.get().getId());
                 cvService.updateUpdatedDateOfCV(education.get().getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update education success", education);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete education success", education);
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Education is not exist", null);
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
+
+    @PutMapping("/update-work-experience")
+    public ResponseData updateWorkExperienceById(@RequestBody WorkExperience updateWorkExperience) {
+        try {
+            Optional<WorkExperience> workExperience = workExperienceService.getWorkExperienceById(updateWorkExperience.getId());
+            if(workExperience.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                workExperienceService.updateWordExperience(updateWorkExperience);
+                cvService.updateUpdatedDateOfCV(updateWorkExperience.getCvId()    , nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update work experience success", updateWorkExperience);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Work experience is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @DeleteMapping("/delete-work-experience")
+    public ResponseData deleteWorkExperienceById(@RequestParam(value = "id") long id) {
+        try {
+            Optional<WorkExperience> workExperience = workExperienceService.getWorkExperienceById(id);
+            if(workExperience.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                workExperienceService.deleteWordExperience(workExperience.get());
+                cvService.updateUpdatedDateOfCV(workExperience.get().getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete work experience success", workExperience);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Work experience is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    //Certificate
+    @PutMapping("/update-certificate")
+    public ResponseData updateCertidicate(@RequestBody Certificate updateCertificate) {
+        try {
+            Optional<Certificate> certificate = certificateService.getCertificateById(updateCertificate.getId());
+            if(certificate.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                certificateService.updateService(updateCertificate);
+                cvService.updateUpdatedDateOfCV(updateCertificate.getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update certificate success", updateCertificate);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Certificate is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @DeleteMapping("/delete-certificate")
+    public ResponseData deleteCertificateById(@RequestParam(value = "id") long id) {
+        try {
+            Optional<Certificate> certificate = certificateService.getCertificateById(id);
+            if(certificate.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                certificateService.deleteCertificate(certificate.get());
+                cvService.updateUpdatedDateOfCV(certificate.get().getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete certificate success", certificate.get());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Certificate is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    //Language
+    @PutMapping("/update-language")
+    public ResponseData updateLanguage(@RequestBody Language updateLanguage) {
+        try {
+            Optional<Language> language = languageService.getLanguageById(updateLanguage.getId());
+            if(language.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                languageService.updateLanguage(updateLanguage);
+                cvService.updateUpdatedDateOfCV(updateLanguage.getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update language success", updateLanguage);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Language is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @DeleteMapping("/delete-language")
+    public ResponseData deleteLanguageById(@RequestParam(value = "id") long id) {
+        try {
+            Optional<Language> language = languageService.getLanguageById(id);
+            if(language.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                languageService.deleteLanguage(language.get());
+                cvService.updateUpdatedDateOfCV(language.get().getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete language success", language.get());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Language is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    //major level
+    @PutMapping("/update-major-level")
+    public ResponseData updateMajorLevel(@RequestBody MajorLevel updateMajorLevel) {
+        try {
+            Optional<MajorLevel> majorLevel = majorLevelService.getMajorLevelById(updateMajorLevel.getId());
+            if(majorLevel.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                majorLevelService.updateMajorLevel(updateMajorLevel);
+                cvService.updateUpdatedDateOfCV(updateMajorLevel.getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update major level success", updateMajorLevel);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Major level is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @DeleteMapping("/delete-major-level")
+    public ResponseData deleteMajorLevel(@RequestParam(value = "id") long id) {
+        try {
+            Optional<MajorLevel> majorLevel = majorLevelService.getMajorLevelById(id);
+            if(majorLevel.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                majorLevelService.deleteMajorLevel(majorLevel.get());
+                cvService.updateUpdatedDateOfCV(majorLevel.get().getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete language success", majorLevel);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Major level is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    //Other Skill
+    @PutMapping("/update-other-skill")
+    public ResponseData updateOtherSkill(@RequestBody OtherSkill updateOtherSkill) {
+        try {
+            Optional<OtherSkill> otherSkill = otherSkillService.getOtherSkillById(updateOtherSkill.getId());
+            if(otherSkill.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                otherSkillService.updateOtherSKill(updateOtherSkill);
+                cvService.updateUpdatedDateOfCV(updateOtherSkill.getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update other skill success", updateOtherSkill);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Other skill is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @DeleteMapping("/delete-other-skill")
+    public ResponseData deleteOtherSkill(@RequestParam(value = "id") long id) {
+        try {
+            Optional<OtherSkill> otherSkill = otherSkillService.getOtherSkillById(id);
+            if(otherSkill.isPresent()) {
+                LocalDateTime nowDate = LocalDateTime.now();
+                otherSkillService.deleteOtherSkill(otherSkill.get());
+                cvService.updateUpdatedDateOfCV(otherSkill.get().getCvId(), nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "delete other skill success", otherSkill.get());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Other skill is not exist", null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
 
 
 }

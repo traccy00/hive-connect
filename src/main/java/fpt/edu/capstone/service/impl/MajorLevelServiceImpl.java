@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class MajorLevelServiceImpl implements MajorLevelService {
 
@@ -19,8 +21,23 @@ public class MajorLevelServiceImpl implements MajorLevelService {
     }
 
     @Override
-    public void insertNewMajorLevel(MajorLevel majorLevel) {
-        majorLevelRepository.insertNewMajorLevel(majorLevel.getFieldId(), majorLevel.getMajorId(), majorLevel.getCvId(), majorLevel.getLevel(), majorLevel.isStatus());
+    public MajorLevel insertNewMajorLevel(MajorLevel majorLevel) {
+         return  majorLevelRepository.save(majorLevel);
+    }
+
+    @Override
+    public void deleteMajorLevel(MajorLevel majorLevel) {
+        majorLevelRepository.delete(majorLevel);
+    }
+
+    @Override
+    public void updateMajorLevel(MajorLevel majorLevel) {
+        majorLevelRepository.updateNewMajorLevel(majorLevel.getFieldId(), majorLevel.getMajorId(), majorLevel.getLevel(), majorLevel.isStatus(), majorLevel.getId());
+    }
+
+    @Override
+    public Optional<MajorLevel> getMajorLevelById(long id) {
+        return majorLevelRepository.findById(id);
     }
 
 }

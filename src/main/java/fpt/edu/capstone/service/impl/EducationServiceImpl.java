@@ -22,8 +22,10 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
-    public void insertEducation(long cvId, String school, String major, LocalDateTime startDate, LocalDateTime endDate, String description, boolean isStudying) {
-        educationRepository.insertEducation(cvId, school, major, startDate, endDate, description, isStudying);
+
+    public Education insertEducation(Education newEducation) {
+//        return  educationReposiroty.insertEducation(cvId, school, major, startDate, endDate, description, isStudying);
+        return educationRepository.save(newEducation);
     }
 
     @Override

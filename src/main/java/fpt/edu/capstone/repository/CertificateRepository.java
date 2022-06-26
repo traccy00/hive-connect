@@ -17,4 +17,15 @@ public interface CertificateRepository extends JpaRepository<Certificate, Long> 
     @Transactional
     @Query(value = "INSERT INTO certificate (certificate_name, certificate_url, status, cv_id) VALUES(?1, ?2, ?3, ?4)", nativeQuery = true)
     void insertCertificate(String certificateName, String certificateUrl, long status, long cvId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE public.certificate SET certificate_name=?1, certificate_url=?2, status=?3 WHERE id=?4", nativeQuery = true)
+    void updateCertificate(String certificateName, String certificateUrl, long status, long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM public.certificate WHERE id=?1", nativeQuery = true)
+    void deleteCertificate(long id);
+
 }
