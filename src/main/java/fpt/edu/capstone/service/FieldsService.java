@@ -9,4 +9,6 @@ public interface FieldsService {
     List<Fields> getAllField();
 
     boolean existById(long id);
+
+    Fields getById(long id);
 }
