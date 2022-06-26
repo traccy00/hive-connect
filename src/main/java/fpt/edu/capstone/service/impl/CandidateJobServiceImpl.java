@@ -256,7 +256,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         detail.setJobRequirement(job.getJobRequirement());
         detail.setStartDate(job.getStartDate());
         detail.setEndDate(job.getEndDate());
-        detail.setBenifit(job.getBenifit());
+        detail.setBenifit(job.getBenefit());
         detail.setFieldId(job.getFieldId());
         detail.setFieldName(fields.getFieldName());
         detail.setCreatedAt(job.getCreatedAt());
