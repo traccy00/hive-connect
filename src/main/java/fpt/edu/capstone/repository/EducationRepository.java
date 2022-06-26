@@ -21,7 +21,7 @@ public interface EducationRepository extends JpaRepository<Education,Long> {
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO public.education (cv_id, school, major, start_date, end_date, description, is_studying) VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7)", nativeQuery = true)
-    void insertEducation(long cvId, String school, String major, LocalDateTime startDate, LocalDateTime endDate, String description, boolean isStudying);
+    Education insertEducation(long cvId, String school, String major, LocalDateTime startDate, LocalDateTime endDate, String description, boolean isStudying);
 
     @Modifying
     @Transactional

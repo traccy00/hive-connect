@@ -12,7 +12,7 @@ public interface CVService {
     CV getCVByCandidateId(long candidateId); //nam
 
     //giu
-    void insertCv(long candidateId, long isDeleted, String summary, LocalDateTime createAt, LocalDateTime updateAt);
+    CV insertCv(long candidateId, long isDeleted, String summary, LocalDateTime createAt, LocalDateTime updateAt);
 
     //giu
     Optional<CV> findCvById(long id);

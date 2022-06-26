@@ -16,4 +16,14 @@ public interface OtherSkillReposiroty extends JpaRepository<OtherSkill,Long> {
     @Transactional
     @Query(value = "INSERT INTO other_skill (skill_name, cv_id, level) VALUES(?1, ?2, ?3)", nativeQuery = true)
     void insertOtherSkill(String skillName, long cvId, String level);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE public.other_skill SET skill_name=?1, level=?2 WHERE id=?3", nativeQuery = true)
+    void updateOtherSkill(String skillName, String level, long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM public.other_skill WHERE id=?1", nativeQuery = true)
+    void deleteOtherSkill(long id);
 }

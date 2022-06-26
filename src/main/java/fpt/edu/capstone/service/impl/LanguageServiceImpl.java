@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class LanguageServiceImpl implements LanguageService {
 
@@ -19,7 +21,23 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     @Override
-    public void insertLanguage(String language, String level, long cvId) {
-        languageRepository.insertLanguage(language, level, cvId);
+    public Language insertLanguage(Language newLanguage) {
+        return languageRepository.save(newLanguage);
     }
+
+    @Override
+    public void deleteLanguage(Language language) {
+        languageRepository.delete(language);
+    }
+
+    @Override
+    public void updateLanguage(Language language) {
+        languageRepository.updateLanguage(language.getLanguage(), language.getLevel(), language.getId());
+    }
+
+    @Override
+    public Optional<Language> getLanguageById(long id) {
+        return languageRepository.findById(id);
+    }
+
 }

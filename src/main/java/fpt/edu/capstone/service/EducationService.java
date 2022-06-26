@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface EducationService {
     List<Education> getListEducationByCvId(Long cvId);
 
-    void insertEducation(long cvId, String school, String major, LocalDateTime startDate, LocalDateTime endDate, String description, boolean isStudying);
+    Education insertEducation(Education newEducation);
 
     void updateEducation(Education updateEducation);
 

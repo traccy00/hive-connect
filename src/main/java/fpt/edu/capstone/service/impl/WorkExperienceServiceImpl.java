@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class WorkExperienceServiceImpl implements WorkExperienceService {
 
@@ -20,7 +22,22 @@ public class WorkExperienceServiceImpl implements WorkExperienceService {
     }
 
     @Override
-    public void insertWorkExperience(long cvId, String companyName, String position, LocalDateTime startDate, LocalDateTime endDate, String description) {
-        workExperienceRepository.insertWorkExperience(cvId, companyName, position, startDate, endDate, description);
+    public WorkExperience insertWorkExperience(WorkExperience newWorkExperience) {
+        return workExperienceRepository.save(newWorkExperience);
+    }
+
+    @Override
+    public void updateWordExperience(WorkExperience workExperience) {
+        workExperienceRepository.updateWordExperience(workExperience.getCompanyName(), workExperience.getPosition(),workExperience.getStartDate(), workExperience.getEndDate(), workExperience.getDescription(), workExperience.getId());
+    }
+
+    @Override
+    public void deleteWordExperience(WorkExperience workExperience) {
+        workExperienceRepository.delete(workExperience);
+    }
+
+    @Override
+    public Optional<WorkExperience> getWorkExperienceById(long id) {
+        return workExperienceRepository.findById(id);
     }
 }

@@ -16,5 +16,10 @@ public interface MajorLevelRepository extends JpaRepository<MajorLevel,Long> {
     @Transactional
     @Modifying
     @Query(value = "INSERT INTO public.major_level(field_id, major_id, cv_id, level, status) VALUES(?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
-    void insertNewMajorLevel(Long fieldId, Long majorId, Long cvId, String level, boolean status);
+    void insertNewMajorLevel(long fieldId, long majorId, long cvId, String level, boolean status);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE public.major_level SET field_id=?1, major_id=?2, level=?3, status=?4 where id = ?5", nativeQuery = true)
+    void updateNewMajorLevel(long fieldId, long majorId, String level, boolean status, long id);
 }

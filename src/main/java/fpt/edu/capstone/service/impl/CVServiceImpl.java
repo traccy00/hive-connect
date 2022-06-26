@@ -21,8 +21,9 @@ public class CVServiceImpl implements CVService {
     }
 
     @Override
-    public void insertCv(long candidateId, long isDeleted, String summary, LocalDateTime createAt, LocalDateTime updateAt) {
-        cvRepository.insertCv(candidateId, isDeleted, summary, createAt, updateAt);
+    public CV insertCv(long candidateId, long isDeleted, String summary, LocalDateTime createAt, LocalDateTime updateAt) {
+        CV newCV = new CV(0, candidateId, isDeleted, summary, createAt,updateAt);
+        return cvRepository.save(newCV);
     }
 
     @Override
