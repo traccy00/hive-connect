@@ -29,25 +29,25 @@ public class RecruiterServiceImpl implements RecruiterService {
 
     @Override
     public RecruiterProfileResponse getRecruiterProfile(long userId) {
-        //role recruiter = 2
-        long roleId = 2;
-        Users user = userRepository.findById(userId);
+        RecruiterProfileResponse recruiterProfile = new RecruiterProfileResponse();
+        Users user = userRepository.getUserById(userId);
         if(user == null) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
-        RecruiterProfileResponse recruiterProfile = new RecruiterProfileResponse();
-        Recruiter recruiter = recruiterRepository.getRecruiterProfile(userId);
+        //role recruiter = 2
+        Recruiter recruiter = recruiterRepository.getRecruiterProfileByUserId(userId);
+        if(recruiter == null) {
+            throw new HiveConnectException("Recruiter doesn't exist");
+        }
         recruiterProfile.setUserName(user.getUsername());
         recruiterProfile.setAvatar(user.getAvatar());
-        //already choose one company
+
         if(recruiter.getCompanyId() != 0) {
             long companyId = recruiter.getCompanyId();
             Company company = companyRepository.getCompanyById(companyId);
             recruiterProfile.setCompanyId(companyId);
             recruiterProfile.setCompanyName(company.getName());
             recruiterProfile.setCompanyAddress(company.getAddress());
-        } else {
-            recruiterProfile.setCompanyName(recruiter.getCompanyName());
         }
         recruiterProfile.setId(recruiter.getId());
         recruiterProfile.setEmail(user.getEmail());
