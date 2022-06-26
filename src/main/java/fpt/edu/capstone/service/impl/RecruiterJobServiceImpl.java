@@ -62,6 +62,8 @@ public class RecruiterJobServiceImpl implements RecruiterJobService {
                 response.setToSalary(job.getToSalary());
 //                response.getApplyCount(job.getApplyCount);
 //                response.getViewCount();
+                response.setStartDate(job.getStartDate());
+                response.setEndDate(job.getEndDate());
                 responseList.add(response);
             }
         }

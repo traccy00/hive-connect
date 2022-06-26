@@ -3,6 +3,8 @@ package fpt.edu.capstone.dto.job;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class JobForRecruiterResponse {
@@ -14,4 +16,6 @@ public class JobForRecruiterResponse {
     private long toSalary;
     private long viewCount;
     private long applyCount;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 }
