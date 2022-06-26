@@ -5,6 +5,8 @@ import fpt.edu.capstone.repository.AppliedJobRepository;
 import fpt.edu.capstone.service.AppliedJobService;
 import fpt.edu.capstone.utils.Enums;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +35,7 @@ public class AppliedJobServiceImpl implements AppliedJobService {
     }
 
     @Override
-    public List<AppliedJob> getCvAppliedJob(long jobId, boolean isApplied) {
-        return appliedJobRepository.getCvAppliedJob(jobId, isApplied);
+    public Page<AppliedJob> getCvAppliedJob(Pageable pageable, long jobId, boolean isApplied) {
+        return appliedJobRepository.getCvAppliedJob(pageable, jobId, isApplied);
     }
 }
