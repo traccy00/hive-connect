@@ -33,7 +33,7 @@ public class JobDetailResponse {
     private long countryId;
     private String jobDescription;
     private String jobRequirement;
-    private String benifit;
+    private String benefit;
     private long fieldId;
     private String fieldName;
     private LocalDateTime startDate;
