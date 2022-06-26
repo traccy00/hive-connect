@@ -121,12 +121,14 @@ public class JobController {
     }
 
     //Recruiter: Get list CV applied a job
-    @GetMapping("/list-cv-applied-a-job")
-    public ResponseData getListCandidateAppliedJob(@RequestParam long jobId) {
+    @GetMapping("/list-cv-applied-a-job/{jobId}")
+    public ResponseData getListCandidateAppliedJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                                   @RequestParam(defaultValue = "10") Integer pageSize,
+                                                   @PathVariable long jobId) {
         try {
-            List<CvAppliedJobResponse> listCandidateAppliedJob = findJobService.getCvListAppliedJob(jobId);
+            ResponseDataPagination pagination = findJobService.getCvListAppliedJob(pageNo, pageSize, jobId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
-                    ResponseMessageConstants.SUCCESS, listCandidateAppliedJob);
+                    ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

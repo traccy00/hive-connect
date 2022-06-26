@@ -1,6 +1,8 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.entity.AppliedJob;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,6 +14,6 @@ public interface AppliedJobService {
 
     AppliedJob getAppliedJobBefore(long candidateId, long jobId);
 
-    List<AppliedJob> getCvAppliedJob(long jobId, boolean isApplied);
+    Page<AppliedJob> getCvAppliedJob(Pageable pageable, long jobId, boolean isApplied);
 
 }

@@ -10,8 +10,13 @@ import fpt.edu.capstone.repository.CVRepository;
 import fpt.edu.capstone.repository.EducationRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,8 +46,18 @@ public class FindJobServiceImpl implements FindJobService {
 
     private final EducationRepository educationRepository;
 
+    private final CVService cvService;
+
     @Override
     public void appliedJob(AppliedJobRequest request) throws Exception {
+        if(request.isUploadCv()) {
+            //upload file
+        } else {
+            CV cv = cvService.getCVByCandidateId(request.getCandidateId());
+            if(cv == null) {
+                throw new HiveConnectException("Create your profile to apply job!");
+            }
+        }
         if (!jobService.existsById(request.getJobId())) {
             throw new HiveConnectException("Job doesn't exist.");
         }
@@ -83,55 +98,69 @@ public class FindJobServiceImpl implements FindJobService {
     }
 
     @Override
-    public List<CvAppliedJobResponse> getCvListAppliedJob(long jobId) {
+    public ResponseDataPagination getCvListAppliedJob(Integer pageNo, Integer pageSize, long jobId) {
         List<CvAppliedJobResponse> responseList = new ArrayList<>();
+
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
 
         Optional<Job> job = jobService.findById(jobId);
         if(!job.isPresent()) {
             throw new HiveConnectException("Job doesn't exist");
         }
-        List<AppliedJob> appliedJobs = appliedJobService.getCvAppliedJob(jobId, true);
+        Page<AppliedJob> appliedJobs = appliedJobService.getCvAppliedJob(pageable, jobId, true);
         if(appliedJobs.isEmpty()) {
             throw new HiveConnectException("No CV applies");
         }
         CvAppliedJobResponse responseObj = new CvAppliedJobResponse();
         responseObj.setJobId(jobId);
-        for (AppliedJob appliedJob : appliedJobs) {
-            Candidate candidate = candidateService.getById(appliedJob.getCandidateId());
-            responseObj.setCandidateId(appliedJob.getCandidateId());
-            responseObj.setCandidateName(candidate.getFullName());
+        if(appliedJobs.hasContent()) {
+            for (AppliedJob appliedJob : appliedJobs) {
+                Candidate candidate = candidateService.getById(appliedJob.getCandidateId());
+                responseObj.setCandidateId(appliedJob.getCandidateId());
+                responseObj.setCandidateName(candidate.getFullName());
 
-            Users user = userService.findById(candidate.getUserId());
-            responseObj.setAvatar(user.getAvatar());
-            if(appliedJob.isUploadCv()) {
-                //upload CV
-                responseObj.setCvUrl(appliedJob.getCvUploadUrl());
-            }
-            CV cv = cvRepository.getByCandidateId(appliedJob.getCandidateId());
-            if(cv == null) {
-                if(!appliedJob.isUploadCv()) {
-                    //Profile không tồn tại mà
-                    throw new HiveConnectException("Please try to contact administrator");
+                Users user = userService.findById(candidate.getUserId());
+                responseObj.setAvatar(user.getAvatar());
+                if (appliedJob.isUploadCv()) {
+                    //upload CV
+                    responseObj.setCvUrl(appliedJob.getCvUploadUrl());
                 }
-            }
-            List<WorkExperience> workExperiencesOfCv = workExperienceService.getListWorkExperienceByCvId(cv.getId());
-            if(!workExperiencesOfCv.isEmpty()) {
-                List<String> experienceDesc = workExperiencesOfCv.stream().map(WorkExperience::getPosition).collect(Collectors.toList());
-                responseObj.setExperienceDesc(experienceDesc);
-            }
-            List<Education> educations = educationRepository.getListEducationByCvId(cv.getId());
-            if(!educations.isEmpty()) {
-                List<String> schools = educations.stream().map(Education::getSchool).collect(Collectors.toList());
-                responseObj.setEducations(schools);
-            }
-            responseObj.setCareerGoal(candidate.getIntroduction());
-            responseObj.setAddress(candidate.getAddress());
+                CV cv = cvRepository.getByCandidateId(appliedJob.getCandidateId());
+                if (cv == null) {
+                    if (!appliedJob.isUploadCv()) {
+                        //Profile không tồn tại mà cũng không upload CV
+                        throw new HiveConnectException("Please try to contact administrator");
+                    }
+                }
+                List<WorkExperience> workExperiencesOfCv = workExperienceService.getListWorkExperienceByCvId(cv.getId());
+                if (!workExperiencesOfCv.isEmpty()) {
+                    List<String> experienceDesc = workExperiencesOfCv.stream().map(WorkExperience::getPosition).collect(Collectors.toList());
+                    responseObj.setExperienceDesc(experienceDesc);
+                }
+                List<Education> educations = educationRepository.getListEducationByCvId(cv.getId());
+                if (!educations.isEmpty()) {
+                    List<String> schools = educations.stream().map(Education::getSchool).collect(Collectors.toList());
+                    responseObj.setEducations(schools);
+                }
+                responseObj.setCareerGoal(candidate.getIntroduction());
+                responseObj.setAddress(candidate.getAddress());
 //            responseObj.setExperienceYear();
 
-            responseObj.setApprovalStatus(appliedJob.getApprovalStatus());
-            responseList.add(responseObj);
+                responseObj.setApprovalStatus(appliedJob.getApprovalStatus());
+                responseList.add(responseObj);
+            }
         }
-        return responseList;
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(responseList);
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(appliedJobs.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(appliedJobs.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
     }
 
     @Override
