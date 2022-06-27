@@ -47,13 +47,13 @@ public class JobServiceImpl implements JobService {
         long companyId = request.getCompanyId();
         long recruiterId = request.getRecruiterId();
         long fieldId = request.getFieldId();
-        if(!companyService.existById(companyId)){
+        if (!companyService.existById(companyId)) {
             throw new HiveConnectException("Company not found!");
         }
-        if(!recruiterService.existById(recruiterId)){
+        if (!recruiterService.existById(recruiterId)) {
             throw new HiveConnectException("Recruiter not found!");
         }
-        if(!fieldsService.existById(fieldId)){
+        if (!fieldsService.existById(fieldId)) {
             throw new HiveConnectException("Field not found!");
         }
         Recruiter recruiter = recruiterService.getRecruiterById(recruiterId);
@@ -69,10 +69,10 @@ public class JobServiceImpl implements JobService {
                                                       long fromSalary, long toSalary, String rank, String workForm, String workPlace) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<Job> jobs = jobRepository.searchListJobFilter(pageable,fieldId, countryId,jobName,fromSalary,toSalary,rank,workForm,workPlace);
-        List <JobResponse> jobResponse = new ArrayList<>();
-        if(jobs.hasContent()){
-            for (Job j :jobs.getContent()){
+        Page<Job> jobs = jobRepository.searchListJobFilter(pageable, fieldId, countryId, jobName, fromSalary, toSalary, rank, workForm, workPlace);
+        List<JobResponse> jobResponse = new ArrayList<>();
+        if (jobs.hasContent()) {
+            for (Job j : jobs.getContent()) {
                 JobResponse jr = modelMapper.map(j, JobResponse.class);
                 jobResponse.add(jr);
             }
@@ -94,7 +94,7 @@ public class JobServiceImpl implements JobService {
     //TODO : fix insert for update function
     public void updateJob(UpdateJobRequest request) {
         Job job = jobRepository.getById(request.getJobId());
-        if(job == null){
+        if (job == null) {
             throw new HiveConnectException("Job does not exist");
         }
         Object UpdateJobRequest = request;
@@ -153,10 +153,11 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Job getJobById(long jobId) {
-        if(jobRepository.getById(jobId) != null) {
-            return jobRepository.getById(jobId);
+        Job job = jobRepository.getById(jobId);
+        if (job == null || job.getId() == 0) {
+            throw new HiveConnectException("Job doesn't exist");
         }
-        throw new HiveConnectException("Job doesn't exist");
+        return job;
     }
 
     @Override
@@ -166,16 +167,16 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobResponse> getListSuggestJobByCv(long candidateId) {
-        if(!candidateService.existsById(candidateId)){
+        if (!candidateService.existsById(candidateId)) {
             throw new HiveConnectException("Candidate does not exist");
         }
         CV cv = cvService.getCVByCandidateId(candidateId);
-        List <MajorLevel> majorLevel = majorLevelService.getListMajorLevelByCvId(cv.getId()); // lấy ra major của candidate để filter
+        List<MajorLevel> majorLevel = majorLevelService.getListMajorLevelByCvId(cv.getId()); // lấy ra major của candidate để filter
         List<JobResponse> responses = new ArrayList<>();
-        for (MajorLevel ml : majorLevel){
+        for (MajorLevel ml : majorLevel) {
             String majorName = majorService.getNameByMajorId(ml.getMajorId()).toLowerCase();
-            List <Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
-            for (Job j : jobList){
+            List<Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
+            for (Job j : jobList) {
                 JobResponse jr = modelMapper.map(j, JobResponse.class);
                 responses.add(jr);
             }

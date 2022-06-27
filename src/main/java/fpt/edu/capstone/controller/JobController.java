@@ -73,9 +73,9 @@ public class JobController {
     }
 
     @GetMapping("/job-detail/{id}")
-    public ResponseData getJobDetail(@PathVariable("id") long jobId){
+    public ResponseData getJobDetail(@PathVariable("id") long jobId, @RequestParam("candidateId") long candidateId){
         try {
-            JobDetailResponse jobDetailResponse = candidateJobService.getJobDetail(jobId);
+            JobDetailResponse jobDetailResponse = candidateJobService.getJobDetail(jobId, candidateId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), jobDetailResponse);
         }catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
