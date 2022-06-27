@@ -219,7 +219,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
     @Override
     public void approveJob(ApprovalJobRequest request) {
         AppliedJob appliedJob = appliedJobService.getAppliedJobPendingApproval(request.getJobId(), request.getCandidateId());
-        if(appliedJob == null) {
+        if (appliedJob == null) {
             throw new HiveConnectException("This CV does not exist");
         }
         if (appliedJob.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus()) &&
@@ -234,15 +234,25 @@ public class CandidateJobServiceImpl implements CandidateJobService {
     }
 
     @Override
-    public JobDetailResponse getJobDetail(long jobId) {
+    public JobDetailResponse getJobDetail(long jobId, long candidateId) {
         JobDetailResponse detail = new JobDetailResponse();
         Job job = jobService.getJobById(jobId);
-
+        //company information
+        //company does not exist by user can post job -> exception
+        if(String.valueOf(job.getCompanyId()) == null || job.getCompanyId() == 0) {
+            throw new HiveConnectException("Please try to contact administrator");
+        }
         Company company = companyService.getCompanyById(job.getCompanyId());
+        //company does not exist by user can post job -> exception
+        if (company == null) {
+            throw new HiveConnectException("Please try to contact administrator");
+        }
+        detail.setCompanyName(company.getName());
+        detail.setCompany(company);
+
         Fields fields = fieldsService.getById(job.getFieldId());
         detail.setJobId(jobId);
         detail.setRecruiterId(job.getRecruiterId());
-        detail.setCompanyName(company.getName());
         detail.setJobName(job.getJobName());
         detail.setFromSalary(job.getFromSalary());
         detail.setToSalary(job.getToSalary());
@@ -268,7 +278,13 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         detail.setWeekday(job.getWeekday());
         detail.setCountryId(job.getCountryId());
         detail.setCompanyId(job.getCompanyId());
-        detail.setCompany(company);
+        //candidate information
+        detail.setCandidateId(candidateId);
+        AppliedJob appliedJob = appliedJobService.getAppliedJobBefore(candidateId, jobId);
+        if(appliedJob != null) {
+            detail.setApplied(appliedJob.isApplied());
+            detail.setApprovalStatus(appliedJob.getApprovalStatus());
+        }
         return detail;
     }
 }

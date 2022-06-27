@@ -53,4 +53,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     Page<Job> getAllByRecruiterId(Pageable pageable, long recruiterId);
 
     Optional<Job> findById(long id);
+
+    @Query(value = "select * from job where id = ?", nativeQuery = true)
+    Job getById(long id);
 }

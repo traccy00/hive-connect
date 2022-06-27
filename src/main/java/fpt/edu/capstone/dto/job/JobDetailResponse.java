@@ -46,5 +46,10 @@ public class JobDetailResponse {
     private boolean isUrgentJob;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    //company information
     Company company;
+    //candidate information
+    private long candidateId;
+    private boolean isApplied;
+    private String approvalStatus;
 }

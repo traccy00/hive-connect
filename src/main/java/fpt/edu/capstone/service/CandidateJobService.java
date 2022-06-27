@@ -13,5 +13,5 @@ public interface CandidateJobService {
 
     void approveJob(ApprovalJobRequest request);
 
-    JobDetailResponse getJobDetail(long jobId);
+    JobDetailResponse getJobDetail(long jobId, long candidateId);
 }
