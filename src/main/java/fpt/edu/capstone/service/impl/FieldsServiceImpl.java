@@ -1,33 +1,37 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.entity.Fields;
-import fpt.edu.capstone.repository.FieldRepository;
-import fpt.edu.capstone.repository.FieldsReposiroty;
+import fpt.edu.capstone.repository.FieldsRepository;
 import fpt.edu.capstone.service.FieldsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class FieldsServiceImpl implements FieldsService {
 
-    private final FieldsReposiroty fieldsReposiroty;
+    private final FieldsRepository fieldsRepository;
 
     @Override
     public List<Fields> getAllField() {
-        return fieldsReposiroty.getAllField();
+        return fieldsRepository.getAllField();
     }
 
     @Override
     public boolean existById(long id) {
-        return fieldsReposiroty.existsById(id);
+        return fieldsRepository.existsById(id);
     }
 
     @Override
     public Fields getById(long id) {
-        return fieldsReposiroty.getById(id);
+        return fieldsRepository.getById(id);
+    }
+
+    @Override
+    public Optional<Fields> findById(long id) {
+        return fieldsRepository.findById(id);
     }
 }

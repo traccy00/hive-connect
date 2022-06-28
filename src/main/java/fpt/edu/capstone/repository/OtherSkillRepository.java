@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 
-public interface OtherSkillReposiroty extends JpaRepository<OtherSkill,Long> {
+public interface OtherSkillRepository extends JpaRepository<OtherSkill,Long> {
     @Query(value = "select * from other_skill o where o.cv_id = ?1", nativeQuery = true)
     List<OtherSkill> getListOtherSkillByCvId(Long cvId);
 

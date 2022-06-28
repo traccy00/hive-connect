@@ -1,16 +1,14 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.company.CreateCompanyRequest;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Fields;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,7 +35,13 @@ public class CompanyController {
     }
 
     @GetMapping("/create-company")
-    public ResponseData createCompany(){
-        return null;
+    public ResponseData createCompany(@RequestBody CreateCompanyRequest request){
+        try {
+            Company company = companyService.createCompany(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, company);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
     }
 }

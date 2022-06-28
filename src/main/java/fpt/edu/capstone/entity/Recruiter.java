@@ -43,6 +43,9 @@ public class Recruiter {
     @Column(name = "business_license")
     private String businessLicense;
 
+    @Column(name = "additional_license")
+    private String additionalLicense;
+
     @Column(name = "user_id")
     private long userId;
 
