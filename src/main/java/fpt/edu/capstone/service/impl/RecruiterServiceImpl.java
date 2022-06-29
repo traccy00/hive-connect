@@ -1,7 +1,10 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
+import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
+import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.Users;
@@ -13,6 +16,8 @@ import fpt.edu.capstone.service.RecruiterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,10 +58,11 @@ public class RecruiterServiceImpl implements RecruiterService {
         recruiterProfile.setEmail(user.getEmail());
         recruiterProfile.setFullName(recruiter.getFullName());
         recruiterProfile.setPhone(recruiter.getPhoneNumber());
-        recruiterProfile.setGender(recruiter.getGender());
+        recruiterProfile.setGender(recruiter.isGender());
         recruiterProfile.setPosition(recruiter.getPosition());
         recruiterProfile.setLinkedinAccount(recruiter.getLinkedInAccount());
         recruiterProfile.setBusinessLicense(recruiter.getBusinessLicense());
+        recruiterProfile.setAvatar(recruiter.getAvatarUrl());
         return recruiterProfile;
     }
 
@@ -76,7 +82,36 @@ public class RecruiterServiceImpl implements RecruiterService {
     }
 
     @Override
-    public void insertRecruiter(long userId) {
-        recruiterRepository.insertRecruiter(userId);
+    public Optional<Recruiter> findById(long id) {
+        return recruiterRepository.findById(id);
+    }
+
+    @Override
+    public Recruiter insertRecruiter(long userId) {
+        Recruiter recruiter = new Recruiter();
+        recruiter.setUserId(userId);
+        LocalDateTime nowDate = LocalDateTime.now();
+        recruiter.setCreateAt(nowDate);
+        return recruiterRepository.save(recruiter);
+    }
+
+    @Override
+    public void updateRecruiterInformation(RecruiterUpdateProfileRequest recruiterUpdateProfileRequest) {
+        LocalDateTime nowDate = LocalDateTime.now();
+        recruiterRepository.updateCruiterProfile(recruiterUpdateProfileRequest.getFullName(),
+                recruiterUpdateProfileRequest.isGender(),
+                recruiterUpdateProfileRequest.getPosition(),
+                recruiterUpdateProfileRequest.getLinkedinAccount(),
+                recruiterUpdateProfileRequest.getBusinessLicense(),
+                nowDate,
+                recruiterUpdateProfileRequest.getPhone(),
+                recruiterUpdateProfileRequest.getAdditionalLicense(),
+                recruiterUpdateProfileRequest.getAvatarUrl(),
+                recruiterUpdateProfileRequest.getId());
+    }
+
+    @Override
+    public List<AppliedJobByRecruiterResponse> getListAppliedByForRecruiter(long recruiterId) {
+        return recruiterRepository.getListAppliedByForRecruiter(recruiterId);
     }
 }

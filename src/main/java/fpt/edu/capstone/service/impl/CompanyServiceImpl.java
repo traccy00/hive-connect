@@ -60,4 +60,19 @@ public class CompanyServiceImpl implements CompanyService {
         Company savedCompany = companyRepository.getCompanyById(company.getId());
         return savedCompany;
     }
+
+    @Override
+    public Company insertCompany(Company newCompany) {
+        return companyRepository.save(newCompany);
+    }
+
+    @Override
+    public Optional<Company> getCompanyByName(String companyName) {
+        return companyRepository.getCompanyByName(companyName);
+    }
+
+    @Override
+    public Optional<Company> getCompanyByTaxCode(String taxCode) {
+        return companyRepository.getCompanyByTaxcode(taxCode);
+    }
 }
