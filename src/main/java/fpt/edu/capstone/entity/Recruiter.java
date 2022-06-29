@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "recruiter")
@@ -32,7 +33,7 @@ public class Recruiter {
     private boolean verifyPhoneNumber;
 
     @Column(name = "gender")
-    private String gender;
+    private boolean gender;
 
     @Column(name = "position")
     private String position;
@@ -54,4 +55,16 @@ public class Recruiter {
 
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
+
+    @Column(name = "created_at")
+    private LocalDateTime createAt;
+
+    @Column(name = "updated_at")
+    private  LocalDateTime updateAt;
+
+    @Column(name = "company_address")
+    private String companyAddress;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
 }
