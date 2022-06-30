@@ -1,4 +1,4 @@
-package fpt.edu.capstone.twilio_test;
+package fpt.edu.capstone.common.Twilio;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "twilio")
 @Data
 public class TwilioProperties {
-    private String accountSid = "AC20c4ce61a75e5760ea35508e73df4469";
-    private String authToken = "f2a7632ce2b6d5b364c34a8757de75ec";
-    private String serviceId = "VAcf787143dc0d8fe3cea2cbf289f85e7b";
+    private String accountSid = "ACa0d71f7974210689d3d4d2bb357b15b8";
+    private String authToken = "9460f204aeb053cbf479b382db785f98";
+    private String serviceId = "VAff7a425ec99829697c6a9daa941b6214";
 
     public TwilioProperties() {
     }

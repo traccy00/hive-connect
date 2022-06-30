@@ -1,9 +1,10 @@
-package fpt.edu.capstone.twilio_test;
+package fpt.edu.capstone.service.impl;
 
-import com.twilio.Twilio;
 import com.twilio.exception.ApiException;
-import com.twilio.rest.verify.v1.service.Verification;
-import com.twilio.rest.verify.v1.service.VerificationCheck;
+import com.twilio.rest.verify.v2.service.Verification;
+import com.twilio.rest.verify.v2.service.VerificationCheck;
+import fpt.edu.capstone.common.Twilio.TwilioProperties;
+import fpt.edu.capstone.common.Twilio.VerificationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

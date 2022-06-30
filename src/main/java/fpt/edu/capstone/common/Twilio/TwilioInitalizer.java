@@ -1,4 +1,5 @@
-package fpt.edu.capstone.twilio_test;
+package fpt.edu.capstone.common.Twilio;
+
 
 import com.twilio.Twilio;
 import org.springframework.beans.factory.annotation.Autowired;
