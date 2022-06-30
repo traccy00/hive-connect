@@ -39,5 +39,10 @@ public class PaymentController {
         //Lấy ra thông tin về lịch sử nạp, chi tiêu của tài khoản đó và tổng số tiền đã nạp
         return null;
     }
-
+/*
+- gia hạn gói package
+- payment, package, wallet, banner
+- login google , linkedlin
+- upload file
+ */
 }

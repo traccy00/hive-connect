@@ -19,8 +19,8 @@ public class Banner extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "buy_payment_id")
-    private long buyPaymentId;
+    @Column(name = "rental_package_id")
+    private long rentalPackageId;
 
     @Column(name = "title")
     private String title;

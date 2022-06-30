@@ -1,0 +1,22 @@
+
+/*
+    - upload file
+    - payment
+- lấy ra ds các gói hiện tại đang có
+- discount ( tài khoản lâu năm hoặc tiêu nhiều tiền thì được đề xuất discount)
+- các lợi ích khi thuê gói package này
+- view detail CV ( xem full thông tin ứng viên)
+- lúc ứng tuyển thì sẽ dc up cv lên, cv đó sẽ được tải lại và dùng lại cv đó để apply job khác, và được xem đã upoad những cv nào
+- xuất CV
+    - wallet
+
+    - detail company
+người tạo company mới dc edit thông tin của company đó
+ */
+
+/*
+- gia hạn gói package
+- payment, package, wallet, banner
+- login google , linkedlin
+- upload file
+ */

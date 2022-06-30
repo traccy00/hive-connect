@@ -24,7 +24,7 @@ public class DetailPackage {
 
     //QUẢNG CÁO TUYỂN DỤNG
     @Column(name = "type")
-    private String type; // basic, classic, gold
+    private String type; // basic, classic, gold, GÓI MUA THÊM
 
     @Column(name = "price")
     private long price;
