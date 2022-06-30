@@ -1,9 +1,12 @@
 package fpt.edu.capstone.entity;
-//phát triển đơn giản, chỉ hiển thị thông tin ngân hàng
-public class Payment {
+
+import fpt.edu.capstone.utils.BaseEntity;
+
+public class Payment extends BaseEntity {
     private long id;
-    private String paymentType; // cash, bank, momo, visa....
-    private String receiver;
-    private String amount;
-    private String information;
+    private long recruiterId;
+    private long rentalPackageId;
+    private long bannerId;
+    private String expiredDate;
+
 }

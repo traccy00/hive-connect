@@ -19,7 +19,7 @@ public class RentalPackage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "package_name")
+    @Column(name = "package_name") // Gold, basic, classic, gói mua thêm
     private String packageName;
 
     @Column(name = "description")
