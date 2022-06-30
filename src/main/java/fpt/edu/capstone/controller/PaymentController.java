@@ -21,7 +21,7 @@ public class PaymentController {
         return null;
     }
 
-    @@PostMapping("/add-wallet")
+    @PostMapping("/add-wallet")
     public ResponseData addCreditForUser(){
         // khi người dùng nạp tiền vào tài khoản, cần insert số tiền đó vào db
         //cách thức nạp là chuyển tiền qua ngân hàng đến STK được quy định, khi hiveconnect nhận được tiền sẽ tự cộng tiền vào hệ thống
