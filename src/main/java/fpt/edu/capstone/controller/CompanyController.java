@@ -35,7 +35,7 @@ public class CompanyController {
         return null;
     }
 
-    @GetMapping("/create-company")
+    @PostMapping("/create-company")
     public ResponseData createCompany(@RequestBody CreateCompanyRequest request){
         try {
             Company company = companyService.createCompany(request);

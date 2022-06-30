@@ -45,7 +45,7 @@ public class CompanyServiceImpl implements CompanyService {
     public Company createCompany(CreateCompanyRequest request) {
         Optional<Fields> field = fieldsService.findById(request.getFieldWork());
         if(!field.isPresent()) {
-            throw new HiveConnectException("Invalid data");
+            throw new HiveConnectException("Field is not exist");
         }
         if (StringUtils.isBlank(request.getName())
                 || StringUtils.isBlank(request.getEmail())
