@@ -23,4 +23,8 @@ public interface CandidateService  {
 
     void updateCandidateInformation(Candidate updatedCandidate);
 
+    void updateIsNeedJob(boolean isNeedJob, long id);
+
+    void updateAvatarUrl(String avatarId, long id);
+
 }

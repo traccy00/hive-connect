@@ -2,13 +2,18 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
 import fpt.edu.capstone.entity.Candidate;
+import fpt.edu.capstone.entity.Avatar;
+import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.service.CandidateService;
+import fpt.edu.capstone.service.UserService;
+import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +24,12 @@ public class CandidateController {
     private static final Logger logger = LoggerFactory.getLogger(Candidate.class);
     @Autowired
     private CandidateService candidateService;
+
+    @Autowired
+    private UserImageService userImageService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/all")
     public ResponseData getAllCandidate() {
@@ -97,6 +108,47 @@ public class CandidateController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
 
+    }
+
+    @PutMapping("/update-is-need-job")
+    public ResponseData updateIsNeedJob(@RequestParam long candidateId) {
+            try{
+                Optional<Candidate> candidate = candidateService.findById(candidateId);
+                if(candidate.isPresent()) {
+                    candidateService.updateIsNeedJob(!candidate.get().isNeedJob(), candidate.get().getId());
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update successful", candidate.get().isNeedJob());
+                }
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", candidateId);
+            }catch (Exception ex) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            }
+    }
+
+    @PostMapping("/upload-avatar")
+    public ResponseData uploadAvatar(@RequestParam("file") MultipartFile file, long userId) {
+
+        try{
+            Optional<Users> users = userService.findByIdOp(userId);
+            if(users.isPresent()) { //Check if user is existed
+                Optional<Candidate> candidate = candidateService.findCandidateByUserId(userId);
+                if(candidate.isPresent()){ //Check if this user is candidate
+                    Optional<Avatar> avatarImgSearched = userImageService.findAvatarByUserId(userId);
+                    if(avatarImgSearched.isPresent()){
+                        userImageService.updateAvatar(avatarImgSearched.get().getId(), file);
+                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update avatar successful", avatarImgSearched.get().getId());
+                    }else {
+                        Avatar avatar =  userImageService.save(file, "IMG", userId);
+                        candidateService.updateAvatarUrl(avatar.getId(), candidate.get().getId());
+                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update avatar successful", avatar.getId());
+                    }
+                }else {
+                    return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", userId);
+                }
+            }
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this user", userId);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
     }
 
 

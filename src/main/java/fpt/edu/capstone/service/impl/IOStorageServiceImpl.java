@@ -33,7 +33,6 @@ public class IOStorageServiceImpl implements IOStorageService {
     @Override
     public String storeFile(MultipartFile file) {
         try{
-            System.out.println("Ahihi do ngok");
             if(file.isEmpty()){
                 throw new RuntimeException("Failed to store empty file");
             }

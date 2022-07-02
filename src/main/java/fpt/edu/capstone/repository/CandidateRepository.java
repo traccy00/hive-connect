@@ -28,4 +28,14 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
     @Modifying
     @Query(value = "UPDATE public.candidate SET gender=?1, birth_date=?2, country=?3, full_name=?4, address=?5, social_link=?6, introduction=?7 WHERE id=?8", nativeQuery = true)
     void updateCandidateInformation(boolean gender, LocalDateTime birthDate, String country, String fullName, String address, String socialLink,  String introduction, long id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE public.candidate SET is_need_job = ?1 WHERE id = ?2", nativeQuery = true)
+    void updateCandicateInformation(boolean newIsNeedJob, long id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE public.candidate SET avatar_url=?1 WHERE id=?2", nativeQuery = true)
+    void updateAvatarUrl(String avatarId, long id);
 }
