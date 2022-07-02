@@ -1,17 +1,21 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
-import fpt.edu.capstone.entity.Candidate;
-import fpt.edu.capstone.entity.Avatar;
-import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.entity.*;
+import fpt.edu.capstone.repository.CVImportedRepository;
 import fpt.edu.capstone.service.CandidateService;
 import fpt.edu.capstone.service.UserService;
+import fpt.edu.capstone.service.impl.CVImportedService;
+import fpt.edu.capstone.service.impl.ImageService;
 import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +34,10 @@ public class CandidateController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CVImportedService cvImportedService;
+
 
     @GetMapping("/all")
     public ResponseData getAllCandidate() {
@@ -150,6 +158,53 @@ public class CandidateController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
+    @GetMapping("/avatar/{id}")
+    public ResponseEntity<byte[]> getCompanyAvatar(@PathVariable String id) {
+        Optional<Avatar> fileEntityOptional = userImageService.getFile(id);
+
+        if (!fileEntityOptional.isPresent()) {
+            return ResponseEntity.notFound()
+                    .build();
+        }
+
+        Avatar avatar = fileEntityOptional.get();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + avatar.getName() + "\"")
+                .contentType(MediaType.valueOf(avatar.getContentType()))
+                .body(avatar.getData());
+    }
+
+    @PostMapping("upload-cv")
+    public ResponseData uploadCV(@RequestParam("file") MultipartFile file, long candidateId) {
+        try{
+                Optional<Candidate> candidate = candidateService.findById(candidateId);
+                if(candidate.isPresent()){ //Check if this user is candidate
+                        CVImported cvImported =  cvImportedService.save(file,"CV",candidateId);
+                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Upload CV successful", cvImported.getId());
+                }else {
+                    return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", candidateId);
+                }
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/cv/{id}")
+    public ResponseEntity<byte[]> getCVImported(@PathVariable String id) {
+        Optional<CVImported> CVImported = cvImportedService.findById(id);
+
+        if (!CVImported.isPresent()) {
+            return ResponseEntity.notFound()
+                    .build();
+        }
+
+        CVImported cvImported = CVImported.get();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cvImported.getName() + "\"")
+                .contentType(MediaType.valueOf(cvImported.getContentType()))
+                .body(cvImported.getData());
+    }
+
 
 
 }

@@ -16,6 +16,9 @@ import fpt.edu.capstone.utils.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -131,5 +134,21 @@ public class RecruiterController {
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
+    }
+
+    @GetMapping("/avatar/{id}")
+    public ResponseEntity<byte[]> getCompanyAvatar(@PathVariable String id) {
+        Optional<Avatar> fileEntityOptional = userImageService.getFile(id);
+
+        if (!fileEntityOptional.isPresent()) {
+            return ResponseEntity.notFound()
+                    .build();
+        }
+
+        Avatar avatar = fileEntityOptional.get();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + avatar.getName() + "\"")
+                .contentType(MediaType.valueOf(avatar.getContentType()))
+                .body(avatar.getData());
     }
 }

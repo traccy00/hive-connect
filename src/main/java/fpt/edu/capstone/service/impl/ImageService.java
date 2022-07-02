@@ -78,4 +78,8 @@ public class ImageService {
         imageRepository.updateCompanyAvatar(file.getBytes(),true,id);
     }
 
+    public Optional<Image> finById(String id){
+        return imageRepository.findById(id);
+    };
+
 }
