@@ -27,4 +27,9 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
 
     @Query(value = "select j.job_name as jobName, aj.id as id, aj.job_id as jobId, aj.candidate_id as candidateId, aj.is_applied as isApplied, aj.approval_status as approvalStatus, aj.is_upload_cv  as isUploadCv, aj.cv_upload_url as cvUploadUrl, r.id  as recruiterId  from job j join applied_job aj on j.id = aj.job_id join recruiter r on j.recruiter_id = r.id where r.id = ?1", nativeQuery = true)
     List<AppliedJobByRecruiterResponse> getListAppliedByForRecruiter(long recruiterId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE public.recruiter SET avatar_url=?1 WHERE id=?2", nativeQuery = true)
+    void updateAvatar(String img, long id);
 }

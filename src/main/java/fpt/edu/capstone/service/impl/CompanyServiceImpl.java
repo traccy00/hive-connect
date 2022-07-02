@@ -62,6 +62,16 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public Optional<Company> findById(long companyId) {
+        return companyRepository.findById(companyId);
+    }
+
+    @Override
+    public void updateCompanyAvatarUrl(String avatarId, long companyId) {
+        companyRepository.updateCompanyAvatarUrl(avatarId, companyId);
+    }
+
+    @Override
     public Company insertCompany(Company newCompany) {
         return companyRepository.save(newCompany);
     }
