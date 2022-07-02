@@ -4,14 +4,20 @@ import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
+import fpt.edu.capstone.entity.Avatar;
+import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.entity.Recruiter;
+import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.service.RecruiterService;
+import fpt.edu.capstone.service.UserService;
+import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +30,12 @@ public class RecruiterController {
 
     @Autowired
     private RecruiterService recruiterService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserImageService userImageService;
 
     @GetMapping("/recruiter-profile/{userId}")
     public ResponseData getRecruiterProfile(@PathVariable("userId") long userId) {
@@ -77,34 +89,6 @@ public class RecruiterController {
         return null;
     }
 
-    //TODO : Dashboard
-    @PostMapping("/create-campaign")
-    public ResponseData createCampaign(){
-        return null;
-    }
-
-    @PutMapping("/update-campaign")
-    public ResponseData updateCampaign(){
-        return null;
-    }
-
-    @DeleteMapping("/delete-campaign")
-    public ResponseData deleteCampaign(){
-        return null;
-    }
-
-    @GetMapping("/get-total-campaign-open")
-    public ResponseData totalCampaign(){
-        //lấy ra total count các chiến dịch
-        return null;
-    }
-
-    @GetMapping("/get-detail-campaign")
-    public ResponseData detailCampaign(){
-        //lấy ra chi tiết chiến dịch
-        return null;
-    }
-
     @GetMapping("/get-total-cv-applied")
     public ResponseData totalCVApplied(){
         return null;
@@ -120,5 +104,32 @@ public class RecruiterController {
         List<AppliedJobByRecruiterResponse> appliedJobByRecruiterResponses = recruiterService.getListAppliedByForRecruiter(recruiterId);
         System.out.println(appliedJobByRecruiterResponses);
         return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "asd", appliedJobByRecruiterResponses);
+    }
+
+    @PostMapping("/upload-avatar")
+    public ResponseData uploadAvatar(@RequestParam("file") MultipartFile file, long userId) {
+
+        try{
+            Optional<Users> users = userService.findByIdOp(userId);
+            if(users.isPresent()) { //Check if user is existed
+                Optional<Recruiter> recruiter = recruiterService.findRecruiterByUserId(userId);
+                if(recruiter.isPresent()){ //Check if this user is recruiter
+                    Optional<Avatar> avatarImgSearched = userImageService.findAvatarByUserId(userId);
+                    if(avatarImgSearched.isPresent()){
+                        userImageService.updateAvatar(avatarImgSearched.get().getId(), file);
+                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update avatar successful", avatarImgSearched.get().getId());
+                    }else {
+                        Avatar avatar =  userImageService.save(file, "IMG", userId);
+                        recruiterService.updateRecruiterAvatar(avatar.getId(), recruiter.get().getId());
+                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update avatar successful", avatar.getId());
+                    }
+                }else {
+                    return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this recruiter", userId);
+                }
+            }
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this user", userId);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
     }
 }

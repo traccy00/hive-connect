@@ -24,4 +24,6 @@ public interface RecruiterService {
     void updateRecruiterInformation(RecruiterUpdateProfileRequest recruiterUpdateProfileRequest);
 
     List<AppliedJobByRecruiterResponse> getListAppliedByForRecruiter(long recruiterId);
+
+    void updateRecruiterAvatar(String img, long id);
 }

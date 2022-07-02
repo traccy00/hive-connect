@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -17,18 +19,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Image extends BaseEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     @Column(name = "company_id")
     private long companyId;
-
-    @Column(name = "candidate_id")
-    private long candidateId;
-
-    @Column(name = "recruiter_id")
-    private long recruiterId;
 
     @Column(name = "event_id")
     private long eventId;
@@ -39,9 +37,6 @@ public class Image extends BaseEntity {
     @Column(name = "recruiter_post_id")
     private long recruiterPostId;
 
-    @Column(name = "image_url")
-    private String imageUrl;
-
     @Column(name = "is_deleted")
     private int isDeleted;
 
@@ -50,4 +45,12 @@ public class Image extends BaseEntity {
 
     @Column(name = "is_banner")
     private boolean isBanner;
+
+    private String name;
+
+    private String contentType;
+
+    @Type(type="org.hibernate.type.BinaryType")
+    @Column(name = "data")
+    private byte[] data;
 }

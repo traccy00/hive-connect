@@ -3,15 +3,18 @@ package fpt.edu.capstone.controller;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CreateCompanyRequest;
 import fpt.edu.capstone.entity.Company;
+import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.service.CompanyService;
-import fpt.edu.capstone.service.impl.UserImageService;
+import fpt.edu.capstone.service.impl.ImageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -20,7 +23,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @Autowired
-    private UserImageService userImageService;
+    private ImageService imageService;
 
     @GetMapping("/get-list-company")
     public ResponseData getListCompany(){
@@ -49,13 +52,26 @@ public class CompanyController {
         }
     }
 
-//    @PostMapping("/upload-company-image")
-//    public ResponseData uploadAvatar(@RequestParam("file") MultipartFile file) {
-//        try {
-//            AvatarImg avatar = fileService.save(file, "IMG");
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), String.format("File uploaded successfully: %s", file.getOriginalFilename()), avatar);
-//        } catch (Exception e) {
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage(), file.getOriginalFilename() );
-//        }
-//    }
+    @PostMapping("update-avatar")
+    public ResponseData updateCompanyAvatar(@RequestParam("file") MultipartFile file, long companyId) {
+        try{
+            Optional<Company> companySearched = companyService.findById(companyId);
+            if(companySearched.isPresent()) {
+                Optional<Image> imageSearched = imageService.findAvatarByCompanyId(companyId);
+                if(imageSearched.isPresent()) {
+                    imageService.updateAvatar(imageSearched.get().getId(), file);
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "update avatar successful", imageSearched.get().getId());
+                }else {
+                    Image image = imageService.saveCompanyAvatar(file, "IMG", companyId);
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Insert avatar successful", image.getId());
+                }
+            }else {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this company", companyId);
+            }
+
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
 }

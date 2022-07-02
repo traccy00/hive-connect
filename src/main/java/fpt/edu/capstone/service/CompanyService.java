@@ -2,6 +2,7 @@ package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.company.CreateCompanyRequest;
 import fpt.edu.capstone.entity.Company;
+import fpt.edu.capstone.entity.Image;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +22,8 @@ public interface CompanyService {
     Optional<Company> getCompanyByTaxCode(String taxCode);
 
     Company createCompany(CreateCompanyRequest request);
+
+    Optional<Company> findById(long companyId);
+
+    void updateCompanyAvatarUrl(String avatarId, long companyId);
 }

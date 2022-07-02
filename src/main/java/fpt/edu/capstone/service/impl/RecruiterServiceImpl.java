@@ -114,4 +114,9 @@ public class RecruiterServiceImpl implements RecruiterService {
     public List<AppliedJobByRecruiterResponse> getListAppliedByForRecruiter(long recruiterId) {
         return recruiterRepository.getListAppliedByForRecruiter(recruiterId);
     }
+
+    @Override
+    public void updateRecruiterAvatar(String img, long id) {
+        recruiterRepository.updateAvatar(img,id);
+    }
 }
