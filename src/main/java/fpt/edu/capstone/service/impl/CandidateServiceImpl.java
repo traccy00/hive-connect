@@ -57,4 +57,14 @@ public class CandidateServiceImpl implements CandidateService {
         candidateRepository.updateCandidateInformation(updatedCandidate.isGender(), updatedCandidate.getBirthDate(), updatedCandidate.getCountry(), updatedCandidate.getFullName(), updatedCandidate.getAddress(), updatedCandidate.getSocialLink(), updatedCandidate.getIntroduction(), updatedCandidate.getId());
     }
 
+    @Override
+    public void updateIsNeedJob(boolean isNeedJob, long id) {
+        candidateRepository.updateCandicateInformation(isNeedJob, id);
+    }
+
+    @Override
+    public void updateAvatarUrl(String avatarId, long id) {
+        candidateRepository.updateAvatarUrl(avatarId, id);
+    }
+
 }

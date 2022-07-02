@@ -17,4 +17,6 @@ public interface UserService {
     Users getByUserName(String username);
 
     Users findById(long id);
+
+    Optional<Users> findByIdOp(long id);
 }
