@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import fpt.edu.capstone.dto.File.FileResponse;
 import fpt.edu.capstone.entity.Avatar;
+import fpt.edu.capstone.entity.Company;
+import fpt.edu.capstone.entity.Image;
+import fpt.edu.capstone.service.impl.ImageService;
 import fpt.edu.capstone.service.impl.UserImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class FileController {
 
     private final UserImageService userImageService;
+
 
     @Autowired
     public FileController(UserImageService userImageService) {
@@ -79,4 +83,5 @@ public class FileController {
                 .contentType(MediaType.valueOf(avatar.getContentType()))
                 .body(avatar.getData());
     }
+
 }

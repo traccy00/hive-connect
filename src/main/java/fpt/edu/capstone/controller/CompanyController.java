@@ -2,6 +2,7 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CreateCompanyRequest;
+import fpt.edu.capstone.entity.Avatar;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.service.CompanyService;
@@ -10,6 +11,9 @@ import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,6 +76,22 @@ public class CompanyController {
         }catch (Exception ex){
             return null;
         }
+    }
+
+    @GetMapping("/avatar/{id}")
+    public ResponseEntity<byte[]> getCompanyAvatar(@PathVariable String id) {
+        Optional<Image> image = imageService.finById(id);
+
+        if (!image.isPresent()) {
+            return ResponseEntity.notFound()
+                    .build();
+        }
+
+        Image image1 = image.get();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image1.getName() + "\"")
+                .contentType(MediaType.valueOf(image1.getContentType()))
+                .body(image1.getData());
     }
 
 }
