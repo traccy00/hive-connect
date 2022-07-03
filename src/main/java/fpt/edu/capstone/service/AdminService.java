@@ -11,4 +11,6 @@ public interface AdminService {
     Optional <Admin> findAdminByUserId(long userId);
 
     void insertAdmin(long userId);
+
+    ResponseDataPagination searchUsersForAdmin(String selectTab, Integer pageNo, Integer pageSize, String username, String email);
 }
