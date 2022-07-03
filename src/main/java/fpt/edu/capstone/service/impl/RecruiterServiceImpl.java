@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
+import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
@@ -14,6 +15,8 @@ import fpt.edu.capstone.repository.RecruiterRepository;
 import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.RecruiterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -123,5 +126,10 @@ public class RecruiterServiceImpl implements RecruiterService {
     @Override
     public void updateCompany(long companyId, long id) {
         recruiterRepository.updateCompany(companyId, id);
+    }
+
+    @Override
+    public Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, String username, String email) {
+        return recruiterRepository.searchRecruitersForAdmin(pageable, username, email);
     }
 }

@@ -1,14 +1,17 @@
 package fpt.edu.capstone.repository;
 
+import fpt.edu.capstone.dto.admin.user.CandidateManageResponse;
 import fpt.edu.capstone.entity.Candidate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 @Repository
@@ -38,4 +41,12 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
     @Modifying
     @Query(value = "UPDATE public.candidate SET avatar_url=?1 WHERE id=?2", nativeQuery = true)
     void updateAvatarUrl(String avatarId, long id);
+
+    @Query(value = "select u.id as userId, c.id as candidateRecruiterId, u.avatar as avatar, c.gender as gender, c.birth_date as birthDate, c.country as country, " +
+            "c.full_name as fullName, u.username as userName, c.address as address, c.social_link as socialLink, c.is_need_job as isNeedJob, c.experience_level as experienceLevel, " +
+            "c.introduction as introduction, u.email as email, u.role_id as roleId, r.name as roleName, u.is_deleted as isDeleted, u.last_login_time as lastLoginTime, " +
+            "u.is_verified_email as isVerifiedEmail, u.is_veriy_phonenumber as isVerifiedPhoneNumber, u.created_at as createdAt, u.updated_at as updatedAt " +
+            "from users u join candidate c on u.id = c.user_id " +
+            "join roles r on u.role_id = r.id where u.username like concat('%',:username,'%') and email like concat('%',:email,'%') ", nativeQuery = true)
+    Page<CandidateManageResponse> searchCandidateForAdmin(Pageable pageable, @Param("username") String username, @Param("email") String email);
 }

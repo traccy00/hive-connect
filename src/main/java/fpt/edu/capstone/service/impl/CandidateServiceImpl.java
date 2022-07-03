@@ -1,14 +1,14 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.admin.user.CandidateManageResponse;
 import fpt.edu.capstone.entity.Candidate;
-import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.CandidateRepository;
 import fpt.edu.capstone.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +65,11 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public void updateAvatarUrl(String avatarId, long id) {
         candidateRepository.updateAvatarUrl(avatarId, id);
+    }
+
+    @Override
+    public Page<CandidateManageResponse> searchCandidatesForAdmin(Pageable pageable, String username, String email) {
+        return candidateRepository.searchCandidateForAdmin(pageable, username, email);
     }
 
 }

@@ -1,8 +1,10 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.dto.admin.user.CandidateManageResponse;
 import fpt.edu.capstone.entity.Candidate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,4 +29,5 @@ public interface CandidateService  {
 
     void updateAvatarUrl(String avatarId, long id);
 
+    Page<CandidateManageResponse> searchCandidatesForAdmin(Pageable pageable, String username, String email);
 }

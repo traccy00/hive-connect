@@ -1,10 +1,14 @@
 package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
+import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
 import fpt.edu.capstone.entity.Recruiter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -37,4 +41,15 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
     @Transactional
     @Query(value = "UPDATE public.recruiter SET company_id=?1 WHERE id=?2", nativeQuery = true)
     void updateCompany(long companyId, long id);
+
+    @Query(value = "select u.id as userId, u.username as userName, u.email as email, u.role_id as roleId, r2.name as roleName, u.is_deleted as isDeleted, u.last_login_time as lastLoginTime, " +
+            "u.avatar as avatar, u.is_verified_email as isVerifiedEmail, u.is_active as isActive, r.id as recruiterId, r.company_id as companyId, c.name as companyName, " +
+            "r.fullname as fullName, r.verify_account as verifyAccount, r.verify_phonenumber as verifyPhoneNumber, r.gender as gender, r.position as position, " +
+            "r.linkedin_url as linkedInAccount, r.business_license as businessLicense, r.additional_license as additionalLicense, r.phone_number as phoneNumber, " +
+            "r.created_at as createdAt, r.updated_at as updatedAt, r.company_address as companyAddress " +
+            "from users u join recruiter r on u.id = r.user_id " +
+            "join roles r2 on u.role_id = r2.id " +
+            "join companies c on r.company_id = c.id " +
+            "where u.username like concat('%',:username,'%') and u.email like concat('%',:email,'%')", nativeQuery = true)
+    Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, @Param("username") String username, @Param("email") String email);
 }
