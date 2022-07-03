@@ -7,8 +7,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "companies")
-@Getter
 @Setter
+@Getter
 public class Company {
 
     @Id
@@ -51,4 +51,7 @@ public class Company {
 
     @Column(name = "map_url")
     private String mapUrl;
+
+    @Column(name = "creator_id") //Id của thằng recruiter tạo công ty
+    private long creatorId;
 }

@@ -119,4 +119,9 @@ public class RecruiterServiceImpl implements RecruiterService {
     public void updateRecruiterAvatar(String img, long id) {
         recruiterRepository.updateAvatar(img,id);
     }
+
+    @Override
+    public void updateCompany(long companyId, long id) {
+        recruiterRepository.updateCompany(companyId, id);
+    }
 }

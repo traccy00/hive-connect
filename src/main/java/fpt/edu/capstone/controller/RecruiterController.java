@@ -4,12 +4,12 @@ import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
-import fpt.edu.capstone.entity.Avatar;
-import fpt.edu.capstone.entity.Candidate;
-import fpt.edu.capstone.entity.Recruiter;
-import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.entity.*;
+import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.RecruiterService;
+import fpt.edu.capstone.service.RequestJoinCompanyService;
 import fpt.edu.capstone.service.UserService;
+import fpt.edu.capstone.service.impl.CompanyServiceImpl;
 import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
@@ -39,6 +39,12 @@ public class RecruiterController {
 
     @Autowired
     private UserImageService userImageService;
+
+    @Autowired
+    private CompanyService companyService;
+
+    @Autowired
+    private RequestJoinCompanyService requestJoinCompanyService;
 
     @GetMapping("/recruiter-profile/{userId}")
     public ResponseData getRecruiterProfile(@PathVariable("userId") long userId) {
@@ -150,5 +156,64 @@ public class RecruiterController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + avatar.getName() + "\"")
                 .contentType(MediaType.valueOf(avatar.getContentType()))
                 .body(avatar.getData());
+    }
+
+
+    //create request
+
+    @PostMapping("/send-request-join-company") //không cần gửi approval id
+    public ResponseData sendRequestJoinCompany(@RequestBody RequestJoinCompany requestJoinCompany) {
+        try {
+            Optional<Company> company = companyService.findById(requestJoinCompany.getCompanyId());
+            if(!company.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this company to send request", requestJoinCompany.getCompanyId());
+            }
+            requestJoinCompany.setStatus("Pending");
+            requestJoinCompany.setApproverId(company.get().getCreatorId());
+            requestJoinCompanyService.createRequest(requestJoinCompany);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Send request successful", requestJoinCompany);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    //fetch request by sender_id
+    @GetMapping("/get-sent-request")
+    public ResponseData getSentRequest(@RequestParam long senderId) {
+        try {
+            Optional<RequestJoinCompany> requestJoinCompanyOp = requestJoinCompanyService.getSentRequest(senderId);
+            if(requestJoinCompanyOp.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", requestJoinCompanyOp.get());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No request was sent", null);
+        }catch(Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+    //fetch request by creator_id Check xem thang nay co phair creator cua thang nao khong => fetch
+    @GetMapping("/get-receive-request")
+    public ResponseData getReceiveRequest(@RequestParam long approverId) {
+        try {
+            Optional<List<RequestJoinCompany>> requestJoinCompanyOp = requestJoinCompanyService.getReceiveRequest(approverId);
+            if(requestJoinCompanyOp.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", requestJoinCompanyOp.get());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No request have been received", null);
+        }catch(Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @PutMapping("/approve-join-company-request")
+    public ResponseData getReceiveRequest(@RequestBody RequestJoinCompany newRequestJoinCompany) {
+        try {
+            requestJoinCompanyService.approveRequest(newRequestJoinCompany.getStatus(), newRequestJoinCompany.getId());
+            if(!newRequestJoinCompany.getStatus().toLowerCase().equals("deny")) {
+                recruiterService.updateCompany(newRequestJoinCompany.getCompanyId(), newRequestJoinCompany.getSenderId());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "succesful", newRequestJoinCompany);
+        }catch(Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
     }
 }
