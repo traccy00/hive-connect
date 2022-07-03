@@ -26,4 +26,5 @@ public interface CompanyService {
     Optional<Company> findById(long companyId);
 
     void updateCompanyAvatarUrl(String avatarId, long companyId);
+
 }

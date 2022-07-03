@@ -205,7 +205,5 @@ public class CandidateController {
                 .body(cvImported.getData());
     }
 
-
-
 }
 

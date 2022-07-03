@@ -32,4 +32,9 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
     @Transactional
     @Query(value = "UPDATE public.recruiter SET avatar_url=?1 WHERE id=?2", nativeQuery = true)
     void updateAvatar(String img, long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE public.recruiter SET company_id=?1 WHERE id=?2", nativeQuery = true)
+    void updateCompany(long companyId, long id);
 }
