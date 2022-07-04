@@ -4,7 +4,11 @@ import fpt.edu.capstone.common.payment.PaymentConfig;
 import fpt.edu.capstone.dto.vnpay.PaymentDTO;
 import fpt.edu.capstone.dto.vnpay.PaymentResponseDTO;
 import fpt.edu.capstone.entity.Payment;
+import fpt.edu.capstone.entity.Recruiter;
+import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.repository.PaymentRepository;
 import fpt.edu.capstone.service.PaymentService;
+import fpt.edu.capstone.service.RecruiterService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -20,16 +24,23 @@ import java.util.*;
 public class PaymentServiceImpl implements PaymentService {
     private final ModelMapper modelMapper;
 
+    private final PaymentRepository paymentRepository;
+
+    private final RecruiterService recruiterService;
     @Override
     public PaymentResponseDTO getPaymentVNPay(PaymentDTO paymentDTO) throws UnsupportedEncodingException {
-
+        Recruiter recruiter = recruiterService.getRecruiterById(paymentDTO.getRecruiterId());
+        if (recruiter == null){
+            throw new HiveConnectException("Recruiter id = "+ recruiter.getId()+ "not exist");
+        }
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
         payment.setCommand(PaymentConfig.COMMAND);
         payment.setCurrCode(PaymentConfig.CURR_CODE);
         payment.setLocal(PaymentConfig.LOCATE_DEFAULT);
+        String randomTransactionCode = PaymentConfig.getRandomNumber(8);
+        payment.setTransactionCode(randomTransactionCode);
         payment.create();
 
-        payment.setTransactionCode(PaymentConfig.getRandomNumber(8));
         int amount = paymentDTO.getAmount() * 100;
 
         Date date = new Date();
@@ -86,9 +97,10 @@ public class PaymentServiceImpl implements PaymentService {
         String paymentUrl = PaymentConfig.vnp_PayUrl + "?" + queryUrl;
 
         PaymentResponseDTO result = new PaymentResponseDTO();
-        result.setStatus("00");
-        result.setMessage("success");
         result.setPaymentUrl(paymentUrl);
+        if (result != null){
+            paymentRepository.save(payment);
+        }
         return result;
     }
 }
