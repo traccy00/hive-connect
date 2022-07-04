@@ -132,48 +132,6 @@ public class CandidateController {
             }
     }
 
-    @PostMapping("/upload-avatar")
-    public ResponseData uploadAvatar(@RequestParam("file") MultipartFile file, long userId) {
-
-        try{
-            Optional<Users> users = userService.findByIdOp(userId);
-            if(users.isPresent()) { //Check if user is existed
-                Optional<Candidate> candidate = candidateService.findCandidateByUserId(userId);
-                if(candidate.isPresent()){ //Check if this user is candidate
-                    Optional<Avatar> avatarImgSearched = userImageService.findAvatarByUserId(userId);
-                    if(avatarImgSearched.isPresent()){
-                        userImageService.updateAvatar(avatarImgSearched.get().getId(), file);
-                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update avatar successful", avatarImgSearched.get().getId());
-                    }else {
-                        Avatar avatar =  userImageService.save(file, "IMG", userId);
-                        candidateService.updateAvatarUrl(avatar.getId(), candidate.get().getId());
-                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update avatar successful", avatar.getId());
-                    }
-                }else {
-                    return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", userId);
-                }
-            }
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this user", userId);
-        }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
-        }
-    }
-    @GetMapping("/avatar/{id}")
-    public ResponseEntity<byte[]> getCompanyAvatar(@PathVariable String id) {
-        Optional<Avatar> fileEntityOptional = userImageService.getFile(id);
-
-        if (!fileEntityOptional.isPresent()) {
-            return ResponseEntity.notFound()
-                    .build();
-        }
-
-        Avatar avatar = fileEntityOptional.get();
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + avatar.getName() + "\"")
-                .contentType(MediaType.valueOf(avatar.getContentType()))
-                .body(avatar.getData());
-    }
-
     @PostMapping("upload-cv")
     public ResponseData uploadCV(@RequestParam("file") MultipartFile file, long candidateId) {
         try{
