@@ -1,6 +1,7 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.repository.CVImportedRepository;
 import fpt.edu.capstone.service.CandidateService;
@@ -9,6 +10,7 @@ import fpt.edu.capstone.service.impl.CVImportedService;
 import fpt.edu.capstone.service.impl.ImageService;
 import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,6 +163,17 @@ public class CandidateController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cvImported.getName() + "\"")
                 .contentType(MediaType.valueOf(cvImported.getContentType()))
                 .body(cvImported.getData());
+    }
+    @GetMapping("/get-who-viewed-CV")
+    public ResponseData getRecruitersViewedCV(@RequestParam long candidateId) {
+        try {
+            Page<>
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
     }
 
 }

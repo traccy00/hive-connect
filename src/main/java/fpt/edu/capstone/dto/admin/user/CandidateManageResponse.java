@@ -26,5 +26,6 @@ public interface CandidateManageResponse {
     boolean getIsVerifiedEmail();
     LocalDateTime getCreatedAt();
     LocalDateTime getUpdatedAt();
+    boolean getIsLocked();
 }
 
