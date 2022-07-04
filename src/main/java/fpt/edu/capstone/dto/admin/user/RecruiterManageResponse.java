@@ -28,4 +28,5 @@ public interface RecruiterManageResponse {
     LocalDateTime getCreateAt();
     LocalDateTime getUpdateAt();
     String getCompanyAddress();
+    boolean getIsLocked();
 }

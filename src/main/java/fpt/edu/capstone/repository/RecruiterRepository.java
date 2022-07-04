@@ -46,11 +46,11 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
             "u.avatar as avatar, u.is_verified_email as isVerifiedEmail, u.is_active as isActive, r.id as recruiterId, r.company_id as companyId, c.name as companyName, " +
             "r.fullname as fullName, r.verify_account as verifyAccount, r.verify_phonenumber as verifyPhoneNumber, r.gender as gender, r.position as position, " +
             "r.linkedin_url as linkedInAccount, r.business_license as businessLicense, r.additional_license as additionalLicense, r.phone_number as phoneNumber, " +
-            "r.created_at as createdAt, r.updated_at as updatedAt, r.company_address as companyAddress " +
+            "r.created_at as createdAt, r.updated_at as updatedAt, r.company_address as companyAddress, u.is_locked as isLocked " +
             "from users u join recruiter r on u.id = r.user_id " +
             "join roles r2 on u.role_id = r2.id " +
             "join companies c on r.company_id = c.id " +
-            "where u.username like concat('%',:username,'%') and u.email like concat('%',:email,'%')", nativeQuery = true)
+            "where lower(u.username) like lower(concat('%',:username,'%')) and lower(u.email) like lower(concat('%',:email,'%'))", nativeQuery = true)
     Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, @Param("username") String username, @Param("email") String email);
 
     Optional<Recruiter> findByPhoneNumber(String phone);
