@@ -167,7 +167,7 @@ public class CandidateController {
     @GetMapping("/get-who-viewed-CV")
     public ResponseData getRecruitersViewedCV(@RequestParam long candidateId) {
         try {
-            Page<>
+//            Page<>
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
