@@ -2,10 +2,12 @@ package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Repository
@@ -21,6 +23,11 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     @Query(value = "select * from users where id = ?", nativeQuery = true)
     Users getUserById(long userId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE public.users SET avatar=?1 WHERE id=?2", nativeQuery = true)
+    void updateAvatarUrl(String avatarId, long id);
 
     Users getByUsername(String username);
 }

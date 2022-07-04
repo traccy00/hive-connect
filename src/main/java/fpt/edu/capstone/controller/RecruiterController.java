@@ -114,51 +114,6 @@ public class RecruiterController {
         System.out.println(appliedJobByRecruiterResponses);
         return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "asd", appliedJobByRecruiterResponses);
     }
-
-    @PostMapping("/upload-avatar")
-    public ResponseData uploadAvatar(@RequestParam("file") MultipartFile file, long userId) {
-
-        try{
-            Optional<Users> users = userService.findByIdOp(userId);
-            if(users.isPresent()) { //Check if user is existed
-                Optional<Recruiter> recruiter = recruiterService.findRecruiterByUserId(userId);
-                if(recruiter.isPresent()){ //Check if this user is recruiter
-                    Optional<Avatar> avatarImgSearched = userImageService.findAvatarByUserId(userId);
-                    if(avatarImgSearched.isPresent()){
-                        userImageService.updateAvatar(avatarImgSearched.get().getId(), file);
-                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update avatar successful", avatarImgSearched.get().getId());
-                    }else {
-                        Avatar avatar =  userImageService.save(file, "IMG", userId);
-                        recruiterService.updateRecruiterAvatar(avatar.getId(), recruiter.get().getId());
-                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update avatar successful", avatar.getId());
-                    }
-                }else {
-                    return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this recruiter", userId);
-                }
-            }
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this user", userId);
-        }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
-        }
-    }
-
-    @GetMapping("/avatar/{id}")
-    public ResponseEntity<byte[]> getCompanyAvatar(@PathVariable String id) {
-        Optional<Avatar> fileEntityOptional = userImageService.getFile(id);
-
-        if (!fileEntityOptional.isPresent()) {
-            return ResponseEntity.notFound()
-                    .build();
-        }
-
-        Avatar avatar = fileEntityOptional.get();
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + avatar.getName() + "\"")
-                .contentType(MediaType.valueOf(avatar.getContentType()))
-                .body(avatar.getData());
-    }
-
-
     //create request
 
     @PostMapping("/send-request-join-company") //không cần gửi approval id

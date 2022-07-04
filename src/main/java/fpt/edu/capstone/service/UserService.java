@@ -19,4 +19,6 @@ public interface UserService {
     Users findById(long id);
 
     Optional<Users> findByIdOp(long id);
+
+    void updateAvatarUrl(String avatarId, long id);
 }

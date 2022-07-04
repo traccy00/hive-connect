@@ -85,4 +85,9 @@ public class UserServiceImpl implements UserService {
     public Optional<Users> findByIdOp(long id) {
         return userRepository.findById(id);
     }
+
+    @Override
+    public void updateAvatarUrl(String avatarId, long id) {
+        userRepository.updateAvatarUrl(avatarId, id);
+    }
 }

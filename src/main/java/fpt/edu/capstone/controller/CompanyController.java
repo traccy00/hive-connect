@@ -56,42 +56,4 @@ public class CompanyController {
         }
     }
 
-    @PostMapping("update-avatar")
-    public ResponseData updateCompanyAvatar(@RequestParam("file") MultipartFile file, long companyId) {
-        try{
-            Optional<Company> companySearched = companyService.findById(companyId);
-            if(companySearched.isPresent()) {
-                Optional<Image> imageSearched = imageService.findAvatarByCompanyId(companyId);
-                if(imageSearched.isPresent()) {
-                    imageService.updateAvatar(imageSearched.get().getId(), file);
-                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "update avatar successful", imageSearched.get().getId());
-                }else {
-                    Image image = imageService.saveCompanyAvatar(file, "IMG", companyId);
-                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Insert avatar successful", image.getId());
-                }
-            }else {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this company", companyId);
-            }
-
-        }catch (Exception ex){
-            return null;
-        }
-    }
-
-    @GetMapping("/avatar/{id}")
-    public ResponseEntity<byte[]> getCompanyAvatar(@PathVariable String id) {
-        Optional<Image> image = imageService.finById(id);
-
-        if (!image.isPresent()) {
-            return ResponseEntity.notFound()
-                    .build();
-        }
-
-        Image image1 = image.get();
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image1.getName() + "\"")
-                .contentType(MediaType.valueOf(image1.getContentType()))
-                .body(image1.getData());
-    }
-
 }
