@@ -3,8 +3,13 @@ package fpt.edu.capstone.controller;
 import com.twilio.Twilio;
 import com.twilio.rest.verify.v2.service.Verification;
 import fpt.edu.capstone.common.Twilio.TwilioProperties;
+import fpt.edu.capstone.entity.Recruiter;
+import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.service.RecruiterService;
+import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +21,8 @@ import com.twilio.rest.verify.v2.service.VerificationCheck;
 @RestController
 @RequestMapping("/api/v1/otp")
 public class TwilioController {
+    @Autowired
+    private RecruiterService recruiterService;
 
     public TwilioController(TwilioProperties twilioProperties) {
         this.twilioProperties = twilioProperties;
@@ -57,6 +64,11 @@ public class TwilioController {
 
             System.out.println(verificationCheck.getStatus());
             if (verificationCheck.getStatus().equals("approval")) {
+                //Update verify phone number
+                Recruiter re = recruiterService.findByPhoneNumber(phone).get();
+                if(re != null){
+                    re.setVerifyPhoneNumber(true);
+                }
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Approval", verificationCheck.getStatus());
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Denied", verificationCheck.getStatus());

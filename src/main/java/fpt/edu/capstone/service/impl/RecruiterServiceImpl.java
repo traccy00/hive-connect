@@ -90,6 +90,11 @@ public class RecruiterServiceImpl implements RecruiterService {
     }
 
     @Override
+    public Optional<Recruiter> findByPhoneNumber(String phone) {
+        return recruiterRepository.findByPhoneNumber(phone);
+    }
+
+    @Override
     public Recruiter insertRecruiter(long userId) {
         Recruiter recruiter = new Recruiter();
         recruiter.setUserId(userId);
