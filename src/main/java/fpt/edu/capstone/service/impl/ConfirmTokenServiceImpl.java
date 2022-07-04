@@ -32,7 +32,7 @@ public class ConfirmTokenServiceImpl implements ConfirmTokenService {
 
         String subject = "Welcome to Hive Connect Social";
         Content content = new Content("text/html",
-                "To confirm your account, please click here : "+"http://localhost:8081/confirm-account?token="+token);
+                "To confirm your account, please click here : "+"http://localhost:4200/auth/confirm-token?token="+token);
 
         Mail mail = new Mail(from, subject, to, content);
 

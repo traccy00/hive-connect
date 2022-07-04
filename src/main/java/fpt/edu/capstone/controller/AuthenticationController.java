@@ -179,7 +179,7 @@ public class AuthenticationController {
      */
     @PostMapping("/confirm-account")
     @Operation(summary = "confirm account")
-    public ResponseData confirmAccount(@RequestParam("token") String token) {
+    public ResponseDataUser confirmAccount(@RequestParam("token") String token) {
         try {
             // Cần lấy ra token để truyền vào url cho verify
             ConfirmToken cf = confirmTokenService.getByConfirmToken(token);
@@ -196,11 +196,13 @@ public class AuthenticationController {
                 user.setVerifiedEmail(true);
             }
             userService.saveUser(user);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS);
+            final UserDetails userDetails = securityUserService.loadUserByUsername(user.getUsername());
+            String tokenJwt = jwtTokenUtil.generateToken(userDetails);
+            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.REGISTER_SUCCESS, user, tokenJwt);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+            return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 
