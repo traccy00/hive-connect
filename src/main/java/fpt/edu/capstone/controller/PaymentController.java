@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/payment")
 @AllArgsConstructor
@@ -34,20 +36,24 @@ public class PaymentController {
     }
 
     @GetMapping("/payment-information")
-    public ResponseData transactionHandle(@RequestParam(value = "vnpAmount", required = false) String amount,
-                                          @RequestParam(value = "vnpBankCode", required = false) String bankCode,
-                                          @RequestParam(value = "vnpBankTranNo", required = false) String bankTranNo,
-                                          @RequestParam(value = "vnpCardType", required = false) String cardType,
-                                          @RequestParam(value = "vnpOrderInfo", required = false) String orderInfo,
-                                          @RequestParam(value = "vnpPayDate", required = false) String payDate,
-                                          @RequestParam(value = "vnpResponseCode", required = false) String responseCode,
-                                          @RequestParam(value = "vnpTmnCode", required = false) String tmnCode,
-                                          @RequestParam(value = "vnpTransactionNo", required = false) String transactionNo,
-                                          @RequestParam(value = "vnpTxnRef", required = false) String txnRef,
-                                          @RequestParam(value = "vnpSecureHashType", required = false) String secureHashType,
-                                          @RequestParam(value = "vnpSecureHash", required = false) String secureHash) {
-
-
-        return null;
+    public ResponseData transactionHandle(@RequestParam(defaultValue = "0", value = "recruiterId", required = false) long recruiterId,
+                                          @RequestParam(defaultValue = "0", value = "rentalPackageId", required = false) long rentalPackageId,
+                                          @RequestParam(defaultValue = "0", value = "bannerId", required = false) long bannerId,
+                                          @RequestParam(value = "transactionCode", required = false) String transactionCode,
+                                          @RequestParam(value = "orderType", required = false) String orderType) {
+        try {
+            List<Payment> paymentList = paymentService.
+                    getListPaymentFilter(recruiterId, rentalPackageId, bannerId, transactionCode, orderType);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS, paymentList);
+        } catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
     }
+
+    /*
+    xử lý get tổng số tiền mà recruiter đã nạp
+    xử lý khi mua gói package sẽ truyền vào gì, ngày hết hạn như nào
+     */
 }

@@ -103,4 +103,12 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return result;
     }
+
+    @Override
+    public List<Payment> getListPaymentFilter(long recruiterId, long rentalPackageId,
+                                              long bannerId, String transactionCode, String orderType) {
+        List <Payment> paymentList = paymentRepository.
+                getListPaymentFilter(recruiterId,rentalPackageId,bannerId,transactionCode,orderType);
+        return paymentList;
+    }
 }
