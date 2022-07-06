@@ -152,6 +152,13 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public Page<Job> getJobByCompanyId(long pageNo, long quantity, long companyId) {
+        int pageReq = (int) (pageNo >= 1 ? pageNo - 1 : pageNo);
+        Pageable pageable = PageRequest.of(pageReq, (int) quantity);
+        return jobRepository.getJobByCompanyId(companyId, pageable);
+    }
+
+    @Override
     public Job getJobById(long jobId) {
         Job job = jobRepository.getById(jobId);
         if (job == null || job.getId() == 0) {

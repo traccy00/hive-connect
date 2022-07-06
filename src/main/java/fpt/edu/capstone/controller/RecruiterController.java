@@ -2,6 +2,8 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.job.JobResponse;
+import fpt.edu.capstone.dto.recruiter.RecruiterBaseOnCompanyResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
 import fpt.edu.capstone.entity.*;
@@ -12,18 +14,23 @@ import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.CompanyServiceImpl;
 import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseData;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/recruiter")
@@ -169,6 +176,38 @@ public class RecruiterController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "succesful", newRequestJoinCompany);
         }catch(Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/get-recruiter-by-company")
+    public ResponseDataPagination getRecruiterByCompany(@RequestParam(defaultValue = "1") Integer pageNo,
+                                                        @RequestParam(defaultValue = "10") Integer pageSize,
+                                                        @RequestParam("companyId") long companyId) {
+        try {
+            List<RecruiterBaseOnCompanyResponse> responseList = new ArrayList<>();
+            Page<Recruiter> recruiters = recruiterService.getRecruiterByCompanyId(pageNo, pageSize, companyId);
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
+//            Page<Job> jobs = jobService.getPopularJobList(pageable);
+            if (recruiters.hasContent()) {
+                for (Recruiter r : recruiters) {
+                    Users user = userService.getUserById(r.getUserId());
+                    RecruiterBaseOnCompanyResponse recruiterBaseOnCompanyResponse = new RecruiterBaseOnCompanyResponse(r.getId(), r.getFullName(), r.getAvatarUrl(), r.getFullName(), r.isGender(), r.getPosition(), r.getLinkedInAccount(), user.getEmail(), r.getPhoneNumber());
+                    responseList.add(recruiterBaseOnCompanyResponse);
+                }
+            }
+            ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+            Pagination pagination = new Pagination();
+            responseDataPagination.setData(responseList);
+            pagination.setCurrentPage(pageNo);
+            pagination.setPageSize(pageSize);
+            pagination.setTotalPage(recruiters.getTotalPages());
+            pagination.setTotalRecords(Integer.parseInt(String.valueOf(recruiters.getTotalElements())));
+            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+            responseDataPagination.setPagination(pagination);
+            return responseDataPagination;
+        }catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return new ResponseDataPagination();
         }
     }
 }
