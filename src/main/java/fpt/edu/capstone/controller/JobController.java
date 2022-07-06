@@ -3,23 +3,22 @@ package fpt.edu.capstone.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
+import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.service.CandidateJobService;
-import fpt.edu.capstone.service.FindJobService;
-import fpt.edu.capstone.service.JobService;
-import fpt.edu.capstone.service.RecruiterJobService;
-import fpt.edu.capstone.utils.Enums;
-import fpt.edu.capstone.utils.LogUtils;
-import fpt.edu.capstone.utils.ResponseData;
-import fpt.edu.capstone.utils.ResponseDataPagination;
+import fpt.edu.capstone.entity.JobHashtag;
+import fpt.edu.capstone.service.*;
+import fpt.edu.capstone.utils.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/job")
@@ -34,6 +33,10 @@ public class JobController {
     private final CandidateJobService candidateJobService;
 
     private final RecruiterJobService recruiterJobService;
+
+    private final JobHashTagService jobHashTagService;
+
+    private final CompanyService companyService;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -265,6 +268,65 @@ public class JobController {
         }catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-jobs-by-company")
+    public ResponseDataPagination getJobByCompany(@RequestParam(defaultValue = "1") Integer pageNo,
+                                              @RequestParam(defaultValue = "10") Integer pageSize,
+                                              @RequestParam("companyId") long companyId) {
+        try {
+            List<JobResponse> responseList = new ArrayList<>();
+            Page<Job> jobs = jobService.getJobByCompanyId(pageNo, pageSize, companyId);
+            if (jobs.hasContent()) {
+                for (Job job : jobs) {
+                    JobResponse jobResponse = new JobResponse();
+                    jobResponse.setJobId(job.getId());
+                    jobResponse.setCompanyId(job.getCompanyId());
+                    jobResponse.setRecruiterId(job.getRecruiterId());
+                    List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
+                    if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
+                        List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
+                        jobResponse.setListHashtag(hashTagNameList);
+                    }
+                    Company company = companyService.getCompanyById(job.getCompanyId());
+                    if (company != null) {
+                        jobResponse.setCompanyName(company.getName());
+                    }
+                    jobResponse.setJobName(job.getJobName());
+                    jobResponse.setJobDescription(job.getJobDescription());
+                    jobResponse.setJobRequirement(job.getJobRequirement());
+                    jobResponse.setBenefit(job.getBenefit());
+                    jobResponse.setFromSalary(job.getFromSalary());
+                    jobResponse.setToSalary(job.getToSalary());
+                    jobResponse.setNumberRecruits(job.getNumberRecruits());
+                    jobResponse.setRank(job.getRank());
+                    jobResponse.setWorkForm(job.getWorkForm());
+                    jobResponse.setGender(job.isGender());
+                    jobResponse.setStartDate(job.getStartDate());
+                    jobResponse.setEndDate(job.getEndDate());
+                    jobResponse.setWorkPlace(job.getWorkPlace());
+                    jobResponse.setCreatedAt(job.getCreatedAt());
+                    jobResponse.setUpdatedAt(job.getUpdatedAt());
+                    jobResponse.setPopularJob(job.isPopularJob());
+                    jobResponse.setNewJob(job.isNewJob());
+                    jobResponse.setUrgentJob(job.isUrgentJob());
+                    responseList.add(jobResponse);
+                }
+            }
+            ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+            Pagination pagination = new Pagination();
+            responseDataPagination.setData(responseList);
+            pagination.setCurrentPage(pageNo);
+            pagination.setPageSize(pageSize);
+            pagination.setTotalPage(jobs.getTotalPages());
+            pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
+            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+            responseDataPagination.setPagination(pagination);
+            return responseDataPagination;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseDataPagination();
         }
     }
 }

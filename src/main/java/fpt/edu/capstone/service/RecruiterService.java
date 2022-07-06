@@ -4,6 +4,7 @@ import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
+import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.Recruiter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,4 +39,6 @@ public interface RecruiterService {
     Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, String username, String email);
 
     void updateCompany(long companyId, long id);
+
+    Page<Recruiter> getRecruiterByCompanyId(long pageNo, long quantity, long companyId);
 }

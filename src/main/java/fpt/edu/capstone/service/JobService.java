@@ -41,4 +41,6 @@ public interface JobService {
     Page<Job> getJobOfRecruiter(Pageable pageable, long recruiterId);
 
     Optional<Job> findById(long id);
+
+    Page<Job> getJobByCompanyId(long pageNo, long quantity, long companyId);
 }

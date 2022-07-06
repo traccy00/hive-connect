@@ -16,6 +16,7 @@ import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.RecruiterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -131,6 +132,13 @@ public class RecruiterServiceImpl implements RecruiterService {
     @Override
     public void updateCompany(long companyId, long id) {
         recruiterRepository.updateCompany(companyId, id);
+    }
+
+    @Override
+    public Page<Recruiter> getRecruiterByCompanyId(long pageNo, long quantity, long companyId) {
+        int pageReq = (int) (pageNo >= 1 ? pageNo - 1 : pageNo);
+        Pageable pageable = PageRequest.of(pageReq, (int) quantity);
+        return recruiterRepository.getRecruiterByCompanyId(companyId, pageable);
     }
 
     @Override

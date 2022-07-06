@@ -2,6 +2,7 @@ package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
+import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.Recruiter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,4 +55,7 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
     Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, @Param("username") String username, @Param("email") String email);
 
     Optional<Recruiter> findByPhoneNumber(String phone);
+
+    @Query(value = "select * from recruiter where company_id = ?1", nativeQuery = true)
+    Page<Recruiter> getRecruiterByCompanyId(long id, Pageable pageable);
 }
