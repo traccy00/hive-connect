@@ -14,13 +14,14 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class RentalPackage extends BaseEntity {
+//Các gói cho thuê
+public class RentalPackage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long id; //1
 
-    @Column(name = "package_name") // Gold, basic, classic, gói mua thêm
-    private String packageName;
+    @Column(name = "package_group") // quảng cáo tuyển dụng, top employer branding
+    private String packageGroup;
 
     @Column(name = "description")
     private String description;

@@ -15,4 +15,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             "and  (lower(p.orderType) like lower(concat('%', :type ,'%')) or :type is null or :type ='')")
     List<Payment> getListPaymentFilter(@Param("recruiterId") long recruiterId,@Param("rentalPackageId") long rentalPackageId,
                                        @Param("bannerId") long bannerId,@Param("code") String transactionCode,@Param("type") String orderType);
+
+    Payment findByRecruiterId(long recId);
 }

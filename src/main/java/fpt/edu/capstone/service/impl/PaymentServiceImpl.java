@@ -16,7 +16,10 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -110,5 +113,20 @@ public class PaymentServiceImpl implements PaymentService {
         List <Payment> paymentList = paymentRepository.
                 getListPaymentFilter(recruiterId,rentalPackageId,bannerId,transactionCode,orderType);
         return paymentList;
+    }
+
+    @Override
+    public Payment findRecruiterPurchasedPackage(long recruiterId) {
+        Payment payment = paymentRepository.findByRecruiterId(recruiterId);
+        if(payment == null){
+            throw new HiveConnectException("there is no payment to buy any package");
+        }
+        //If exist : check expireDate package
+        LocalDateTime expiredDate = payment.getExpiredDate();
+        LocalDateTime now = LocalDateTime.now();
+        if(expiredDate.isAfter(now)){
+            throw new HiveConnectException("Package has expired date");
+        }
+        return null;
     }
 }

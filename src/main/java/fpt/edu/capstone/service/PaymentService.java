@@ -13,4 +13,6 @@ public interface PaymentService {
 
     List <Payment> getListPaymentFilter(long recruiterId,long rentalPackageId,
                                         long bannerId,String transactionCode,String orderType);
+
+    Payment findRecruiterPurchasedPackage(long recruiterId);
 }
