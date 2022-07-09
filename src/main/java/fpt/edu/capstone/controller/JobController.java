@@ -208,22 +208,11 @@ public class JobController {
     }
 
     @GetMapping("/remote-job")
-    public ResponseData getListRemoteJob() {
+    public ResponseData getListRemoteJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                         @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
-            List <Job> listFulltimeJob = jobService.getListJobByWorkForm("REMOTE");
-            List <DetailJobResponse> response = listFulltimeJob.stream().
-                    map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
-            for (DetailJobResponse res: response) {
-                Company company = companyService.getCompanyById(res.getCompanyId());
-                Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
-                Fields fields = fieldsService.getById(res.getFieldId());
-
-                res.setCompanyName(company.getName());
-                res.setFieldName(fields.getFieldName());
-                res.setRecruiterName(recruiter.getFullName());
-                res.setAvatar(company.getAvatar());
-            }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, response);
+            ResponseDataPagination pagination = jobService.getListJobByWorkForm(pageNo,pageSize, "REMOTE");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
@@ -231,22 +220,11 @@ public class JobController {
     }
 
     @GetMapping("/fulltime-job")
-    public ResponseData getListFulltimeJob() {
+    public ResponseData getListFulltimeJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                           @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
-            List <Job> listFulltimeJob = jobService.getListJobByWorkForm("FULLTIME");
-            List <DetailJobResponse> response = listFulltimeJob.stream().
-                    map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
-            for (DetailJobResponse res: response) {
-                Company company = companyService.getCompanyById(res.getCompanyId());
-                Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
-                Fields fields = fieldsService.getById(res.getFieldId());
-
-                res.setCompanyName(company.getName());
-                res.setFieldName(fields.getFieldName());
-                res.setRecruiterName(recruiter.getFullName());
-                res.setAvatar(company.getAvatar());
-            }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, response);
+            ResponseDataPagination pagination = jobService.getListJobByWorkForm(pageNo,pageSize, "FULLTIME");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
@@ -254,22 +232,11 @@ public class JobController {
     }
 
     @GetMapping("/parttime-job")
-    public ResponseData getListParttimeJob() {
+    public ResponseData getListParttimeJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                           @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
-            List <Job> listFulltimeJob = jobService.getListJobByWorkForm("PARTTIME");
-            List <DetailJobResponse> response = listFulltimeJob.stream().
-                    map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
-            for (DetailJobResponse res: response) {
-                Company company = companyService.getCompanyById(res.getCompanyId());
-                Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
-                Fields fields = fieldsService.getById(res.getFieldId());
-
-                res.setCompanyName(company.getName());
-                res.setFieldName(fields.getFieldName());
-                res.setRecruiterName(recruiter.getFullName());
-                res.setAvatar(company.getAvatar());
-            }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, response);
+            ResponseDataPagination pagination = jobService.getListJobByWorkForm(pageNo,pageSize, "PARTTIME");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
@@ -277,22 +244,12 @@ public class JobController {
     }
 
     @GetMapping("/job-by-field")
-    public ResponseData getJobByCareer(@RequestParam(value = "id") long fieldId) {
+    public ResponseData getJobByCareer(@RequestParam(defaultValue = "1") Integer pageNo,
+                                       @RequestParam(defaultValue = "10") Integer pageSize,
+                                       @RequestParam(value = "id") long fieldId) {
         try {
-            List<Job> listByCareer = jobService.getJobByFieldId(fieldId);
-            List <DetailJobResponse> response = listByCareer.stream().
-                    map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
-            for (DetailJobResponse res: response) {
-                Company company = companyService.getCompanyById(res.getCompanyId());
-                Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
-                Fields fields = fieldsService.getById(res.getFieldId());
-
-                res.setCompanyName(company.getName());
-                res.setFieldName(fields.getFieldName());
-                res.setRecruiterName(recruiter.getFullName());
-                res.setAvatar(company.getAvatar());
-            }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,response);
+            ResponseDataPagination pagination = jobService.getJobByFieldId(pageNo, pageSize, fieldId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,pagination);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);

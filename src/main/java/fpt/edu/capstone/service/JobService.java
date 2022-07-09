@@ -4,6 +4,7 @@ import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
 import fpt.edu.capstone.entity.Job;
+import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +25,11 @@ public interface JobService {
 
     boolean existsById(long id);
 
-    List<Job> getListJobByWorkForm(String workForm);
+    ResponseDataPagination getListJobByWorkForm(Integer pageNo, Integer pageSize, String workForm);
 
     Page<Job> getNewestJobList(Pageable pageable);
 
-    List<Job> getJobByFieldId(long id);
+    ResponseDataPagination getJobByFieldId(Integer pageNo, Integer pageSize, long id);
 
     List<JobResponse> getListSuggestJobByCv(long candidateId);
 

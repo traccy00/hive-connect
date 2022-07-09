@@ -33,7 +33,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     boolean existsById(long id);
 
     @Query(value = "select * from Job where work_form like  upper(concat('%', :workForm ,'%'))", nativeQuery = true)
-    List<Job> getListJobByWorkForm(@Param("workForm") String workForm);
+    Page<Job> getListJobByWorkForm(Pageable pageable, @Param("workForm") String workForm);
 
     @Query(value = "select * from job where is_new_job = ?1 and (is_deleted = ?2 or is_deleted is null)", nativeQuery = true)
     Page<Job> getNewestJob(Pageable pageable, boolean isNewJob, int isDeleted);
@@ -45,7 +45,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     Page<Job> getPopularJob(Pageable pageable, boolean b, int i);
 
     @Query("Select c from Job c where c.fieldId = :fieldId and c.isDeleted = 0")
-    List<Job> getListJobByFieldId(@Param("fieldId") long fieldId);
+    Page<Job> getListJobByFieldId(Pageable pageable, @Param("fieldId") long fieldId);
 
     @Query("select c from Job c where c.jobDescription like lower(concat('%', :majorName ,'%')) or c.jobRequirement like  lower(concat('%', :majorName ,'%'))")
     List <Job> getListSuggestJobByCv(String majorName);

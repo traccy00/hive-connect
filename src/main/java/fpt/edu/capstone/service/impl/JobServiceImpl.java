@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.job.CreateJobRequest;
+import fpt.edu.capstone.dto.job.DetailJobResponse;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
 import fpt.edu.capstone.entity.*;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -116,8 +118,32 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> getListJobByWorkForm(String workForm) {
-        return jobRepository.getListJobByWorkForm(workForm);
+    public ResponseDataPagination getListJobByWorkForm(Integer pageNo, Integer pageSize, String workForm) {
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+        Page <Job> listFulltimeJob = jobRepository.getListJobByWorkForm(pageable, workForm);
+        List <DetailJobResponse> response = listFulltimeJob.stream().
+                map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
+        for (DetailJobResponse res: response) {
+            Company company = companyService.getCompanyById(res.getCompanyId());
+            Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
+            Fields fields = fieldsService.getById(res.getFieldId());
+
+            res.setCompanyName(company.getName());
+            res.setFieldName(fields.getFieldName());
+            res.setRecruiterName(recruiter.getFullName());
+            res.setAvatar(company.getAvatar());
+        }
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(response);
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(listFulltimeJob.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(listFulltimeJob.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
     }
 
     @Override
@@ -166,8 +192,32 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> getJobByFieldId(long id) {
-        return jobRepository.getListJobByFieldId(id);
+    public ResponseDataPagination getJobByFieldId(Integer pageNo, Integer pageSize, long id) {
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+        Page<Job> listByCareer = jobRepository.getListJobByFieldId(pageable, id);
+        List <DetailJobResponse> response = listByCareer.stream().
+                map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
+        for (DetailJobResponse res: response) {
+            Company company = companyService.getCompanyById(res.getCompanyId());
+            Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
+            Fields fields = fieldsService.getById(res.getFieldId());
+
+            res.setCompanyName(company.getName());
+            res.setFieldName(fields.getFieldName());
+            res.setRecruiterName(recruiter.getFullName());
+            res.setAvatar(company.getAvatar());
+        }
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(response);
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(listByCareer.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(listByCareer.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
     }
 
     @Override
