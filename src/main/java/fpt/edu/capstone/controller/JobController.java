@@ -3,13 +3,12 @@ package fpt.edu.capstone.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
-import fpt.edu.capstone.entity.Company;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.JobHashtag;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,9 +33,15 @@ public class JobController {
 
     private final RecruiterJobService recruiterJobService;
 
+    private final RecruiterService recruiterService;
+
     private final JobHashTagService jobHashTagService;
 
     private final CompanyService companyService;
+
+    private final FieldsService fieldsService;
+
+    private final ModelMapper modelMapper;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -205,8 +210,20 @@ public class JobController {
     @GetMapping("/remote-job")
     public ResponseData getListRemoteJob() {
         try {
-            List <Job> listRemoteJob = jobService.getListJobByWorkForm("REMOTE");
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listRemoteJob);
+            List <Job> listFulltimeJob = jobService.getListJobByWorkForm("REMOTE");
+            List <DetailJobResponse> response = listFulltimeJob.stream().
+                    map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
+            for (DetailJobResponse res: response) {
+                Company company = companyService.getCompanyById(res.getCompanyId());
+                Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
+                Fields fields = fieldsService.getById(res.getFieldId());
+
+                res.setCompanyName(company.getName());
+                res.setFieldName(fields.getFieldName());
+                res.setRecruiterName(recruiter.getFullName());
+                res.setAvatar(company.getAvatar());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, response);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
@@ -217,7 +234,19 @@ public class JobController {
     public ResponseData getListFulltimeJob() {
         try {
             List <Job> listFulltimeJob = jobService.getListJobByWorkForm("FULLTIME");
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listFulltimeJob);
+            List <DetailJobResponse> response = listFulltimeJob.stream().
+                    map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
+            for (DetailJobResponse res: response) {
+                Company company = companyService.getCompanyById(res.getCompanyId());
+                Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
+                Fields fields = fieldsService.getById(res.getFieldId());
+
+                res.setCompanyName(company.getName());
+                res.setFieldName(fields.getFieldName());
+                res.setRecruiterName(recruiter.getFullName());
+                res.setAvatar(company.getAvatar());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, response);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
@@ -227,8 +256,20 @@ public class JobController {
     @GetMapping("/parttime-job")
     public ResponseData getListParttimeJob() {
         try {
-            List <Job> listParttimeJob = jobService.getListJobByWorkForm("PARTTIME");
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listParttimeJob);
+            List <Job> listFulltimeJob = jobService.getListJobByWorkForm("PARTTIME");
+            List <DetailJobResponse> response = listFulltimeJob.stream().
+                    map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
+            for (DetailJobResponse res: response) {
+                Company company = companyService.getCompanyById(res.getCompanyId());
+                Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
+                Fields fields = fieldsService.getById(res.getFieldId());
+
+                res.setCompanyName(company.getName());
+                res.setFieldName(fields.getFieldName());
+                res.setRecruiterName(recruiter.getFullName());
+                res.setAvatar(company.getAvatar());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, response);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
@@ -239,7 +280,19 @@ public class JobController {
     public ResponseData getJobByCareer(@RequestParam(value = "id") long fieldId) {
         try {
             List<Job> listByCareer = jobService.getJobByFieldId(fieldId);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,listByCareer);
+            List <DetailJobResponse> response = listByCareer.stream().
+                    map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
+            for (DetailJobResponse res: response) {
+                Company company = companyService.getCompanyById(res.getCompanyId());
+                Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
+                Fields fields = fieldsService.getById(res.getFieldId());
+
+                res.setCompanyName(company.getName());
+                res.setFieldName(fields.getFieldName());
+                res.setRecruiterName(recruiter.getFullName());
+                res.setAvatar(company.getAvatar());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,response);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);

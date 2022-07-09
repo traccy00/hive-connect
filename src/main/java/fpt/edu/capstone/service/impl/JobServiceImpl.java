@@ -56,10 +56,8 @@ public class JobServiceImpl implements JobService {
         if (!fieldsService.existById(fieldId)) {
             throw new HiveConnectException("Field not found!");
         }
-        Recruiter recruiter = recruiterService.getRecruiterById(recruiterId);
         Object CreateJobRequest = request;
         Job job = modelMapper.map(CreateJobRequest, Job.class);
-//        job.setCompanyName(recruiter.getCompanyName());
         job.create();
         jobRepository.save(job);
     }

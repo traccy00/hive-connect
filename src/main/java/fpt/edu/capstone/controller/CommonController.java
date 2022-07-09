@@ -55,27 +55,4 @@ public class CommonController {
         //lấy ra được ngành nghề hiển thị trong thanh combobox
         return null;
     }
-
-    @PostMapping("/upload-image")
-    public ResponseData uploadImage(@RequestPart("file") MultipartFile multipartFile) {
-//        try {
-//            logger.info("file request with file-name:" + multipartFile.getOriginalFilename());
-//            if (multipartFile == null) {
-//                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.DATA_INVALID);
-//            }
-//            String resultFileName = configService.uploadImage(authModel.getUserId(), multipartFile);
-//            Map<String, String> mapResponse = new HashMap<>();
-//            mapResponse.put("image", resultFileName);
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), mapResponse);
-//        } catch (Exception be) {
-//            String msg = LogUtils.printLogStackTrace(be);
-//            logger.error(msg);
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), be.getMessage());
-//        } catch (Exception e) {
-//            String msg = LogUtils.printLogStackTrace(e);
-//            logger.error(msg);
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
-//        }
-        return null;
-    }
 }
