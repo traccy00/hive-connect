@@ -20,3 +20,5 @@ người tạo company mới dc edit thông tin của company đó
 - login google , linkedlin
 - upload file
  */
+
+ Hoàng xử lý api liên quan đến admin, ( xem màn mockup admin và break đầu api rồi code)

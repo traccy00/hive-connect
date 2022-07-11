@@ -35,7 +35,7 @@ public class Banner extends BaseEntity {
     private boolean spotlight;
 
     @Column(name = "homepage_banner_a")
-    private boolean hompageBannerA;
+    private boolean homepageBannerA;
 
     @Column(name = "homepage_banner_b")
     private boolean homePageBannerB;
@@ -54,4 +54,12 @@ public class Banner extends BaseEntity {
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
+
+    @Column(name = "price")
+    private long price;
+
+    @Column(name = "discount")
+    private long discount;
+
+
 }
