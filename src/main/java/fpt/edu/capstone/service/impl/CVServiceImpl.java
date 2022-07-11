@@ -6,6 +6,7 @@ import fpt.edu.capstone.service.CVService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +40,11 @@ public class CVServiceImpl implements CVService {
     @Override
     public void updateUpdatedDateOfCV(long id, LocalDateTime updatedDate) {
         cvRepository.updateUpdatedDateOfCV(id,updatedDate);
+    }
+
+    @Override
+    public Optional<CV> findByIdAndCandidateId(long id, long candidateId) {
+        return cvRepository.findByIdAndCAndCandidateId(id, candidateId);
     }
 
     public CV getCVByCandidateId(long candidateId) { //Nam
