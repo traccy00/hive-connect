@@ -191,7 +191,9 @@ public class RecruiterController {
             if (recruiters.hasContent()) {
                 for (Recruiter r : recruiters) {
                     Users user = userService.getUserById(r.getUserId());
-                    RecruiterBaseOnCompanyResponse recruiterBaseOnCompanyResponse = new RecruiterBaseOnCompanyResponse(r.getId(), r.getFullName(), r.getAvatarUrl(), r.getFullName(), r.isGender(), r.getPosition(), r.getLinkedInAccount(), user.getEmail(), r.getPhoneNumber());
+                    RecruiterBaseOnCompanyResponse recruiterBaseOnCompanyResponse =
+                            new RecruiterBaseOnCompanyResponse(r.getId(), r.getFullName(), r.getAvatarUrl(), r.getFullName(),
+                                    r.isGender(), r.getPosition(), r.getLinkedInAccount(), user.getEmail(), user.getPhone());
                     responseList.add(recruiterBaseOnCompanyResponse);
                 }
             }

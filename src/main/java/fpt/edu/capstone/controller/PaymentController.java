@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -69,5 +70,19 @@ public class PaymentController {
     public ResponseData checkRecruiterBuyPackage(@RequestParam(defaultValue = "0") long recruiterId){
         Payment payment = paymentService.findRecruiterPurchasedPackage(recruiterId);
         return null;
+    }
+
+    @GetMapping("/total-profit")
+    public ResponseData getTotalProfit(@RequestParam(value = "day", required = false) int day,
+                                       @RequestParam(value = "month", required = false) int month,
+                                       @RequestParam("year") int year){
+        try {
+//            List <LocalDateTime> list = paymentService.getListDateTime();
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS);
+        } catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
     }
 }

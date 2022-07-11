@@ -30,4 +30,6 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     void updateAvatarUrl(String avatarId, long id);
 
     Users getByUsername(String username);
+
+    Optional<Users> findByPhone(String phone);
 }

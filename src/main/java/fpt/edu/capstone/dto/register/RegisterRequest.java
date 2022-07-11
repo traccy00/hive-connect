@@ -26,6 +26,8 @@ public class RegisterRequest {
     @NotBlank
     private String email;
 
+    private String phone;
+
     @NotBlank
     private long roleId;
 

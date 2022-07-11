@@ -54,8 +54,6 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
             "where lower(u.username) like lower(concat('%',:username,'%')) and lower(u.email) like lower(concat('%',:email,'%'))", nativeQuery = true)
     Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, @Param("username") String username, @Param("email") String email);
 
-    Optional<Recruiter> findByPhoneNumber(String phone);
-
     @Query(value = "select * from recruiter where company_id = ?1", nativeQuery = true)
     Page<Recruiter> getRecruiterByCompanyId(long id, Pageable pageable);
 }
