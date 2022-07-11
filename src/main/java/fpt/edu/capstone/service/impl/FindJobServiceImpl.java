@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.AppliedJobRequest;
 import fpt.edu.capstone.dto.job.CvAppliedJobResponse;
 import fpt.edu.capstone.dto.job.RecruiterPostResponse;
@@ -59,7 +60,7 @@ public class FindJobServiceImpl implements FindJobService {
             }
         }
         if (!jobService.existsById(request.getJobId())) {
-            throw new HiveConnectException("Job doesn't exist.");
+            throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
         if (!candidateService.existsById(request.getCandidateId())) {
             throw new HiveConnectException("Candidate doesn't exist.");
@@ -106,7 +107,7 @@ public class FindJobServiceImpl implements FindJobService {
 
         Optional<Job> job = jobService.findById(jobId);
         if(!job.isPresent()) {
-            throw new HiveConnectException("Job doesn't exist");
+            throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
         Page<AppliedJob> appliedJobs = appliedJobService.getCvAppliedJob(pageable, jobId, true);
         if(appliedJobs.isEmpty()) {

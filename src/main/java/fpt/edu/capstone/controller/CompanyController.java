@@ -65,7 +65,7 @@ public class CompanyController {
                 Company tmp = companyOp.get();
                 CompanyInformationResponse company = new CompanyInformationResponse();
                 company.setAddress(tmp.getAddress());
-                company.setAvatar(tmp.getAvatar());
+//                company.setAvatar(tmp.getAvatar());
                 company.setDescription(tmp.getDescription());
                 company.setEmail(tmp.getEmail());
                 company.setFieldWork(tmp.getFieldWork());
