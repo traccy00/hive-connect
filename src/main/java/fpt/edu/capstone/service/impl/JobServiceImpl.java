@@ -159,6 +159,11 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public void updateIsDeleted(long status, long id) {
+        jobRepository.updateIsDeleted(status, id);
+    }
+
+    @Override
     public Job getJobById(long jobId) {
         Job job = jobRepository.getById(jobId);
         if (job == null || job.getId() == 0) {
