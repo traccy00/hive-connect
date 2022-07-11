@@ -43,6 +43,4 @@ public interface JobService {
     Optional<Job> findById(long id);
 
     Page<Job> getJobByCompanyId(long pageNo, long quantity, long companyId);
-
-    void updateIsDeleted(long status, long id);
 }

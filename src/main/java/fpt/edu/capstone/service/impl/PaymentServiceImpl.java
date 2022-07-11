@@ -111,9 +111,4 @@ public class PaymentServiceImpl implements PaymentService {
                 getListPaymentFilter(recruiterId,rentalPackageId,bannerId,transactionCode,orderType);
         return paymentList;
     }
-
-    @Override
-    public List<Payment> getListPaymentOrderByDate() {
-        return paymentRepository.getListPaymentOrderByDate();
-    }
 }
