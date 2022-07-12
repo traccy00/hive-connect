@@ -18,4 +18,5 @@ public class CreateCompanyRequest {
     private String avatar;
     private String taxCode;
     private String mapUrl;
+    private long creatorId;
 }

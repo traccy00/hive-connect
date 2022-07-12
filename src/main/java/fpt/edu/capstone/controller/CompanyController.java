@@ -6,9 +6,11 @@ import fpt.edu.capstone.dto.company.CompanyInformationResponse;
 import fpt.edu.capstone.dto.company.CreateCompanyRequest;
 import fpt.edu.capstone.dto.company.TopCompanyResponse;
 import fpt.edu.capstone.entity.Company;
+import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.service.AppliedJobService;
 import fpt.edu.capstone.service.CompanyManageService;
 import fpt.edu.capstone.service.CompanyService;
+import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.service.impl.ImageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -32,6 +34,8 @@ public class CompanyController {
 
     private final CompanyManageService companyManageService;
 
+    private final RecruiterService recruiterService;
+
     @GetMapping("/get-list-company")
     public ResponseData getListCompany(){
         try {
@@ -51,7 +55,12 @@ public class CompanyController {
     @PostMapping("/create-company")
     public ResponseData createCompany(@RequestBody CreateCompanyRequest request){
         try {
+            Optional<Recruiter> recruiter =  recruiterService.findById(request.getCreatorId());
+            if(!recruiter.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this recruiter", request.getCreatorId());
+            }
             Company company = companyService.createCompany(request);
+            recruiterService.updateCompany(company.getId(), recruiter.get().getId());
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, company);
         }catch (Exception e) {
             e.printStackTrace();
