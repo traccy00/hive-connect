@@ -1,6 +1,8 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.TopCompanyResponse;
 import fpt.edu.capstone.entity.AppliedJob;
+import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.repository.AppliedJobRepository;
 import fpt.edu.capstone.service.AppliedJobService;
 import fpt.edu.capstone.utils.Enums;
@@ -37,5 +39,11 @@ public class AppliedJobServiceImpl implements AppliedJobService {
     @Override
     public Page<AppliedJob> getCvAppliedJob(Pageable pageable, long jobId, boolean isApplied) {
         return appliedJobRepository.getCvAppliedJob(pageable, jobId, isApplied);
+    }
+
+    @Override
+    public List<TopCompanyResponse> getTop12Companies() {
+        //thêm sort
+        return appliedJobRepository.getTop12Companies();
     }
 }
