@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users getUserById(long id) {
-        return userRepository.getById(id);
+        return userRepository.findById(id).get();
     }
 
     @Override
