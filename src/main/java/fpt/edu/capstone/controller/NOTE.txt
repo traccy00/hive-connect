@@ -26,3 +26,5 @@ người tạo company mới dc edit thông tin của company đó
 - Mai ai đã xem hồ sơ của bạn, unit test, review mockup admin
 - Hoàng xử lý api liên quan đến admin, ( xem màn mockup admin và break đầu api rồi code)
  */
+
+ Hoàng xử lý api liên quan đến admin, ( xem màn mockup admin và break đầu api rồi code)
