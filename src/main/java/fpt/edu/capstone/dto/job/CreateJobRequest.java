@@ -34,7 +34,4 @@ public class CreateJobRequest {
     private String jobRequirement;
     private String benefit;
     private String weekday;
-    private boolean isPopularJob;
-    private boolean isNewJob;
-    private boolean isUrgentJob;
 }

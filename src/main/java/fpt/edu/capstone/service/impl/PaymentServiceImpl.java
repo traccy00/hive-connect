@@ -129,4 +129,9 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return null;
     }
+
+    @Override
+    public List<Payment> getListPaymentOrderByDate() {
+        return paymentRepository.getListPaymentOrderByDate();
+    }
 }

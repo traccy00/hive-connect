@@ -45,8 +45,8 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
 
     @Query(value = "select u.id as userId, u.username as userName, u.email as email, u.role_id as roleId, r2.name as roleName, u.is_deleted as isDeleted, u.last_login_time as lastLoginTime, " +
             "u.avatar as avatar, u.is_verified_email as isVerifiedEmail, u.is_active as isActive, r.id as recruiterId, r.company_id as companyId, c.name as companyName, " +
-            "r.fullname as fullName, r.verify_account as verifyAccount, r.verify_phonenumber as verifyPhoneNumber, r.gender as gender, r.position as position, " +
-            "r.linkedin_url as linkedInAccount, r.business_license as businessLicense, r.additional_license as additionalLicense, r.phone_number as phoneNumber, " +
+            "r.fullname as fullName, r.verify_account as verifyAccount, u.phone as phoneNumber, u.is_verified_phone as verifyPhoneNumber, r.gender as gender, r.position as position, " +
+            "r.linkedin_url as linkedInAccount, r.business_license as businessLicense, r.additional_license as additionalLicense, " +
             "r.created_at as createdAt, r.updated_at as updatedAt, r.company_address as companyAddress, u.is_locked as isLocked " +
             "from users u join recruiter r on u.id = r.user_id " +
             "join roles r2 on u.role_id = r2.id " +

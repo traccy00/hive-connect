@@ -5,8 +5,10 @@ import fpt.edu.capstone.entity.Reported;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ReportedRepository extends JpaRepository<Reported, Long> {
@@ -20,4 +22,9 @@ public interface ReportedRepository extends JpaRepository<Reported, Long> {
             "and u.id in (:userId) and u2.id in (:personReportId)", nativeQuery = true)
     Page<ReportedUserResponse> searchReportedUsers(Pageable pageable, String username, String personReportName,
                                                    List<Long> userId, List<Long> personReportId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "Update reported set approval_reported_status = ?1 where id = ?2", nativeQuery = true)
+    void updateReportedStatus(String status, long id);
 }

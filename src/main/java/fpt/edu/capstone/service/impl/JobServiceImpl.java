@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.DetailJobResponse;
 import fpt.edu.capstone.dto.job.JobResponse;
@@ -132,7 +133,7 @@ public class JobServiceImpl implements JobService {
             res.setCompanyName(company.getName());
             res.setFieldName(fields.getFieldName());
             res.setRecruiterName(recruiter.getFullName());
-            res.setAvatar(company.getAvatar());
+//            res.setAvatar(company.getAvatar());
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
@@ -172,7 +173,7 @@ public class JobServiceImpl implements JobService {
         if (job.isPresent()) {
             return job;
         }
-        throw new HiveConnectException("Job doesn't exist");
+        throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
     }
 
     @Override
@@ -183,10 +184,15 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public void updateIsDeleted(long status, long id) {
+        jobRepository.updateIsDeleted(status, id);
+    }
+
+    @Override
     public Job getJobById(long jobId) {
         Job job = jobRepository.getById(jobId);
         if (job == null || job.getId() == 0) {
-            throw new HiveConnectException("Job doesn't exist");
+            throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
         return job;
     }
@@ -206,7 +212,7 @@ public class JobServiceImpl implements JobService {
             res.setCompanyName(company.getName());
             res.setFieldName(fields.getFieldName());
             res.setRecruiterName(recruiter.getFullName());
-            res.setAvatar(company.getAvatar());
+//            res.setAvatar(company.getAvatar());
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
