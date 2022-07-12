@@ -187,9 +187,9 @@ public class AuthenticationController {
                 throw new HiveConnectException("Token invalid");
             }
             //So sánh time expire và time trong db nếu quá hạn thì ko cho sử dụng token
-            if (LocalDateTime.now().isAfter(cf.getExpiredTime())) {
-                throw new HiveConnectException("Token has been expired");
-            }
+//            if (LocalDateTime.now().isAfter(cf.getExpiredTime())) {
+//                throw new HiveConnectException("Token has been expired");
+//            }
             String mailToken = cf.getConfirmationToken();
             Users user = userService.getUserById(cf.getUserId());
             if (StringUtils.equals(token, mailToken)) {
