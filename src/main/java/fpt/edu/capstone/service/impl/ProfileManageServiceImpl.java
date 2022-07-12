@@ -41,7 +41,9 @@ public class ProfileManageServiceImpl implements ProfileManageService {
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
         Page<ProfileViewer> profileViewersOfCv = profileViewerService.getProfileViewerOfCv(pageable, cvId);
-
+        if(profileViewersOfCv.hasContent()) {
+//            List<P>
+        }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
         responseDataPagination.setData(profileViewersOfCv);
@@ -69,6 +71,7 @@ public class ProfileManageServiceImpl implements ProfileManageService {
             ProfileViewer saveProfileViewer = new ProfileViewer();
             saveProfileViewer.setViewerId(response.getViewerId());
             saveProfileViewer.setCvId(response.getCvId());
+            saveProfileViewer.setCandidateId(response.getCandidateId());
             saveProfileViewer.create();
             profileViewerRepository.save(saveProfileViewer);
         }
