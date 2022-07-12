@@ -1,6 +1,8 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.dto.TopCompanyResponse;
 import fpt.edu.capstone.entity.AppliedJob;
+import fpt.edu.capstone.entity.Company;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,4 +18,5 @@ public interface AppliedJobService {
 
     Page<AppliedJob> getCvAppliedJob(Pageable pageable, long jobId, boolean isApplied);
 
+    List<TopCompanyResponse> getTop12Companies();
 }

@@ -15,6 +15,7 @@ import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -166,6 +167,7 @@ public class CandidateController {
     }
 
     @PostMapping("/insert-who-view-cv")
+    @Operation(summary = "Insert when viewer click view CV of a candidate")
     public ResponseData insertWhoViewCv(@RequestBody ViewCvResponse response) {
         try {
             profileManageService.insertWhoViewCv(response);
@@ -182,6 +184,7 @@ public class CandidateController {
     }
 
     @GetMapping("/get-cv-viewer")
+    @Operation(summary = "Get list viewer who view CV of a candidate")
     public ResponseData getRecruitersViewedCV(@RequestParam(defaultValue = "0") Integer pageNo,
                                               @RequestParam(defaultValue = "10") Integer pageSize,
                                               @RequestParam long cvId,
