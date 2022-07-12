@@ -212,4 +212,17 @@ public class RecruiterController {
             return new ResponseDataPagination();
         }
     }
+
+    @GetMapping("/find-cv")
+    public ResponseData findCv(@RequestParam(defaultValue = "0") Integer pageNo,
+                               @RequestParam(defaultValue = "10") Integer pageSize,
+                               @RequestParam String candidateName,
+                               @RequestParam String cvName) {
+        try {
+
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        }catch(Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
 }

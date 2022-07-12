@@ -1,11 +1,13 @@
 package fpt.edu.capstone.controller;
 
-import fpt.edu.capstone.dto.TopCompanyResponse;
+import fpt.edu.capstone.dto.company.CompanyResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CompanyInformationResponse;
 import fpt.edu.capstone.dto.company.CreateCompanyRequest;
+import fpt.edu.capstone.dto.company.TopCompanyResponse;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.service.AppliedJobService;
+import fpt.edu.capstone.service.CompanyManageService;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.impl.ImageService;
 import fpt.edu.capstone.utils.Enums;
@@ -28,9 +30,7 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
-    private final ImageService imageService;
-
-    private final AppliedJobService appliedJobService;
+    private final CompanyManageService companyManageService;
 
     @GetMapping("/get-list-company")
     public ResponseData getListCompany(){
@@ -91,7 +91,7 @@ public class CompanyController {
     @GetMapping("/get-top-12-recruitment-companies")
     public ResponseData getTop12Companies() {
         try {
-            List<TopCompanyResponse> topCompanies = appliedJobService.getTop12Companies();
+            List<TopCompanyResponse> topCompanies = companyManageService.getTop12Companies();
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, topCompanies);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
