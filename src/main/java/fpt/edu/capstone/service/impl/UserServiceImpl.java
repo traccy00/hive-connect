@@ -66,8 +66,10 @@ public class UserServiceImpl implements UserService {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
         user.setRoleId(request.getRoleId());
         user.setVerifiedEmail(false);
+        user.setVerifiedPhone(false);
         user.create();
         userRepository.save(user);
     }
@@ -95,5 +97,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Users> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Optional<Users> findByPhoneNumber(String phone) {
+        return userRepository.findByPhone(phone);
     }
 }

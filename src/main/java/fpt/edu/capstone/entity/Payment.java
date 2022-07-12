@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -54,6 +55,6 @@ public class Payment extends BaseEntity {
     private String local;
 
     @Column(name = "expired_date")
-    private String expiredDate; // ngày hết hạn gói package đã thuê
+    private LocalDateTime expiredDate; // ngày hết hạn gói package đã thuê
 
 }

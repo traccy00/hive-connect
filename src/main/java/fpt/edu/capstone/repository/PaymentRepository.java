@@ -18,4 +18,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     @Query(value = "select * from Payment p order by created_at desc    ", nativeQuery = true)
     List<Payment> getListPaymentOrderByDate();
+
+    Payment findByRecruiterId(long recId);
 }

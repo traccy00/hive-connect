@@ -1,24 +1,16 @@
 package fpt.edu.capstone.dto.job;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
 import java.time.LocalDateTime;
-
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class CreateJobRequest {
+public class DetailJobResponse {
+    private long id;
     private long companyId;
-    private long recruiterId;
-    private long fieldId;
-    private long countryId;
+    private String companyName;
     private String jobName;
     private String workPlace;
     private String workForm;
@@ -33,5 +25,15 @@ public class CreateJobRequest {
     private String jobDescription;
     private String jobRequirement;
     private String benefit;
+    private long fieldId;
+    private String fieldName;
+    private boolean isPopularJob;
+    private boolean isNewJob;
+    private boolean isUrgentJob;
+    private long recruiterId;
+    private String recruiterName;
     private String weekday;
+    private long countryId;
+    private String countryName;
+    private String avatar;
 }

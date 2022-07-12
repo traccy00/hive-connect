@@ -26,8 +26,6 @@ public interface RecruiterService {
 
     Optional<Recruiter> findById(long id);
 
-    Optional<Recruiter> findByPhoneNumber (String phone);
-
     Recruiter insertRecruiter(long userId);
 
     void updateRecruiterInformation(RecruiterUpdateProfileRequest recruiterUpdateProfileRequest);

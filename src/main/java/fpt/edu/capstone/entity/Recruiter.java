@@ -29,9 +29,6 @@ public class Recruiter {
     @Column(name = "verify_account")
     private boolean verifyAccount;
 
-    @Column(name = "verify_phonenumber")
-    private boolean verifyPhoneNumber;
-
     @Column(name = "gender")
     private boolean gender;
 
@@ -49,9 +46,6 @@ public class Recruiter {
 
     @Column(name = "user_id")
     private long userId;
-
-    @Column(name = "phone_number")
-    private String phoneNumber;
 
     @Column(name = "is_deleted")
     private boolean isDeleted = false;

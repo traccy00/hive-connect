@@ -1,5 +1,6 @@
 package fpt.edu.capstone.entity;
 
+import fpt.edu.capstone.utils.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,13 +15,13 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetailPackage {
+public class DetailPackage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "rental_package_id")
-    private long rentalPackageId;
+    private long rentalPackageId; //1
 
     //QUẢNG CÁO TUYỂN DỤNG
     @Column(name = "type")
@@ -33,7 +34,7 @@ public class DetailPackage {
     private long discount;
 
     @Column(name = "time_expired")
-    private LocalDateTime timeExpired;
+    private String timeExpired;
 
     @Column(name = "description")
     private String description; // mô tả về gói khuyến mãi
@@ -63,6 +64,12 @@ public class DetailPackage {
     @Column(name = "is_hot")
     private boolean isHot;
 
-    @Column(name = "good_job")
-    private boolean goodJob;
+    @Column(name = "is_good_job")
+    private boolean isGoodJob;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
+    @Column(name = "max_cv_view")
+    private int maxCvView; // được xem full thông tin tối đa bao nhiêu cv
 }

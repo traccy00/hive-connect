@@ -1,22 +1,20 @@
 package fpt.edu.capstone.controller;
 
+import fpt.edu.capstone.dto.TopCompanyResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CompanyInformationResponse;
 import fpt.edu.capstone.dto.company.CreateCompanyRequest;
-import fpt.edu.capstone.entity.Avatar;
 import fpt.edu.capstone.entity.Company;
-import fpt.edu.capstone.entity.Image;
+import fpt.edu.capstone.service.AppliedJobService;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.impl.ImageService;
 import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +23,14 @@ import java.util.Optional;
 @AllArgsConstructor
 @RequestMapping("api/v1/company")
 public class CompanyController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CompanyController.class);
+
     private final CompanyService companyService;
 
-    @Autowired
-    private ImageService imageService;
+    private final ImageService imageService;
+
+    private final AppliedJobService appliedJobService;
 
     @GetMapping("/get-list-company")
     public ResponseData getListCompany(){
@@ -65,7 +67,7 @@ public class CompanyController {
                 Company tmp = companyOp.get();
                 CompanyInformationResponse company = new CompanyInformationResponse();
                 company.setAddress(tmp.getAddress());
-                company.setAvatar(tmp.getAvatar());
+//                company.setAvatar(tmp.getAvatar());
                 company.setDescription(tmp.getDescription());
                 company.setEmail(tmp.getEmail());
                 company.setFieldWork(tmp.getFieldWork());
@@ -86,4 +88,15 @@ public class CompanyController {
         }
     }
 
+    @GetMapping("/get-top-12-recruitment-companies")
+    public ResponseData getTop12Companies() {
+        try {
+            List<TopCompanyResponse> topCompanies = appliedJobService.getTop12Companies();
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, topCompanies);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
 }

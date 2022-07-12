@@ -19,6 +19,12 @@ người tạo company mới dc edit thông tin của company đó
 - payment, package, wallet, banner
 - login google , linkedlin
 - upload file
+
+- liên kết gói mua với cv, vd người dùng mua gói xem tối đa 20cv thì xử lí .......
+
+- Nam xử lí thanh toán và liên quan đến các gói mua thêm và các chức năng rec được sử dụng
+- Mai ai đã xem hồ sơ của bạn, unit test, review mockup admin
+- Hoàng xử lý api liên quan đến admin, ( xem màn mockup admin và break đầu api rồi code)
  */
 
  Hoàng xử lý api liên quan đến admin, ( xem màn mockup admin và break đầu api rồi code)

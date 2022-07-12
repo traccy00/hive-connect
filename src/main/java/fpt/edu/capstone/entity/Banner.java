@@ -22,6 +22,12 @@ public class Banner extends BaseEntity {
     @Column(name = "rental_package_id")
     private long rentalPackageId;
 
+    @Column(name = "price")
+    private long price;
+
+    @Column(name = "discount")
+    private long discount;
+
     @Column(name = "title")
     private String title;
 
@@ -55,11 +61,6 @@ public class Banner extends BaseEntity {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
-    @Column(name = "price")
-    private long price;
-
-    @Column(name = "discount")
-    private long discount;
 
 
 }

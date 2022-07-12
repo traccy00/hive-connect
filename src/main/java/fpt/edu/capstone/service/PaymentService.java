@@ -7,6 +7,7 @@ import fpt.edu.capstone.entity.Payment;
 import org.springframework.security.core.parameters.P;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PaymentService {
@@ -16,4 +17,8 @@ public interface PaymentService {
                                         long bannerId,String transactionCode,String orderType);
 
     List<Payment> getListPaymentOrderByDate();
+
+    Payment findRecruiterPurchasedPackage(long recruiterId);
+
+//    List <LocalDateTime> listDateTime();
 }

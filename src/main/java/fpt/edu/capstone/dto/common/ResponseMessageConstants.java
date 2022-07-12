@@ -49,4 +49,7 @@ public interface ResponseMessageConstants {
     //PAYMENT
     String PAYMENT_SUCCESS = "PAYMENT_SUCCESS";
     String PAYMENT_FAILED = "PAYMENT_FAILED";
+
+    //JOB
+    String JOB_DOES_NOT_EXIST = "JOB_DOES_NOT_EXIST";
 }

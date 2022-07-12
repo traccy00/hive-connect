@@ -1,20 +1,24 @@
 package fpt.edu.capstone.controller;
 
+import fpt.edu.capstone.dto.CV.ViewCvResponse;
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.entity.*;
-import fpt.edu.capstone.repository.CVImportedRepository;
+import fpt.edu.capstone.entity.CVImported;
+import fpt.edu.capstone.entity.Candidate;
+import fpt.edu.capstone.entity.ProfileViewer;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.CandidateService;
-import fpt.edu.capstone.service.UserService;
+import fpt.edu.capstone.service.ProfileManageService;
+import fpt.edu.capstone.service.ProfileViewerService;
 import fpt.edu.capstone.service.impl.CVImportedService;
-import fpt.edu.capstone.service.impl.ImageService;
-import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
+import fpt.edu.capstone.utils.ResponseDataPagination;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,20 +30,17 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/candidate")
+@AllArgsConstructor
 public class CandidateController {
     private static final Logger logger = LoggerFactory.getLogger(Candidate.class);
-    @Autowired
-    private CandidateService candidateService;
 
-    @Autowired
-    private UserImageService userImageService;
+    private final CandidateService candidateService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
     private CVImportedService cvImportedService;
 
+    private final ProfileManageService profileManageService;
+
+    private final ProfileViewerService profileViewerService;
 
     @GetMapping("/all")
     public ResponseData getAllCandidate() {
@@ -164,17 +165,39 @@ public class CandidateController {
                 .contentType(MediaType.valueOf(cvImported.getContentType()))
                 .body(cvImported.getData());
     }
-    @GetMapping("/get-who-viewed-CV")
-    public ResponseData getRecruitersViewedCV(@RequestParam long candidateId) {
+
+    @PostMapping("/insert-who-view-cv")
+    @Operation(summary = "Insert when viewer click view CV of a candidate")
+    public ResponseData insertWhoViewCv(@RequestBody ViewCvResponse response) {
         try {
-//            Page<>
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+            profileManageService.insertWhoViewCv(response);
+            ProfileViewer profileViewer = profileViewerService.getByCvIdAndViewerId(response.getCvId(), response.getViewerId());
+            if(profileViewer == null) {
+                throw new HiveConnectException("Lưu người xem CV thất bại");
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, profileViewer);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-cv-viewer")
+    @Operation(summary = "Get list viewer who view CV of a candidate")
+    public ResponseData getRecruitersViewedCV(@RequestParam(defaultValue = "0") Integer pageNo,
+                                              @RequestParam(defaultValue = "10") Integer pageSize,
+                                              @RequestParam long cvId,
+                                              @RequestParam long candidateId) {
+        try {
+            ResponseDataPagination pagination = profileManageService
+                    .getProfileViewer(pageNo, pageSize, cvId, candidateId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
-
 }
 

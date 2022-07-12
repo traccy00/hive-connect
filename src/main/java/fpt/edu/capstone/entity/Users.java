@@ -31,6 +31,9 @@ public class Users extends BaseEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "phone")
+    private String phone;
+
     @Column(name = "role_id")
     private long roleId;
 
@@ -45,6 +48,9 @@ public class Users extends BaseEntity {
 
     @Column(name = "is_verified_email")
     private boolean isVerifiedEmail;
+
+    @Column(name = "is_verified_phone")
+    private boolean isVerifiedPhone;
 
     @Column(name = "is_active")
     private boolean isActive = false;

@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import fpt.edu.capstone.dto.File.FileResponse;
 import fpt.edu.capstone.dto.File.ImageRequest;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.Avatar;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Image;
@@ -15,7 +18,10 @@ import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.ImageService;
 import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,6 +35,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api/v1/files")
 public class FileController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @Autowired
     private UserService userService;
@@ -157,6 +165,21 @@ public class FileController {
 
         return ResponseEntity.notFound()
                 .build();
+    }
+
+    @PostMapping("/upload")
+    public ResponseData uploadImages() {
+        try {
+            AWSCredentials credentials = new BasicAWSCredentials(
+                    "AKIAXYJP2KLRA46NTLAN",
+                    "RlosMR/wqvzZ/eNWCUgU1bw3EAJuZx46kXzkeg1Z"
+            );
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        }catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
     }
 
 }

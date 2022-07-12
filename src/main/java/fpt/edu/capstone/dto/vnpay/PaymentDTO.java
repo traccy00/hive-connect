@@ -13,7 +13,6 @@ public class PaymentDTO {
     private long recruiterId;
     private long rentalPackageId;
     private long bannerId;
-    private long transactionCode;
     private int amount;
     private String orderType;
     private String description;

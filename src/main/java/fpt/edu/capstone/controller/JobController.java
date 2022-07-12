@@ -3,13 +3,12 @@ package fpt.edu.capstone.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
-import fpt.edu.capstone.entity.Company;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.JobHashtag;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,9 +33,15 @@ public class JobController {
 
     private final RecruiterJobService recruiterJobService;
 
+    private final RecruiterService recruiterService;
+
     private final JobHashTagService jobHashTagService;
 
     private final CompanyService companyService;
+
+    private final FieldsService fieldsService;
+
+    private final ModelMapper modelMapper;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -203,10 +208,11 @@ public class JobController {
     }
 
     @GetMapping("/remote-job")
-    public ResponseData getListRemoteJob() {
+    public ResponseData getListRemoteJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                         @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
-            List <Job> listRemoteJob = jobService.getListJobByWorkForm("REMOTE");
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listRemoteJob);
+            ResponseDataPagination pagination = jobService.getListJobByWorkForm(pageNo,pageSize, "REMOTE");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
@@ -214,10 +220,11 @@ public class JobController {
     }
 
     @GetMapping("/fulltime-job")
-    public ResponseData getListFulltimeJob() {
+    public ResponseData getListFulltimeJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                           @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
-            List <Job> listFulltimeJob = jobService.getListJobByWorkForm("FULLTIME");
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listFulltimeJob);
+            ResponseDataPagination pagination = jobService.getListJobByWorkForm(pageNo,pageSize, "FULLTIME");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
@@ -225,10 +232,11 @@ public class JobController {
     }
 
     @GetMapping("/parttime-job")
-    public ResponseData getListParttimeJob() {
+    public ResponseData getListParttimeJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                           @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
-            List <Job> listParttimeJob = jobService.getListJobByWorkForm("PARTTIME");
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listParttimeJob);
+            ResponseDataPagination pagination = jobService.getListJobByWorkForm(pageNo,pageSize, "PARTTIME");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
@@ -236,10 +244,12 @@ public class JobController {
     }
 
     @GetMapping("/job-by-field")
-    public ResponseData getJobByCareer(@RequestParam(value = "id") long fieldId) {
+    public ResponseData getJobByCareer(@RequestParam(defaultValue = "1") Integer pageNo,
+                                       @RequestParam(defaultValue = "10") Integer pageSize,
+                                       @RequestParam(value = "id") long fieldId) {
         try {
-            List<Job> listByCareer = jobService.getJobByFieldId(fieldId);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,listByCareer);
+            ResponseDataPagination pagination = jobService.getJobByFieldId(pageNo, pageSize, fieldId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,pagination);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);

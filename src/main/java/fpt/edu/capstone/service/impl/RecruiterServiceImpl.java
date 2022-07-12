@@ -61,7 +61,6 @@ public class RecruiterServiceImpl implements RecruiterService {
         recruiterProfile.setId(recruiter.getId());
         recruiterProfile.setEmail(user.getEmail());
         recruiterProfile.setFullName(recruiter.getFullName());
-        recruiterProfile.setPhone(recruiter.getPhoneNumber());
         recruiterProfile.setGender(recruiter.isGender());
         recruiterProfile.setPosition(recruiter.getPosition());
         recruiterProfile.setLinkedinAccount(recruiter.getLinkedInAccount());
@@ -88,11 +87,6 @@ public class RecruiterServiceImpl implements RecruiterService {
     @Override
     public Optional<Recruiter> findById(long id) {
         return recruiterRepository.findById(id);
-    }
-
-    @Override
-    public Optional<Recruiter> findByPhoneNumber(String phone) {
-        return recruiterRepository.findByPhoneNumber(phone);
     }
 
     @Override

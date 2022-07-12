@@ -33,5 +33,6 @@ public interface CVRepository extends JpaRepository<CV,Long> {
     @Query(value = "UPDATE public.cv SET updated_at =?2 WHERE id=?1", nativeQuery = true)
     void updateUpdatedDateOfCV(long id, LocalDateTime updatedDate);
 
-
+    @Query(value = "select * from cv where id = ?1 and candidate_id = ?2", nativeQuery = true)
+    Optional<CV> findByIdAndCAndCandidateId(long id, long candidateId);
 }

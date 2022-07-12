@@ -22,7 +22,7 @@ import com.twilio.rest.verify.v2.service.VerificationCheck;
 @RequestMapping("/api/v1/otp")
 public class TwilioController {
     @Autowired
-    private RecruiterService recruiterService;
+    private UserService userService;
 
     public TwilioController(TwilioProperties twilioProperties) {
         this.twilioProperties = twilioProperties;
@@ -65,9 +65,9 @@ public class TwilioController {
             System.out.println(verificationCheck.getStatus());
             if (verificationCheck.getStatus().equals("approval")) {
                 //Update verify phone number
-                Recruiter re = recruiterService.findByPhoneNumber(phone).get();
+                Users re = userService.findByPhoneNumber(phone).get();
                 if(re != null){
-                    re.setVerifyPhoneNumber(true);
+                    re.setVerifiedPhone(true);
                 }
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Approval", verificationCheck.getStatus());
             }
