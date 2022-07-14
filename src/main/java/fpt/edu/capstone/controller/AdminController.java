@@ -1,6 +1,7 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.repository.ReportedRepository;
 import fpt.edu.capstone.service.*;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +46,8 @@ public class AdminController {
 
     private final LocalDateTime minDate = LocalDateTime.MIN;
     private final LocalDateTime maxDate = LocalDateTime.MAX;
+
+    private final UserService userService;
 
     @GetMapping("/list-admin")
     @Operation(summary = "Get list admin")
@@ -98,7 +102,8 @@ public class AdminController {
     @GetMapping("/count-users")
     public ResponseData countUsers() {
         try {
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+            HashMap<String, List<CountRegisterUserResponse>> responseHashMap = userService.countUser();
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, responseHashMap);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
@@ -122,21 +127,22 @@ public class AdminController {
             bannerService.updateBanner(newBanner);
             Optional<Banner> banner = bannerService.findById(newBanner.getId());
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", banner.get());
-        }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
-        }
-    }
-    @PostMapping("/insert-banner")
-    public ResponseData insertBanner(Banner newBanner) {
-        try{
-            Banner banner =  bannerService.insertBanner(newBanner);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", banner);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
 
-//    @GetMapping("/search-banner")
+    @PostMapping("/insert-banner")
+    public ResponseData insertBanner(Banner newBanner) {
+        try {
+            Banner banner = bannerService.insertBanner(newBanner);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", banner);
+        } catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    //    @GetMapping("/search-banner")
 //    public ResponseData searchReportedUsers(
 //            @RequestParam(defaultValue = "true", required = false) String screen,
 //            @RequestParam(required = false)  @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -159,14 +165,14 @@ public class AdminController {
                                              @RequestParam(defaultValue = "-1", required = false) long userId,
                                              @RequestParam(defaultValue = "-1", required = false) long postId,
                                              @RequestParam long reportId) {
-        try{
-            if(status.toLowerCase().equals("delete")) {
+        try {
+            if (status.toLowerCase().equals("delete")) {
                 Optional<Job> jobOptional = jobService.findById(postId);
-                if(jobOptional.isPresent()) {
+                if (jobOptional.isPresent()) {
                     jobService.updateIsDeleted(1, jobOptional.get().getId());
                     reportedService.updateReportedStatus("deleted", reportId);
                     return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete post successful", jobOptional.get());
-                }else {
+                } else {
                     //co can xu ly user khong ?
                     return null;
                 }
@@ -175,17 +181,29 @@ public class AdminController {
                 reportedService.updateReportedStatus("Cancel", reportId);
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Cancel report successful", null);
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
+
     @GetMapping("/get-all-reported")
     public ResponseData getAllReported() {
         try {
             List<Reported> reporteds = reportedService.getAllReported();
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Get All Successful", reporteds);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @PutMapping("/lock-unlock-user")
+    public ResponseData lockUnlockUser() {
+        try {
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 

@@ -1,18 +1,26 @@
 package fpt.edu.capstone.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.Bucket;
 import fpt.edu.capstone.dto.File.FileResponse;
 import fpt.edu.capstone.dto.File.ImageRequest;
+import fpt.edu.capstone.dto.UploadFileRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.Avatar;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.ImageService;
@@ -110,11 +118,11 @@ public class FileController {
                 Optional<Users> users = userService.findByIdOp(imageRequest.getUserId());
                 if (users.isPresent()) { //Check if user is existed
                     Optional<Avatar> avatarImgSearched = userImageService.findAvatarByUserId(imageRequest.getUserId());
-                    if(avatarImgSearched.isPresent()) {
+                    if (avatarImgSearched.isPresent()) {
                         userImageService.updateAvatar(avatarImgSearched.get().getId(), file);
                         return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update avatar successful", avatarImgSearched.get().getId());
-                    }else {
-                        Avatar avatar =  userImageService.save(file, "IMG", imageRequest.getUserId());
+                    } else {
+                        Avatar avatar = userImageService.save(file, "IMG", imageRequest.getUserId());
                         userService.updateAvatarUrl(avatar.getId(), imageRequest.getUserId());
                         return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update avatar successful", avatar.getId());
                     }
@@ -122,17 +130,17 @@ public class FileController {
                 return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this user", imageRequest.getUserId());
             } else { //id company image
                 Optional<Company> companySearched = companyService.findById(imageRequest.getCompanyId());
-                if(companySearched.isPresent()) {
+                if (companySearched.isPresent()) {
                     Optional<Image> imageSearched = imageService.findAvatarByCompanyId(imageRequest.getCompanyId());
-                    if(imageSearched.isPresent()) {
+                    if (imageSearched.isPresent()) {
                         imageService.updateAvatar(imageSearched.get().getId(), file);
                         return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "update avatar successful", imageSearched.get().getId());
-                    }else {
+                    } else {
                         Image image = imageService.saveCompanyAvatar(file, "IMG", imageRequest.getCompanyId());
                         companyService.updateCompanyAvatarUrl(image.getId(), image.getCompanyId());
                         return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Insert avatar successful", image.getId());
                     }
-                }else {
+                } else {
                     return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this company", imageRequest.getCompanyId());
                 }
             }
@@ -155,7 +163,7 @@ public class FileController {
                     .body(avatar.getData());
         }
 
-        if(image.isPresent()) {
+        if (image.isPresent()) {
             Image image1 = image.get();
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image1.getName() + "\"")
@@ -167,18 +175,55 @@ public class FileController {
                 .build();
     }
 
-    @PostMapping("/upload")
-    public ResponseData uploadImages() {
+//    @PostMapping("/upload-file")
+//    public ResponseData uploadImages(@RequestParam String path, @RequestParam String uploadFileName) {
+//        try {
+//            AWSCredentials credentials = new BasicAWSCredentials(
+//                    "AKIAXYJP2KLRA46NTLAN",
+//                    "RlosMR/wqvzZ/eNWCUgU1bw3EAJuZx46kXzkeg1Z"
+//            );
+//            AmazonS3 s3client = AmazonS3ClientBuilder
+//                    .standard()
+//                    .withCredentials(new AWSStaticCredentialsProvider(credentials))
+//                    .withRegion(Regions.US_WEST_1)
+//                    .build();
+//            String bucketName = "hive-connect-images";
+//
+////            if (s3client.doesBucketExist(bucketName)) {
+////                logger.info("Bucket name is not available."
+////                        + " Try again with a different Bucket name.");
+////                s3client.createBucket(bucketName);
+//////                throw new HiveConnectException("Try contact admin, bucket does not exist");
+////            }
+//            List<Bucket> buckets = s3client.listBuckets();
+//            for (Bucket bucket : buckets) {
+//                System.out.println(bucket.getName());
+//            }
+//
+//            s3client.putObject(
+//                    bucketName,
+//                    "E:/test2.txt",
+//                    new File("D:/test2.txt")
+//            );
+//
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+//        } catch (Exception e) {
+//            String msg = LogUtils.printLogStackTrace(e);
+//            logger.error(msg);
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+//        }
+//    }
+
+    @PostMapping("/upload-file")
+    public ResponseData uploadImages(@RequestBody UploadFileRequest request) {
         try {
-            AWSCredentials credentials = new BasicAWSCredentials(
-                    "AKIAXYJP2KLRA46NTLAN",
-                    "RlosMR/wqvzZ/eNWCUgU1bw3EAJuZx46kXzkeg1Z"
-            );
+
+
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
-        }catch (Exception e) {
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 

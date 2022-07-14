@@ -1,8 +1,10 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.entity.Users;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,4 +28,6 @@ public interface UserService {
     List<Users> findAll();
 
     Optional<Users> findByPhoneNumber(String phone);
+
+    HashMap<String, List<CountRegisterUserResponse>> countUser();
 }
