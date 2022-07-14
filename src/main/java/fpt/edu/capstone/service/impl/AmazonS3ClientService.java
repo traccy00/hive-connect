@@ -1,4 +1,4 @@
-package fpt.edu.capstone.service;
+package fpt.edu.capstone.service.impl;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

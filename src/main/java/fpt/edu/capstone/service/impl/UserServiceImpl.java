@@ -9,6 +9,7 @@ import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.LoginService;
 import fpt.edu.capstone.service.RoleService;
 import fpt.edu.capstone.service.UserService;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,18 +20,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
-    @Autowired
-    private LoginService loginService;
+    private final LoginService loginService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Users getUserById(long id) {
@@ -116,5 +114,37 @@ public class UserServiceImpl implements UserService {
         responseHashMap.put("Month", registerMonthAgo);
         responseHashMap.put("Today", registerToday);
         return responseHashMap;
+    }
+
+    @Override
+    public Users lockUnlockUser(long userId) {
+        Users user = userRepository.getById(userId);
+        if(user == null) {
+            throw new HiveConnectException("Người dùng không tồn tại");
+        }
+        if(user.isLocked()) {
+            user.setLocked(false);
+        } else {
+            user.setLocked(true);
+        }
+        user.update();
+        userRepository.save(user);
+        return user;
+    }
+
+    @Override
+    public Users activeDeactiveUser(long userId) {
+        Users user = userRepository.getById(userId);
+        if(user == null) {
+            throw new HiveConnectException("Người dùng không tồn tại");
+        }
+        if(user.isActive()) {
+            user.setActive(false);
+        } else {
+            user.setActive(true);
+        }
+        user.update();
+        userRepository.save(user);
+        return user;
     }
 }
