@@ -13,10 +13,7 @@ import fpt.edu.capstone.service.RequestJoinCompanyService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.CompanyServiceImpl;
 import fpt.edu.capstone.service.impl.UserImageService;
-import fpt.edu.capstone.utils.Enums;
-import fpt.edu.capstone.utils.Pagination;
-import fpt.edu.capstone.utils.ResponseData;
-import fpt.edu.capstone.utils.ResponseDataPagination;
+import fpt.edu.capstone.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +56,8 @@ public class RecruiterController {
             RecruiterProfileResponse recruiterProfile = recruiterService.getRecruiterProfile(userId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), recruiterProfile);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }

@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.entity.Role;
 import fpt.edu.capstone.entity.Users;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,5 +104,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<Users> findByPhoneNumber(String phone) {
         return userRepository.findByPhone(phone);
+    }
+
+    @Override
+    public HashMap<String, List<CountRegisterUserResponse>> countUser() {
+        List<CountRegisterUserResponse> registerToday = userRepository.countUserRegisterToday();
+        List<CountRegisterUserResponse> registerMonthAgo = userRepository.countUserRegisterMonthAgo();
+        List<CountRegisterUserResponse> totalRegisterUsers = userRepository.countAllUsersRegister();
+        HashMap<String, List<CountRegisterUserResponse>> responseHashMap = new HashMap<>();
+        responseHashMap.put("Total", totalRegisterUsers);
+        responseHashMap.put("Month", registerMonthAgo);
+        responseHashMap.put("Today", registerToday);
+        return responseHashMap;
     }
 }

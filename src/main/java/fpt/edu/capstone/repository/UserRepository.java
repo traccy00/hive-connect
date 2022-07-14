@@ -1,5 +1,6 @@
 package fpt.edu.capstone.repository;
 
+import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,4 +34,19 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     Users getByUsername(String username);
 
     Optional<Users> findByPhone(String phone);
+
+    @Query(value = "select count(id) as numberUser, t1.role_id as roleId from " +
+            "(select u.id, role_id, created_at from users u where date_trunc('day',created_at) = current_date) t1 " +
+            "group by t1.role_id", nativeQuery = true)
+    List<CountRegisterUserResponse> countUserRegisterToday();
+
+    @Query(value = "select count(*) as numberUser, t1.role_id as roleId from " +
+            "(select u.id, role_id from users u) t1 " +
+            "group by t1.role_id", nativeQuery = true)
+    List<CountRegisterUserResponse> countAllUsersRegister();
+
+    @Query(value = "select count(id) as numberUser,  t1.role_id as roleId from " +
+            "(select u.id, role_id, created_at from users u where created_at > current_date - interval '30' day ) t1 " +
+            "group by t1.role_id", nativeQuery = true)
+    List<CountRegisterUserResponse> countUserRegisterMonthAgo();
 }
