@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 public class Users extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
 
     @Column(name = "username")

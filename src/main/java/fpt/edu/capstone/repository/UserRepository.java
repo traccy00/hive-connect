@@ -49,4 +49,8 @@ public interface UserRepository extends JpaRepository<Users, Long> {
             "(select u.id, role_id, created_at from users u where created_at > current_date - interval '30' day ) t1 " +
             "group by t1.role_id", nativeQuery = true)
     List<CountRegisterUserResponse> countUserRegisterMonthAgo();
+
+    @Query(value = "select * from users u where u.id= ?", nativeQuery = true)
+    Users getById(long id);
+
 }

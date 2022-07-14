@@ -1,9 +1,12 @@
 package fpt.edu.capstone.controller;
 
+import fpt.edu.capstone.dto.admin.UserStatusRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
-import fpt.edu.capstone.entity.*;
-import fpt.edu.capstone.repository.ReportedRepository;
+import fpt.edu.capstone.entity.Banner;
+import fpt.edu.capstone.entity.Job;
+import fpt.edu.capstone.entity.Reported;
+import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -13,15 +16,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -197,9 +195,10 @@ public class AdminController {
     }
 
     @PutMapping("/lock-unlock-user")
-    public ResponseData lockUnlockUser() {
+    public ResponseData lockUnlockUser(@RequestParam long userId) {
         try {
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+            Users updateUser = userService.lockUnlockUser(userId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, updateUser);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
@@ -207,4 +206,15 @@ public class AdminController {
         }
     }
 
+    @PutMapping("/active-deactive-user")
+    public ResponseData activeDeactiveUser(@RequestParam long userId) {
+        try {
+            Users updateUser = userService.activeDeactiveUser(userId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, updateUser);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
 }

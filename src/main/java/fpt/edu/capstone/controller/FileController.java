@@ -1,17 +1,5 @@
 package fpt.edu.capstone.controller;
 
-import java.io.File;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.Bucket;
 import fpt.edu.capstone.dto.File.FileResponse;
 import fpt.edu.capstone.dto.File.ImageRequest;
 import fpt.edu.capstone.dto.UploadFileRequest;
@@ -20,17 +8,17 @@ import fpt.edu.capstone.entity.Avatar;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.entity.Users;
-import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.UserService;
+import fpt.edu.capstone.service.impl.AmazonS3ClientService;
 import fpt.edu.capstone.service.impl.ImageService;
 import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,24 +27,27 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/v1/files")
+@AllArgsConstructor
 public class FileController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private UserImageService userImageService;
+    private final UserImageService userImageService;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    @Autowired
-    private ImageService imageService;
+    private final ImageService imageService;
+
+    private final AmazonS3ClientService amazonS3ClientService;
 
     @PostMapping("/import-file")
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {
@@ -214,17 +205,16 @@ public class FileController {
 //        }
 //    }
 
+    //cần validate đuôi file
     @PostMapping("/upload-file")
     public ResponseData uploadImages(@RequestBody UploadFileRequest request) {
         try {
-
-
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+            String fileName = amazonS3ClientService.uploadFile(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, fileName);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
-
 }

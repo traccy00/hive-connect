@@ -30,4 +30,8 @@ public interface UserService {
     Optional<Users> findByPhoneNumber(String phone);
 
     HashMap<String, List<CountRegisterUserResponse>> countUser();
+
+    Users lockUnlockUser(long userId);
+
+    Users activeDeactiveUser(long userId);
 }
