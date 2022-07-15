@@ -6,6 +6,7 @@ import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterBaseOnCompanyResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
+import fpt.edu.capstone.dto.recruiter.UploadBusinessLicenseRequest;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.RecruiterService;
@@ -97,12 +98,6 @@ public class RecruiterController {
         }
     }
 
-    @PostMapping("/prove-recruiter")
-    public ResponseData insertProveOfRecruiter(){
-        //thêm giấy phép kinh doanh or thẻ nhân viên... chứng minh là nhà tuyển dụng
-        return null;
-    }
-
     @GetMapping("/get-total-cv-applied")
     public ResponseData totalCVApplied(){
         return null;
@@ -124,16 +119,12 @@ public class RecruiterController {
     @PostMapping("/send-request-join-company") //không cần gửi approval id
     public ResponseData sendRequestJoinCompany(@RequestBody RequestJoinCompany requestJoinCompany) {
         try {
-            Optional<Company> company = companyService.findById(requestJoinCompany.getCompanyId());
-            if(!company.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this company to send request", requestJoinCompany.getCompanyId());
-            }
-            requestJoinCompany.setStatus("Pending");
-            requestJoinCompany.setApproverId(company.get().getCreatorId());
             requestJoinCompanyService.createRequest(requestJoinCompany);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Send request successful", requestJoinCompany);
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -221,6 +212,18 @@ public class RecruiterController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         }catch(Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @PutMapping("/upload-business-license")
+    public ResponseData uploadBusinessLicense(@RequestBody UploadBusinessLicenseRequest request) {
+        try {
+            Recruiter recruiter = recruiterService.uploadLicense(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, recruiter);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 }

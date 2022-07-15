@@ -1,5 +1,6 @@
 package fpt.edu.capstone.entity;
 
+import fpt.edu.capstone.utils.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "recruiter")
 @Getter
 @Setter
-public class Recruiter {
+public class Recruiter extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,21 +45,27 @@ public class Recruiter {
     @Column(name = "additional_license")
     private String additionalLicense;
 
+    @Column(name = "business_license_url")
+    private String businessLicenseUrl;
+
+    @Column(name = "additional_license_url")
+    private String additionalLicenseUrl;
+
     @Column(name = "user_id")
     private long userId;
 
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
-    @Column(name = "created_at")
-    private LocalDateTime createAt;
-
-    @Column(name = "updated_at")
-    private  LocalDateTime updateAt;
-
     @Column(name = "company_address")
     private String companyAddress;
 
     @Column(name = "avatar_url")
     private String avatarUrl;
+
+    @Column(name = "business_license_approval_status")
+    private String businessLicenseApprovalStatus;
+
+    @Column(name = "additional_license_approval_status")
+    private String additionalLicenseApprovalStatus;
 }

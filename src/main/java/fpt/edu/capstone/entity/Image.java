@@ -21,15 +21,24 @@ import javax.persistence.*;
 public class Image extends BaseEntity {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+//    @GeneratedValue(generator = "uuid")
+//    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id")
+//    private long id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "url")
+    private String url;
 
     @Column(name = "company_id")
     private long companyId;
-
-    @Column(name = "event_id")
-    private long eventId;
 
     @Column(name = "candidate_post_id")
     private long candidatePostId;
@@ -38,7 +47,7 @@ public class Image extends BaseEntity {
     private long recruiterPostId;
 
     @Column(name = "is_deleted")
-    private int isDeleted;
+    private int isDeleted = 0;
 
     @Column(name = "is_avatar")
     private boolean isAvatar;
@@ -46,11 +55,16 @@ public class Image extends BaseEntity {
     @Column(name = "is_banner")
     private boolean isBanner;
 
-    private String name;
+    @Column(name = "event_id")
+    private long eventId;
 
+    @Column(name = "content_type")
     private String contentType;
 
     @Type(type="org.hibernate.type.BinaryType")
     @Column(name = "data")
     private byte[] data;
+
+    @Column(name = "recruiter_id")
+    private long recruiterId;
 }

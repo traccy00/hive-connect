@@ -52,4 +52,7 @@ public interface ResponseMessageConstants {
 
     //JOB
     String JOB_DOES_NOT_EXIST = "JOB_DOES_NOT_EXIST";
+
+    //AMAZON
+    String AMAZON_SAVE_URL = "https://hive-connect-images.s3.us-west-1.amazonaws.com/hiveconnect/";
 }

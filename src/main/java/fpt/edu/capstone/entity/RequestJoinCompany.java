@@ -1,5 +1,6 @@
 package fpt.edu.capstone.entity;
 
+import fpt.edu.capstone.utils.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,14 +11,11 @@ import java.time.LocalDateTime;
 @Table(name = "request_join_company")
 @Getter
 @Setter
-public class RequestJoinCompany {
+public class RequestJoinCompany extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(name = "create_at") //Xóa sau 1 tháng request|| 3 ngày sau khi approval or deny
-    private LocalDateTime createAt;
 
     @Column(name = "status") //Pending, Approve, Deny
     private String status;
@@ -30,4 +28,6 @@ public class RequestJoinCompany {
 
     @Column(name = "approver_id")  //Id của recruiter tạo công ty
     private long approverId;
+
+    //Xóa sau 1 tháng request|| 3 ngày sau khi approval or deny
 }

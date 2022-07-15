@@ -217,4 +217,29 @@ public class AdminController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+    @GetMapping("/get-list-pending-license")
+    @Operation(summary = "Get list pending license for Admin approval")
+    public ResponseData getPendingLicenses() {
+        //một record sẽ có hai dòng business license và addition license
+        try {
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @PutMapping("approve-license")
+    @Operation(summary = "Admin approve license")
+    public ResponseData approvaLicense() {
+        try {
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
 }

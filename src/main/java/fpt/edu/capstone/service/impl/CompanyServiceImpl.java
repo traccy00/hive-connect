@@ -3,8 +3,10 @@ package fpt.edu.capstone.service.impl;
 import fpt.edu.capstone.dto.company.CreateCompanyRequest;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Fields;
+import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.CompanyRepository;
+import fpt.edu.capstone.repository.ImageRepository;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.FieldsService;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +28,8 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
 
     private final FieldsService fieldsService;
+
+    private final ImageRepository imageRepository;
 
     @Override
     public Company getCompanyById(long id) {
@@ -42,6 +47,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Company createCompany(CreateCompanyRequest request) {
         Optional<Fields> field = fieldsService.findById(request.getFieldWork());
         if(!field.isPresent()) {
@@ -57,6 +63,11 @@ public class CompanyServiceImpl implements CompanyService {
         }
         Company company = modelMapper.map(request, Company.class);
         companyRepository.save(company);
+
+        Image image = new Image();
+        image.setCompanyId(company.getId());
+        image.setAvatar(true);
+        imageRepository.save(image);
         Company savedCompany = companyRepository.getCompanyById(company.getId());
         return savedCompany;
     }
