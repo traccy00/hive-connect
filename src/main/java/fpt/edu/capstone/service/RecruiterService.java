@@ -1,9 +1,11 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
+import fpt.edu.capstone.dto.UploadFileRequest;
 import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
+import fpt.edu.capstone.dto.recruiter.UploadBusinessLicenseRequest;
 import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.Recruiter;
 import org.springframework.data.domain.Page;
@@ -39,4 +41,6 @@ public interface RecruiterService {
     void updateCompany(long companyId, long id);
 
     Page<Recruiter> getRecruiterByCompanyId(long pageNo, long quantity, long companyId);
+
+    Recruiter uploadLicense(UploadBusinessLicenseRequest request);
 }
