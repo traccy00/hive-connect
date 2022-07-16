@@ -3,13 +3,10 @@ package fpt.edu.capstone.controller;
 import fpt.edu.capstone.dto.CV.ViewCvResponse;
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.entity.CVImported;
-import fpt.edu.capstone.entity.Candidate;
-import fpt.edu.capstone.entity.ProfileViewer;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
-import fpt.edu.capstone.service.CandidateService;
-import fpt.edu.capstone.service.ProfileManageService;
-import fpt.edu.capstone.service.ProfileViewerService;
+import fpt.edu.capstone.repository.FollowRepository;
+import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.service.impl.CVImportedService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -41,6 +38,14 @@ public class CandidateController {
     private final ProfileManageService profileManageService;
 
     private final ProfileViewerService profileViewerService;
+
+    private final FollowService followService;
+
+    private final JobService jobService;
+
+    private final CompanyService companyService;
+
+    private final RecruiterService recruiterService;
 
     @GetMapping("/all")
     public ResponseData getAllCandidate() {
@@ -197,6 +202,85 @@ public class CandidateController {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
+
+    @PostMapping("/follow-something")
+    @Operation(summary = "Follow job, company, recruiter with type 1,2,3")
+    public ResponseData follow(@RequestBody Follow follow) {
+        try{
+            if(followService.isFollowing(follow.getFollowerId(), follow.getFollowedId(), follow.getType())) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Is Follow yet", null);
+            }
+            if(follow.getType() != 1 && follow.getType() != 2 && follow.getType() != 3) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "You must send correct type ", null);
+            }
+            if(!candidateService.findById(follow.getFollowerId()).isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this follower id", follow.getFollowerId());
+            }
+            if(follow.getType() == 1 ) { //job
+                if(!jobService.existsById(follow.getFollowedId())) {
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this job with id", follow.getFollowedId());
+                }
+            }
+            if(follow.getType() == 2 ) { //company
+                if(!companyService.existById(follow.getFollowedId())) {
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this company with id", follow.getFollowedId());
+                }
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful but haven't handled this case", follow.getType());
+            }
+            if(follow.getType() == 3 ) { //Recruiter
+                if(!recruiterService.existById(follow.getFollowedId())) {
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this recruiter with id", follow.getFollowedId());
+                }
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful but haven't handled this case", follow.getType());
+            }
+            Follow insertedFollow = followService.insertFollow(follow);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Follow successful", insertedFollow);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/followed-job")
+    @Operation(summary = "Get list followed job with candidate id")
+    public ResponseData getListFollowedJob(@RequestParam long candidateId) {
+        try{
+            Optional<List<Follow>> follows = followService.getListFollowedJobByFollowerId(candidateId);
+            if(follows.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", follows.get());
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful but don't have any followed job", null);
+
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
+        }
+    }
+
+    @DeleteMapping("/unfollow")
+    @Operation(summary = "Unfollow something, must have correct type (1,2,3) ~ (job, company, recruiter")
+    public ResponseData unfollow(@RequestParam long followerId, @RequestParam long followedId, @RequestParam long type) {
+        try{
+            if(!followService.isFollowing(followerId, followedId, type)) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "You have not followed this",null);
+            }
+            followService.unFollow(followerId, followedId, type);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Unfollow succsess full",null);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/is-following")
+    @Operation(summary = "Check if a is following b by a id type = 1,2,3 than b = job, company, recruiter")
+    public ResponseData isFollowing(@RequestParam long followerId, @RequestParam long followedId, @RequestParam long type) {
+        try {
+            if(!followService.isFollowing(followerId, followedId, type)) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Not following", false);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Is following", true);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
         }
     }
 }
