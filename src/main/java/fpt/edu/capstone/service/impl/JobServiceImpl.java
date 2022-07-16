@@ -5,6 +5,7 @@ import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.DetailJobResponse;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
+import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.JobRepository;
@@ -243,5 +244,10 @@ public class JobServiceImpl implements JobService {
             }
         }
         return responses;
+    }
+
+    @Override
+    public CountTotalCreatedJobResponse countTotalCreatedJobOfRecruiter(long recruiterId) {
+        return jobRepository.countTotalCreatedJobOfRecruiter(recruiterId);
     }
 }

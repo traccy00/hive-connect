@@ -2,6 +2,8 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.company.CompanyResponse;
 import fpt.edu.capstone.dto.company.TopCompanyResponse;
+import fpt.edu.capstone.dto.recruiter.CountCandidateApplyPercentageResponse;
+import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
 import fpt.edu.capstone.entity.AppliedJob;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.repository.AppliedJobRepository;
@@ -50,5 +52,15 @@ public class AppliedJobServiceImpl implements AppliedJobService {
     @Override
     public List<CompanyResponse> getTop12Companies() {
       return appliedJobRepository.getTop12Companies();
+    }
+
+    @Override
+    public List<AppliedJob> searchAppliedJobsOfCandidate(long candidateId, String approvalStatus) {
+        return appliedJobRepository.searchAppliedJobsOfCandidate(candidateId, approvalStatus);
+    }
+
+    @Override
+    public CountCandidateApplyPercentageResponse countApplyPercentage(long recruiterId) {
+        return appliedJobRepository.countApplyPercentage(recruiterId);
     }
 }
