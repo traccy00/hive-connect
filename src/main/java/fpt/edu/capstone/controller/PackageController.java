@@ -34,9 +34,10 @@ public class PackageController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/list-package")
-    public ResponseData getListDetailPackage(@RequestParam(value = "name", defaultValue = "") String name){
+    public ResponseData getListDetailPackage(@RequestParam(value = "name", defaultValue = "") String name ,
+                                             @RequestParam(value = "rentalPackageId", defaultValue = "0", required = false) long rentalPackageId){
         try {
-            List<DetailPackage> list =  detailPackageService.getListDetailPackageFilter(name);
+            List<DetailPackage> list =  detailPackageService.getListDetailPackageFilter(name, rentalPackageId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS,list);
         }catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
@@ -82,6 +83,19 @@ public class PackageController {
             p.setDeleted(false);
             p.create();
             detailPackageService.saveDetailPackage(p);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS);
+        }catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @PutMapping("/update-new-package")
+    @Operation(summary = "chỉnh sửa dịch vụ con")
+    public ResponseData updateSubPackage(@RequestBody DetailPackage request){
+        try {
+            detailPackageService.updateDetailPackage(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS);
         }catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);

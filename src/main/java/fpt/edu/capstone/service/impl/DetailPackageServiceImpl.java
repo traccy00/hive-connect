@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.entity.DetailPackage;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.DetailPackageRepository;
 import fpt.edu.capstone.service.DetailPackageService;
 import lombok.AllArgsConstructor;
@@ -14,8 +15,8 @@ import java.util.Optional;
 public class DetailPackageServiceImpl implements DetailPackageService {
     private final DetailPackageRepository detailPackageRepository;
     @Override
-    public List<DetailPackage> getListDetailPackageFilter(String name) {
-        return detailPackageRepository.getListFilter(name);
+    public List<DetailPackage> getListDetailPackageFilter(String name, long rentalId) {
+        return detailPackageRepository.getListFilter(name, rentalId);
     }
 
     @Override
@@ -31,5 +32,14 @@ public class DetailPackageServiceImpl implements DetailPackageService {
     @Override
     public void saveDetailPackage(DetailPackage detailPackage) {
         detailPackageRepository.save(detailPackage);
+    }
+
+    @Override
+    public void updateDetailPackage(DetailPackage detailPackage) {
+        DetailPackage dp = detailPackageRepository.getById(detailPackage.getId());
+        if(dp == null){
+            throw new HiveConnectException("Gói dịch vụ không tồn tại");
+        }
+        detailPackageRepository.saveAndFlush(detailPackage);
     }
 }
