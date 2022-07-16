@@ -1,12 +1,10 @@
 package fpt.edu.capstone.controller;
 
-import fpt.edu.capstone.dto.admin.UserStatusRequest;
+import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
-import fpt.edu.capstone.entity.Banner;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.Reported;
-import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -42,10 +40,14 @@ public class AdminController {
 
     private final PaymentService paymentService;
 
+    private final RecruiterService recruiterService;
+
     private final LocalDateTime minDate = LocalDateTime.MIN;
     private final LocalDateTime maxDate = LocalDateTime.MAX;
 
     private final UserService userService;
+
+    private final AdminManageService adminManageService;
 
     @GetMapping("/list-admin")
     @Operation(summary = "Get list admin")
@@ -218,12 +220,15 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/get-list-pending-license")
-    @Operation(summary = "Get list pending license for Admin approval")
-    public ResponseData getPendingLicenses() {
-        //một record sẽ có hai dòng business license và addition license
+    @GetMapping("/get-licenses-approval")
+    @Operation(summary = "Get list license for Admin approval")
+    public ResponseData searchLicensesApproval(@RequestParam(required = false) String businessApprovalStatus,
+                                               @RequestParam(required = false) String additionalApprovalStatus) {
+        //một record sẽ có hai dòng business license và addition license: tất cả trạng thái
         try {
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+            List<LicenseApprovalResponse> responseList = adminManageService.
+                    searchLicenseApprovalForAdmin(businessApprovalStatus, additionalApprovalStatus);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, responseList);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
@@ -233,9 +238,10 @@ public class AdminController {
 
     @PutMapping("approve-license")
     @Operation(summary = "Admin approve license")
-    public ResponseData approvaLicense() {
+    public ResponseData approvaLicense(@RequestBody ApprovalLicenseRequest request) {
         try {
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+            Recruiter recruiter = recruiterService.approveLicense(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, recruiter);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

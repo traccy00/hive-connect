@@ -15,6 +15,7 @@ import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.CompanyServiceImpl;
 import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.*;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +33,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/recruiter")
+@AllArgsConstructor
 public class RecruiterController {
 
     private static final Logger logger = LoggerFactory.getLogger(RecruiterController.class);
 
-    @Autowired
-    private RecruiterService recruiterService;
+    private final RecruiterService recruiterService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserImageService userImageService;
-
-    @Autowired
-    private CompanyService companyService;
+    private final UserService userService;
 
     @Autowired
     private RequestJoinCompanyService requestJoinCompanyService;
