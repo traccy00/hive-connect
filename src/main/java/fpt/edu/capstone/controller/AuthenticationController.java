@@ -109,9 +109,9 @@ public class AuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
+            throw new Exception("Tài khoản bị khóa", e);
         } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+            throw new Exception("Sai tên đăng nhập hoặc mật khẩu", e);
         }
     }
 
