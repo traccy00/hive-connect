@@ -1,6 +1,7 @@
 package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.dto.job.JobResponse;
+import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
 import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.RecruiterPost;
 import org.springframework.data.domain.Page;
@@ -65,4 +66,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query(value = "Update job set is_deleted = ?1 where id = ?2", nativeQuery = true)
     void updateIsDeleted(long status, long id);
+
+    @Query(value = "select count(j.id) as totalCreatedJob, j.recruiter_id as recruiterId from job j where recruiter_id = ? group by j.recruiter_id", nativeQuery = true)
+    CountTotalCreatedJobResponse countTotalCreatedJobOfRecruiter(long recruiterId);
 }
