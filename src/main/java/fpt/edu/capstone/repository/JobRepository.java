@@ -6,6 +6,7 @@ import fpt.edu.capstone.entity.RecruiterPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -21,14 +22,16 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             "and j.toSalary =:toSalary or 0 =:toSalary " +
             "and (lower(j.rank) like lower(concat('%', :rank ,'%')) or :rank is null or :rank ='')" +
             "and (lower(j.workForm) like lower(concat('%', :workForm ,'%')) or :workForm is null or :workForm ='')" +
-            "and (lower(j.workPlace) like lower(concat('%', :workPlace ,'%')) or :workPlace is null or :workPlace ='')")
+            "and (lower(j.workPlace) like lower(concat('%', :workPlace ,'%')) or :workPlace is null or :workPlace ='') " +
+            "and j.isDeleted = 0")
     Page<Job> searchListJobFilter(Pageable pageable, @Param("fieldId") long fieldId,@Param("countryId") long countryId, @Param("jobName") String jobName,
                                             @Param("fromSalary") long fromSalary, @Param("toSalary") long toSalary,
                                             @Param("rank") String rank, @Param("workForm") String workForm,
                                             @Param("workPlace") String workPlace);
 
-//    @Query("update RecruiterPost c set c.isDeleted = 1 where c.id =:jobId")
-//    void deleteJob(@Param("jobId") long jobId);
+    @Modifying
+    @Query("update Job j set j.isDeleted = 1 where j.id =:jobId")
+    void deleteJob(@Param("jobId") long jobId);
 
     boolean existsById(long id);
 

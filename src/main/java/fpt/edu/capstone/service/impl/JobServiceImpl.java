@@ -104,14 +104,14 @@ public class JobServiceImpl implements JobService {
         jobRepository.saveAndFlush(job);
     }
 
-//    @Override
-//    public void deleteJob(long jobId) {
-//        RecruiterPost recruiterPost = jobRepository.getById(jobId);
-//        if(recruiterPost == null){
-//            throw new HiveConnectException("Job does not exist");
-//        }
-//        jobRepository.deleteJob(jobId);
-//    }
+    @Override
+    public void deleteJob(long jobId) {
+        Job job = jobRepository.getById(jobId);
+        if(job == null){
+            throw new HiveConnectException("Công việc không tồn tại");
+        }
+        jobRepository.deleteById(jobId);
+    }
 
     @Override
     public boolean existsById(long id) {

@@ -104,17 +104,17 @@ public class JobController {
         }
     }
 
-//    @DeleteMapping("/delete-job")
-//    public ResponseData deleteJob(@RequestParam(value = "id") long jobId) {
-//        try {
-//            jobService.deleteJob(jobId);
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_CATEGORY_SUCCESS);
-//        } catch (Exception e) {
-//            String msg = LogUtils.printLogStackTrace(e);
-//            logger.error(msg);
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
-//        }
-//    }
+    @DeleteMapping("/delete-job")
+    public ResponseData deleteJob(@RequestParam(value = "id") long jobId) {
+        try {
+            jobService.deleteJob(jobId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_CATEGORY_SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
 
     @PostMapping("/apply-job")
     public ResponseData applyJob(@RequestBody AppliedJobRequest request) {

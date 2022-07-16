@@ -21,7 +21,7 @@ public interface JobService {
 
     void updateJob(UpdateJobRequest request);
 
-//    void deleteJob(long jobId);
+    void deleteJob(long jobId);
 
     boolean existsById(long id);
 
