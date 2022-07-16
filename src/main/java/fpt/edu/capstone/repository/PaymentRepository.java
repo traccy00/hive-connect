@@ -1,10 +1,13 @@
 package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.entity.Payment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
@@ -20,4 +23,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> getListPaymentOrderByDate();
 
     Payment findByRecruiterId(long recId);
+
+    @Query(value = "select * from payment p where p.created_at >= :startDate and p.created_at < :endDate", nativeQuery = true)
+    Page<Payment> getRevenueInMonth(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate, Pageable pageable);
 }

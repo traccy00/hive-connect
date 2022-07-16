@@ -10,13 +10,16 @@ import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -72,13 +75,21 @@ public class PaymentController {
         return null;
     }
 
-    @GetMapping("/total-profit")
-    public ResponseData getTotalProfit(@RequestParam(value = "day", required = false) int day,
-                                       @RequestParam(value = "month", required = false) int month,
-                                       @RequestParam("year") int year){
+    /**
+     * TODO : NOT WORKING - CHECK THIS API
+     * Nam
+     */
+    @GetMapping("/total-revenue")
+    public ResponseData getTotalProfit(@RequestParam(value = "startDate") String startDate,
+                                       @RequestParam(value = "endDate") String endDate,
+                                       @RequestParam(defaultValue = "1") Integer pageNo,
+                                       @RequestParam(defaultValue = "10") Integer pageSize){
         try {
-//            List <LocalDateTime> list = paymentService.getListDateTime();
-            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime start = LocalDateTime.parse(startDate, formatter);
+            LocalDateTime end = LocalDateTime.parse(endDate, formatter);
+            ResponseDataPagination pagination = paymentService.getRevenue(start, end, pageNo, pageSize);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS, pagination);
         } catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

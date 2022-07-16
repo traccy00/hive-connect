@@ -9,8 +9,14 @@ import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.PaymentRepository;
 import fpt.edu.capstone.service.PaymentService;
 import fpt.edu.capstone.service.RecruiterService;
+import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -20,6 +26,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -128,6 +135,26 @@ public class PaymentServiceImpl implements PaymentService {
             throw new HiveConnectException("Package has expired date");
         }
         return null;
+    }
+
+    @Override
+    public ResponseDataPagination getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize) {
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+        LocalDateTime startDate = start.truncatedTo(ChronoUnit.DAYS);
+        end = startDate.plusDays(1);
+        Page<Payment> payments = paymentRepository.getRevenueInMonth(startDate, end, pageable);
+
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(payments.toList());
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(payments.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(payments.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
     }
 
     @Override
