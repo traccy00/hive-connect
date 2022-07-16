@@ -1,19 +1,15 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
-import fpt.edu.capstone.dto.UploadFileRequest;
 import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
+import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
 import fpt.edu.capstone.dto.recruiter.UploadBusinessLicenseRequest;
-import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.Recruiter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,4 +39,8 @@ public interface RecruiterService {
     Page<Recruiter> getRecruiterByCompanyId(long pageNo, long quantity, long companyId);
 
     Recruiter uploadLicense(UploadBusinessLicenseRequest request);
+
+    List<Recruiter> searchLicenseApprovalForAdmin(String businessApprovalStatus, String additionalApprovalStatus);
+
+    Recruiter approveLicense(ApprovalLicenseRequest request);
 }

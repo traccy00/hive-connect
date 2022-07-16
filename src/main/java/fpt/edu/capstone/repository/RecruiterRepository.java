@@ -56,4 +56,9 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
 
     @Query(value = "select * from recruiter where company_id = ?1", nativeQuery = true)
     Page<Recruiter> getRecruiterByCompanyId(long id, Pageable pageable);
+
+    @Query(value = "select * from recruiter r where (business_license_approval_status is not null " +
+            "or additional_license_approval_status is not null) and business_license_approval_status like concat('%',?1,'%') " +
+            "and additional_license_approval_status like concat('%',?2,'%') ", nativeQuery = true)
+    List<Recruiter> searchLicenseApprovalForAdmin(String businessApprovalStatus, String additionalApprovalStatus);
 }
