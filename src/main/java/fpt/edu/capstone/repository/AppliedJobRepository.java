@@ -1,11 +1,14 @@
 package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.dto.company.CompanyResponse;
+import fpt.edu.capstone.dto.recruiter.CountCandidateApplyPercentageResponse;
+import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
 import fpt.edu.capstone.entity.AppliedJob;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,4 +36,13 @@ public interface AppliedJobRepository extends JpaRepository<AppliedJob, Long> {
             "join companies c on j.company_id = c.id) t1 " +
             "group by company_id, t1.company_name order by applyCvNumber desc limit 12;", nativeQuery = true)
     List<CompanyResponse> getTop12Companies();
+
+    @Query(value = "select * from applied_job aj where candidate_id = :candidateId " +
+            "and (approval_status like (:status) or :status is null or :status = '')",
+            nativeQuery = true)
+    List<AppliedJob> searchAppliedJobsOfCandidate(@Param("candidateId") long candidateId,@Param("status") String approvalStatus);
+
+    @Query(value = "select count(aj.candidate_id) as totalApplied, aj.job_id as jobId, j.number_recruits as numberRecruits " +
+            "from applied_job aj join job j on aj.job_id = j.id where j.recruiter_id = ? group by job_id , number_recruits", nativeQuery = true)
+    CountCandidateApplyPercentageResponse countApplyPercentage(long recruiterId);
 }

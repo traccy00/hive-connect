@@ -3,6 +3,7 @@ package fpt.edu.capstone.service;
 import fpt.edu.capstone.dto.job.CreateJobRequest;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
+import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
 import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
@@ -46,6 +47,8 @@ public interface JobService {
     Page<Job> getJobByCompanyId(long pageNo, long quantity, long companyId);
 
     void updateIsDeleted(long status, long id);
+
+    CountTotalCreatedJobResponse countTotalCreatedJobOfRecruiter(long recruiterId);
 
     List<Job> getJobByRecruiterId(long recId);
 }

@@ -3,8 +3,13 @@ package fpt.edu.capstone.controller;
 import fpt.edu.capstone.dto.CV.ViewCvResponse;
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.entity.AppliedJob;
+import fpt.edu.capstone.entity.CVImported;
+import fpt.edu.capstone.entity.Candidate;
+import fpt.edu.capstone.entity.ProfileViewer;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.repository.FollowRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.service.impl.CVImportedService;
@@ -14,6 +19,7 @@ import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -46,6 +52,8 @@ public class CandidateController {
     private final CompanyService companyService;
 
     private final RecruiterService recruiterService;
+
+    private final CandidateManageService candidateManageService;
 
     @GetMapping("/all")
     public ResponseData getAllCandidate() {
@@ -281,6 +289,20 @@ public class CandidateController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Is following", true);
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/search-applied-jobs")
+    @Operation(summary = "View list applied job and approval status of a Candidate")
+    public ResponseData searchListAppliedJob(@RequestParam long candidateId,
+                                             @RequestParam(required = false, defaultValue = StringUtils.EMPTY) String approvalStatus) {
+        try {
+            List<AppliedJob> appliedJobs = candidateManageService.searchAppliedJobsOfCandidate(candidateId, approvalStatus);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, appliedJobs);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 }

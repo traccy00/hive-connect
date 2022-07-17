@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -145,57 +146,57 @@ public class RecruiterServiceImpl implements RecruiterService {
     //check thêm tên file có hợp lệ không
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public Recruiter uploadLicense(UploadBusinessLicenseRequest request) {
-        System.out.println("tess:" + Enums.ApprovalStatus.APPROVED);
-        Optional<Recruiter> optionalRecruiter = findById(request.getRecruiterId());
+    public Recruiter uploadLicense(long recruiterId,
+                                   MultipartFile businessMultipartFile,
+                                   MultipartFile additionalMultipartFile) throws Exception {
+        Optional<Recruiter> optionalRecruiter = findById(recruiterId);
         if (!optionalRecruiter.isPresent()) {
             throw new HiveConnectException("Người dùng không tồn tại, không thể đăng tải giấy phép kinh doanh");
         }
         if (optionalRecruiter.get().getCompanyId() == 0) {
             throw new HiveConnectException("Nhà tuyển dụng chưa có thông tin công ty. Vui lòng cập nhật thông tin công ty trước.");
         }
-        List<UploadFileRequest> fileRequestList = request.getUploadFileRequests();
-        if (fileRequestList == null || fileRequestList.isEmpty()) {
+        if (businessMultipartFile == null && additionalMultipartFile == null) {
             throw new HiveConnectException("Không có file nào được upload");
         }
-        for (UploadFileRequest fileRequest : fileRequestList) {
 
-            //check xem đã save được vào amazon chưa
+        //check xem đã save được vào amazon chưa
 
-            //"1": business license, "2": additional license
-            if (fileRequest.getType().equals("1")) {
-                //check xem license đã từng upload lên chưa, trạng thái như thế nào?
-                if (optionalRecruiter.get().getBusinessLicense() != null && optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null) {
-                    if (optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())
-                            || optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
-                        throw new HiveConnectException("Nhà tuyển dụng đã có giấy phép kinh doanh hoặc giấy phép đang được duyệt, không thể thay đổi");
-                    }
+        //"1": business license, "2": additional license
+        if (businessMultipartFile != null) {
+            //check xem license đã từng upload lên chưa, trạng thái như thế nào?
+            if (optionalRecruiter.get().getBusinessLicense() != null && optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null) {
+                if ((optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())
+                        || optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus()))
+                && additionalMultipartFile == null) {
+                    throw new HiveConnectException("Nhà tuyển dụng đã có giấy phép kinh doanh hoặc giấy phép đang được duyệt, không thể thay đổi");
                 }
-                //upload file to amazon
-                amazonS3ClientService.uploadFile(fileRequest);
-                //save to database
-                optionalRecruiter.get().setBusinessLicense(fileRequest.getUploadFileName());
-                optionalRecruiter.get().setBusinessLicenseUrl(ResponseMessageConstants.AMAZON_SAVE_URL + fileRequest.getUploadFileName());
-                optionalRecruiter.get().setBusinessLicenseApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-                optionalRecruiter.get().update();
-            } else if (fileRequest.getType().equals("2")) {
-                if (optionalRecruiter.get().getAdditionalLicense() != null
-                        && optionalRecruiter.get().getAdditionalLicenseApprovalStatus() != null) {
-                    if (optionalRecruiter.get().getAdditionalLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())
-                            || optionalRecruiter.get().getAdditionalLicenseApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
-                        throw new HiveConnectException("Nhà tuyển dụng đã có giấy phép kinh doanh hoặc giấy phép đang được duyệt, không thể thay đổi");
-                    }
-                }
-                //upload file to amazon
-                amazonS3ClientService.uploadFile(fileRequest);
-                //save to database
-                optionalRecruiter.get().setAdditionalLicense(fileRequest.getUploadFileName());
-                optionalRecruiter.get().setAdditionalLicenseUrl(ResponseMessageConstants.AMAZON_SAVE_URL + fileRequest.getUploadFileName());
-                optionalRecruiter.get().setAdditionalLicenseApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-                optionalRecruiter.get().update();
             }
-            recruiterRepository.save(optionalRecruiter.get());
+            //upload file to amazon
+            String fileName = amazonS3ClientService.uploadFileAmazonS3(null, businessMultipartFile);
+            //save to database
+            optionalRecruiter.get().setBusinessLicense(fileName);
+            optionalRecruiter.get().setBusinessLicenseUrl(ResponseMessageConstants.AMAZON_SAVE_URL + fileName);
+            optionalRecruiter.get().setBusinessLicenseApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+            optionalRecruiter.get().update();
         }
+        if (additionalMultipartFile != null) {
+            if (optionalRecruiter.get().getAdditionalLicense() != null
+                    && optionalRecruiter.get().getAdditionalLicenseApprovalStatus() != null) {
+                if (optionalRecruiter.get().getAdditionalLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())
+                        || optionalRecruiter.get().getAdditionalLicenseApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
+                    throw new HiveConnectException("Nhà tuyển dụng đã có giấy phép kinh doanh hoặc giấy phép đang được duyệt, không thể thay đổi");
+                }
+            }
+            //upload file to amazon
+            String fileName = amazonS3ClientService.uploadFileAmazonS3(null, additionalMultipartFile);
+            //save to database
+            optionalRecruiter.get().setAdditionalLicense(fileName);
+            optionalRecruiter.get().setAdditionalLicenseUrl(ResponseMessageConstants.AMAZON_SAVE_URL + fileName);
+            optionalRecruiter.get().setAdditionalLicenseApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+            optionalRecruiter.get().update();
+        }
+        recruiterRepository.save(optionalRecruiter.get());
         return optionalRecruiter.get();
     }
 
