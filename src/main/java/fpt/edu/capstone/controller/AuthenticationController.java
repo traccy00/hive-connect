@@ -194,6 +194,7 @@ public class AuthenticationController {
             Users user = userService.getUserById(cf.getUserId());
             if (StringUtils.equals(token, mailToken)) {
                 user.setVerifiedEmail(true);
+                user.setActive(true);
             }
             userService.saveUser(user);
             final UserDetails userDetails = securityUserService.loadUserByUsername(user.getUsername());
