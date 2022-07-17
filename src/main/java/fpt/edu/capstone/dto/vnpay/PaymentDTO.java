@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PaymentDTO {
     private long recruiterId;
-    private long rentalPackageId;
+    private long detailPackageId;
     private long bannerId;
     private int amount;
     private String orderType;
