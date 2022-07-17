@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,46 +58,46 @@ public class RecruiterController {
 
     @PostMapping("/insert-recruiter")
     public ResponseData insertRecruiter(@RequestBody long userId) {
-        try{
+        try {
             Optional<Recruiter> recruiter = recruiterService.findRecruiterByUserId(userId);
-            if(recruiter.isPresent()) {
+            if (recruiter.isPresent()) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "That user id is existed", userId);
             }
             Recruiter recruiter1 = recruiterService.insertRecruiter(userId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Insert recruiter successful", recruiter1);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
 
     @PutMapping("/account-authen-level")
-    public ResponseData changeLevelAuthenAccount(){
+    public ResponseData changeLevelAuthenAccount() {
         //cấp độ xác thực account của recruiter ( update trong db khi đã xác thực xong 1 cấp độ)
         return null;
     }
 
 
     @PutMapping("/update-recruiter-profile")
-    public ResponseData updateProfile(@RequestBody RecruiterUpdateProfileRequest recruiterUpdateProfileRequest){
-        try{
+    public ResponseData updateProfile(@RequestBody RecruiterUpdateProfileRequest recruiterUpdateProfileRequest) {
+        try {
             Optional<Recruiter> recruiter = recruiterService.findById(recruiterUpdateProfileRequest.getId());
-            if(!recruiter.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS,"Can not find this recruiter", recruiterUpdateProfileRequest.getId());
+            if (!recruiter.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS, "Can not find this recruiter", recruiterUpdateProfileRequest.getId());
             }
             recruiterService.updateRecruiterInformation(recruiterUpdateProfileRequest);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS,"update recruiter successfull", recruiterService.findById(recruiterUpdateProfileRequest.getId()).get());
-        }catch (Exception ex){
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, "update recruiter successfull", recruiterService.findById(recruiterUpdateProfileRequest.getId()).get());
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
 
     @GetMapping("/get-total-cv-applied")
-    public ResponseData totalCVApplied(){
+    public ResponseData totalCVApplied() {
         return null;
     }
 
     @GetMapping("/get-detail-cv")
-    public ResponseData detailCv(){
+    public ResponseData detailCv() {
         return null;
     }
 
@@ -113,7 +114,7 @@ public class RecruiterController {
         try {
             requestJoinCompanyService.createRequest(requestJoinCompany);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Send request successful", requestJoinCompany);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
@@ -126,25 +127,26 @@ public class RecruiterController {
     public ResponseData getSentRequest(@RequestParam long senderId) {
         try {
             Optional<RequestJoinCompany> requestJoinCompanyOp = requestJoinCompanyService.getSentRequest(senderId);
-            if(requestJoinCompanyOp.isPresent()) {
+            if (requestJoinCompanyOp.isPresent()) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", requestJoinCompanyOp.get());
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No request was sent", null);
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
+
     //fetch request by creator_id Check xem thang nay co phair creator cua thang nao khong => fetch
     @GetMapping("/get-receive-request")
     @Operation(summary = "recruiter - người tạo company đang có những request nào")
     public ResponseData getReceiveRequest(@RequestParam long approverId) {
         try {
             Optional<List<RequestJoinCompany>> requestJoinCompanyOp = requestJoinCompanyService.getReceiveRequest(approverId);
-            if(requestJoinCompanyOp.isPresent()) {
+            if (requestJoinCompanyOp.isPresent()) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", requestJoinCompanyOp.get());
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No request have been received", null);
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
@@ -154,11 +156,11 @@ public class RecruiterController {
     public ResponseData getReceiveRequest(@RequestBody RequestJoinCompany newRequestJoinCompany) {
         try {
             requestJoinCompanyService.approveRequest(newRequestJoinCompany.getStatus(), newRequestJoinCompany.getId());
-            if(!newRequestJoinCompany.getStatus().toLowerCase().equals("deny")) {
+            if (!newRequestJoinCompany.getStatus().toLowerCase().equals("deny")) {
                 recruiterService.updateCompany(newRequestJoinCompany.getCompanyId(), newRequestJoinCompany.getSenderId());
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "succesful", newRequestJoinCompany);
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
@@ -191,7 +193,7 @@ public class RecruiterController {
             responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
             responseDataPagination.setPagination(pagination);
             return responseDataPagination;
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
             return new ResponseDataPagination();
         }
@@ -205,15 +207,17 @@ public class RecruiterController {
         try {
 
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
 
     @PutMapping("/upload-business-license")
-    public ResponseData uploadBusinessLicense(@RequestBody UploadBusinessLicenseRequest request) {
+    public ResponseData uploadBusinessLicense(@RequestPart("recruiterId") long recruiterId,
+                                              @RequestPart(value = "businessMultipartFile", required = false) MultipartFile businessMultipartFile,
+                                              @RequestPart(value = "additionalMultipartFile", required = false) MultipartFile additionalMultipartFile) {
         try {
-            Recruiter recruiter = recruiterService.uploadLicense(request);
+            Recruiter recruiter = recruiterService.uploadLicense(recruiterId, businessMultipartFile, additionalMultipartFile);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, recruiter);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -228,7 +232,7 @@ public class RecruiterController {
         try {
             CommonRecruiterInformationResponse response = recruiterManageService.getCommonInforOfRecruiter(recruiterId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, response);
-        }catch (Exception e) {
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

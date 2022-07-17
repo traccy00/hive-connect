@@ -207,9 +207,10 @@ public class FileController {
 
     //cần validate đuôi file
     @PostMapping("/upload-file")
-    public ResponseData uploadImages(@RequestBody UploadFileRequest request) {
+    public ResponseData uploadImages(@RequestPart("request") UploadFileRequest request,
+                                     @RequestPart("multipartFile") MultipartFile multipartFile) {
         try {
-            String fileName = amazonS3ClientService.uploadFile(request);
+            String fileName = amazonS3ClientService.uploadFile(request, multipartFile);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, fileName);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
