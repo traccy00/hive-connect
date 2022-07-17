@@ -16,6 +16,7 @@ public class PaymentConfig {
     public static final String TMN_CODE = "Y84VL87I";
     public static final String CURR_CODE = "VND";
     public static final String ORDER_TYPE = "Buy Package";
+    public static final String ORDER_INFOR = "Thanh toán dịch vụ thuộc Hive Connect";
     public static final String LOCATE_DEFAULT = "vn";
     public static final String RETURN_URL = "http://localhost:4200/payment/result";
     public static String vnp_HashSecret = "GZUXJUYKBTVRVXDXSGJAOQPWYXQSITOW";

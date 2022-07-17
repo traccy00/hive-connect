@@ -17,7 +17,6 @@ public class PaymentDTO {
     private long bannerId;
     private int amount;
     private String orderType;
-    @NotBlank(message = "Mô tả thông tin thanh toán không được để trống.")
     private String description;
     private String bankCode;
 }
