@@ -123,18 +123,18 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Payment findRecruiterPurchasedPackage(long recruiterId) {
-        Payment payment = paymentRepository.findByRecruiterId(recruiterId);
+    public List<Payment> findRecruiterPurchasedPackage(long recruiterId) {
+        List<Payment> payment = paymentRepository.findByRecruiterId(recruiterId);
         if(payment == null){
             throw new HiveConnectException("there is no payment to buy any package");
         }
         //If exist : check expireDate package
-        LocalDateTime expiredDate = payment.getExpiredDate();
-        LocalDateTime now = LocalDateTime.now();
-        if(expiredDate.isAfter(now)){
-            throw new HiveConnectException("Package has expired date");
-        }
-        return null;
+//        LocalDateTime expiredDate = payment.getExpiredDate();
+//        LocalDateTime now = LocalDateTime.now();
+//        if(expiredDate.isAfter(now)){
+//            throw new HiveConnectException("Package has expired date");
+//        }
+        return payment;
     }
 
     @Override

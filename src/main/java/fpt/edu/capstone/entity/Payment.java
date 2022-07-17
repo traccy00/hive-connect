@@ -24,8 +24,8 @@ public class Payment extends BaseEntity {
     @Column(name = "recruiter_id")
     private long recruiterId;
 
-    @Column(name = "rental_package_id")
-    private long rentalPackageId;
+    @Column(name = "detail_package_id")
+    private long detailPackageId;
 
     @Column(name = "banner_id")
     private long bannerId;

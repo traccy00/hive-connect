@@ -46,4 +46,6 @@ public interface JobService {
     Page<Job> getJobByCompanyId(long pageNo, long quantity, long companyId);
 
     void updateIsDeleted(long status, long id);
+
+    List<Job> getJobByRecruiterId(long recId);
 }

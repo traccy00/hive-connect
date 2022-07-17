@@ -1,11 +1,14 @@
 package fpt.edu.capstone.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fpt.edu.capstone.dto.active_package.PaymentActiveRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
 import fpt.edu.capstone.entity.*;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.*;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -43,6 +46,10 @@ public class JobController {
 
     private final ModelMapper modelMapper;
 
+    private final PaymentActiveService paymentActiveService;
+
+    private final PaymentService paymentService;
+
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
         try {
@@ -79,6 +86,37 @@ public class JobController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+    @GetMapping("/list-job-by-recruiter")
+    @Operation(summary = "list job theo recruiterId, để hiển thị trên màn job của ứng viên")
+    public ResponseData recruiterBuyPackage(@RequestParam(value = "recruiterId") long recruiterId){
+        try {
+            List<Job> jobs = jobService.getJobByRecruiterId(recruiterId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS,jobs);
+        } catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @PutMapping("/package-active")
+    @Operation(summary = "recruiter gắn job với gói dịch vụ mà recruiter đã mua trước đó")
+    public ResponseData packageActive(@RequestBody PaymentActiveRequest request){
+        try {
+            PaymentActive active = modelMapper.map(request, PaymentActive.class);
+            //cần lấy ra dc expireDate
+//            Payment payment = paymentService.
+//            active.setExpiredDate();
+            paymentActiveService.save(active);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_JOB_SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
 
     @GetMapping("/job-detail/{id}")
     public ResponseData getJobDetail(@PathVariable("id") long jobId, @RequestParam("candidateId") long candidateId){
