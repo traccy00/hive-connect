@@ -2,9 +2,9 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.repository.ImageRepository;
-import fpt.edu.capstone.repository.UserImageRepository;
+import fpt.edu.capstone.service.ImageService;
+import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,30 +15,29 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ImageService {
+@AllArgsConstructor
+public class ImageServiceImpl implements ImageService {
 
-    @Autowired
-    private ImageRepository imageRepository;
-
+    private final ImageRepository imageRepository;
 
     //type = IMG || CV
-    private boolean isValidFile(MultipartFile file, String type){
+    public boolean isValidFile(MultipartFile file, String type) {
         String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
-        if(type.equals("IMG")) {
-            return  Arrays.asList(new String[] {"jpeg","jpg","png"}).contains(fileExtension.toLowerCase()) ;
+        if (type.equals("IMG")) {
+            return Arrays.asList(new String[]{"jpeg", "jpg", "png"}).contains(fileExtension.toLowerCase());
         }
-        return  Arrays.asList(new String[] {"pdf"}).contains(fileExtension.toLowerCase()) ;
+        return Arrays.asList(new String[]{"pdf"}).contains(fileExtension.toLowerCase());
     }
 
     public Image saveCompanyAvatar(MultipartFile file, String type, long companyId) throws IOException {
-        if(file.isEmpty()){
+        if (file.isEmpty()) {
             throw new RuntimeException("Failed to store empty file");
         }
-        if(!isValidFile(file, type)){
+        if (!isValidFile(file, type)) {
             throw new RuntimeException("File is invalid");
         }
         float fileSizeInMB = file.getSize() / 1_000_000;
-        if (fileSizeInMB > 25.0f){
+        if (fileSizeInMB > 25.0f) {
             throw new RuntimeException("File must  be <= 25mb");
         }
         Image image = new Image();
@@ -52,7 +51,7 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
-    public Optional<Image> getFile(String id) {
+    public Optional<Image> getFile(long id) {
         return imageRepository.findById(id);
     }
 
@@ -60,26 +59,35 @@ public class ImageService {
         return imageRepository.findAll();
     }
 
-    public Optional<Image> findAvatarByCompanyId(long companyId){
+    public Optional<Image> findAvatarByCompanyId(long companyId) {
         return imageRepository.findAvatarByCompanyId(companyId);
-    };
+    }
 
     public void updateAvatar(String id, MultipartFile file) throws IOException {
-        if(file.isEmpty()){
+        if (file.isEmpty()) {
             throw new RuntimeException("Failed to store empty file");
         }
-        if(!isValidFile(file, "IMG")){
+        if (!isValidFile(file, "IMG")) {
             throw new RuntimeException("File is invalid");
         }
         float fileSizeInMB = file.getSize() / 1_000_000;
-        if (fileSizeInMB > 25.0f){
+        if (fileSizeInMB > 25.0f) {
             throw new RuntimeException("File must  be <= 25mb");
         }
-        imageRepository.updateCompanyAvatar(file.getBytes(),true,id);
+        imageRepository.updateCompanyAvatar(file.getBytes(), true, id);
     }
 
-    public Optional<Image> finById(String id){
+    public Optional<Image> finById(long id) {
         return imageRepository.findById(id);
-    };
+    }
 
+    @Override
+    public Image getAvatarRecruiter(long recruiterId) {
+        return imageRepository.getAvatarRecruiter(recruiterId);
+    }
+
+    @Override
+    public Image getAvatarCandidate(long candidateId) {
+        return imageRepository.getAvatarCandidate(candidateId);
+    }
 }

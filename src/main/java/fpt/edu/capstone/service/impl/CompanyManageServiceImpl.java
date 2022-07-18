@@ -18,7 +18,7 @@ public class CompanyManageServiceImpl implements CompanyManageService {
 
     private final AppliedJobService appliedJobService;
 
-    private final ImageService imageService;
+    private final ImageServiceImpl imageService;
 
     @Override
     public List<TopCompanyResponse> getTop12Companies() {

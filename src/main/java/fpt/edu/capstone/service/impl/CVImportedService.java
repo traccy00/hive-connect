@@ -4,12 +4,10 @@ package fpt.edu.capstone.service.impl;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import fpt.edu.capstone.entity.CVImported;
 import fpt.edu.capstone.repository.CVImportedRepository;
-import fpt.edu.capstone.repository.UserImageRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -3,20 +3,17 @@ package fpt.edu.capstone.service;
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
 import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
-import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
-import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
-import fpt.edu.capstone.dto.recruiter.UploadBusinessLicenseRequest;
 import fpt.edu.capstone.entity.Recruiter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public interface RecruiterService {
-    RecruiterProfileResponse getRecruiterProfile(long userId);
+
+    Recruiter getRecruiterByUserId(long userId);
 
     boolean existById(long recId);
 
@@ -27,8 +24,6 @@ public interface RecruiterService {
     Optional<Recruiter> findById(long id);
 
     Recruiter insertRecruiter(long userId);
-
-    void updateRecruiterInformation(RecruiterUpdateProfileRequest recruiterUpdateProfileRequest);
 
     List<AppliedJobByRecruiterResponse> getListAppliedByForRecruiter(long recruiterId);
 
@@ -47,4 +42,6 @@ public interface RecruiterService {
     List<Recruiter> searchLicenseApprovalForAdmin(String businessApprovalStatus, String additionalApprovalStatus);
 
     Recruiter approveLicense(ApprovalLicenseRequest request);
+
+    Recruiter getById(long recruiterId);
 }

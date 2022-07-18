@@ -59,6 +59,7 @@ public interface ResponseMessageConstants {
     String REQUEST_EXCEPTION = "MSG_REQUEST_EXCEPTION";
     String UPLOAD_IMG_EXCEPTION = "MSG_UPLOAD_IMG_EXCEPTION";
     String MAX_IMAGE_SIZE = "MSG_MAX_IMAGE_SIZE_5MB";
-    String UPLOAD_IMAGE_WRONG_TYPE = "MSG_UPLOAD_IMAGE_WRONG_TYPE";
-    String UPLOAD_IMAGE_OVER_SIZE = "MSG_UPLOAD_IMAGE_OVER_SIZE";
+    String UPLOAD_IMAGE_WRONG_TYPE = "Tệp tải lên không đúng định dạng";
+    String UPLOAD_IMAGE_OVER_SIZE = "Hình ảnh tải lên bị quá dung lượng cho phép";
+    String UPDATE_SUCCESSFULLY = "Cập nhật thành công";
 }

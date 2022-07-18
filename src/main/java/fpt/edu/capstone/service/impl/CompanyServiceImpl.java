@@ -96,4 +96,9 @@ public class CompanyServiceImpl implements CompanyService {
     public Optional<Company> getCompanyByTaxCode(String taxCode) {
         return companyRepository.getCompanyByTaxcode(taxCode);
     }
+
+    @Override
+    public List<Company> searchCompany(String companyName) {
+        return companyRepository.getAllByName(companyName);
+    }
 }

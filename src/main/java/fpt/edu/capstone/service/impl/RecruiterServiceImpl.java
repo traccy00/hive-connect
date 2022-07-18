@@ -1,14 +1,10 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
-import fpt.edu.capstone.dto.UploadFileRequest;
 import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
-import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
-import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
-import fpt.edu.capstone.dto.recruiter.UploadBusinessLicenseRequest;
-import fpt.edu.capstone.entity.*;
+import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.CompanyRepository;
 import fpt.edu.capstone.repository.RecruiterRepository;
@@ -40,36 +36,8 @@ public class RecruiterServiceImpl implements RecruiterService {
     private final AmazonS3ClientService amazonS3ClientService;
 
     @Override
-    public RecruiterProfileResponse getRecruiterProfile(long userId) {
-        RecruiterProfileResponse recruiterProfile = new RecruiterProfileResponse();
-        Users user = userRepository.getUserById(userId);
-        if (user == null) {
-            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
-        }
-        //role recruiter = 2
-        Recruiter recruiter = recruiterRepository.getRecruiterProfileByUserId(userId);
-        if (recruiter == null) {
-            throw new HiveConnectException("Recruiter doesn't exist");
-        }
-        recruiterProfile.setUserName(user.getUsername());
-        recruiterProfile.setAvatar(user.getAvatar());
-
-        if (recruiter.getCompanyId() != 0) {
-            long companyId = recruiter.getCompanyId();
-            Company company = companyRepository.getCompanyById(companyId);
-            recruiterProfile.setCompanyId(companyId);
-            recruiterProfile.setCompanyName(company.getName());
-            recruiterProfile.setCompanyAddress(company.getAddress());
-        }
-        recruiterProfile.setId(recruiter.getId());
-        recruiterProfile.setEmail(user.getEmail());
-        recruiterProfile.setFullName(recruiter.getFullName());
-        recruiterProfile.setGender(recruiter.isGender());
-        recruiterProfile.setPosition(recruiter.getPosition());
-        recruiterProfile.setLinkedinAccount(recruiter.getLinkedInAccount());
-        recruiterProfile.setBusinessLicense(recruiter.getBusinessLicense());
-        recruiterProfile.setAvatar(recruiter.getAvatarUrl());
-        return recruiterProfile;
+    public Recruiter getRecruiterByUserId(long userId) {
+        return recruiterRepository.getRecruiterByUserId(userId);
     }
 
     @Override
@@ -99,21 +67,6 @@ public class RecruiterServiceImpl implements RecruiterService {
         LocalDateTime nowDate = LocalDateTime.now();
         recruiter.setCreatedAt(nowDate);
         return recruiterRepository.save(recruiter);
-    }
-
-    @Override
-    public void updateRecruiterInformation(RecruiterUpdateProfileRequest recruiterUpdateProfileRequest) {
-        LocalDateTime nowDate = LocalDateTime.now();
-        recruiterRepository.updateCruiterProfile(recruiterUpdateProfileRequest.getFullName(),
-                recruiterUpdateProfileRequest.isGender(),
-                recruiterUpdateProfileRequest.getPosition(),
-                recruiterUpdateProfileRequest.getLinkedinAccount(),
-                recruiterUpdateProfileRequest.getBusinessLicense(),
-                nowDate,
-                recruiterUpdateProfileRequest.getPhone(),
-                recruiterUpdateProfileRequest.getAdditionalLicense(),
-                recruiterUpdateProfileRequest.getAvatarUrl(),
-                recruiterUpdateProfileRequest.getId());
     }
 
     @Override
@@ -168,7 +121,7 @@ public class RecruiterServiceImpl implements RecruiterService {
             if (optionalRecruiter.get().getBusinessLicense() != null && optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null) {
                 if ((optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())
                         || optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus()))
-                && additionalMultipartFile == null) {
+                        && additionalMultipartFile == null) {
                     throw new HiveConnectException("Nhà tuyển dụng đã có giấy phép kinh doanh hoặc giấy phép đang được duyệt, không thể thay đổi");
                 }
             }
@@ -233,5 +186,10 @@ public class RecruiterServiceImpl implements RecruiterService {
             recruiterRepository.save(optionalRecruiter.get());
         }
         return optionalRecruiter.get();
+    }
+
+    @Override
+    public Recruiter getById(long recruiterId) {
+        return recruiterRepository.getById(recruiterId);
     }
 }
