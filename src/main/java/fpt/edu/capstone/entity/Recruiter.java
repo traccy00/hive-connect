@@ -37,7 +37,7 @@ public class Recruiter extends BaseEntity {
     private String position;
 
     @Column(name = "linkedin_url")
-    private String linkedInAccount;
+    private String linkedinAccount;
 
     @Column(name = "business_license")
     private String businessLicense;
@@ -59,9 +59,6 @@ public class Recruiter extends BaseEntity {
 
     @Column(name = "company_address")
     private String companyAddress;
-
-    @Column(name = "avatar_url")
-    private String avatarUrl;
 
     @Column(name = "business_license_approval_status")
     private String businessLicenseApprovalStatus;

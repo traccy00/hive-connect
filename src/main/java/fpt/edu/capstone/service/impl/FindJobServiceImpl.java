@@ -39,7 +39,7 @@ public class FindJobServiceImpl implements FindJobService {
 
     private final JobService jobService;
 
-    private final UserService userService;
+    private final ImageService imageService;
 
     private final WorkExperienceService workExperienceService;
 
@@ -121,8 +121,8 @@ public class FindJobServiceImpl implements FindJobService {
                 responseObj.setCandidateId(appliedJob.getCandidateId());
                 responseObj.setCandidateName(candidate.getFullName());
 
-                Users user = userService.findById(candidate.getUserId());
-                responseObj.setAvatar(user.getAvatar());
+                Image image = imageService.getAvatarCandidate(candidate.getId());
+                responseObj.setAvatar(image.getUrl());
                 if (appliedJob.isUploadCv()) {
                     //upload CV
                     responseObj.setCvUrl(appliedJob.getCvUploadUrl());

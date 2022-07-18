@@ -21,15 +21,8 @@ import javax.persistence.*;
 public class Image extends BaseEntity {
 
     @Id
-//    @GeneratedValue(generator = "uuid")
-//    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
-
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
-//    private long id;
+    private long id;
 
     @Column(name = "name")
     private String name;
@@ -67,4 +60,7 @@ public class Image extends BaseEntity {
 
     @Column(name = "recruiter_id")
     private long recruiterId;
+
+    @Column(name = "candidate_id")
+    private long candidateId;
 }

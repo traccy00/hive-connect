@@ -4,6 +4,7 @@ import fpt.edu.capstone.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -26,4 +27,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     @Modifying
     @Query(value = "Update companies set avatar = ?1 where id = ?2", nativeQuery = true)
     void updateCompanyAvatarUrl(String avatarId, long companyId);
+
+    @Query(value = "select * from companies c where name like concat('%',:companyName,'%')", nativeQuery = true)
+    List<Company> getAllByName(@Param("companyName") String companyName);
 }

@@ -10,10 +10,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RecruiterProfileResponse {
-
-    private long id;
+    private long recruiterId;
     private String userName;
-    private String avatar;
+    private String avatarName;
+    private String avatarUrl;
     private long companyId;
     private String companyName;
     private String companyAddress;
@@ -23,5 +23,4 @@ public class RecruiterProfileResponse {
     private boolean gender;
     private String position;
     private String linkedinAccount;
-    private String businessLicense;
 }

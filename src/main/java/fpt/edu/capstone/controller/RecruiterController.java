@@ -3,28 +3,25 @@ package fpt.edu.capstone.controller;
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.recruiter.RecruiterBaseOnCompanyResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
-import fpt.edu.capstone.dto.recruiter.UploadBusinessLicenseRequest;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.RequestJoinCompany;
-import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.service.RecruiterManageService;
 import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.service.RequestJoinCompanyService;
 import fpt.edu.capstone.service.UserService;
-import fpt.edu.capstone.utils.*;
+import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.LogUtils;
+import fpt.edu.capstone.utils.ResponseData;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,17 +34,14 @@ public class RecruiterController {
 
     private final RecruiterService recruiterService;
 
-    private final UserService userService;
-
     private final RecruiterManageService recruiterManageService;
 
-    @Autowired
-    private RequestJoinCompanyService requestJoinCompanyService;
+    private final RequestJoinCompanyService requestJoinCompanyService;
 
     @GetMapping("/recruiter-profile/{userId}")
     public ResponseData getRecruiterProfile(@PathVariable("userId") long userId) {
         try {
-            RecruiterProfileResponse recruiterProfile = recruiterService.getRecruiterProfile(userId);
+            RecruiterProfileResponse recruiterProfile = recruiterManageService.getRecruiterProfile(userId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), recruiterProfile);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -70,30 +64,19 @@ public class RecruiterController {
         }
     }
 
-    @PutMapping("/account-authen-level")
-    public ResponseData changeLevelAuthenAccount() {
-        //cấp độ xác thực account của recruiter ( update trong db khi đã xác thực xong 1 cấp độ)
-        return null;
-    }
-
-
     @PutMapping("/update-recruiter-profile")
-    public ResponseData updateProfile(@RequestBody RecruiterUpdateProfileRequest recruiterUpdateProfileRequest) {
+    public ResponseData updateProfile(@RequestPart("recruiterId") long recruiterId,
+                                      @RequestPart(value = "request", required = false) RecruiterUpdateProfileRequest request,
+                                      @RequestPart(value = "multipartFile", required = false) MultipartFile multipartFile) {
         try {
-            Optional<Recruiter> recruiter = recruiterService.findById(recruiterUpdateProfileRequest.getId());
-            if (!recruiter.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS, "Can not find this recruiter", recruiterUpdateProfileRequest.getId());
-            }
-            recruiterService.updateRecruiterInformation(recruiterUpdateProfileRequest);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS, "update recruiter successfull", recruiterService.findById(recruiterUpdateProfileRequest.getId()).get());
+            RecruiterProfileResponse profileResponse = recruiterManageService.
+                    updateRecruiterInformation(recruiterId, request, multipartFile);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.UPDATE_SUCCESSFULLY, profileResponse);
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
-    }
-
-    @GetMapping("/get-total-cv-applied")
-    public ResponseData totalCVApplied() {
-        return null;
     }
 
     @GetMapping("/get-detail-cv")
@@ -103,12 +86,18 @@ public class RecruiterController {
 
     @GetMapping("get-list-applied-job")
     public ResponseData getListAppliedJob(long recruiterId) {
-        List<AppliedJobByRecruiterResponse> appliedJobByRecruiterResponses = recruiterService.getListAppliedByForRecruiter(recruiterId);
-        System.out.println(appliedJobByRecruiterResponses);
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "asd", appliedJobByRecruiterResponses);
+        try {
+            List<AppliedJobByRecruiterResponse> appliedJobByRecruiterResponses = recruiterService.getListAppliedByForRecruiter(recruiterId);
+            System.out.println(appliedJobByRecruiterResponses);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "asd", appliedJobByRecruiterResponses);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
     }
-    //create request
 
+    //create request
     @PostMapping("/send-request-join-company") //không cần gửi approval id
     public ResponseData sendRequestJoinCompany(@RequestBody RequestJoinCompany requestJoinCompany) {
         try {
@@ -166,36 +155,16 @@ public class RecruiterController {
     }
 
     @GetMapping("/get-recruiter-by-company")
-    public ResponseDataPagination getRecruiterByCompany(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getRecruiterByCompany(@RequestParam(defaultValue = "1") Integer pageNo,
                                                         @RequestParam(defaultValue = "10") Integer pageSize,
                                                         @RequestParam("companyId") long companyId) {
         try {
-            List<RecruiterBaseOnCompanyResponse> responseList = new ArrayList<>();
-            Page<Recruiter> recruiters = recruiterService.getRecruiterByCompanyId(pageNo, pageSize, companyId);
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
-//            Page<Job> jobs = jobService.getPopularJobList(pageable);
-            if (recruiters.hasContent()) {
-                for (Recruiter r : recruiters) {
-                    Users user = userService.getUserById(r.getUserId());
-                    RecruiterBaseOnCompanyResponse recruiterBaseOnCompanyResponse =
-                            new RecruiterBaseOnCompanyResponse(r.getId(), r.getFullName(), r.getAvatarUrl(), r.getFullName(),
-                                    r.isGender(), r.getPosition(), r.getLinkedInAccount(), user.getEmail(), user.getPhone());
-                    responseList.add(recruiterBaseOnCompanyResponse);
-                }
-            }
-            ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-            Pagination pagination = new Pagination();
-            responseDataPagination.setData(responseList);
-            pagination.setCurrentPage(pageNo);
-            pagination.setPageSize(pageSize);
-            pagination.setTotalPage(recruiters.getTotalPages());
-            pagination.setTotalRecords(Integer.parseInt(String.valueOf(recruiters.getTotalElements())));
-            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-            responseDataPagination.setPagination(pagination);
-            return responseDataPagination;
+            ResponseDataPagination pagination = recruiterManageService.getRecruitersOfCompany(pageNo, pageSize, companyId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            return new ResponseDataPagination();
+            String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
 
