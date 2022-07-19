@@ -27,4 +27,6 @@ public interface CompanyService {
 
     void updateCompanyAvatarUrl(String avatarId, long companyId);
 
+    List<Company> searchCompany(String companyName);
+
 }

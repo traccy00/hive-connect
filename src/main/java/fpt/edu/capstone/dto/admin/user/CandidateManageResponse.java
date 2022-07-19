@@ -27,5 +27,6 @@ public interface CandidateManageResponse {
     LocalDateTime getCreatedAt();
     LocalDateTime getUpdatedAt();
     boolean getIsLocked();
+    boolean getIsActive();
 }
 

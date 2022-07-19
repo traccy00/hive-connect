@@ -44,9 +44,6 @@ public class Users extends BaseEntity {
     @Column(name = "last_login_time")
     private LocalDateTime lastLoginTime;
 
-    @Column(name = "avatar")
-    private String avatar;
-
     @Column(name = "is_verified_email")
     private boolean isVerifiedEmail;
 
