@@ -55,4 +55,7 @@ public class Users extends BaseEntity {
 
     @Column(name = "is_locked")
     private boolean isLocked = false;
+
+    @Column(name = "avatar")
+    private String avatar;
 }

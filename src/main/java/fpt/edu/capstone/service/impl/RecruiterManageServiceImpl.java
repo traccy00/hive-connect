@@ -1,7 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
-import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterBaseOnCompanyResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
@@ -22,7 +21,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -92,11 +90,27 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         Page<Recruiter> recruiters = recruiterService.getRecruiterByCompanyId(pageNo, pageSize, companyId);
         if (recruiters.hasContent()) {
             for (Recruiter recruiter : recruiters) {
+                RecruiterBaseOnCompanyResponse response = new RecruiterBaseOnCompanyResponse();
+                response.setRecruiterId(recruiter.getId());
+
                 Users user = userService.getUserById(recruiter.getUserId());
+                if (user == null) {
+                    throw new HiveConnectException("Liên hệ admin");
+                }
+                response.setUserName(user.getUsername());
+
                 Image image = imageService.getAvatarRecruiter(recruiter.getId());
-                RecruiterBaseOnCompanyResponse response =
-                        new RecruiterBaseOnCompanyResponse(recruiter.getId(), recruiter.getFullName(), image.getUrl(), recruiter.getFullName(),
-                                recruiter.isGender(), recruiter.getPosition(), recruiter.getLinkedinAccount(), user.getEmail(), user.getPhone());
+                if (image != null) {
+                    response.setAvatar(image.getUrl());
+                }
+                response.setFullName(recruiter.getFullName());
+                response.setGender(recruiter.isGender());
+                response.setPosition(recruiter.getPosition());
+                response.setLinkedinAccount(recruiter.getLinkedinAccount());
+
+                response.setEmail(user.getEmail());
+                response.setPhone(user.getPhone());
+
                 responseList.add(response);
             }
         }
