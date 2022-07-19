@@ -22,4 +22,6 @@ public interface CVService {
     void updateUpdatedDateOfCV(long id, LocalDateTime updatedDate);
 
     Optional<CV> findByIdAndCandidateId(long id, long candidateId);
+
+//    Page<CV>
 }

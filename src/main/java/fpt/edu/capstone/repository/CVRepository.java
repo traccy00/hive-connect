@@ -1,6 +1,7 @@
 package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.entity.CV;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,4 +36,7 @@ public interface CVRepository extends JpaRepository<CV,Long> {
 
     @Query(value = "select * from cv where id = ?1 and candidate_id = ?2", nativeQuery = true)
     Optional<CV> findByIdAndCAndCandidateId(long id, long candidateId);
+
+//    @Query(value = "", nativeQuery = true)
+//    Page<CV> findCvForRecruiter(long recruiterId);
 }
