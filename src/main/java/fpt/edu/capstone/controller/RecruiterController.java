@@ -1,6 +1,8 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
+import fpt.edu.capstone.dto.CV.CVResponse;
+import fpt.edu.capstone.dto.CV.FindCVResponse;
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
@@ -66,11 +68,10 @@ public class RecruiterController {
 
     @PutMapping("/update-recruiter-profile")
     public ResponseData updateProfile(@RequestPart("recruiterId") long recruiterId,
-                                      @RequestPart(value = "request", required = false) RecruiterUpdateProfileRequest request,
-                                      @RequestPart(value = "multipartFile", required = false) MultipartFile multipartFile) {
+                                      @RequestPart(value = "request", required = false) RecruiterUpdateProfileRequest request) {
         try {
             RecruiterProfileResponse profileResponse = recruiterManageService.
-                    updateRecruiterInformation(recruiterId, request, multipartFile);
+                    updateRecruiterInformation(recruiterId, request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.UPDATE_SUCCESSFULLY, profileResponse);
         } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
@@ -172,9 +173,10 @@ public class RecruiterController {
     public ResponseData findCv(@RequestParam(defaultValue = "0") Integer pageNo,
                                @RequestParam(defaultValue = "10") Integer pageSize,
                                @RequestParam String candidateName,
-                               @RequestParam String cvName) {
+                               @RequestParam String cvName,
+                               @RequestParam String candidateAddress) {
         try {
-
+//            List<FindCVResponse> responseList =
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);

@@ -377,4 +377,16 @@ public class JobController {
             return new ResponseDataPagination();
         }
     }
+
+    @GetMapping("/same-jobs-of-other-companies")
+    public ResponseData getSameJobsOfOtherCompanies(@RequestParam long detailJobId) {
+        try {
+            List<JobResponse> responseList = jobService.getSameJobsOtherCompanies(detailJobId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        }catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
 }

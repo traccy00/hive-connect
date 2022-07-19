@@ -281,7 +281,7 @@ public class CandidateController {
 
     @GetMapping("/is-following")
     @Operation(summary = "Check if a is following b by a id type = 1,2,3 than b = job, company, recruiter")
-    public ResponseData isFollowing(@RequestParam long followerId, @RequestParam long followedId, @RequestParam long type) {
+    public ResponseData     isFollowing(@RequestParam long followerId, @RequestParam long followedId, @RequestParam long type) {
         try {
             if(!followService.isFollowing(followerId, followedId, type)) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Not following", false);
@@ -292,7 +292,7 @@ public class CandidateController {
         }
     }
 
-    @GetMapping("/search-applied-jobs")
+    @GetMapping("/get-applied-jobs-of-candidate")
     @Operation(summary = "View list applied job and approval status of a Candidate")
     public ResponseData searchListAppliedJob(@RequestParam long candidateId,
                                              @RequestParam(required = false, defaultValue = StringUtils.EMPTY) String approvalStatus) {
@@ -305,5 +305,14 @@ public class CandidateController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+//    @GetMapping("/get-jobs-applied-of-candidate")
+//    public ResponseData getJobsAppliedOfCandidate(@RequestParam long userId) {
+//        try {
+//            List<AppliedJo>
+//        } catch (Exception e) {
+//
+//        }
+//    }
 }
 
