@@ -151,7 +151,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             user.setPhone(request.getPhone());
             userRepository.save(user);
         }
-        RecruiterProfileResponse profileResponse = getRecruiterProfile(recruiterId);
+        RecruiterProfileResponse profileResponse = getRecruiterProfile(recruiter.getUserId());
         return profileResponse;
     }
 
