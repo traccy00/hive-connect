@@ -4,7 +4,6 @@ import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
 import fpt.edu.capstone.utils.ResponseDataPagination;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface RecruiterManageService {
 
@@ -12,7 +11,7 @@ public interface RecruiterManageService {
 
     ResponseDataPagination getRecruitersOfCompany(Integer pageNo, Integer pageSize, long companyId);
 
-    RecruiterProfileResponse updateRecruiterInformation(long recruiterId, RecruiterUpdateProfileRequest request, MultipartFile multipartFile) throws Exception;
+    RecruiterProfileResponse updateRecruiterInformation(long recruiterId, RecruiterUpdateProfileRequest request) throws Exception;
 
     RecruiterProfileResponse getRecruiterProfile(long userId);
 

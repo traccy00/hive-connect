@@ -114,44 +114,13 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public RecruiterProfileResponse updateRecruiterInformation(long recruiterId, RecruiterUpdateProfileRequest request, MultipartFile multipartFile) throws Exception {
+    public RecruiterProfileResponse updateRecruiterInformation(long recruiterId, RecruiterUpdateProfileRequest request) throws Exception {
         Recruiter recruiter = recruiterService.getById(recruiterId);
         if (recruiter == null) {
             throw new HiveConnectException("Người dùng không tồn tại");
         }
-        if (request == null && multipartFile == null) {
+        if (request == null) {
             throw new HiveConnectException("Không có dữ liệu thay đổi, không thể cập nhật");
-        }
-//        LocalDateTime nowDate = LocalDateTime.now();
-        if (multipartFile != null) {
-            Image image = imageService.getAvatarRecruiter(recruiterId);
-            if (image == null) {
-                image = new Image();
-                image.create();
-            } else {
-                image.update();
-            }
-            String avatarName = amazonS3ClientService.uploadFileAmazonS3(null, multipartFile);
-            image.setName(avatarName);
-            image.setUrl(ResponseMessageConstants.AMAZON_SAVE_URL + avatarName);
-            image.setAvatar(true);
-            image.setRecruiterId(recruiterId);
-            imageRepository.save(image);
-
-//            profileResponse.setRecruiterId(recruiterId);
-//            profileResponse.setAvatarName(avatarName);
-//            profileResponse.setAvatarUrl(ResponseMessageConstants.AMAZON_SAVE_URL + avatarName);
-//            profileResponse.setCompanyId(recruiter.getCompanyId());
-//            Company company = companyService.getCompanyById(recruiter.getCompanyId());
-//            if (company != null) {
-//                profileResponse.setCompanyId(company.getId());
-//                profileResponse.setCompanyName(company.getName());
-//                profileResponse.setCompanyAddress(company.getAddress());
-//            }
-//            profileResponse.setFullName(recruiter.getFullName());
-//            profileResponse.setGender(recruiter.isGender());
-//            profileResponse.setPosition(recruiter.getPosition());
-//            profileResponse.setLinkedinAccount(recruiter.getLinkedinAccount());
         }
         if (request != null) {
             recruiter.setFullName(request.getFullName());
@@ -167,30 +136,24 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             }
             user.setPhone(request.getPhone());
             userRepository.save(user);
-
-//            profileResponse.setEmail(user.getEmail());
-//            profileResponse.setPhone(user.getPhone());
-//            profileResponse.setUserName(user.getUsername());
         }
         RecruiterProfileResponse profileResponse = getRecruiterProfile(recruiterId);
         return profileResponse;
     }
 
     @Override
-    public RecruiterProfileResponse getRecruiterProfile(long recruiterId) {
-        RecruiterProfileResponse profileResponse = new RecruiterProfileResponse();
-        Recruiter recruiter = recruiterRepository.getById(recruiterId);
-        if (recruiter == null) {
-            throw new HiveConnectException("Recruiter doesn't exist");
-        }
-
-        profileResponse.setRecruiterId(recruiter.getId());
-
-        Users user = userService.getUserById(recruiter.getUserId());
+    public RecruiterProfileResponse getRecruiterProfile(long userId) {
+        Users user = userService.getUserById(userId);
         //recruiter tồn tại nhưng user không tồn tại (database lỗi)
         if (user == null) {
-            throw new HiveConnectException("Liên hệ admin");
+            throw new HiveConnectException("Người dùng không tồn tại");
         }
+        RecruiterProfileResponse profileResponse = new RecruiterProfileResponse();
+        Recruiter recruiter = recruiterRepository.getRecruiterByUserId(userId);
+        if (recruiter == null) {
+            throw new HiveConnectException("Nhà tuyển dụng không tồn tại");
+        }
+        profileResponse.setRecruiterId(recruiter.getId());
         profileResponse.setUserName(user.getUsername());
         profileResponse.setEmail(user.getEmail());
         profileResponse.setPhone(user.getPhone());

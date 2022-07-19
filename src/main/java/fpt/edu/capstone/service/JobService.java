@@ -51,4 +51,6 @@ public interface JobService {
     CountTotalCreatedJobResponse countTotalCreatedJobOfRecruiter(long recruiterId);
 
     List<Job> getJobByRecruiterId(long recId);
+
+    List<JobResponse> getSameJobsOtherCompanies(long detailJobId);
 }
