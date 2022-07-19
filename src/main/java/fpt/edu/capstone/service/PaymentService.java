@@ -21,4 +21,6 @@ public interface PaymentService {
     List<Payment> findRecruiterPurchasedPackage(long recruiterId);
 
     ResponseDataPagination getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize);
+
+    void savePayment(Payment payment, String vnpResponseCode);
 }

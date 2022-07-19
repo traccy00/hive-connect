@@ -15,6 +15,7 @@ import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.apache.http.protocol.ResponseDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +34,24 @@ public class PaymentController {
 
     private final JobService jobService;
 
-    @PostMapping("/create-payment")
+    @PostMapping("/create-url-payment")
     public ResponseData createPayment(@RequestBody PaymentDTO paymentDTO)  {
         try {
             PaymentResponseDTO dto = paymentService.getPaymentVNPay(paymentDTO);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS, dto);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @PostMapping("/save-payment-success")
+    public ResponseData savePaymentSuccess(@RequestParam("vnp_ResponseCode") String vnpResponseCode){
+        try {
+            Payment payment = new Payment();
+            paymentService.savePayment(payment, vnpResponseCode);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

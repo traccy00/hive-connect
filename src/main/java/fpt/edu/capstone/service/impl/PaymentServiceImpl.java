@@ -11,6 +11,7 @@ import fpt.edu.capstone.service.PaymentService;
 import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -49,6 +50,9 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setLocal(PaymentConfig.LOCATE_DEFAULT);
         String randomTransactionCode = PaymentConfig.getRandomNumber(8);
         payment.setTransactionCode(randomTransactionCode);
+
+        LocalDateTime now = LocalDateTime.now();
+        payment.setExpiredDate(now.plusDays(14));
         payment.create();
 
         int amount = paymentDTO.getAmount() * 100;
@@ -155,6 +159,49 @@ public class PaymentServiceImpl implements PaymentService {
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
+    }
+
+    @Override
+    public void savePayment(Payment payment, String vnpResponseCode) {
+
+
+        if(vnpResponseCode.equals("00")){
+            System.out.println("Thanh toán thành công");
+            paymentRepository.save(payment);
+        }
+        if(vnpResponseCode.equals("07")){
+            throw new HiveConnectException("Trừ tiền thành công. Giao dịch bị nghi ngờ");
+        }
+        if(vnpResponseCode.equals("09")){
+            throw new HiveConnectException("Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.");
+        }
+        if(vnpResponseCode.equals("10")){
+            throw new HiveConnectException("Giao dịch không thành công do: Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần");
+        }
+        if(vnpResponseCode.equals("11")){
+            throw new HiveConnectException("Giao dịch không thành công do: Đã hết hạn chờ thanh toán. Xin quý khách vui lòng thực hiện lại giao dịch.");
+        }
+        if(vnpResponseCode.equals("12")){
+            throw new HiveConnectException("Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng bị khóa.");
+        }
+        if(vnpResponseCode.equals("13")){
+            throw new HiveConnectException("Giao dịch không thành công do Quý khách nhập sai mật khẩu xác thực giao dịch (OTP). Xin quý khách vui lòng thực hiện lại giao dịch.");
+        }
+        if(vnpResponseCode.equals("24")){
+            throw new HiveConnectException("Giao dịch không thành công do: Khách hàng hủy giao dịch");
+        }
+        if(vnpResponseCode.equals("51")){
+            throw new HiveConnectException("Giao dịch không thành công do: Tài khoản của quý khách không đủ số dư để thực hiện giao dịch.");
+        }
+        if(vnpResponseCode.equals("65")){
+            throw new HiveConnectException("Giao dịch không thành công do: Tài khoản của Quý khách đã vượt quá hạn mức giao dịch trong ngày.");
+        }
+        if(vnpResponseCode.equals("79")){
+            throw new HiveConnectException("Giao dịch không thành công do: KH nhập sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch");
+        }
+        if(vnpResponseCode.equals("99")){
+            throw new HiveConnectException("Các lỗi khác");
+        }
     }
 
     @Override

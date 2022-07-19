@@ -28,6 +28,9 @@ public class Banner extends BaseEntity {
     @Column(name = "discount")
     private long discount;
 
+    @Column(name = "time_expired")
+    private String timeExpired;
+
     @Column(name = "title")
     private String title;
 
