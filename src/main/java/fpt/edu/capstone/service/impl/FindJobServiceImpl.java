@@ -51,13 +51,9 @@ public class FindJobServiceImpl implements FindJobService {
 
     @Override
     public void appliedJob(AppliedJobRequest request) throws Exception {
-        if(request.isUploadCv()) {
-            //upload file
-        } else {
-            CV cv = cvService.getCVByCandidateId(request.getCandidateId());
-            if(cv == null) {
-                throw new HiveConnectException("Create your profile to apply job!");
-            }
+        CV cv = cvService.getCVByCandidateId(request.getCandidateId());
+        if(cv == null) {
+            throw new HiveConnectException("Create your profile to apply job!");
         }
         if (!jobService.existsById(request.getJobId())) {
             throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
@@ -78,6 +74,7 @@ public class FindJobServiceImpl implements FindJobService {
                     AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
                     appliedJob.setApplied(true);
                     appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+                    appliedJob.setCvUploadUrl(request.getCvUrl());
                     appliedJob.create();
                     appliedJobRepository.save(appliedJob);
                     return;
@@ -89,10 +86,10 @@ public class FindJobServiceImpl implements FindJobService {
             appliedJob1.update();
             appliedJobRepository.save(appliedJob1);
         } else {
-            Object AppliedJobRequest = request;
-            AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
+            AppliedJob appliedJob = modelMapper.map(request, AppliedJob.class);
             appliedJob.setApplied(true);
             appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+            appliedJob.setCvUploadUrl(request.getCvUrl());
             appliedJob.create();
             appliedJobRepository.save(appliedJob);
         }
