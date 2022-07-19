@@ -66,9 +66,9 @@ public class RecruiterController {
         }
     }
 
-    @PutMapping("/update-recruiter-profile")
-    public ResponseData updateProfile(@RequestPart("recruiterId") long recruiterId,
-                                      @RequestPart(value = "request", required = false) RecruiterUpdateProfileRequest request) {
+    @PutMapping("/update-recruiter-profile/{recruiterId}")
+    public ResponseData updateProfile(@PathVariable("recruiterId") long recruiterId,
+                                      @RequestBody RecruiterUpdateProfileRequest request) {
         try {
             RecruiterProfileResponse profileResponse = recruiterManageService.
                     updateRecruiterInformation(recruiterId, request);
