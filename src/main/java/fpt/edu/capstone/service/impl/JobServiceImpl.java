@@ -76,6 +76,12 @@ public class JobServiceImpl implements JobService {
         if (jobs.hasContent()) {
             for (Job j : jobs.getContent()) {
                 JobResponse jr = modelMapper.map(j, JobResponse.class);
+                jr.setJobId(j.getId());
+                Company company = companyService.getCompanyById(j.getCompanyId());
+                if(company != null) {
+                    jr.setCompanyName(company.getName());
+                }
+                jr.setCompanyName(company.getName());
                 jobResponse.add(jr);
             }
         }

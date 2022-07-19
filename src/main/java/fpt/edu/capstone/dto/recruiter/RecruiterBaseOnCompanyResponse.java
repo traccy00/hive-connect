@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RecruiterBaseOnCompanyResponse {
 
-    private long id;
+    private long recruiterId;
     private String userName;
     private String avatar;
     private String fullName;
