@@ -50,18 +50,25 @@ public class UserServiceImpl implements UserService {
     public void registerUser(RegisterRequest request) {
         Optional<Role> optionalRole = roleService.findRoleById(request.getRoleId());
         if (!optionalRole.isPresent()) {
-            throw new HiveConnectException("Role: "+ request.getRoleId() + "not found");
+            throw new HiveConnectException("Loại vai trò người dùng không tồn tại trong hệ thống");
         }
         //check exist email username
-        Optional <Users> checkExisted = userRepository.checkExistedUserByUsernameOrEmail(request.getUsername(),request.getEmail());
-        if(checkExisted.isPresent()){
-            throw new HiveConnectException("Username or email is already existed!");
-        }
+//        Optional <Users> checkExisted = userRepository.checkExistedUserByUsernameOrEmail(request.getUsername(),request.getEmail());
+//        if(checkExisted.isPresent()){
+//            throw new HiveConnectException("Username or email is already existed!");
+//        }
 
+        Optional<Users> userExistByUserName = userRepository.findByUsername(request.getUsername());
+        if(userExistByUserName.isPresent()) {
+            throw new HiveConnectException("Tên đăng nhập đã được sử dụng");
+        }
+        Optional<Users> userExistByEmail = userRepository.findByEmail(request.getEmail());
+        if(userExistByEmail.isPresent()) {
+            throw new HiveConnectException("Email đã được sử dụng");
+        }
         if(!StringUtils.equals(request.getPassword(),request.getConfirmPassword())){
-            throw new HiveConnectException("Confirm password does not matches");
+            throw new HiveConnectException("Mật khẩu xác nhận không đúng");
         }
-
         Users user = new Users();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));

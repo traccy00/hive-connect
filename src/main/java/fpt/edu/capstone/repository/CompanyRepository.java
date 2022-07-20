@@ -17,7 +17,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     @Query(value = "select * from companies where id = ?", nativeQuery = true)
     Company getCompanyById(long companyId);
 
-    @Query(value = "select * from companies where name = ?1", nativeQuery = true)
+    @Query(value = "select * from companies where lower(name) = lower(?) and is_deleted = 0 limit 1;", nativeQuery = true)
     Optional<Company> getCompanyByName(String companyName);
 
     @Query(value = "select * from companies where taxcode = ?1", nativeQuery = true)

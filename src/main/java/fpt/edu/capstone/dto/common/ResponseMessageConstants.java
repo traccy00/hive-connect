@@ -51,7 +51,7 @@ public interface ResponseMessageConstants {
     String PAYMENT_FAILED = "PAYMENT_FAILED";
 
     //JOB
-    String JOB_DOES_NOT_EXIST = "JOB_DOES_NOT_EXIST";
+    String JOB_DOES_NOT_EXIST = "Tin tuyển dụng không tồn tại";
 
     //AMAZON
     String AMAZON_SAVE_URL = "https://hive-connect-images.s3.us-west-1.amazonaws.com/hiveconnect/";

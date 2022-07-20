@@ -6,6 +6,7 @@ import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.AppliedJobRepository;
+import fpt.edu.capstone.repository.FollowRepository;
 import fpt.edu.capstone.repository.JobRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +45,8 @@ public class CandidateJobServiceImpl implements CandidateJobService {
     private final FieldsService fieldsService;
 
     private final ImageService imageService;
+
+    private final FollowRepository followRepository;
 
     @Override
     public ResponseDataPagination getNewestJob(Integer pageNo, Integer pageSize) {
@@ -301,6 +305,12 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         if(appliedJob != null) {
             detail.setApplied(appliedJob.isApplied());
             detail.setApprovalStatus(appliedJob.getApprovalStatus());
+        }
+        Optional<Follow> followJob = followRepository.getFollowIfHave(candidateId, jobId, 1);
+        if(followJob.isPresent()) {
+            detail.setFollowing(true);
+        } else {
+            detail.setFollowing(false);
         }
         return detail;
     }

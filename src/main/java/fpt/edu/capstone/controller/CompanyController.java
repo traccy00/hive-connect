@@ -54,13 +54,14 @@ public class CompanyController {
         try {
             Optional<Recruiter> recruiter = recruiterService.findById(request.getCreatorId());
             if (!recruiter.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this recruiter", request.getCreatorId());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Người dùng không tồn tại", request.getCreatorId());
             }
             Company company = companyService.createCompany(request);
             recruiterService.updateCompany(company.getId(), recruiter.get().getId());
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, company);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
