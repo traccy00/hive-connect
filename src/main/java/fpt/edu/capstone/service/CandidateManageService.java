@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CandidateManageService {
     ResponseDataPagination searchAppliedJobsOfCandidate(Integer pageNo, Integer pageSize, long candidateId, String approvalStatus);
+
+    ResponseDataPagination getJobsOfCompany(Integer pageNo, Integer pageSize, long companyId);
 }

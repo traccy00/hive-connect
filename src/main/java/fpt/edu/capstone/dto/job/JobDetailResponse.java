@@ -52,4 +52,5 @@ public class JobDetailResponse {
     private long candidateId;
     private boolean isApplied;
     private String approvalStatus;
+    private boolean isFollowing;
 }

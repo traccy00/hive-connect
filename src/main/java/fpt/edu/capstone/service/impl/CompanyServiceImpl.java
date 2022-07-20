@@ -49,17 +49,23 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Company createCompany(CreateCompanyRequest request) {
-        Optional<Fields> field = fieldsService.findById(request.getFieldWork());
-        if(!field.isPresent()) {
-            throw new HiveConnectException("Field is not exist");
+        if (companyRepository.getCompanyByName(request.getName()).isPresent()) {
+            throw new HiveConnectException("Tên công ty đã được sử dụng");
         }
-        if (StringUtils.isBlank(request.getName())
-                || StringUtils.isBlank(request.getEmail())
-                || StringUtils.isBlank(request.getPhoneNumber())
-                || StringUtils.isBlank(request.getTaxCode())
-                || StringUtils.isBlank(request.getAddress())
-                || StringUtils.isBlank(request.getNumberEmployees())) {
-            throw new HiveConnectException("Please input to mandatory fields");
+        Optional<Fields> field = fieldsService.findById(request.getFieldWork());
+        if (!field.isPresent()) {
+            throw new HiveConnectException("Lĩnh vực công ty không tồn tại");
+        }
+        if ((request.getName() == null || request.getName().trim().isEmpty())
+                || (request.getEmail() == null || request.getEmail().trim().isEmpty())
+                || (request.getPhoneNumber() == null || request.getPhoneNumber().trim().isEmpty())
+                || (request.getTaxCode() == null || request.getTaxCode().trim().isEmpty())
+                || (request.getAddress() == null || request.getAddress().trim().isEmpty())
+                || (request.getNumberEmployees() == null || request.getNumberEmployees().trim().isEmpty())) {
+            throw new HiveConnectException("Vui lòng nhập vào các ô bắt buộc");
+        }
+        if(companyRepository.getCompanyByTaxcode(request.getTaxCode().trim()).isPresent()) {
+            throw new HiveConnectException("Mã số thuế đã được sử dụng cho công ty khác");
         }
         Company company = modelMapper.map(request, Company.class);
         companyRepository.save(company);

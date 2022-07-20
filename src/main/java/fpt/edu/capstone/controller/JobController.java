@@ -36,19 +36,11 @@ public class JobController {
 
     private final RecruiterJobService recruiterJobService;
 
-    private final RecruiterService recruiterService;
-
-    private final JobHashTagService jobHashTagService;
-
-    private final CompanyService companyService;
-
-    private final FieldsService fieldsService;
-
     private final ModelMapper modelMapper;
 
     private final PaymentActiveService paymentActiveService;
 
-    private final PaymentService paymentService;
+    private final CandidateManageService candidateManageService;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -320,61 +312,16 @@ public class JobController {
     }
 
     @GetMapping("/get-jobs-by-company")
-    public ResponseDataPagination getJobByCompany(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getJobByCompany(@RequestParam(defaultValue = "1") Integer pageNo,
                                               @RequestParam(defaultValue = "10") Integer pageSize,
                                               @RequestParam("companyId") long companyId) {
         try {
-            List<JobResponse> responseList = new ArrayList<>();
-            Page<Job> jobs = jobService.getJobByCompanyId(pageNo, pageSize, companyId);
-            if (jobs.hasContent()) {
-                for (Job job : jobs) {
-                    JobResponse jobResponse = new JobResponse();
-                    jobResponse.setJobId(job.getId());
-                    jobResponse.setCompanyId(job.getCompanyId());
-                    jobResponse.setRecruiterId(job.getRecruiterId());
-                    List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
-                    if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
-                        List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
-                        jobResponse.setListHashtag(hashTagNameList);
-                    }
-                    Company company = companyService.getCompanyById(job.getCompanyId());
-                    if (company != null) {
-                        jobResponse.setCompanyName(company.getName());
-                    }
-                    jobResponse.setJobName(job.getJobName());
-                    jobResponse.setJobDescription(job.getJobDescription());
-                    jobResponse.setJobRequirement(job.getJobRequirement());
-                    jobResponse.setBenefit(job.getBenefit());
-                    jobResponse.setFromSalary(job.getFromSalary());
-                    jobResponse.setToSalary(job.getToSalary());
-                    jobResponse.setNumberRecruits(job.getNumberRecruits());
-                    jobResponse.setRank(job.getRank());
-                    jobResponse.setWorkForm(job.getWorkForm());
-                    jobResponse.setGender(job.isGender());
-                    jobResponse.setStartDate(job.getStartDate());
-                    jobResponse.setEndDate(job.getEndDate());
-                    jobResponse.setWorkPlace(job.getWorkPlace());
-                    jobResponse.setCreatedAt(job.getCreatedAt());
-                    jobResponse.setUpdatedAt(job.getUpdatedAt());
-                    jobResponse.setPopularJob(job.isPopularJob());
-                    jobResponse.setNewJob(job.isNewJob());
-                    jobResponse.setUrgentJob(job.isUrgentJob());
-                    responseList.add(jobResponse);
-                }
-            }
-            ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-            Pagination pagination = new Pagination();
-            responseDataPagination.setData(responseList);
-            pagination.setCurrentPage(pageNo);
-            pagination.setPageSize(pageSize);
-            pagination.setTotalPage(jobs.getTotalPages());
-            pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
-            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-            responseDataPagination.setPagination(pagination);
-            return responseDataPagination;
+            ResponseDataPagination pagination = candidateManageService.getJobsOfCompany(pageNo, pageSize, companyId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         }catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseDataPagination();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
 
