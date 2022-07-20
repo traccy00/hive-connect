@@ -22,5 +22,5 @@ public interface PaymentService {
 
     ResponseDataPagination getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize);
 
-    void savePayment(Payment payment, String vnpResponseCode);
+    void savePayment(String vnpResponseCode, String vnpOrderInfo);
 }

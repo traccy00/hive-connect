@@ -47,10 +47,10 @@ public class PaymentController {
     }
 
     @PostMapping("/save-payment-success")
-    public ResponseData savePaymentSuccess(@RequestParam("vnp_ResponseCode") String vnpResponseCode){
+    public ResponseData savePaymentSuccess(@RequestParam("vnp_ResponseCode") String vnpResponseCode,
+                                           @RequestParam("vnp_OrderInfo") String vnpOrderInfo){
         try {
-            Payment payment = new Payment();
-            paymentService.savePayment(payment, vnpResponseCode);
+            paymentService.savePayment(vnpResponseCode, vnpOrderInfo);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

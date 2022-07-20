@@ -16,7 +16,5 @@ public class PaymentDTO {
     private long detailPackageId;
     private long bannerId;
     private int amount;
-    private String orderType;
-    private String description;
     private String bankCode;
 }
