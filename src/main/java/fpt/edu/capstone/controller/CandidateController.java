@@ -260,13 +260,8 @@ public class CandidateController {
                                            @RequestParam(defaultValue = "10") Integer pageSize,
                                            @RequestParam long candidateId) {
         try{
-            int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
-            Pageable pageable = PageRequest.of(pageReq, pageSize);
-            ResponseDataPagination responseDataPagination = followService.getFollowedJobByCandidateID(pageable, candidateId);
-            if(responseDataPagination.getData() == null) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.HAVE_NOT_FOLLOWED_JOB, null);
-            }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", responseDataPagination.getData());
+            ResponseDataPagination pagination = followService.getFollowedJobByCandidateID(pageNo, pageSize, candidateId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),pagination);
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
         }

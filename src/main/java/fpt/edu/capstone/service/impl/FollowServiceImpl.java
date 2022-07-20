@@ -13,6 +13,7 @@ import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -52,27 +53,20 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    public ResponseDataPagination getFollowedJobByCandidateID(Pageable pageable, long candidateId) {
-        Page<FollowingResponse> follows= followRepository.getFollowedJobByCandidateID(pageable, candidateId);
-        if(follows.hasContent()) {
-            ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-            Pagination pagination = new Pagination();
-            responseDataPagination.setData(follows);
-            pagination.setCurrentPage(pageable.getPageNumber());
-            pagination.setPageSize(pageable.getPageSize());
-            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-            responseDataPagination.setPagination(pagination);
-            return  responseDataPagination;
-        }
-        else {
-            ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-            Pagination pagination = new Pagination();
-            responseDataPagination.setData(null);
-            pagination.setCurrentPage(pageable.getPageNumber());
-            pagination.setPageSize(pageable.getPageSize());
-            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-            responseDataPagination.setPagination(pagination);
-            return  responseDataPagination;
-        }
+    public ResponseDataPagination getFollowedJobByCandidateID(Integer pageNo, Integer pageSize, long candidateId) {
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+        Page<FollowingResponse> follows = followRepository.getFollowedJobByCandidateID(pageable, candidateId);
+
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(follows.getContent());
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(follows.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(follows.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
     }
 }

@@ -18,5 +18,5 @@ public interface FollowService {
 
     Boolean isFollowing(long followerId, long followedId, long type);
 
-    ResponseDataPagination getFollowedJobByCandidateID(Pageable pageable, long candidateId);
+    ResponseDataPagination getFollowedJobByCandidateID(Integer pageNo, Integer pageSize, long candidateId);
 }
