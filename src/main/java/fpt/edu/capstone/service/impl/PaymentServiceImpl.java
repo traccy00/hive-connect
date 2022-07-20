@@ -40,21 +40,9 @@ public class PaymentServiceImpl implements PaymentService {
     private final RecruiterService recruiterService;
     @Override
     public PaymentResponseDTO getPaymentVNPay(PaymentDTO paymentDTO) throws UnsupportedEncodingException {
-        Recruiter recruiter = recruiterService.getRecruiterById(paymentDTO.getRecruiterId());
-        if (recruiter == null){
-            throw new HiveConnectException("Recruiter id = "+ recruiter.getId()+ "not exist");
-        }
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
-        payment.setCommand(PaymentConfig.COMMAND);
-        payment.setCurrCode(PaymentConfig.CURR_CODE);
-        payment.setLocal(PaymentConfig.LOCATE_DEFAULT);
         String randomTransactionCode = PaymentConfig.getRandomNumber(8);
         payment.setTransactionCode(randomTransactionCode);
-
-        LocalDateTime now = LocalDateTime.now();
-        payment.setExpiredDate(now.plusDays(14));
-        payment.create();
-
         int amount = paymentDTO.getAmount() * 100;
 
         Date date = new Date();
@@ -67,8 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
         String bannerId = String.valueOf(paymentDTO.getBannerId());
 
         String  p =  "recruiterId "+ recruiterId + " detailPackageId "+detailPackageId +
-                " bannerId "+bannerId + " amount " + String.valueOf(amount)+ " orderType "+paymentDTO.getOrderType()+
-                " description "+ paymentDTO.getDescription()+" bankCode "+paymentDTO.getBankCode();
+                " bannerId "+bannerId + " amount " + String.valueOf(amount)+ " bankCode "+paymentDTO.getBankCode();
 
         Map<String, String> vnpParams = new HashMap<>();
         vnpParams.put("vnp_Version", PaymentConfig.VERSION_VNPAY);
@@ -119,9 +106,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         PaymentResponseDTO result = new PaymentResponseDTO();
         result.setPaymentUrl(paymentUrl);
-//        if (result != null){
-//            paymentRepository.save(payment);
-//        }
         return result;
     }
 
@@ -170,38 +154,40 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public void savePayment(String vnpResponseCode, String vnpOrderInfo) {
-        PaymentDTO dto = new PaymentDTO();
+        PaymentDTO paymentDTO = new PaymentDTO();
 
         String[] ss = vnpOrderInfo.split("\\+");
         Map<String, String> map = new HashMap<>();
         for (int i = 0; i < ss.length; i = i + 2) {
             map.put(ss[i], ss[i + 1]);
         }
-
-        /*
-        String s = "recruiterId+1+detailPackageId+2+bannerId+0+amount+123456000+orderType+hehe+description+string+bankCode+NCB";
-        String[] ss = s.split("\\+");
-        Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < ss.length; i = i + 2) {
-            map.put(ss[i], ss[i + 1]);
-        }
-        PaymentDTO paymentDTO = new PaymentDTO();
         map.forEach((key,value)->{
             if(key.equals("recruiterId")) paymentDTO.setRecruiterId(Long.parseLong(value));
-            if(key.equals("orderType")) paymentDTO.setOrderType(value);
-            if(key.equals("bankCode")) paymentDTO.setBankCode(value);
-            if(key.equals("amount")) paymentDTO.setAmount(Integer.parseInt(value));
             if(key.equals("detailPackageId")) paymentDTO.setDetailPackageId(Long.parseLong(value));
-            if(key.equals("description")) paymentDTO.setDescription(value);
+            if(key.equals("bannerId")) paymentDTO.setBannerId(Long.parseLong(value));
+            if(key.equals("amount")) paymentDTO.setAmount(Integer.parseInt(value));
+//            if(key.equals("description")) paymentDTO.setDescription(value);
+//            if(key.equals("orderType")) paymentDTO.setOrderType(value);
+            if(key.equals("bankCode")) paymentDTO.setBankCode(value);
         });
-        System.out.println(paymentDTO.getRecruiterId());
-         */
 
-
-        Payment payment = modelMapper.map(dto, Payment.class);
+        Payment payment = modelMapper.map(paymentDTO, Payment.class);
+        Recruiter recruiter = recruiterService.getRecruiterById(payment.getRecruiterId());
+        if (recruiter == null){
+            throw new HiveConnectException("Nhà tuyển dụng có id = "+ recruiter.getId()+ "không tồn tại");
+        }
+        payment.setCommand(PaymentConfig.COMMAND);
+        payment.setCurrCode(PaymentConfig.CURR_CODE);
+        payment.setLocal(PaymentConfig.LOCATE_DEFAULT);
+        String randomTransactionCode = PaymentConfig.getRandomNumber(8);
+        payment.setTransactionCode(randomTransactionCode);
+        LocalDateTime now = LocalDateTime.now();
+        payment.setExpiredDate(now.plusDays(14));
+        payment.create();
 
         if(vnpResponseCode.equals("00")){
             System.out.println("Thanh toán thành công");
+            paymentRepository.save(payment);
         }
         if(vnpResponseCode.equals("07")){
             throw new HiveConnectException("Trừ tiền thành công. Giao dịch bị nghi ngờ");
