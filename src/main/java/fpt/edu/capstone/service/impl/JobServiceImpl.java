@@ -125,34 +125,40 @@ public class JobServiceImpl implements JobService {
         return jobRepository.existsById(id);
     }
 
-    @Override
-    public ResponseDataPagination getListJobByWorkForm(Integer pageNo, Integer pageSize, String workForm) {
-        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
-        Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page <Job> listFulltimeJob = jobRepository.getListJobByWorkForm(pageable, workForm);
-        List <DetailJobResponse> response = listFulltimeJob.stream().
-                map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
-        for (DetailJobResponse res: response) {
-            Company company = companyService.getCompanyById(res.getCompanyId());
-            Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
-            Fields fields = fieldsService.getById(res.getFieldId());
-
-            res.setCompanyName(company.getName());
-            res.setFieldName(fields.getFieldName());
-            res.setRecruiterName(recruiter.getFullName());
-//            res.setAvatar(company.getAvatar());
-        }
-        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-        Pagination pagination = new Pagination();
-        responseDataPagination.setData(response);
-        pagination.setCurrentPage(pageNo);
-        pagination.setPageSize(pageSize);
-        pagination.setTotalPage(listFulltimeJob.getTotalPages());
-        pagination.setTotalRecords(Integer.parseInt(String.valueOf(listFulltimeJob.getTotalElements())));
-        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-        responseDataPagination.setPagination(pagination);
-        return responseDataPagination;
-    }
+//    @Override
+//    public ResponseDataPagination getListJobByWorkForm(Integer pageNo, Integer pageSize, String workForm) {
+//        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+//        Pageable pageable = PageRequest.of(pageReq, pageSize);
+//        Page <Job> listFulltimeJob = jobRepository.getListJobByWorkForm(pageable, workForm);
+//        List <DetailJobResponse> response = listFulltimeJob.stream().
+//                map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
+//        for (DetailJobResponse res: response) {
+//            Company company = companyService.getCompanyById(res.getCompanyId());
+//            Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
+//            Fields fields = fieldsService.getById(res.getFieldId());
+//
+//            res.setCompanyName(company.getName());
+//            res.setFieldName(fields.getFieldName());
+//            res.setRecruiterName(recruiter.getFullName());
+////            res.setAvatar(company.getAvatar());
+//        }
+//        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+//        Pagination pagination = new Pagination();
+//        responseDataPagination.setData(response);
+//        pagination.setCurrentPage(pageNo);
+//        pagination.setPageSize(pageSize);
+//        pagination.setTotalPage(listFulltimeJob.getTotalPages());
+//        pagination.setTotalRecords(Integer.parseInt(String.valueOf(listFulltimeJob.getTotalElements())));
+//        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+//        responseDataPagination.setPagination(pagination);
+//        return responseDataPagination;
+//        List<JobResponse> responseList = new ArrayList<>();
+//        if(listFulltimeJob.hasContent()) {
+//            for(Job job : listFulltimeJob) {
+//                JobResponse response = modelMapper.map(job, JobResponse.class);
+//            }
+//        }
+//    }
 
     @Override
     public Page<Job> getNewestJobList(Pageable pageable) {

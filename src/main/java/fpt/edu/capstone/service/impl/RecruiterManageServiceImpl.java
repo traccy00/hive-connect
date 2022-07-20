@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
+import fpt.edu.capstone.dto.company.CompanyInformationResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterBaseOnCompanyResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
@@ -190,5 +191,36 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         profileResponse.setPosition(recruiter.getPosition());
         profileResponse.setLinkedinAccount(recruiter.getLinkedinAccount());
         return profileResponse;
+    }
+
+    @Override
+    public CompanyInformationResponse getCompanyInformation(long companyId, long recruiterId) {
+        CompanyInformationResponse response = new CompanyInformationResponse();
+        Optional<Company> companyOp = companyService.findById(companyId);
+        if (companyOp.isPresent()) {
+            Company tmp = companyOp.get();
+            response.setAddress(tmp.getAddress());
+            Image image = imageService.getImageCompany(companyId, true);
+            if(image != null) {
+                response.setAvatar(image.getUrl());
+            }
+            response.setDescription(tmp.getDescription());
+            response.setEmail(tmp.getEmail());
+            response.setFieldWork(tmp.getFieldWork());
+            response.setId(tmp.getId());
+            response.setName(tmp.getName());
+            response.setMapUrl(tmp.getMapUrl());
+            response.setPhone(tmp.getPhone());
+            response.setNumberEmployees(tmp.getNumberEmployees());
+            response.setWebsite(tmp.getWebsite());
+            response.setTaxCode(tmp.getTaxCode());
+            long creatorId = tmp.getCreatorId();
+            boolean isCreator = false;
+            if(recruiterId != 0 && creatorId == recruiterId) {
+                isCreator = true;
+            }
+            response.setCreator(isCreator);
+        }
+        return response;
     }
 }

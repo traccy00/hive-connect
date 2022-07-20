@@ -14,4 +14,7 @@ public interface CandidateJobService {
     void approveJob(ApprovalJobRequest request);
 
     JobDetailResponse getJobDetail(long jobId, long candidateId);
+
+    ResponseDataPagination getListJobByWorkForm(Integer pageNo, Integer pageSize, String workForm);
+
 }

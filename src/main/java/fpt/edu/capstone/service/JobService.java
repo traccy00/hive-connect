@@ -26,8 +26,6 @@ public interface JobService {
 
     boolean existsById(long id);
 
-    ResponseDataPagination getListJobByWorkForm(Integer pageNo, Integer pageSize, String workForm);
-
     Page<Job> getNewestJobList(Pageable pageable);
 
     ResponseDataPagination getJobByFieldId(Integer pageNo, Integer pageSize, long id);
