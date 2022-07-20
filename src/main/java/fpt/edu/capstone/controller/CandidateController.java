@@ -2,6 +2,7 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.CV.ViewCvResponse;
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
+import fpt.edu.capstone.dto.candidate.FollowingResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.AppliedJob;
 import fpt.edu.capstone.entity.CVImported;
@@ -22,6 +23,9 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -252,14 +256,17 @@ public class CandidateController {
 
     @GetMapping("/followed-job")
     @Operation(summary = "Get list followed job with candidate id")
-    public ResponseData getListFollowedJob(@RequestParam long candidateId) {
+    public ResponseData getListFollowedJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                           @RequestParam(defaultValue = "10") Integer pageSize,
+                                           @RequestParam long candidateId) {
         try{
-            Optional<List<Follow>> follows = followService.getListFollowedJobByFollowerId(candidateId);
-            if(follows.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", follows.get());
+            int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+            Pageable pageable = PageRequest.of(pageReq, pageSize);
+            ResponseDataPagination responseDataPagination = followService.getFollowedJobByCandidateID(pageable, candidateId);
+            if(responseDataPagination.getData() == null) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.HAVE_NOT_FOLLOWED_JOB, null);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful but don't have any followed job", null);
-
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", responseDataPagination.getData());
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
         }
@@ -281,7 +288,7 @@ public class CandidateController {
 
     @GetMapping("/is-following")
     @Operation(summary = "Check if a is following b by a id type = 1,2,3 than b = job, company, recruiter")
-    public ResponseData     isFollowing(@RequestParam long followerId, @RequestParam long followedId, @RequestParam long type) {
+    public ResponseData isFollowing(@RequestParam long followerId, @RequestParam long followedId, @RequestParam long type) {
         try {
             if(!followService.isFollowing(followerId, followedId, type)) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Not following", false);
