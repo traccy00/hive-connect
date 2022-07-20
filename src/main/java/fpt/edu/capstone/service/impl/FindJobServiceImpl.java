@@ -52,29 +52,33 @@ public class FindJobServiceImpl implements FindJobService {
     @Override
     public void appliedJob(AppliedJobRequest request) throws Exception {
         CV cv = cvService.getCVByCandidateId(request.getCandidateId());
-        if(cv == null) {
-            throw new HiveConnectException("Create your profile to apply job!");
+        if (cv == null && request.getCvUrl() == null) {
+            throw new HiveConnectException("Vui lòng tạo hồ sơ trước khi ứng tuyển công việc hoặc tải CV của bạn lên.");
         }
         if (!jobService.existsById(request.getJobId())) {
             throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
         if (!candidateService.existsById(request.getCandidateId())) {
-            throw new HiveConnectException("Candidate doesn't exist.");
+            throw new HiveConnectException("Ứng viên không tồn tại.");
         }
         //if exists candidate account, candidate has already applied the job
         AppliedJob appliedJob1 = appliedJobService.getAppliedJobBefore(request.getCandidateId(), request.getJobId());
         if (appliedJob1 != null) {
             if (appliedJob1.isApplied()) {
-                if(appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
+                if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
                     appliedJob1.setApplied(false);
-                } else if(appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
-                    throw new HiveConnectException("This CV has been approved");
+                } else if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+                    throw new HiveConnectException("CV của bạn đã được nhà tuyển dụng duyệt.");
                 } else if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT.getStatus())) {
                     Object AppliedJobRequest = request;
                     AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
-                    appliedJob.setApplied(true);
+                    if (request.getCvUrl() == null) {
+                        appliedJob.setApplied(true);
+                    } else {
+                        appliedJob.setApplied(false);
+                        appliedJob.setCvUploadUrl(request.getCvUrl());
+                    }
                     appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-                    appliedJob.setCvUploadUrl(request.getCvUrl());
                     appliedJob.create();
                     appliedJobRepository.save(appliedJob);
                     return;
@@ -86,10 +90,10 @@ public class FindJobServiceImpl implements FindJobService {
             appliedJob1.update();
             appliedJobRepository.save(appliedJob1);
         } else {
-            AppliedJob appliedJob = modelMapper.map(request, AppliedJob.class);
+            Object AppliedJobRequest = request;
+            AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
             appliedJob.setApplied(true);
             appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-            appliedJob.setCvUploadUrl(request.getCvUrl());
             appliedJob.create();
             appliedJobRepository.save(appliedJob);
         }
@@ -103,16 +107,16 @@ public class FindJobServiceImpl implements FindJobService {
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
         Optional<Job> job = jobService.findById(jobId);
-        if(!job.isPresent()) {
+        if (!job.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
         Page<AppliedJob> appliedJobs = appliedJobService.getCvAppliedJob(pageable, jobId, true);
-        if(appliedJobs.isEmpty()) {
+        if (appliedJobs.isEmpty()) {
             throw new HiveConnectException("No CV applies");
         }
         CvAppliedJobResponse responseObj = new CvAppliedJobResponse();
         responseObj.setJobId(jobId);
-        if(appliedJobs.hasContent()) {
+        if (appliedJobs.hasContent()) {
             for (AppliedJob appliedJob : appliedJobs) {
                 Candidate candidate = candidateService.getById(appliedJob.getCandidateId());
                 responseObj.setCandidateId(appliedJob.getCandidateId());

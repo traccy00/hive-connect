@@ -175,6 +175,47 @@ public class CandidateJobServiceImpl implements CandidateJobService {
     }
 
     @Override
+    public ResponseDataPagination getListJobByWorkForm(Integer pageNo, Integer pageSize, String workForm) {
+        List<JobResponse> responseList = new ArrayList<>();
+
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+
+        Page <Job> jobs = jobRepository.getListJobByWorkForm(pageable, workForm);
+
+        if (jobs.hasContent()) {
+            for (Job job : jobs) {
+                JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
+                jobResponse.setJobId(job.getId());
+                List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
+                if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
+                    List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
+                    jobResponse.setListHashtag(hashTagNameList);
+                }
+                Company company = companyService.getCompanyById(job.getCompanyId());
+                if (company != null) {
+                    jobResponse.setCompanyName(company.getName());
+                }
+                Image image = imageService.getImageCompany(company.getId(), true);
+                if(image != null) {
+                    jobResponse.setCompanyAvatar(image.getUrl());
+                }
+                responseList.add(jobResponse);
+            }
+        }
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(responseList);
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(jobs.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
+    }
+
+    @Override
     public ResponseDataPagination getPopularJob(Integer pageNo, Integer pageSize) {
         List<JobResponse> responseList = new ArrayList<>();
 

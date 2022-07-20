@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
+import fpt.edu.capstone.dto.company.CompanyInformationResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
 import fpt.edu.capstone.utils.ResponseDataPagination;
@@ -14,5 +15,7 @@ public interface RecruiterManageService {
     RecruiterProfileResponse updateRecruiterInformation(long recruiterId, RecruiterUpdateProfileRequest request) throws Exception;
 
     RecruiterProfileResponse getRecruiterProfile(long userId);
+
+    CompanyInformationResponse getCompanyInformation(long companyId, long recruiterId);
 
 }

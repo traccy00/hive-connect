@@ -28,5 +28,5 @@ public class CompanyInformationResponse {
     private String avatar;
     private String taxCode;
     private String mapUrl;
-
+    private boolean isCreator;
 }
