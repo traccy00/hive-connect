@@ -1,12 +1,23 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.candidate.FollowingResponse;
+import fpt.edu.capstone.dto.job.JobResponse;
+import fpt.edu.capstone.entity.AppliedJob;
 import fpt.edu.capstone.entity.Follow;
+import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.repository.FollowRepository;
 import fpt.edu.capstone.service.FollowService;
+import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,5 +49,30 @@ public class FollowServiceImpl implements FollowService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public ResponseDataPagination getFollowedJobByCandidateID(Pageable pageable, long candidateId) {
+        Page<FollowingResponse> follows= followRepository.getFollowedJobByCandidateID(pageable, candidateId);
+        if(follows.hasContent()) {
+            ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+            Pagination pagination = new Pagination();
+            responseDataPagination.setData(follows);
+            pagination.setCurrentPage(pageable.getPageNumber());
+            pagination.setPageSize(pageable.getPageSize());
+            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+            responseDataPagination.setPagination(pagination);
+            return  responseDataPagination;
+        }
+        else {
+            ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+            Pagination pagination = new Pagination();
+            responseDataPagination.setData(null);
+            pagination.setCurrentPage(pageable.getPageNumber());
+            pagination.setPageSize(pageable.getPageSize());
+            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+            responseDataPagination.setPagination(pagination);
+            return  responseDataPagination;
+        }
     }
 }

@@ -1,6 +1,10 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.entity.AppliedJob;
 import fpt.edu.capstone.entity.Follow;
+import fpt.edu.capstone.utils.ResponseDataPagination;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,4 +17,6 @@ public interface FollowService {
     Follow insertFollow(Follow follow);
 
     Boolean isFollowing(long followerId, long followedId, long type);
+
+    ResponseDataPagination getFollowedJobByCandidateID(Pageable pageable, long candidateId);
 }

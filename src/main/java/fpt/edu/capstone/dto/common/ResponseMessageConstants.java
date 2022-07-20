@@ -62,4 +62,6 @@ public interface ResponseMessageConstants {
     String UPLOAD_IMAGE_WRONG_TYPE = "Tệp tải lên không đúng định dạng";
     String UPLOAD_IMAGE_OVER_SIZE = "Hình ảnh tải lên bị quá dung lượng cho phép";
     String UPDATE_SUCCESSFULLY = "Cập nhật thành công";
+
+    String HAVE_NOT_FOLLOWED_JOB = "Bạn chưa theo dõi công việc nào cả";
 }
