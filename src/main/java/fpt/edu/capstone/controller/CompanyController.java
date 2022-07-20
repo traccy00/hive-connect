@@ -8,6 +8,7 @@ import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.service.CompanyManageService;
 import fpt.edu.capstone.service.CompanyService;
+import fpt.edu.capstone.service.RecruiterManageService;
 import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -33,6 +34,8 @@ public class CompanyController {
 
     private final RecruiterService recruiterService;
 
+    private final RecruiterManageService recruiterManageService;
+
     @GetMapping("/get-list-company")
     public ResponseData getListCompany(){
         try {
@@ -42,11 +45,6 @@ public class CompanyController {
             e.printStackTrace();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
-    }
-
-    @GetMapping("/find-company")
-    public ResponseData findCompany(@RequestParam String companyName) {
-        return null;
     }
 
     @PostMapping("/create-company")
@@ -67,31 +65,15 @@ public class CompanyController {
     }
 
     @GetMapping("/company-information") //get information of company by id
-    public ResponseData getCompanyInformation(@RequestParam long companyId) {
+    public ResponseData getCompanyInformation(@RequestParam long companyId,
+                                              @RequestParam(defaultValue = "0", required = false) long recruiterId) {
         try {
-            Optional<Company> companyOp = companyService.findById(companyId);
-            if (companyOp.isPresent()) {
-                Company tmp = companyOp.get();
-                CompanyInformationResponse company = new CompanyInformationResponse();
-                company.setAddress(tmp.getAddress());
-//                company.setAvatar(tmp.getAvatar());
-                company.setDescription(tmp.getDescription());
-                company.setEmail(tmp.getEmail());
-                company.setFieldWork(tmp.getFieldWork());
-                company.setId(tmp.getId());
-                company.setName(tmp.getName());
-                company.setMapUrl(tmp.getMapUrl());
-                company.setPhone(tmp.getPhone());
-                company.setNumberEmployees(tmp.getNumberEmployees());
-                company.setWebsite(tmp.getWebsite());
-                company.setTaxCode(tmp.getTaxCode());
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", company);
-            } else {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this company", companyId);
-            }
-
+            CompanyInformationResponse response = recruiterManageService.getCompanyInformation(companyId, recruiterId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, response);
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
