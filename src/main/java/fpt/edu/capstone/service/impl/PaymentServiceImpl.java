@@ -62,6 +62,14 @@ public class PaymentServiceImpl implements PaymentService {
         String dateString = formatter.format(date);
         String vnpCreateDate = dateString;
 
+        String recruiterId = String.valueOf(paymentDTO.getRecruiterId());
+        String detailPackageId = String.valueOf(paymentDTO.getDetailPackageId());
+        String bannerId = String.valueOf(paymentDTO.getBannerId());
+
+        String  p =  "recruiterId "+ recruiterId + " detailPackageId "+detailPackageId +
+                " bannerId "+bannerId + " amount " + String.valueOf(amount)+ " orderType "+paymentDTO.getOrderType()+
+                " description "+ paymentDTO.getDescription()+" bankCode "+paymentDTO.getBankCode();
+
         Map<String, String> vnpParams = new HashMap<>();
         vnpParams.put("vnp_Version", PaymentConfig.VERSION_VNPAY);
         vnpParams.put("vnp_Command", PaymentConfig.COMMAND);
@@ -69,11 +77,10 @@ public class PaymentServiceImpl implements PaymentService {
         vnpParams.put("vnp_Amount", String.valueOf(amount));
         vnpParams.put("vnp_CreateDate", vnpCreateDate);
         vnpParams.put("vnp_CurrCode", PaymentConfig.CURR_CODE);
-
         vnpParams.put("vnp_IpAddr", PaymentConfig.IP_DEFAULT);
 
         vnpParams.put("vnp_Locale", PaymentConfig.LOCATE_DEFAULT);
-        vnpParams.put("vnp_OrderInfo", PaymentConfig.ORDER_INFOR);
+        vnpParams.put("vnp_OrderInfo", p);
         vnpParams.put("vnp_OrderType", PaymentConfig.ORDER_TYPE);
         vnpParams.put("vnp_ReturnUrl", PaymentConfig.RETURN_URL);
         vnpParams.put("vnp_TxnRef", payment.getTransactionCode());
@@ -112,9 +119,9 @@ public class PaymentServiceImpl implements PaymentService {
 
         PaymentResponseDTO result = new PaymentResponseDTO();
         result.setPaymentUrl(paymentUrl);
-        if (result != null){
-            paymentRepository.save(payment);
-        }
+//        if (result != null){
+//            paymentRepository.save(payment);
+//        }
         return result;
     }
 
@@ -162,12 +169,39 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void savePayment(Payment payment, String vnpResponseCode) {
+    public void savePayment(String vnpResponseCode, String vnpOrderInfo) {
+        PaymentDTO dto = new PaymentDTO();
 
+        String[] ss = vnpOrderInfo.split("\\+");
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < ss.length; i = i + 2) {
+            map.put(ss[i], ss[i + 1]);
+        }
+
+        /*
+        String s = "recruiterId+1+detailPackageId+2+bannerId+0+amount+123456000+orderType+hehe+description+string+bankCode+NCB";
+        String[] ss = s.split("\\+");
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < ss.length; i = i + 2) {
+            map.put(ss[i], ss[i + 1]);
+        }
+        PaymentDTO paymentDTO = new PaymentDTO();
+        map.forEach((key,value)->{
+            if(key.equals("recruiterId")) paymentDTO.setRecruiterId(Long.parseLong(value));
+            if(key.equals("orderType")) paymentDTO.setOrderType(value);
+            if(key.equals("bankCode")) paymentDTO.setBankCode(value);
+            if(key.equals("amount")) paymentDTO.setAmount(Integer.parseInt(value));
+            if(key.equals("detailPackageId")) paymentDTO.setDetailPackageId(Long.parseLong(value));
+            if(key.equals("description")) paymentDTO.setDescription(value);
+        });
+        System.out.println(paymentDTO.getRecruiterId());
+         */
+
+
+        Payment payment = modelMapper.map(dto, Payment.class);
 
         if(vnpResponseCode.equals("00")){
             System.out.println("Thanh toán thành công");
-            paymentRepository.save(payment);
         }
         if(vnpResponseCode.equals("07")){
             throw new HiveConnectException("Trừ tiền thành công. Giao dịch bị nghi ngờ");
