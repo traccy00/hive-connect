@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ProfileViewerServiceImpl implements ProfileViewerService {
@@ -28,5 +30,11 @@ public class ProfileViewerServiceImpl implements ProfileViewerService {
     @Override
     public ProfileViewer getByCvIdAndViewerId(long cvId, long viewerId) {
         return profileViewerRepository.getByCvIdAndViewerId(cvId, viewerId);
+    }
+
+    @Override
+    public List<ProfileViewer> findAll(PageRequest pageRequest) {
+        Page<ProfileViewer> profileViewerPage = profileViewerRepository.findAll(pageRequest);
+        return profileViewerPage.getContent();
     }
 }

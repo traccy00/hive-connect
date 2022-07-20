@@ -42,6 +42,8 @@ public class CandidateJobServiceImpl implements CandidateJobService {
 
     private final FieldsService fieldsService;
 
+    private final ImageService imageService;
+
     @Override
     public ResponseDataPagination getNewestJob(Integer pageNo, Integer pageSize) {
         List<JobResponse> responseList = new ArrayList<>();
@@ -85,6 +87,11 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setPopularJob(job.isPopularJob());
                 jobResponse.setNewJob(job.isNewJob());
                 jobResponse.setUrgentJob(job.isUrgentJob());
+
+                Image image = imageService.getImageCompany(company.getId(), true);
+                if(image != null) {
+                    jobResponse.setCompanyAvatar(image.getUrl());
+                }
                 responseList.add(jobResponse);
             }
         }
@@ -143,6 +150,11 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setPopularJob(job.isPopularJob());
                 jobResponse.setNewJob(job.isNewJob());
                 jobResponse.setUrgentJob(job.isUrgentJob());
+
+                Image image = imageService.getImageCompany(company.getId(), true);
+                if(image != null) {
+                    jobResponse.setCompanyAvatar(image.getUrl());
+                }
                 responseList.add(jobResponse);
             }
         }
@@ -201,6 +213,11 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setPopularJob(job.isPopularJob());
                 jobResponse.setNewJob(job.isNewJob());
                 jobResponse.setUrgentJob(job.isUrgentJob());
+
+                Image image = imageService.getImageCompany(company.getId(), true);
+                if(image != null) {
+                    jobResponse.setCompanyAvatar(image.getUrl());
+                }
                 responseList.add(jobResponse);
             }
         }

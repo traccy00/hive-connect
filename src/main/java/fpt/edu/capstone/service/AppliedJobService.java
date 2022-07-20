@@ -21,7 +21,7 @@ public interface AppliedJobService {
 
     List<CompanyResponse> getTop12Companies();
 
-    List<AppliedJob> searchAppliedJobsOfCandidate(long candidateId, String approvalStatus);
+    Page<AppliedJob> searchAppliedJobsOfCandidate(Pageable pageable, long candidateId, String approvalStatus);
 
     CountCandidateApplyPercentageResponse countApplyPercentage(long recruiterId);
 

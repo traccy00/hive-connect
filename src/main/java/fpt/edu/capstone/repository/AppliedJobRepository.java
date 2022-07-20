@@ -40,7 +40,7 @@ public interface AppliedJobRepository extends JpaRepository<AppliedJob, Long> {
     @Query(value = "select * from applied_job aj where candidate_id = :candidateId " +
             "and (approval_status like (:status) or :status is null or :status = '')",
             nativeQuery = true)
-    List<AppliedJob> searchAppliedJobsOfCandidate(@Param("candidateId") long candidateId,@Param("status") String approvalStatus);
+    Page<AppliedJob> searchAppliedJobsOfCandidate(Pageable pageable, @Param("candidateId") long candidateId,@Param("status") String approvalStatus);
 
     @Query(value = "select count(aj.candidate_id) as totalApplied, aj.job_id as jobId, j.number_recruits as numberRecruits " +
             "from applied_job aj join job j on aj.job_id = j.id where j.recruiter_id = ? group by job_id , number_recruits", nativeQuery = true)

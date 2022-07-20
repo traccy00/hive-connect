@@ -55,8 +55,8 @@ public class AppliedJobServiceImpl implements AppliedJobService {
     }
 
     @Override
-    public List<AppliedJob> searchAppliedJobsOfCandidate(long candidateId, String approvalStatus) {
-        return appliedJobRepository.searchAppliedJobsOfCandidate(candidateId, approvalStatus);
+    public Page<AppliedJob> searchAppliedJobsOfCandidate(Pageable pageable, long candidateId, String approvalStatus) {
+        return appliedJobRepository.searchAppliedJobsOfCandidate(pageable, candidateId, approvalStatus);
     }
 
     @Override

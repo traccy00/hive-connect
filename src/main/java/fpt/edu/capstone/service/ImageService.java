@@ -32,4 +32,6 @@ public interface ImageService {
 
     Image getAvatarCandidate(long candidateId);
 
+    Image getImageCompany(long companyId, boolean isAvatar);
+
 }

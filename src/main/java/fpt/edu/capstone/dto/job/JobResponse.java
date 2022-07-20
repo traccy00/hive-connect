@@ -34,4 +34,5 @@ public class JobResponse {
     private boolean isNewJob;
     private boolean isUrgentJob;
     private int isDeleted;
+    private String companyAvatar;
 }
