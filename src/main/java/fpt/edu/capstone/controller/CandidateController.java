@@ -294,11 +294,14 @@ public class CandidateController {
 
     @GetMapping("/get-applied-jobs-of-candidate")
     @Operation(summary = "View list applied job and approval status of a Candidate")
-    public ResponseData searchListAppliedJob(@RequestParam long candidateId,
+    public ResponseData searchListAppliedJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                             @RequestParam(defaultValue = "10") Integer pageSize,
+                                             @RequestParam long candidateId,
                                              @RequestParam(required = false, defaultValue = StringUtils.EMPTY) String approvalStatus) {
         try {
-            List<AppliedJob> appliedJobs = candidateManageService.searchAppliedJobsOfCandidate(candidateId, approvalStatus);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, appliedJobs);
+            ResponseDataPagination pagination = candidateManageService.
+                    searchAppliedJobsOfCandidate(pageNo, pageSize, candidateId, approvalStatus);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

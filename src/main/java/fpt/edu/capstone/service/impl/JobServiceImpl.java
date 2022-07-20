@@ -51,7 +51,7 @@ public class JobServiceImpl implements JobService {
         long companyId = request.getCompanyId();
         long recruiterId = request.getRecruiterId();
         long fieldId = request.getFieldId();
-        if (!companyService.existById(companyId)) {
+        if (!companyService.findById(companyId).isPresent()) {
             throw new HiveConnectException("Company not found!");
         }
         if (!recruiterService.existById(recruiterId)) {

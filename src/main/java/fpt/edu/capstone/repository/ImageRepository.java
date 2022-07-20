@@ -23,4 +23,7 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     @Query(value = "select * from image i where i.candidate_id = ? and i.is_avatar = true", nativeQuery = true)
     Image getAvatarCandidate(long candidateId);
+
+    @Query(value = "select * from image i where i.company_id = ?1 and i.is_avatar = ?2", nativeQuery = true)
+    Image getImageCompany(long companyId, boolean isAvatar);
 }

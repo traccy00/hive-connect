@@ -89,6 +89,9 @@ public class AuthenticationController {
             }
             if(user.getRoleId() == 2){
                 Optional<Recruiter> recruiter = recruiterService.findRecruiterByUserId(user.getId());
+                if(!recruiter.isPresent()) {
+                    throw new HiveConnectException("Người dùng không tồn tại");
+                }
                 response.setRecruiter(recruiter.get());
             }
             if(user.getRoleId() == 1){

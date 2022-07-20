@@ -90,4 +90,10 @@ public class ImageServiceImpl implements ImageService {
     public Image getAvatarCandidate(long candidateId) {
         return imageRepository.getAvatarCandidate(candidateId);
     }
+
+    //isAvatar = true -> company avatar, isAvatar = false -> company image
+    @Override
+    public Image getImageCompany(long companyId, boolean isAvatar) {
+        return imageRepository.getImageCompany(companyId, isAvatar);
+    }
 }
