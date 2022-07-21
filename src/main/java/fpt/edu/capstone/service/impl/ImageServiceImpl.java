@@ -96,4 +96,22 @@ public class ImageServiceImpl implements ImageService {
     public Image getImageCompany(long companyId, boolean isAvatar) {
         return imageRepository.getImageCompany(companyId, isAvatar);
     }
+
+    @Override
+    public void deleteImagebyId(List<Long> deleteImageIdList) {
+        if(deleteImageIdList.isEmpty()) {
+            deleteImageIdList.add(0L);
+        }
+        imageRepository.deleteImageById(deleteImageIdList);
+    }
+
+    @Override
+    public void saveImageCompany(boolean isAvatar, boolean isCoverImage, long companyId, List<String> uploadImageUrlList) {
+        for(String url : uploadImageUrlList) {
+            Image image = new Image();
+            image.setCompanyId(companyId);
+            image.setUrl(url);
+            imageRepository.save(image);
+        }
+    }
 }

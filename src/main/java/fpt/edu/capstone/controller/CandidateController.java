@@ -2,16 +2,12 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.CV.ViewCvResponse;
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
-import fpt.edu.capstone.dto.candidate.FollowingResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.entity.AppliedJob;
 import fpt.edu.capstone.entity.CVImported;
 import fpt.edu.capstone.entity.Candidate;
+import fpt.edu.capstone.entity.Follow;
 import fpt.edu.capstone.entity.ProfileViewer;
-import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
-import fpt.edu.capstone.service.*;
-import fpt.edu.capstone.repository.FollowRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.service.impl.CVImportedService;
 import fpt.edu.capstone.utils.Enums;
@@ -23,9 +19,6 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -211,8 +204,8 @@ public class CandidateController {
                     .getProfileViewer(pageNo, pageSize, cvId, candidateId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-            String msg = LogUtils.printLogStackTrace(e);
-            logger.error(msg);
+                String msg = LogUtils.printLogStackTrace(e);
+                logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
@@ -254,7 +247,7 @@ public class CandidateController {
         }
     }
 
-    @GetMapping("/followed-job")
+        @GetMapping("/followed-job")
     @Operation(summary = "Get list followed job with candidate id")
     public ResponseData getListFollowedJob(@RequestParam(defaultValue = "1") Integer pageNo,
                                            @RequestParam(defaultValue = "10") Integer pageSize,
@@ -262,8 +255,10 @@ public class CandidateController {
         try{
             ResponseDataPagination pagination = followService.getFollowedJobByCandidateID(pageNo, pageSize, candidateId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),pagination);
-        }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
+        }catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 
@@ -277,6 +272,8 @@ public class CandidateController {
             followService.unFollow(followerId, followedId, type);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Unfollow succsess full",null);
         }catch (Exception ex) {
+            String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
         }
     }
@@ -290,6 +287,8 @@ public class CandidateController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Is following", true);
         }catch (Exception ex) {
+            String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
         }
     }

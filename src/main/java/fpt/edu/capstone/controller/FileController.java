@@ -195,8 +195,8 @@ public class FileController {
     public ResponseData uploadImages(@RequestPart("request") UploadFileRequest request,
                                      @RequestPart("multipartFile") MultipartFile multipartFile) {
         try {
-            String fileName = amazonS3ClientService.uploadFile(request, multipartFile);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, fileName);
+            String fileUrl = amazonS3ClientService.uploadFile(request, multipartFile);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, fileUrl);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

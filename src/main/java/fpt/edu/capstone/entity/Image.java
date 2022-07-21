@@ -63,4 +63,7 @@ public class Image extends BaseEntity {
 
     @Column(name = "candidate_id")
     private long candidateId;
+
+    @Column(name = "is_cover")
+    private boolean isCover;
 }

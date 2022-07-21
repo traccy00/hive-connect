@@ -25,7 +25,7 @@ public interface ResponseMessageConstants {
     String CHANGE_PASSWORD_FAILED = "CHANGE_PASSWORD_FAILED";
     String RESEND_EMAIL_SUCCESS = "RESEND_EMAIL_SUCCESS";
     //USER
-    String USER_DOES_NOT_EXIST = "USER_DOES_NOT_EXIST";
+    String USER_DOES_NOT_EXIST = "Người dùng không tồn tại";
     String USER_IS_INACTIVE = "USER_IS_INACTIVE";
     String USER_IS_DELETED = "USER_IS_DELETED";
 
