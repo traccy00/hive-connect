@@ -9,6 +9,4 @@ public class AppliedJobRequest {
     private long jobId;
     private long candidateId;
     private String cvUrl;
-    private boolean isUploadCv;
-    private boolean isProfileApply;
 }

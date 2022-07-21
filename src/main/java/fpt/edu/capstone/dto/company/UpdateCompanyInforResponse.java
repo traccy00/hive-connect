@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 public class UpdateCompanyInforResponse {
     private long companyId;
-    private String companyName;
+    private String companyEmail;
     private String companyPhone;
     private String companyDescription;
     private String companyWebsite;

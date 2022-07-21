@@ -52,32 +52,55 @@ public class CompanyManageServiceImpl implements CompanyManageService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public UpdateCompanyInforResponse updateCompanyInformation(long recruiterId, UpdateCompanyInforResponse request) {
-        if(!recruiterService.findById(recruiterId).isPresent()) {
+        if (!recruiterService.findById(recruiterId).isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         Company company = companyService.getCompanyById(request.getCompanyId());
-        if(company.getCreatorId() != recruiterId) {
+        if (company == null) {
+            throw new HiveConnectException("Công ty không tồn tại");
+        }
+        if (company.getCreatorId() != recruiterId) {
             throw new HiveConnectException("Không có quyền chỉnh sửa");
         }
+        if ((request.getCompanyEmail() == null && request.getCompanyEmail().trim().isEmpty())
+                || (request.getCompanyPhone() == null && request.getCompanyPhone().trim().isEmpty())
+                || (request.getCompanyDescription() == null && request.getCompanyDescription().trim().isEmpty())
+                || (request.getCompanyWebsite() == null && request.getCompanyWebsite().trim().isEmpty())
+                || (request.getNumberEmployees() == null && request.getNumberEmployees().trim().isEmpty())
+                || (request.getCompanyAddress() == null && request.getCompanyAddress().trim().isEmpty())
+                || (request.getTaxCode() == null && request.getTaxCode().trim().isEmpty())
+                || (request.getMapUrl() == null && request.getMapUrl().trim().isEmpty())) {
+            throw new HiveConnectException("Vui lòng điền vào thông tin bắt buộc");
+        }
+        company.setEmail(request.getCompanyEmail());
+        company.setPhone(request.getCompanyPhone());
+        company.setDescription(request.getCompanyDescription());
+        company.setWebsite(request.getCompanyWebsite());
+        company.setNumberEmployees(request.getNumberEmployees());
+        company.setAddress(request.getCompanyAddress());
+        company.setTaxCode(request.getTaxCode());
+        company.setMapUrl(request.getMapUrl());
+
         List<String> uploadImageUrlList = new ArrayList<>();
         //update avatar
-        if(request.getAvatarUrl() != null && request.getAvatarUrl().trim().isEmpty()) {
+        if (request.getAvatarUrl() != null && request.getAvatarUrl().trim().isEmpty()) {
             uploadImageUrlList.add(request.getAvatarUrl());
             imageService.saveImageCompany(true, false, company.getId(), uploadImageUrlList);
         }
         //update cover image
-        if(request.getAvatarUrl() != null && request.getAvatarUrl().trim().isEmpty()) {
+        if (request.getCoverImageUrl() != null && request.getCoverImageUrl().trim().isEmpty()) {
             uploadImageUrlList.add(request.getCoverImageUrl());
             imageService.saveImageCompany(false, true, company.getId(), uploadImageUrlList);
         }
         //xóa cái nào thì trả id của cái đó
         List<Long> deleteImageIdList = request.getDeleteImageIdList();
-        imageService.deleteImagebyId(deleteImageIdList);
+        imageService.deleteImageById(deleteImageIdList);
 
         //upload introduction image list of company
         uploadImageUrlList = request.getUploadImageUrlList();
-        imageService.saveImageCompany(false, false, company.getId(), uploadImageUrlList);
-
+        if (uploadImageUrlList != null && !uploadImageUrlList.isEmpty()) {
+            imageService.saveImageCompany(false, false, company.getId(), uploadImageUrlList);
+        }
         return null;
     }
 }

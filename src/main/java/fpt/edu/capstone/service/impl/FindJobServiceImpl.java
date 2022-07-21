@@ -51,20 +51,11 @@ public class FindJobServiceImpl implements FindJobService {
 
     @Override
     public void appliedJob(AppliedJobRequest request) throws Exception {
-        if (request.isUploadCv() == request.isProfileApply()) {
-            throw new HiveConnectException("Vui lòng tải CV lên hoặc dùng hồ sơ Hive Connect của bạn để ứng tuyển");
-        }
-        if (request.isProfileApply()) {
+        if (request.getCvUrl() == null || request.getCvUrl().trim().isEmpty()) {
             //profile apply
             CV cv = cvService.getCVByCandidateId(request.getCandidateId());
             if (cv == null) {
                 throw new HiveConnectException("Create your profile to apply job!");
-            }
-        }
-        if (request.isUploadCv()) {
-            String cvUploadedUrl = request.getCvUrl();
-            if (cvUploadedUrl == null || cvUploadedUrl.trim().isEmpty()) {
-                throw new HiveConnectException("Vui lòng thử lại, CV tải lên chưa thành công");
             }
         }
         if (!jobService.existsById(request.getJobId())) {
@@ -91,7 +82,7 @@ public class FindJobServiceImpl implements FindJobService {
                     AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
                     appliedJob.setApplied(true);
                     appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-                    if(request.isUploadCv()) {
+                    if(request.getCvUrl() != null) {
                         appliedJob.setCvUploadUrl(request.getCvUrl());
                         appliedJob.setUploadCv(true);
                     }
@@ -112,7 +103,7 @@ public class FindJobServiceImpl implements FindJobService {
             AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
             appliedJob.setApplied(true);
             appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-            if(request.isUploadCv()) {
+            if(request.getCvUrl() != null) {
                 appliedJob.setCvUploadUrl(request.getCvUrl());
                 appliedJob.setUploadCv(true);
             }
