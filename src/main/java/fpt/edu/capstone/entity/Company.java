@@ -2,6 +2,7 @@ package fpt.edu.capstone.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 
@@ -15,16 +16,16 @@ public class Company {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
+    //mandatory
     @Column(name = "field_work")
     private String fieldWork;
-
+    //mandatory
     @Column(name = "name")
     private String name;
-
+    //mandatory
     @Column(name = "email")
     private String email;
-
+    //mandatory
     @Column(name = "phone")
     private String phone;
 
@@ -33,14 +34,15 @@ public class Company {
 
     @Column(name = "website")
     private String website;
-
+    //mandatory
     @Column(name = "number_employees")
     private String numberEmployees; //số lượng nhân viên đang có trong công ty
-
+    //mandatory
     @Column(name = "address")
     private String address;
-
+    //mandatory
     @Column(name = "taxcode")
+    @Length(min = 10)
     private String taxCode;
 
     @Column(name = "is_deleted")

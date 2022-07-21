@@ -107,13 +107,13 @@ public class CompanyController {
     public ResponseData updateCompanyInformation(@PathVariable("recruiterId") long recruiterId,
                                                  @RequestBody UpdateCompanyInforResponse request) {
         try {
-            //UpdateCompanyInforResponse updateResponse =
+            UpdateCompanyInforResponse updateResponse =
             companyManageService.updateCompanyInformation(recruiterId, request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 }

@@ -98,7 +98,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void deleteImagebyId(List<Long> deleteImageIdList) {
+    public void deleteImageById(List<Long> deleteImageIdList) {
         if(deleteImageIdList.isEmpty()) {
             deleteImageIdList.add(0L);
         }
