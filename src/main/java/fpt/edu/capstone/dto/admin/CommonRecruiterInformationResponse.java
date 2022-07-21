@@ -9,5 +9,5 @@ public class CommonRecruiterInformationResponse {
     private String recruiterFullName;
     private String verifyStep;
     private long totalCreatedJob;
-    private double candidateApplyPercentage;
+    private String candidateApplyPercentage;
 }

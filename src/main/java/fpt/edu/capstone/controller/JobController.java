@@ -154,7 +154,8 @@ public class JobController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
                     new ObjectMapper().writeValueAsString(request));
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
@@ -169,7 +170,8 @@ public class JobController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
                     ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
@@ -193,7 +195,8 @@ public class JobController {
             ResponseDataPagination pagination = candidateJobService.getPopularJob(pageNo, pageSize);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
@@ -207,7 +210,8 @@ public class JobController {
             ResponseDataPagination pagination = candidateJobService.getNewestJob(pageNo, pageSize);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
@@ -220,7 +224,8 @@ public class JobController {
             ResponseDataPagination pagination = candidateJobService.getUrgentJob(pageNo, pageSize);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
@@ -233,7 +238,8 @@ public class JobController {
             List<JobResponse> listSuggestJob = jobService.getListSuggestJobByCv(candidateId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, listSuggestJob);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
@@ -245,7 +251,8 @@ public class JobController {
             ResponseDataPagination pagination = candidateJobService.getListJobByWorkForm(pageNo, pageSize, "REMOTE");
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
@@ -257,7 +264,8 @@ public class JobController {
             ResponseDataPagination pagination = candidateJobService.getListJobByWorkForm(pageNo, pageSize, "FULLTIME");
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
@@ -269,7 +277,8 @@ public class JobController {
             ResponseDataPagination pagination = candidateJobService.getListJobByWorkForm(pageNo, pageSize, "PARTTIME");
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
@@ -282,7 +291,8 @@ public class JobController {
             ResponseDataPagination pagination = jobService.getJobByFieldId(pageNo, pageSize, fieldId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
@@ -294,7 +304,8 @@ public class JobController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
                     new ObjectMapper().writeValueAsString(approvalJobRequest));
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
@@ -307,7 +318,8 @@ public class JobController {
             ResponseDataPagination pagination = recruiterJobService.getJobOfRecruiter(pageNo, pageSize, recruiterId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-            e.printStackTrace();
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
@@ -345,6 +357,7 @@ public class JobController {
     @PostMapping("/report-job/{userId}")
     public ResponseData reportJob(@PathVariable("userId") long userId) {
         try {
+
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

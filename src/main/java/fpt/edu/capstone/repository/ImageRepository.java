@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
@@ -26,4 +27,8 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     @Query(value = "select * from image i where i.company_id = ?1 and i.is_avatar = ?2", nativeQuery = true)
     Image getImageCompany(long companyId, boolean isAvatar);
+
+    @Modifying
+    @Query(value = "delete from image i where id in (:deleteImageIdList)", nativeQuery = true)
+    void deleteImageById(List<Long> deleteImageIdList);
 }

@@ -2,9 +2,7 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.company.CompanyInformationResponse;
-import fpt.edu.capstone.dto.recruiter.RecruiterBaseOnCompanyResponse;
-import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
-import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
+import fpt.edu.capstone.dto.recruiter.*;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.entity.Recruiter;
@@ -24,6 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -69,20 +69,41 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (user == null) {
             throw new HiveConnectException("Liên hệ admin");
         }
+        //verify step 1
         if (user.isVerifiedEmail()) {
             step++;
         }
+        //verify step 2
         if (user.isVerifiedPhone()) {
             step++;
         }
-        if (optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+        //verify step 3
+        if (optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null
+                && optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
             step++;
         }
         response.setRecruiterFullName(optionalRecruiter.get().getFullName());
         response.setVerifyStep(step + " / " + totalStep);
-        response.setTotalCreatedJob(jobService.countTotalCreatedJobOfRecruiter(recruiterId).getTotalCreatedJob());
-        response.setCandidateApplyPercentage(appliedJobService.countApplyPercentage(recruiterId).getTotalApplied()
-                / appliedJobService.countApplyPercentage(recruiterId).getNumberRecruits());
+
+        CountTotalCreatedJobResponse countTotalCreatedJobResponse = jobService.countTotalCreatedJobOfRecruiter(recruiterId);
+        long totalCreatedJob = 0;
+        if(countTotalCreatedJobResponse != null) {
+            totalCreatedJob = countTotalCreatedJobResponse.getTotalCreatedJob();
+        }
+        response.setTotalCreatedJob(totalCreatedJob);
+
+        CountCandidateApplyPercentageResponse countApplyCandidate = appliedJobService.countApplyPercentage(recruiterId);
+        String result = "0";
+        if (countApplyCandidate != null) {
+            long totalApply = countApplyCandidate.getTotalApplied();
+            long numberRecruits = countApplyCandidate.getNumberRecruits();
+            double applyPercentage = (double) totalApply / numberRecruits;
+            DecimalFormat formatter = new DecimalFormat("##.##"); //
+            formatter.setRoundingMode(RoundingMode.DOWN); // Towards zero
+            result = formatter.format(applyPercentage);
+        }
+        response.setCandidateApplyPercentage(result);
+
         return response;
     }
 
@@ -201,7 +222,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             Company tmp = companyOp.get();
             response.setAddress(tmp.getAddress());
             Image image = imageService.getImageCompany(companyId, true);
-            if(image != null) {
+            if (image != null) {
                 response.setAvatar(image.getUrl());
             }
             response.setDescription(tmp.getDescription());
@@ -216,7 +237,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             response.setTaxCode(tmp.getTaxCode());
             long creatorId = tmp.getCreatorId();
             boolean isCreator = false;
-            if(recruiterId != 0 && creatorId == recruiterId) {
+            if (recruiterId != 0 && creatorId == recruiterId) {
                 isCreator = true;
             }
             response.setCreator(isCreator);
