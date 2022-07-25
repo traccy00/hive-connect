@@ -26,7 +26,7 @@ public class DetailPackageServiceImpl implements DetailPackageService {
 
     @Override
     public Optional<DetailPackage> findByName(String name) {
-        return detailPackageRepository.findByType(name);
+        return detailPackageRepository.findByDetailName(name);
     }
 
     @Override

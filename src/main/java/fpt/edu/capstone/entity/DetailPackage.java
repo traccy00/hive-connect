@@ -24,8 +24,8 @@ public class DetailPackage extends BaseEntity {
     private long rentalPackageId; //1
 
     //QUẢNG CÁO TUYỂN DỤNG
-    @Column(name = "type")
-    private String type; // basic, classic, gold, GÓI MUA THÊM
+    @Column(name = "detail_name")
+    private String detailName; //tên chi tiết các gói dịch vụ
 
     @Column(name = "price")
     private long price;
@@ -39,8 +39,10 @@ public class DetailPackage extends BaseEntity {
     @Column(name = "description")
     private String description; // mô tả về gói khuyến mãi
 
-    @Column(name = "label_name")
-    private String labelName; //Việc làm tốt nhất , việc làm nổi bật, việc làm hấp dẫn , none
+    @Column(name = "label")
+    //Việc làm tốt nhất , việc làm nổi bật, việc làm hấp dẫn , none,
+    // sẽ được hiển thị 1 nhãn dán nhỏ bên cạnh công việc, hiểu đơn giản như đi mua tủ lạnh, luôn có những nhán dán sale 50%... được dán ở góc bên phải của tủ lạnh
+    private String label;
 
    @Column(name = "is_related_job")
     private boolean isRelatedJob;

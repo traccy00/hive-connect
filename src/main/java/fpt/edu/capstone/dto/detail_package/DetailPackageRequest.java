@@ -9,12 +9,12 @@ import javax.persistence.Column;
 @Setter
 public class DetailPackageRequest {
     private long rentalPackageId;
-    private String type;
+    private String detailName;
     private long price;
     private long discount;
     private String timeExpired;
     private String description;
-    private String labelName;
+    private String label;
     private boolean isRelatedJob;
     private boolean isSuggestJob;
     private boolean goldenHour;
