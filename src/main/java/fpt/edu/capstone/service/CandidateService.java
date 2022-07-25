@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.admin.user.CandidateManageResponse;
+import fpt.edu.capstone.dto.candidate.CVBaseInformationRequest;
 import fpt.edu.capstone.entity.Candidate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,8 @@ public interface CandidateService  {
     Optional<Candidate> findCandidateByUserId(long userId);
 
     void updateCandidateInformation(Candidate updatedCandidate);
+
+    void updateCVInformation(CVBaseInformationRequest cvBaseInformationRequest);
 
     void updateIsNeedJob(boolean isNeedJob, long id);
 

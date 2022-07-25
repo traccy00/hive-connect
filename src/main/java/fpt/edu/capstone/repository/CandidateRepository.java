@@ -34,8 +34,13 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
     @Transactional
     @Modifying
+    @Query(value = "UPDATE public.candidate SET gender=?1, birth_date=?2, country=?3, full_name=?4, address=?5, social_link=?6 WHERE user_id=?7", nativeQuery = true)
+    void updateCVInformation(boolean gender, LocalDateTime birthDate, String country, String fullName, String address, String socialLink, long userId);
+
+    @Transactional
+    @Modifying
     @Query(value = "UPDATE public.candidate SET is_need_job = ?1 WHERE id = ?2", nativeQuery = true)
-    void updateCandicateInformation(boolean newIsNeedJob, long id);
+    void updateIsNeedJob(boolean newIsNeedJob, long id);
 
     @Transactional
     @Modifying

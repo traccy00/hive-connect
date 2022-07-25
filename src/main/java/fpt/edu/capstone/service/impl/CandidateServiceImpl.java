@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.admin.user.CandidateManageResponse;
+import fpt.edu.capstone.dto.candidate.CVBaseInformationRequest;
 import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.repository.CandidateRepository;
 import fpt.edu.capstone.service.CandidateService;
@@ -58,8 +59,13 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
+    public void updateCVInformation(CVBaseInformationRequest cvBaseInformationRequest) {
+        candidateRepository.updateCVInformation(cvBaseInformationRequest.isGender(), cvBaseInformationRequest.getBirthDate(), cvBaseInformationRequest.getCountry(), cvBaseInformationRequest.getName(), cvBaseInformationRequest.getAddress(), cvBaseInformationRequest.getSocialLink(), cvBaseInformationRequest.getUserId());
+    }
+
+    @Override
     public void updateIsNeedJob(boolean isNeedJob, long id) {
-        candidateRepository.updateCandicateInformation(isNeedJob, id);
+        candidateRepository.updateIsNeedJob(isNeedJob, id);
     }
 
     @Override

@@ -34,4 +34,6 @@ public interface UserService {
     Users lockUnlockUser(long userId);
 
     Users activeDeactiveUser(long userId);
+
+    void updatePhoneNumber(String phoneNumber, long userId);
 }

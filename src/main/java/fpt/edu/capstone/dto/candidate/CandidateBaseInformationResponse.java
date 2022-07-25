@@ -20,5 +20,6 @@ public class CandidateBaseInformationResponse {
     private boolean isNeedJob;
     private long experienceLevel;
     private String introduction;
+    private String phoneNumber;
 
 }
