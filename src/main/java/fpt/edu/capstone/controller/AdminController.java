@@ -2,6 +2,7 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.job.ReportedJobResponse;
 import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.entity.*;
@@ -12,6 +13,7 @@ import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -186,12 +188,21 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/get-all-reported")
-    public ResponseData getAllReported() {
+    @GetMapping("/get-reported-job")
+    public ResponseData getReportedJob(@RequestParam(defaultValue = "1") Integer pageNo,
+                                       @RequestParam(defaultValue = "10") Integer pageSize,
+                                       @RequestParam(value = "createdAtFrom", required = false) LocalDateTime createdAtFrom,
+                                       @RequestParam(value = "createdAtTo", required = false) LocalDateTime createdAtTo,
+                                       @RequestParam(value = "updatedAtFrom",required = false) LocalDateTime updatedAtFrom,
+                                       @RequestParam(value = "updatedAtTo", required = false) LocalDateTime updatedAtTo,
+                                       @RequestParam(value = "jobName", defaultValue = StringUtils.EMPTY) String jobName) {
         try {
-            List<Reported> reporteds = reportedService.getAllReported();
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Get All Successful", reporteds);
+            ResponseDataPagination reports = adminManageService.
+                    searchReportedJob(pageNo, pageSize, createdAtFrom, createdAtTo, updatedAtFrom, updatedAtTo, jobName);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, reports);
         } catch (Exception ex) {
+            String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UpdateCompanyInforResponse {
+public class UpdateCompanyInforRequest {
     private long companyId;
     private String companyEmail;
     private String companyPhone;

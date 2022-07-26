@@ -4,7 +4,7 @@ import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CompanyInformationResponse;
 import fpt.edu.capstone.dto.company.CreateCompanyRequest;
 import fpt.edu.capstone.dto.company.TopCompanyResponse;
-import fpt.edu.capstone.dto.company.UpdateCompanyInforResponse;
+import fpt.edu.capstone.dto.company.UpdateCompanyInforRequest;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.service.CompanyManageService;
@@ -105,9 +105,8 @@ public class CompanyController {
 
     @PutMapping("/update-company-information/{recruiterId}")
     public ResponseData updateCompanyInformation(@PathVariable("recruiterId") long recruiterId,
-                                                 @RequestBody UpdateCompanyInforResponse request) {
+                                                 @RequestBody UpdateCompanyInforRequest request) {
         try {
-            UpdateCompanyInforResponse updateResponse =
             companyManageService.updateCompanyInformation(recruiterId, request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {

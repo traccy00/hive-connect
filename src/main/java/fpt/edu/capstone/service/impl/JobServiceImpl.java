@@ -208,11 +208,12 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobResponse> getSameJobsOtherCompanies(long detailJobId) {
-        Job detailJob = jobRepository.getById(detailJobId);
+//        Job detailJob = jobRepository.getById(detailJobId);
         List<Job> jobs = jobRepository.getSameJobsOtherCompanies(detailJobId);
         List<JobResponse> responseList = new ArrayList<>();
         for(Job job : jobs) {
             JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
+            jobResponse.setJobId(job.getId());
             Company company = companyService.getCompanyById(job.getCompanyId());
             if (company != null) {
                 jobResponse.setCompanyName(company.getName());
