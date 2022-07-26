@@ -128,8 +128,7 @@ public class AdminServiceImpl implements AdminService {
         Page<ReportedUserResponse> reportedUsers = reportedService.searchReportedUsers(pageable, username,
                 personReportName, userIdList, personReportId);
 
-        responseDataPagination.setData(reportedUsers);
-
+        responseDataPagination.setData(reportedUsers.getContent());
         Pagination pagination = new Pagination();
         pagination.setCurrentPage(pageNo);
         pagination.setPageSize(pageSize);

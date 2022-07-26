@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 
 public interface ReportedUserResponse {
     long getReportedId();
-    long getUserId();
+    long getReportedUserId();
     String getUserName();
-    String getReportedReason();
+    String getReportReason();
     LocalDateTime getCreatedAt();
     LocalDateTime getUpdatedAt();
-    long getPersonReport();
+    long getPersonReportId();
     String getPersonReportName();
     String getRelatedLink();
     String getApprovalReportedStatus();

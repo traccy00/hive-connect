@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fpt.edu.capstone.dto.active_package.PaymentActiveRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
+import fpt.edu.capstone.entity.Admin;
 import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.PaymentActive;
+import fpt.edu.capstone.entity.Report;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
@@ -42,6 +44,8 @@ public class JobController {
     private final PaymentActiveService paymentActiveService;
 
     private final CandidateManageService candidateManageService;
+
+    private final AdminManageService adminManageService;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -355,10 +359,11 @@ public class JobController {
     }
 
     @PostMapping("/report-job/{userId}")
-    public ResponseData reportJob(@PathVariable("userId") long userId) {
+    public ResponseData reportJob(@PathVariable("userId") long userId,
+                                  @RequestBody ReportJobRequest request) {
         try {
-
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+            Report report = adminManageService.reportJob(request, userId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, report);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

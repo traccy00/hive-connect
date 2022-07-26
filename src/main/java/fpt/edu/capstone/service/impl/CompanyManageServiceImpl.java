@@ -3,7 +3,7 @@ package fpt.edu.capstone.service.impl;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CompanyResponse;
 import fpt.edu.capstone.dto.company.TopCompanyResponse;
-import fpt.edu.capstone.dto.company.UpdateCompanyInforResponse;
+import fpt.edu.capstone.dto.company.UpdateCompanyInforRequest;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -51,7 +51,7 @@ public class CompanyManageServiceImpl implements CompanyManageService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public UpdateCompanyInforResponse updateCompanyInformation(long recruiterId, UpdateCompanyInforResponse request) {
+    public UpdateCompanyInforRequest updateCompanyInformation(long recruiterId, UpdateCompanyInforRequest request) {
         if (!recruiterService.findById(recruiterId).isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
