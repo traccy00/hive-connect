@@ -60,7 +60,7 @@ public class AuthenticationController {
     @Operation(summary = "Login user")
     public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
-            authenticate(request.getUsername(), request.getPassword());
+            authenticate(request.getUsername().trim(), request.getPassword().trim());
             String username = request.getUsername();
             logger.info("login with username {}", username);
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(request.getPassword())) {
@@ -129,9 +129,9 @@ public class AuthenticationController {
     @Transactional(rollbackOn = HiveConnectException.class)
     public ResponseDataUser register(@RequestBody RegisterRequest request) throws Exception {
         try {
-            String username = request.getUsername();
-            String password = request.getPassword();
-            String email = request.getEmail();
+            String username = request.getUsername().trim();
+            String password = request.getPassword().trim();
+            String email = request.getEmail().trim();
 
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(password)) {
                 return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
@@ -224,9 +224,9 @@ public class AuthenticationController {
             if (!optionalUsers.isPresent()) {
                 throw new HiveConnectException("User: " + username + "not found");
             }
-            String oldPassword = request.getOldPassword();
-            String newPassword = request.getNewPassword();
-            String confirmPassword = request.getConfirmPassword();
+            String oldPassword = request.getOldPassword().trim();
+            String newPassword = request.getNewPassword().trim();
+            String confirmPassword = request.getConfirmPassword().trim();
 
             Users user = optionalUsers.get();
             if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
