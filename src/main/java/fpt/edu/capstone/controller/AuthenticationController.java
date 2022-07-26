@@ -85,6 +85,9 @@ public class AuthenticationController {
 
             if(user.getRoleId() == 3){
                 Optional<Candidate> candidate = candidateService.findCandidateByUserId(user.getId());
+                if(!candidate.isPresent()) {
+                    throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+                }
                 response.setCandidate(candidate.get());
             }
             if(user.getRoleId() == 2){
@@ -96,6 +99,9 @@ public class AuthenticationController {
             }
             if(user.getRoleId() == 1){
                 Optional<Admin> admin = adminService.findAdminByUserId(user.getId());
+                if(!admin.isPresent()) {
+                    throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+                }
                 response.setAdmin(admin.get());
             }
 

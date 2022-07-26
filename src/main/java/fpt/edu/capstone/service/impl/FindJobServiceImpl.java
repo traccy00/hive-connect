@@ -125,7 +125,7 @@ public class FindJobServiceImpl implements FindJobService {
         }
         Page<AppliedJob> appliedJobs = appliedJobService.getCvAppliedJob(pageable, jobId, true);
         if (appliedJobs.isEmpty()) {
-            throw new HiveConnectException("No CV applies");
+            throw new HiveConnectException("Không có CV nào ứng tuyển.");
         }
         CvAppliedJobResponse responseObj = new CvAppliedJobResponse();
         responseObj.setJobId(jobId);
@@ -136,7 +136,9 @@ public class FindJobServiceImpl implements FindJobService {
                 responseObj.setCandidateName(candidate.getFullName());
 
                 Image image = imageService.getAvatarCandidate(candidate.getId());
-                responseObj.setAvatar(image.getUrl());
+                if(image != null) {
+                    responseObj.setAvatar(image.getUrl());
+                }
                 if (appliedJob.isUploadCv()) {
                     //upload CV
                     responseObj.setCvUrl(appliedJob.getCvUploadUrl());
@@ -145,7 +147,7 @@ public class FindJobServiceImpl implements FindJobService {
                 if (cv == null) {
                     if (!appliedJob.isUploadCv()) {
                         //Profile không tồn tại mà cũng không upload CV
-                        throw new HiveConnectException("Please try to contact administrator");
+                        throw new HiveConnectException("Liên hệ admin");
                     }
                 }
                 List<WorkExperience> workExperiencesOfCv = workExperienceService.getListWorkExperienceByCvId(cv.getId());

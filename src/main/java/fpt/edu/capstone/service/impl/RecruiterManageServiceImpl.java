@@ -27,6 +27,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -87,7 +88,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
         CountTotalCreatedJobResponse countTotalCreatedJobResponse = jobService.countTotalCreatedJobOfRecruiter(recruiterId);
         long totalCreatedJob = 0;
-        if(countTotalCreatedJobResponse != null) {
+        if (countTotalCreatedJobResponse != null) {
             totalCreatedJob = countTotalCreatedJobResponse.getTotalCreatedJob();
         }
         response.setTotalCreatedJob(totalCreatedJob);
@@ -218,29 +219,37 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     public CompanyInformationResponse getCompanyInformation(long companyId, long recruiterId) {
         CompanyInformationResponse response = new CompanyInformationResponse();
         Optional<Company> companyOp = companyService.findById(companyId);
-        if (companyOp.isPresent()) {
-            Company tmp = companyOp.get();
-            response.setAddress(tmp.getAddress());
-            Image image = imageService.getImageCompany(companyId, true);
-            if (image != null) {
-                response.setAvatar(image.getUrl());
-            }
-            response.setDescription(tmp.getDescription());
-            response.setEmail(tmp.getEmail());
-            response.setFieldWork(tmp.getFieldWork());
-            response.setId(tmp.getId());
-            response.setName(tmp.getName());
-            response.setMapUrl(tmp.getMapUrl());
-            response.setPhone(tmp.getPhone());
-            response.setNumberEmployees(tmp.getNumberEmployees());
-            response.setWebsite(tmp.getWebsite());
-            response.setTaxCode(tmp.getTaxCode());
-            long creatorId = tmp.getCreatorId();
-            boolean isCreator = false;
-            if (recruiterId != 0 && creatorId == recruiterId) {
-                isCreator = true;
-            }
-            response.setCreator(isCreator);
+        if (!companyOp.isPresent()) {
+            throw new HiveConnectException("Thông tin công ty không tồn tại");
+        }
+        Company tmp = companyOp.get();
+        response.setAddress(tmp.getAddress());
+        Image image = imageService.getImageCompany(companyId, true);
+        if (image != null) {
+            response.setAvatar(image.getUrl());
+        }
+        response.setDescription(tmp.getDescription());
+        response.setEmail(tmp.getEmail());
+        response.setFieldWork(tmp.getFieldWork());
+        response.setId(tmp.getId());
+        response.setName(tmp.getName());
+        response.setMapUrl(tmp.getMapUrl());
+        response.setPhone(tmp.getPhone());
+        response.setNumberEmployees(tmp.getNumberEmployees());
+        response.setWebsite(tmp.getWebsite());
+        response.setTaxCode(tmp.getTaxCode());
+        long creatorId = tmp.getCreatorId();
+        boolean isCreator = false;
+        if (recruiterId != 0 && creatorId == recruiterId) {
+            isCreator = true;
+        }
+        response.setCreator(isCreator);
+        List<Image> companyImageList = imageService.getCompanyImageList(companyId, false, false);
+        List<String> companyImageUrls = companyImageList.stream().map(Image::getUrl).collect(Collectors.toList());
+        response.setCompanyImageUrlList(companyImageUrls);
+        List<Image> coverImage = imageService.getCompanyImageList(companyId, false, true);
+        if (coverImage != null && !coverImage.isEmpty()) {
+            response.setCoverImageUrl(coverImage.get(0).getUrl());
         }
         return response;
     }

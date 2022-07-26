@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,4 +30,6 @@ public class CompanyInformationResponse {
     private String taxCode;
     private String mapUrl;
     private boolean isCreator;
+    private List<String> companyImageUrlList;
+    private String coverImageUrl;
 }

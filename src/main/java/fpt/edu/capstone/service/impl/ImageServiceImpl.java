@@ -114,4 +114,9 @@ public class ImageServiceImpl implements ImageService {
             imageRepository.save(image);
         }
     }
+
+    @Override
+    public List<Image> getCompanyImageList(long companyId, boolean isAvatar, boolean isCoverImage) {
+        return imageRepository.getCompanyImageList(companyId, isAvatar, isCoverImage);
+    }
 }
