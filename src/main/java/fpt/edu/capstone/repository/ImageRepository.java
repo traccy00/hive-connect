@@ -31,4 +31,7 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     @Modifying
     @Query(value = "delete from image i where id in (:deleteImageIdList)", nativeQuery = true)
     void deleteImageById(List<Long> deleteImageIdList);
+
+    @Query(value = "select * from image i where i.company_id = ?1 and is_avatar = ?2 and is_cover = ?3", nativeQuery = true)
+    List<Image> getCompanyImageList(long companyId, boolean isAvatar, boolean isCoverImage);
 }

@@ -37,4 +37,6 @@ public interface ImageService {
     void deleteImageById(List<Long> deleteImageIdList);
 
     void saveImageCompany(boolean isAvatar, boolean isCoverImage, long companyId, List<String> uploadImageUrlList);
+
+    List<Image> getCompanyImageList(long companyId, boolean isAvatar, boolean isCoverImage);
 }
