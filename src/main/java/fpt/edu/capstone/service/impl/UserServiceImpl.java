@@ -154,4 +154,9 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return user;
     }
+
+    @Override
+    public void updatePhoneNumber(String phoneNumber, long userId) {
+        userRepository.updatePhoneNumber(phoneNumber, userId);
+    }
 }

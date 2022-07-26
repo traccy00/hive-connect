@@ -1,12 +1,10 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.CV.ViewCvResponse;
+import fpt.edu.capstone.dto.candidate.CVBaseInformationRequest;
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.entity.CVImported;
-import fpt.edu.capstone.entity.Candidate;
-import fpt.edu.capstone.entity.Follow;
-import fpt.edu.capstone.entity.ProfileViewer;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.service.impl.CVImportedService;
@@ -52,6 +50,8 @@ public class CandidateController {
 
     private final CandidateManageService candidateManageService;
 
+    private final UserService userService;
+
     @GetMapping("/all")
     public ResponseData getAllCandidate() {
         try{
@@ -67,7 +67,8 @@ public class CandidateController {
     public ResponseData getCandidateById(@RequestParam long userId) {
         try{
             Optional<Candidate> candidate = candidateService.findCandidateByUserId(userId);
-            if(candidate.isPresent()){
+            Optional<Users> user = Optional.ofNullable(userService.findById(userId));
+            if(candidate.isPresent() && user.isPresent()){
                 CandidateBaseInformationResponse response = new CandidateBaseInformationResponse();
                 Candidate candidateNN = candidate.get();
                 response.setAddress(candidateNN.getAddress());
@@ -82,6 +83,7 @@ public class CandidateController {
                 response.setNeedJob(candidateNN.isNeedJob());
                 response.setSocialLink(candidateNN.getSocialLink());
                 response.setUserId(candidateNN.getUserId());
+                response.setPhoneNumber(user.get().getPhone());
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Find candidate successful", response);
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find candidate by this user id", null);
@@ -125,6 +127,38 @@ public class CandidateController {
               return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update successful", updateCandidate);
             }
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", updateCandidate.getId());
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+
+    }
+    @PutMapping("/update-cv-base-information")
+    public ResponseData updateCvBaseInformation(@RequestBody CVBaseInformationRequest cvBaseInformationRequest) {
+        try {
+            Optional<Candidate> candidate = candidateService.findCandidateByUserId(cvBaseInformationRequest.getUserId());
+            Optional<Users> users = Optional.ofNullable(userService.getUserById(cvBaseInformationRequest.getUserId()));
+            if(candidate.isPresent() && users.isPresent()) {
+
+                candidateService.updateCVInformation(cvBaseInformationRequest);
+                userService.updatePhoneNumber(cvBaseInformationRequest.getPhoneNumber(), cvBaseInformationRequest.getUserId());
+
+                Users usersNew = userService.getUserById(cvBaseInformationRequest.getUserId());
+                Candidate candidateNewInfor = candidateService.findCandidateByUserId(cvBaseInformationRequest.getUserId()).get();
+
+                CVBaseInformationRequest response = new CVBaseInformationRequest();
+                response.setAddress(candidateNewInfor.getAddress());
+                response.setName(candidateNewInfor.getFullName());
+                response.setCountry(candidateNewInfor.getCountry());
+                response.setBirthDate(candidateNewInfor.getBirthDate());
+                response.setSocialLink(candidateNewInfor.getSocialLink());
+                response.setUserId(candidateNewInfor.getUserId());
+                response.setPhoneNumber(usersNew.getPhone());
+                response.setGender(candidateNewInfor.isGender());
+
+
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update successful", response);
+            }
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", cvBaseInformationRequest.getUserId());
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
