@@ -222,7 +222,7 @@ public class AuthenticationController {
         try {
             Optional<Users> optionalUsers = userService.findUserByUserName(username);
             if (!optionalUsers.isPresent()) {
-                throw new HiveConnectException("User: " + username + "not found");
+                throw new HiveConnectException("Tên người dùng: " + username + "không tìm thấy.");
             }
             String oldPassword = request.getOldPassword().trim();
             String newPassword = request.getNewPassword().trim();
@@ -230,10 +230,10 @@ public class AuthenticationController {
 
             Users user = optionalUsers.get();
             if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-                throw new HiveConnectException("Old password does not matches");
+                throw new HiveConnectException("Mật khẩu cũ không đúng.");
             }
             if (!StringUtils.equals(newPassword, confirmPassword)) {
-                throw new HiveConnectException("Confirm password does not matches");
+                throw new HiveConnectException("Xác nhận mật khẩu không đúng.");
             }
 
             user.setPassword(passwordEncoder.encode(newPassword));

@@ -45,10 +45,10 @@ public class AmazonS3ClientService {
         String fileName = UUID.randomUUID().toString().toUpperCase() + "." + fileType;
 
         logger.info("file-type request:" + fileType);
-        if (!VALID_FILE_TYPES.contains(multipartFile.getContentType())) {
-            logger.info("uploadAvatar - Wrong type");
-            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_WRONG_TYPE);
-        }
+//        if (!VALID_FILE_TYPES.contains(multipartFile.getContentType())) {
+//            logger.info("uploadAvatar - Wrong type");
+//            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_WRONG_TYPE);
+//        }
 
         logger.info("file-size request:" + multipartFile.getSize());
         if (multipartFile.getSize() > MAX_FILE_SIZE) {

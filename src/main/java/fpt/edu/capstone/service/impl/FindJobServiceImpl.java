@@ -55,14 +55,14 @@ public class FindJobServiceImpl implements FindJobService {
             //profile apply
             CV cv = cvService.getCVByCandidateId(request.getCandidateId());
             if (cv == null) {
-                throw new HiveConnectException("Create your profile to apply job!");
+                throw new HiveConnectException("Bạn chưa tạo hồ sơ");
             }
         }
         if (!jobService.existsById(request.getJobId())) {
             throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
         if (!candidateService.existsById(request.getCandidateId())) {
-            throw new HiveConnectException("Candidate doesn't exist.");
+            throw new HiveConnectException("Ứng viên không tồn tại");
         }
         //if exists candidate account, candidate has already applied the job
         AppliedJob appliedJob1 = appliedJobService.getAppliedJobBefore(request.getCandidateId(), request.getJobId());
@@ -75,7 +75,7 @@ public class FindJobServiceImpl implements FindJobService {
                     appliedJob1.setApplied(false);
                     //đã apply và được approved
                 } else if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
-                    throw new HiveConnectException("This CV has been approved");
+                    throw new HiveConnectException("CV này đã được chấp nhận.");
                     //đã từng apply và bị reject, có thể apply lại
                 } else if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT.getStatus())) {
                     Object AppliedJobRequest = request;

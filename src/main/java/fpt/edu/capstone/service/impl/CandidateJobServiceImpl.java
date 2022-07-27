@@ -282,7 +282,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
     public void approveJob(ApprovalJobRequest request) {
         AppliedJob appliedJob = appliedJobService.getAppliedJobPendingApproval(request.getJobId(), request.getCandidateId());
         if (appliedJob == null) {
-            throw new HiveConnectException("This CV does not exist");
+            throw new HiveConnectException("CV không tồn tại");
         }
         if (appliedJob.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus()) &&
                 request.getApprovalStatus().equals("Approved")) {
@@ -302,12 +302,12 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         //company information
         //company does not exist by user can post job -> exception
         if(String.valueOf(job.getCompanyId()) == null || job.getCompanyId() == 0) {
-            throw new HiveConnectException("Please try to contact administrator");
+            throw new HiveConnectException("Liên hệ admin");
         }
         Company company = companyService.getCompanyById(job.getCompanyId());
         //company does not exist by user can post job -> exception
         if (company == null) {
-            throw new HiveConnectException("Please try to contact administrator");
+            throw new HiveConnectException("Liên hệ admin");
         }
         detail.setCompanyName(company.getName());
         detail.setCompany(company);
