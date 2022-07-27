@@ -159,21 +159,26 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (request == null) {
             throw new HiveConnectException("Không có dữ liệu thay đổi, không thể cập nhật");
         }
-        if (request != null) {
-            recruiter.setFullName(request.getFullName());
-            recruiter.setGender(request.isGender());
-            recruiter.setPosition(request.getPosition());
-            recruiter.setLinkedinAccount(request.getLinkedinAccount());
-            recruiterRepository.save(recruiter);
-
-            Users user = userRepository.getUserById(recruiter.getUserId());
-            //recruiter tồn tại nhưng user không tồn tại (database lỗi)
-            if (user == null) {
-                throw new HiveConnectException("Liên hệ admin");
-            }
-            user.setPhone(request.getPhone());
-            userRepository.save(user);
+        if ((request.getFullName() == null || request.getFullName().trim().isEmpty())
+                || (request.getPhone() == null || request.getPhone().trim().isEmpty())
+                || (request.getPosition() == null || request.getPosition().trim().isEmpty())
+                || (request.getLinkedinAccount() == null || request.getLinkedinAccount().trim().isEmpty())) {
+            throw new HiveConnectException("Vui lòng nhập thông tin bắt buộc.");
         }
+        recruiter.setFullName(request.getFullName());
+        recruiter.setPosition(request.getPhone());
+        recruiter.setGender(request.isGender());
+        recruiter.setPosition(request.getPosition());
+        recruiter.setLinkedinAccount(request.getLinkedinAccount());
+        recruiterRepository.save(recruiter);
+
+        Users user = userRepository.getUserById(recruiter.getUserId());
+        //recruiter tồn tại nhưng user không tồn tại (database lỗi)
+        if (user == null) {
+            throw new HiveConnectException("Liên hệ admin");
+        }
+        user.setPhone(request.getPhone());
+        userRepository.save(user);
         RecruiterProfileResponse profileResponse = getRecruiterProfile(recruiter.getUserId());
         return profileResponse;
     }

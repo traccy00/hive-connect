@@ -21,12 +21,12 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles(profiles = { "db2-local", "ia-off"})
-@WebAppConfiguration
-@ContextConfiguration(locations = { "classpath:spring/*.xml" })
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ActiveProfiles(profiles = { "db2-local", "ia-off"})
+//@WebAppConfiguration
+//@ContextConfiguration(locations = { "classpath:spring/*.xml" })
 
-@Transactional
+//@Transactional
 public class AdminManageServiceImplTest {
 
     @InjectMocks

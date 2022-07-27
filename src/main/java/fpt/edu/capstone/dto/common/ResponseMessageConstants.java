@@ -21,13 +21,13 @@ public interface ResponseMessageConstants {
     //REGISTER
     String REGISTER_SUCCESS = "REGISTER_SUCCESS";
     String REGISTER_FAILED = "REGISTER_FAILED";
-    String CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
-    String CHANGE_PASSWORD_FAILED = "CHANGE_PASSWORD_FAILED";
-    String RESEND_EMAIL_SUCCESS = "RESEND_EMAIL_SUCCESS";
+    String CHANGE_PASSWORD_SUCCESS = "Thay đổi mật khẩu thành công";
+    String CHANGE_PASSWORD_FAILED = "Thay đổi mật khẩu thất bại";
+    String RESEND_EMAIL_SUCCESS = "Gửi lại xác thực không thành công";
     //USER
     String USER_DOES_NOT_EXIST = "Người dùng không tồn tại";
-    String USER_IS_INACTIVE = "USER_IS_INACTIVE";
-    String USER_IS_DELETED = "USER_IS_DELETED";
+    String USER_IS_INACTIVE = "Tài khoản người dùng không hoạt động";
+    String USER_IS_DELETED = "Người dùng đã bị xóa";
 
     // COMMON
     String UPDATE_FAILED = "MSG_UPDATE_FAILED";
@@ -36,19 +36,14 @@ public interface ResponseMessageConstants {
     String TOKEN_INVALID = "MSG_TOKEN_INVALID";
 
     //JOB
-    String CREATE_JOB_SUCCESS = "CREATE_JOB_SUCCESS";
-    String CREATE_JOB_FAILED = "CREATE_JOB_FAILED";
-    String UPDATE_JOB_SUCCESS = "UPDATE_JOB_SUCCESS";
-    String UPDATE_JOB_FAILED = "UPDATE_JOB_FAILED";
-
-    //CATEGORY
-    String CREATE_CATEGORY_SUCCESS = "CREATE_CATEGORY_SUCCESS";
-    String UPDATE_CATEGORY_SUCCESS = "UPDATE_CATEGORY_SUCCESS";
-    String DELETE_CATEGORY_SUCCESS = "DELETE_CATEGORY_SUCCESS";
+    String CREATE_JOB_SUCCESS = "Tạo tin tuyển dụng thành công.";
+    String CREATE_JOB_FAILED = "Tạo tin tuyển dụng thất bại.";
+    String UPDATE_JOB_SUCCESS = "Cập nhật tin tuyển dụng thành công.";
+    String UPDATE_JOB_FAILED = "Cập nhật tin tuyển dụng thất bại.";
 
     //PAYMENT
-    String PAYMENT_SUCCESS = "PAYMENT_SUCCESS";
-    String PAYMENT_FAILED = "PAYMENT_FAILED";
+    String PAYMENT_SUCCESS = "Thanh toán thành công";
+    String PAYMENT_FAILED = "Thanh toán thất bại";
 
     //JOB
     String JOB_DOES_NOT_EXIST = "Tin tuyển dụng không tồn tại";

@@ -143,7 +143,7 @@ public class JobController {
     public ResponseData deleteJob(@RequestParam(value = "id") long jobId) {
         try {
             jobService.deleteJob(jobId);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_CATEGORY_SUCCESS);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
@@ -305,8 +305,7 @@ public class JobController {
     public ResponseData approveJob(@RequestBody ApprovalJobRequest approvalJobRequest) {
         try {
             candidateJobService.approveJob(approvalJobRequest);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
-                    new ObjectMapper().writeValueAsString(approvalJobRequest));
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
