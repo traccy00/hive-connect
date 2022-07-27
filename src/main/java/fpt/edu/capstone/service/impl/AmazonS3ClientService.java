@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import fpt.edu.capstone.dto.UploadFileRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.utils.Enums;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,24 +21,25 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AmazonS3ClientService {
 
     private static final Logger logger = LoggerFactory.getLogger(AmazonS3ClientService.class);
 
-    private static final List<String> VALID_FILE_TYPES = new ArrayList<String>(3);
-
-    static {
-        VALID_FILE_TYPES.add("image/jpg");
-        VALID_FILE_TYPES.add("image/jpeg");
-        VALID_FILE_TYPES.add("image/png");
-        VALID_FILE_TYPES.add("image/bmp");
-    }
-
+    private  static final String[] IMAGE_TYPES = new String[]{"image/jpg","image/jpeg","image/png","image/bmp"};
+    private static final String[] CV_TYPES = new String[]{
+            "application/pdf",
+            "application/msword",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    };
+    private static final Map<Enums.FileUploadType,List<String>> TYPE_VALIDATORS = new HashMap<Enums.FileUploadType, List<String>>() {{
+        put(Enums.FileUploadType.Image, Arrays.asList(IMAGE_TYPES));
+        put(Enums.FileUploadType.CV, Arrays.asList(CV_TYPES));
+    }};
     private int MAX_FILE_SIZE = 5242880;
 
     public String uploadFileAmazonS3(UploadFileRequest request, MultipartFile multipartFile) throws Exception {
@@ -45,10 +47,10 @@ public class AmazonS3ClientService {
         String fileName = UUID.randomUUID().toString().toUpperCase() + "." + fileType;
 
         logger.info("file-type request:" + fileType);
-//        if (!VALID_FILE_TYPES.contains(multipartFile.getContentType())) {
-//            logger.info("uploadAvatar - Wrong type");
-//            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_WRONG_TYPE);
-//        }
+        if (!TYPE_VALIDATORS.get(Enums.FileUploadType.parse(request.getTypeUpload())).contains(multipartFile.getContentType())) {
+            logger.info("uploadAvatar - Wrong type");
+            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_WRONG_TYPE);
+        }
 
         logger.info("file-size request:" + multipartFile.getSize());
         if (multipartFile.getSize() > MAX_FILE_SIZE) {

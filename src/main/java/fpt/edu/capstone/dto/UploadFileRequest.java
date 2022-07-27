@@ -1,5 +1,6 @@
 package fpt.edu.capstone.dto;
 
+import fpt.edu.capstone.utils.Enums;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,4 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadFileRequest {
     private String type;
     private String uploadFileName;
+    private MultipartFile file;
+    private String typeUpload;
 }
