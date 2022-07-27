@@ -22,8 +22,12 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query(value = "select * from Payment p order by created_at desc    ", nativeQuery = true)
     List<Payment> getListPaymentOrderByDate();
 
-    List<Payment> findByRecruiterId(long recId);
+    List<Payment> findByRecruiterIdAndExpiredStatusFalse(long recId);
 
     @Query(value = "select * from payment p where p.created_at >= :startDate and p.created_at < :endDate", nativeQuery = true)
     Page<Payment> getRevenueInMonth(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate, Pageable pageable);
+
+    Payment findByRecruiterIdAndBannerId(long recId, long bannerId);
+
+    Payment findByRecruiterIdAndDetailPackageId(long recId, long detailPackageId);
 }

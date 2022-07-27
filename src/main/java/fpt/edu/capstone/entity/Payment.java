@@ -57,4 +57,7 @@ public class Payment extends BaseEntity {
     @Column(name = "expired_date")
     private LocalDateTime expiredDate; // ngày hết hạn gói package đã thuê
 
+    @Column(name = "expired_status")
+    private boolean expiredStatus;
+
 }

@@ -119,16 +119,11 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<Payment> findRecruiterPurchasedPackage(long recruiterId) {
-        List<Payment> payment = paymentRepository.findByRecruiterId(recruiterId);
+        List<Payment> payment = paymentRepository.findByRecruiterIdAndExpiredStatusFalse(recruiterId);
         if (payment == null) {
             throw new HiveConnectException("Nhà tuyển dụng chưa mua gói dịch vụ nào");
         }
         //If exist : check expireDate package
-//        LocalDateTime expiredDate = payment.getExpiredDate();
-//        LocalDateTime now = LocalDateTime.now();
-//        if(expiredDate.isAfter(now)){
-//            throw new HiveConnectException("Package has expired date");
-//        }
         for (Payment p : payment) {
             LocalDateTime now = LocalDateTime.now();
             int a = now.compareTo(p.getExpiredDate());
@@ -177,18 +172,35 @@ public class PaymentServiceImpl implements PaymentService {
 //            if(key.equals("orderType")) paymentDTO.setOrderType(value);
             if(key.equals("bankCode")) paymentDTO.setBankCode(value);
         });
-
+        LocalDateTime now = LocalDateTime.now();
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
         Recruiter recruiter = recruiterService.getRecruiterById(payment.getRecruiterId());
         if (recruiter == null){
             throw new HiveConnectException("Nhà tuyển dụng có id = "+ recruiter.getId()+ "không tồn tại");
+        }
+        if(payment.getBannerId() != 0){
+            Payment checkBanner = paymentRepository.findByRecruiterIdAndBannerId(payment.getRecruiterId(), payment.getBannerId());
+            if(checkBanner != null){
+                //Tiếp tục check đến expired date của gói đó
+                int a = now.compareTo(checkBanner.getExpiredDate());
+                if(a<0){
+                    throw new HiveConnectException("Gói dịch vụ đang trong thời hạn sử dụng. Hãy mua lại sau khi hết hạn.");
+                }
+            }
+
+        }
+        if (payment.getDetailPackageId() != 0){
+            Payment checkDetailPackage = paymentRepository.findByRecruiterIdAndDetailPackageId(payment.getRecruiterId(), payment.getDetailPackageId());
+            int b = now.compareTo(checkDetailPackage.getExpiredDate());
+            if(b < 0){
+                throw new HiveConnectException("Gói dịch vụ đang trong thời hạn sử dụng. Hãy mua lại sau khi hết hạn.");
+            }
         }
         payment.setCommand(PaymentConfig.COMMAND);
         payment.setCurrCode(PaymentConfig.CURR_CODE);
         payment.setLocal(PaymentConfig.LOCATE_DEFAULT);
         String randomTransactionCode = PaymentConfig.getRandomNumber(8);
         payment.setTransactionCode(randomTransactionCode);
-        LocalDateTime now = LocalDateTime.now();
         payment.setExpiredDate(now.plusDays(14));
         payment.create();
 

@@ -32,7 +32,4 @@ public class PaymentActive extends BaseEntity {
 
     @Column(name = "banner_id")
     private long bannerId;
-
-    @Column(name = "expired_date")
-    private LocalDateTime expiredDate;
 }

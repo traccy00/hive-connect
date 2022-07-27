@@ -12,5 +12,4 @@ public class PaymentActiveRequest {
     private long jobId;
     private long detailPackageId;
     private long bannerId;
-    private LocalDateTime expiredDate;
 }

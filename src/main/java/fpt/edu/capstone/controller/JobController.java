@@ -6,6 +6,7 @@ import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
 import fpt.edu.capstone.entity.Admin;
 import fpt.edu.capstone.entity.Job;
+import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.entity.PaymentActive;
 import fpt.edu.capstone.entity.Report;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -46,6 +47,8 @@ public class JobController {
     private final CandidateManageService candidateManageService;
 
     private final AdminManageService adminManageService;
+
+    private final PaymentService paymentService;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -97,16 +100,18 @@ public class JobController {
         }
     }
 
-    @PutMapping("/package-active")
+    /**
+     * Truyền lên cho mình id job và tên gói quảng cáo muốn gắn vào job đó. khi đó admin sẽ xử lí,
+     * cho job đó những chức năng tương ứng với gói đó
+     */
+    @PostMapping("/package-active")
     @Operation(summary = "recruiter gắn job với gói dịch vụ mà recruiter đã mua trước đó")
     public ResponseData packageActive(@RequestBody PaymentActiveRequest request) {
         try {
             PaymentActive active = modelMapper.map(request, PaymentActive.class);
-            //cần lấy ra dc expireDate
-//            Payment payment = paymentService.
-//            active.setExpiredDate();
+            active.create();
             paymentActiveService.save(active);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_JOB_SUCCESS);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
