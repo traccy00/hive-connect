@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.entity.Role;
@@ -32,7 +33,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users getUserById(long id) {
-        return userRepository.findById(id).get();
+        Optional<Users> optionalUser = userRepository.findById(id);
+        if(!optionalUser.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        }
+        return optionalUser.get();
     }
 
     @Override

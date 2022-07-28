@@ -14,4 +14,6 @@ public class UserInforResponse {
     private Candidate candidate;
     private Recruiter recruiter;
     private Admin admin;
+    private boolean joinedCompany;
+    private boolean approvedBusinessLicense;
 }

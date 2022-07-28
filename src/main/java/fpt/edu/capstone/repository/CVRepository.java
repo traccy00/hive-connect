@@ -74,14 +74,14 @@ public interface CVRepository extends JpaRepository<CV, Long> {
                                              @Param("techStack") String techStack);
 
     @Query(value = "with t1 as ( " +
-            "select c.id as cv_id, age(end_date, start_date) as experience_year from cv c " +
+            "select c.id cv_id, age(end_date, start_date) experience_year from cv c " +
             "join candidate ca on c.candidate_id = ca.id " +
             "left join work_experience we on c.id = we.cv_id " +
             "left join major_level ml on c.id = ml.cv_id " +
             "where (ca.address like concat('%',:candidateAddress,'%') or :candidateAddress is null or :candidateAddress = '') " +
             "and ml.major_id in (select m.id from major m where m.major_name like concat('%',:techStack,'%'))" +
             ") " +
-            "select t1.cv_id as cvId, sum(experience_year) as sumExperienceYear from t1  " +
+            "select t1.cv_id cvId, sum(experience_year) sumExperienceYear from t1  " +
             "group by cv_id " +
             "having ((extract(year from sum(experience_year))::numeric(9,2)) < :experienceYearSearch1 and :experienceOption = 1) " +
             "or ((extract(year from sum(experience_year))::numeric(9,2)) >= :experienceYearSearch1 " +
@@ -89,6 +89,20 @@ public interface CVRepository extends JpaRepository<CV, Long> {
             "or ((extract(year from sum(experience_year))::numeric(9,2)) >= :experienceYearSearch2 and :experienceOption = 3) " +
             "or :experienceOption = 0",                                                                                                             //search all experience year
             nativeQuery = true)
+//    @Query(value = "  select t1.cv_id as cvId, sum(experience_year) as sumExperienceYear from " +
+//            "  (select c.id as cv_id, age(end_date, start_date) as experience_year from cv c  \n" +
+//            "        join candidate ca on c.candidate_id = ca.id  \n" +
+//            "        left join work_experience we on c.id = we.cv_id  \n" +
+//            "        left join major_level ml on c.id = ml.cv_id  \n" +
+//            "        where (ca.address like concat('%',:candidateAddress,'%') or :candidateAddress is null or :candidateAddress = '')  \n" +
+//            "        and ml.major_id in (select m.id from major m where m.major_name like concat('%',:techStack,'%'))\n" +
+//            "  ) t1  " +
+//            "        group by cv_id  " +
+//            "        having ((extract(year from sum(experience_year))::numeric(9,2)) < :experienceYearSearch1 and :experienceOption = 1)  \n" +
+//            "        or ((extract(year from sum(experience_year))::numeric(9,2)) >= :experienceYearSearch1  \n" +
+//            "        and (extract(year from sum(experience_year))::numeric(9,2)) < :experienceYearSearch2 and :experienceOption = 2)  \n" +
+//            "        or ((extract(year from sum(experience_year))::numeric(9,2)) >= :experienceYearSearch2 and :experienceOption = 3)  \n" +
+//            "        or :experienceOption = 0")
     Page<IFindCVResponse> findCvTest(Pageable pageable, @Param("experienceOption") int experienceOption,
                                              @Param("experienceYearSearch1") int experienceYearSearch1,
                                              @Param("experienceYearSearch2") int experienceYearSearch2,

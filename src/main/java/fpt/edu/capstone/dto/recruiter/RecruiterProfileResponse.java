@@ -23,4 +23,6 @@ public class RecruiterProfileResponse {
     private boolean gender;
     private String position;
     private String linkedinAccount;
+    private boolean joinedCompany;
+    private boolean approvedBusinessLicense;
 }
