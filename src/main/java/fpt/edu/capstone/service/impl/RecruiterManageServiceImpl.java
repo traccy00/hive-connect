@@ -220,6 +220,17 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         profileResponse.setGender(recruiter.isGender());
         profileResponse.setPosition(recruiter.getPosition());
         profileResponse.setLinkedinAccount(recruiter.getLinkedinAccount());
+        if(recruiter.getCompanyId() == 0) {
+            profileResponse.setJoinedCompany(false);
+        } else if (recruiter.getCompanyId() > 0) {
+            profileResponse.setJoinedCompany(true);
+        }
+        if (recruiter.getBusinessLicenseApprovalStatus() != null
+                && recruiter.getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+            profileResponse.setApprovedBusinessLicense(true);
+        } else {
+            profileResponse.setApprovedBusinessLicense(false);
+        }
         return profileResponse;
     }
 
@@ -274,25 +285,25 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                 candidateAddress, techStack);
         for(IFindCVResponse iFindCVResponse : cvList) {
             FindCVResponse response = new FindCVResponse();
-            Optional<CV> cv = cvService.findCvById(iFindCVResponse.getId());
+            Optional<CV> cv = cvService.findCvById(iFindCVResponse.getCvId());
             Candidate candidate = candidateService.getCandidateById(cv.get().getCandidateId());
             response.setCandidateName(candidate.getFullName());
 
             List<WorkExperience> workExperiences = workExperienceService.
-                    getListWorkExperienceByCvId(iFindCVResponse.getId());
+                    getListWorkExperienceByCvId(iFindCVResponse.getCvId());
             List<String> workPositionExperiences = new ArrayList<>();
             for(WorkExperience workExperience : workExperiences) {
                 workPositionExperiences.add(workExperience.getPosition() + " - " + workExperience.getCompanyName());
             }
             response.setWorkPositionExperiences(workPositionExperiences);
 
-            List<Education> educations = educationService.getListEducationByCvId(iFindCVResponse.getId());
+            List<Education> educations = educationService.getListEducationByCvId(iFindCVResponse.getCvId());
             List<String> schools = educations.stream().map(Education::getSchool).collect(Collectors.toList());
             response.setSchools(schools);
 
             response.setCareerGoal(candidate.getIntroduction());
             response.setCandidateAddress(candidate.getAddress());
-//            response.setSumExperienceYear(iFindCVResponse.getB());
+            response.setSumExperienceYear(iFindCVResponse.getSumExperienceYear());
             responseList.add(response);
         }
 
@@ -316,29 +327,29 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
-        Page<IFindCVResponse> cvList = cvService.findCVForRecruiter(pageable, //experienceOption,
+        Page<IFindCVResponse> cvList = cvService.findCVTest(pageable, experienceOption,
                 candidateAddress, techStack);
         for(IFindCVResponse iFindCVResponse : cvList) {
             FindCVResponse response = new FindCVResponse();
-            Optional<CV> cv = cvService.findCvById(iFindCVResponse.getId());
+            Optional<CV> cv = cvService.findCvById(iFindCVResponse.getCvId());
             Candidate candidate = candidateService.getCandidateById(cv.get().getCandidateId());
             response.setCandidateName(candidate.getFullName());
 
             List<WorkExperience> workExperiences = workExperienceService.
-                    getListWorkExperienceByCvId(iFindCVResponse.getId());
+                    getListWorkExperienceByCvId(iFindCVResponse.getCvId());
             List<String> workPositionExperiences = new ArrayList<>();
             for(WorkExperience workExperience : workExperiences) {
                 workPositionExperiences.add(workExperience.getPosition() + " - " + workExperience.getCompanyName());
             }
             response.setWorkPositionExperiences(workPositionExperiences);
 
-            List<Education> educations = educationService.getListEducationByCvId(iFindCVResponse.getId());
+            List<Education> educations = educationService.getListEducationByCvId(iFindCVResponse.getCvId());
             List<String> schools = educations.stream().map(Education::getSchool).collect(Collectors.toList());
             response.setSchools(schools);
 
             response.setCareerGoal(candidate.getIntroduction());
             response.setCandidateAddress(candidate.getAddress());
-//            response.setSumExperienceYear(iFindCVResponse.getB());
+            response.setSumExperienceYear(iFindCVResponse.getSumExperienceYear());
             responseList.add(response);
         }
 

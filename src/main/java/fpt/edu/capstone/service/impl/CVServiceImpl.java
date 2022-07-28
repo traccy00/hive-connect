@@ -70,7 +70,7 @@ public class CVServiceImpl implements CVService {
         int experienceYearSearch1 = 1;
         //3 năm kinh nghiệm
         int experienceYearSearch2 = 3;
-        return cvRepository.findCvForRecruiter(pageable, experienceOption, experienceYearSearch1, experienceYearSearch2,
+        return cvRepository.findCvTest(pageable, experienceOption, experienceYearSearch1, experienceYearSearch2,
                 candidateAddress, techStack);
     }
 

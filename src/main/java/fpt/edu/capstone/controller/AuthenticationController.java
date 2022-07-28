@@ -83,23 +83,34 @@ public class AuthenticationController {
             UserInforResponse response = new UserInforResponse();
             response.setUser(user);
 
-            if(user.getRoleId() == 3){
+            if (user.getRoleId() == 3) {
                 Optional<Candidate> candidate = candidateService.findCandidateByUserId(user.getId());
-                if(!candidate.isPresent()) {
+                if (!candidate.isPresent()) {
                     throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
                 }
                 response.setCandidate(candidate.get());
             }
-            if(user.getRoleId() == 2){
+            if (user.getRoleId() == 2) {
                 Optional<Recruiter> recruiter = recruiterService.findRecruiterByUserId(user.getId());
-                if(!recruiter.isPresent()) {
+                if (!recruiter.isPresent()) {
                     throw new HiveConnectException("Người dùng không tồn tại");
+                }
+                if (recruiter.get().getCompanyId() == 0) {
+                    response.setJoinedCompany(false);
+                } else if (recruiter.get().getCompanyId() > 0) {
+                    response.setJoinedCompany(true);
+                }
+                if (recruiter.get().getBusinessLicenseApprovalStatus() != null
+                        && recruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+                    response.setApprovedBusinessLicense(true);
+                } else {
+                    response.setApprovedBusinessLicense(false);
                 }
                 response.setRecruiter(recruiter.get());
             }
-            if(user.getRoleId() == 1){
+            if (user.getRoleId() == 1) {
                 Optional<Admin> admin = adminService.findAdminByUserId(user.getId());
-                if(!admin.isPresent()) {
+                if (!admin.isPresent()) {
                     throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
                 }
                 response.setAdmin(admin.get());
@@ -139,13 +150,13 @@ public class AuthenticationController {
             }
             userService.registerUser(request);
             Users user = userService.getByUserName(username);
-            if(user.getRoleId() == 3){
+            if (user.getRoleId() == 3) {
                 candidateService.insertCandidate(user.getId());
             }
-            if(user.getRoleId() == 2){
+            if (user.getRoleId() == 2) {
                 recruiterService.insertRecruiter(user.getId());
             }
-            if(user.getRoleId() == 1){
+            if (user.getRoleId() == 1) {
                 adminService.insertAdmin(user.getId());
             }
             final UserDetails userDetails = securityUserService.loadUserByUsername(username);

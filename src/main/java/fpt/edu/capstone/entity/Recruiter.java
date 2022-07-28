@@ -1,7 +1,9 @@
 package fpt.edu.capstone.entity;
 
 import fpt.edu.capstone.utils.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 @Table(name = "recruiter")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Recruiter extends BaseEntity {
 
     @Id
