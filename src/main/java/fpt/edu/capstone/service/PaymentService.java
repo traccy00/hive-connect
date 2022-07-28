@@ -1,9 +1,8 @@
 package fpt.edu.capstone.service;
 
-import fpt.edu.capstone.dto.vnpay.PaymentDTO;
-import fpt.edu.capstone.dto.vnpay.PaymentResponseDTO;
+import fpt.edu.capstone.dto.payment.PaymentDTO;
+import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
 import fpt.edu.capstone.entity.Payment;
-import org.springframework.security.core.parameters.P;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 
 import java.io.UnsupportedEncodingException;
@@ -23,4 +22,12 @@ public interface PaymentService {
     ResponseDataPagination getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize);
 
     void savePayment(String vnpResponseCode, String vnpOrderInfo);
+
+    Payment findById(long id);
+
+    void updatePayment(Payment payment);
+
+    List<Payment> findAll();
+
+    void save(Payment payment);
 }

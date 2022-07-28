@@ -1,21 +1,20 @@
 package fpt.edu.capstone.controller;
 
+import com.twilio.twiml.voice.Pay;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.vnpay.PaymentDTO;
-import fpt.edu.capstone.dto.vnpay.PaymentResponseDTO;
-import fpt.edu.capstone.entity.Job;
+import fpt.edu.capstone.dto.payment.JobActivePaymentDTO;
+import fpt.edu.capstone.dto.payment.PaymentDTO;
+import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
 import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.JobService;
 import fpt.edu.capstone.service.PaymentService;
-import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
-import org.apache.http.protocol.ResponseDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +52,31 @@ public class PaymentController {
             paymentService.savePayment(vnpResponseCode, vnpOrderInfo);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS);
         } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @PutMapping("/change-payment-active")
+    @Operation(summary = "thay đổi job được gán vào gói dịch vụ còn hạn")
+    public ResponseData changeJobActivePayment(@RequestBody JobActivePaymentDTO request){
+        try {
+            //Check expired date
+            Payment payment = paymentService.findById(request.getId());
+            if(payment == null){
+                throw new HiveConnectException("Không tồn tại thanh toán nào cho dịch vụ này.");
+            }
+            LocalDateTime now = LocalDateTime.now();
+            int a = now.compareTo(payment.getExpiredDate());
+            if(a>=0){
+                throw new HiveConnectException("Gói dịch vụ đã hết hạn, Không thể gắn công việc vào gói.");
+            }
+            payment.setJobId(request.getJobId());
+            payment.update();
+            paymentService.updatePayment(payment);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.CHANGE_JOB_PAYMENT_ACTIVE_SUCCESS);
+        }catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

@@ -1,11 +1,9 @@
-package fpt.edu.capstone.dto.vnpay;
+package fpt.edu.capstone.dto.payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -15,6 +13,9 @@ public class PaymentDTO {
     private long recruiterId;
     private long detailPackageId;
     private long bannerId;
+    private long jobId;
     private int amount;
+    private String orderType;
+    private String description;
     private String bankCode;
 }

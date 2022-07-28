@@ -1,13 +1,9 @@
 package fpt.edu.capstone.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fpt.edu.capstone.dto.active_package.PaymentActiveRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
-import fpt.edu.capstone.entity.Admin;
 import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.Payment;
-import fpt.edu.capstone.entity.PaymentActive;
 import fpt.edu.capstone.entity.Report;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
@@ -41,8 +37,6 @@ public class JobController {
     private final RecruiterJobService recruiterJobService;
 
     private final ModelMapper modelMapper;
-
-    private final PaymentActiveService paymentActiveService;
 
     private final CandidateManageService candidateManageService;
 
@@ -99,26 +93,6 @@ public class JobController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
-
-    /**
-     * Truyền lên cho mình id job và tên gói quảng cáo muốn gắn vào job đó. khi đó admin sẽ xử lí,
-     * cho job đó những chức năng tương ứng với gói đó
-     */
-    @PostMapping("/package-active")
-    @Operation(summary = "recruiter gắn job với gói dịch vụ mà recruiter đã mua trước đó")
-    public ResponseData packageActive(@RequestBody PaymentActiveRequest request) {
-        try {
-            PaymentActive active = modelMapper.map(request, PaymentActive.class);
-            active.create();
-            paymentActiveService.save(active);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
-        } catch (Exception e) {
-            String msg = LogUtils.printLogStackTrace(e);
-            logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
-        }
-    }
-
 
     @GetMapping("/job-detail/{id}")
     public ResponseData getJobDetail(@PathVariable("id") long jobId, @RequestParam("candidateId") long candidateId) {

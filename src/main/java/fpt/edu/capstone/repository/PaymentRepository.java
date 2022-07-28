@@ -15,7 +15,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             "and p.detailPackageId =:rentalPackageId or 0 =:rentalPackageId " +
             "and p.bannerId =:bannerId or 0=:bannerId " +
             "and (lower(p.transactionCode) like lower(concat('%', :code ,'%')) or :code is null or :code ='')" +
-            "and  (lower(p.orderType) like lower(concat('%', :type ,'%')) or :type is null or :type ='')")
+            "and  (lower(p.orderType) like lower(concat('%', :type ,'%')) or :type is null or :type ='') " +
+            "and p.expiredStatus = true")
     List<Payment> getListPaymentFilter(@Param("recruiterId") long recruiterId,@Param("rentalPackageId") long rentalPackageId,
                                        @Param("bannerId") long bannerId,@Param("code") String transactionCode,@Param("type") String orderType);
 

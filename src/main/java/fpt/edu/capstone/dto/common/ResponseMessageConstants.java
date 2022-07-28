@@ -44,7 +44,7 @@ public interface ResponseMessageConstants {
     //PAYMENT
     String PAYMENT_SUCCESS = "Thanh toán thành công";
     String PAYMENT_FAILED = "Thanh toán thất bại";
-
+    String CHANGE_JOB_PAYMENT_ACTIVE_SUCCESS = "Thay đổi kích hoạt công việc thành công";
     //JOB
     String JOB_DOES_NOT_EXIST = "Tin tuyển dụng không tồn tại";
 

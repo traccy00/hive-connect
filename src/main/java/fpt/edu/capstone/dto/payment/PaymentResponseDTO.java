@@ -1,4 +1,4 @@
-package fpt.edu.capstone.dto.vnpay;
+package fpt.edu.capstone.dto.payment;
 
 import lombok.Getter;
 import lombok.Setter;
