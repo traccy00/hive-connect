@@ -1,8 +1,6 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
-import fpt.edu.capstone.dto.CV.CVResponse;
-import fpt.edu.capstone.dto.CV.FindCVResponse;
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
@@ -12,7 +10,6 @@ import fpt.edu.capstone.entity.RequestJoinCompany;
 import fpt.edu.capstone.service.RecruiterManageService;
 import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.service.RequestJoinCompanyService;
-import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
@@ -172,14 +169,34 @@ public class RecruiterController {
     @GetMapping("/find-cv")
     public ResponseData findCv(@RequestParam(defaultValue = "0") Integer pageNo,
                                @RequestParam(defaultValue = "10") Integer pageSize,
-                               @RequestParam String candidateName,
-                               @RequestParam String cvName,
-                               @RequestParam String candidateAddress) {
+                               //@RequestParam(defaultValue = "0") int experienceYearOption,
+                               @RequestParam(required = false) String candidateAddress,
+                               @RequestParam(required = false) String techStacks) {
         try {
-//            List<FindCVResponse> responseList =
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
-        } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            ResponseDataPagination pagination = recruiterManageService.findCV(pageNo, pageSize, //experienceYearOption,
+                    candidateAddress, techStacks);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @GetMapping("/find-cv-test")
+    public ResponseData findCvTest(@RequestParam(defaultValue = "0") Integer pageNo,
+                               @RequestParam(defaultValue = "10") Integer pageSize,
+                               @RequestParam(defaultValue = "0") int experienceYearOption,
+                               @RequestParam(required = false) String candidateAddress,
+                               @RequestParam(required = false) String techStacks) {
+        try {
+            ResponseDataPagination pagination = recruiterManageService.findCVTest(pageNo, pageSize, experienceYearOption,
+                    candidateAddress, techStacks);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 

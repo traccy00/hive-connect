@@ -44,8 +44,8 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Candidate getById(long id) {
-        return candidateRepository.getById(id);
+    public Candidate getCandidateById(long id) {
+        return candidateRepository.getCandidateById(id);
     }
 
     @Override

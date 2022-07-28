@@ -16,7 +16,7 @@ public interface EducationRepository extends JpaRepository<Education,Long> {
     Optional<Education> findById(Long aLong);
 
     @Query(value = "select * from Education e where e.cv_id = ?1", nativeQuery = true)
-    List<Education> getListEducationByCvId(Long cvId);
+    List<Education> getListEducationByCvId(long cvId);
 
     @Modifying
     @Transactional

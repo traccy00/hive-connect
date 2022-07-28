@@ -52,13 +52,13 @@ public class JobServiceImpl implements JobService {
         long recruiterId = request.getRecruiterId();
         long fieldId = request.getFieldId();
         if (!companyService.findById(companyId).isPresent()) {
-            throw new HiveConnectException("Company not found!");
+            throw new HiveConnectException("Công ty của nhà tuyển dụng không tồn tại.");
         }
         if (!recruiterService.existById(recruiterId)) {
-            throw new HiveConnectException("Recruiter not found!");
+            throw new HiveConnectException("Nhà tuyển dụng không tồn tại");
         }
         if (!fieldsService.existById(fieldId)) {
-            throw new HiveConnectException("Field not found!");
+            throw new HiveConnectException("Lĩnh vực kinh doanh không tồn tại.");
         }
         Object CreateJobRequest = request;
         Job job = modelMapper.map(CreateJobRequest, Job.class);

@@ -39,7 +39,7 @@ public class ProfileManageServiceImpl implements ProfileManageService {
     @Override
     public ResponseDataPagination getProfileViewer(Integer pageNo, Integer pageSize, long cvId, long candidateId) {
         List<ProfileViewer> responseList = new ArrayList<>();
-        Candidate candidate = candidateService.getById(candidateId);
+        Candidate candidate = candidateService.getCandidateById(candidateId);
         if (candidate == null) {
             throw new HiveConnectException("Ứng viên không tồn tại");
         }

@@ -55,4 +55,7 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
             "join roles r on u.role_id = r.id " +
             "where lower(u.username) like lower(concat('%',:username,'%')) and lower(u.email) like lower(concat('%',:email,'%'))", nativeQuery = true)
     Page<CandidateManageResponse> searchCandidateForAdmin(Pageable pageable, @Param("username") String username, @Param("email") String email);
+
+    @Query(value = "select * from candidate c where c.id = ?", nativeQuery = true)
+    Candidate getCandidateById(long id);
 }
