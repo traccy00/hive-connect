@@ -20,7 +20,7 @@ public interface CandidateService  {
 
     boolean existsById(long id);
 
-    Candidate getById(long id);
+    Candidate getCandidateById(long id);
 
     Optional<Candidate> findCandidateByUserId(long userId);
 

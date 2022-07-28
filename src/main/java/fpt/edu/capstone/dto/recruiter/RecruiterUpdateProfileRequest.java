@@ -11,4 +11,5 @@ public class RecruiterUpdateProfileRequest {
     private boolean gender;
     private String position;
     private String linkedinAccount;
+    private String avatarUrl;
 }

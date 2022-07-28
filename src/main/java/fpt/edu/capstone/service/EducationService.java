@@ -2,12 +2,11 @@ package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.entity.Education;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface EducationService {
-    List<Education> getListEducationByCvId(Long cvId);
+    List<Education> getListEducationByCvId(long cvId);
 
     Education insertEducation(Education newEducation);
 

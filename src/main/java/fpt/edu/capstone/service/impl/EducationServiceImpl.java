@@ -6,7 +6,6 @@ import fpt.edu.capstone.service.EducationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +16,7 @@ public class EducationServiceImpl implements EducationService {
     EducationRepository educationRepository;
 
     @Override
-    public List<Education> getListEducationByCvId(Long cvId) {
+    public List<Education> getListEducationByCvId(long cvId) {
         return educationRepository.getListEducationByCvId(cvId);
     }
 

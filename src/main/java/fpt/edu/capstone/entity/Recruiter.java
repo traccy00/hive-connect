@@ -65,4 +65,7 @@ public class Recruiter extends BaseEntity {
 
     @Column(name = "additional_license_approval_status")
     private String additionalLicenseApprovalStatus;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
 }

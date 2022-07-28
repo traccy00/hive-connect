@@ -131,7 +131,7 @@ public class FindJobServiceImpl implements FindJobService {
         responseObj.setJobId(jobId);
         if (appliedJobs.hasContent()) {
             for (AppliedJob appliedJob : appliedJobs) {
-                Candidate candidate = candidateService.getById(appliedJob.getCandidateId());
+                Candidate candidate = candidateService.getCandidateById(appliedJob.getCandidateId());
                 responseObj.setCandidateId(appliedJob.getCandidateId());
                 responseObj.setCandidateName(candidate.getFullName());
 
