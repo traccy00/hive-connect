@@ -2,6 +2,9 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.UploadFileRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.entity.Candidate;
+import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.service.CandidateService;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.AmazonS3ClientService;
@@ -11,6 +14,10 @@ import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
 import lombok.AllArgsConstructor;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +40,8 @@ public class FileController {
     private final ImageServiceImpl imageService;
 
     private final AmazonS3ClientService amazonS3ClientService;
+
+    private final CandidateService candidateService;
 
 //    @PostMapping("/import-file")
 //    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {
@@ -200,6 +209,46 @@ public class FileController {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @PostMapping("/import/profile/{id}")
+    public ResponseData importProfile(@RequestPart("file") MultipartFile file, @PathVariable("id") long userId){
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+            XSSFSheet worksheet = workbook.getSheetAt(0);
+            for (int i = 2 ; i < worksheet.getPhysicalNumberOfRows(); i ++){
+                Candidate candidate = candidateService.findCandidateByUserId(userId).get();
+                Users user = userService.getUserById(userId);
+
+                XSSFRow row  = worksheet.getRow(i);
+                DataFormatter formatter = new DataFormatter();
+                String phone = formatter.formatCellValue(row.getCell(1));
+                candidate.setFullName(row.getCell(0).getStringCellValue());
+                user.setPhone(phone);
+                if(row.getCell(2).getStringCellValue().equalsIgnoreCase("Nam")){
+                    candidate.setGender(true);
+                } else {
+                    candidate.setGender(false);
+                }
+                candidate.setBirthDate(null);
+                candidate.setCountry(row.getCell(4).getStringCellValue());
+                candidate.setAddress(row.getCell(5).getStringCellValue());
+                candidate.setSocialLink(row.getCell(6).getStringCellValue());
+                candidateService.save(candidate);
+            }
+            //NOTE : cập nhật thông tin cá nhân done, còn lại xử lý các phần thông tin thêm
+
+            //Chứng chỉ, giải thưởng
+
+            //Học vấn
+
+            //Ngôn ngữ
+
+            //Kỹ năng chuyên môn
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Tải lên mẫu hồ sơ thành công");
+        } catch (Exception e){
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Không thể tải mẫu hồ sơ");
         }
     }
 }

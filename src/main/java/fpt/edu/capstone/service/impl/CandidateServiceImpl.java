@@ -78,4 +78,9 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateRepository.searchCandidateForAdmin(pageable, username, email);
     }
 
+    @Override
+    public void save(Candidate candidate) {
+        candidateRepository.save(candidate);
+    }
+
 }

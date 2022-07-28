@@ -21,9 +21,9 @@ public class JobPaymentCheckExpired {
 
     private static final Logger logger = LoggerFactory.getLogger(JobPaymentCheckExpired.class);
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 50000)
     public void checkPaymentExpire(){
-        logger.info("-------------->START-CHECK_PAYMENTN_EXPIRE:" + new Date());
+        logger.info("-------------->START-CHECK_PAYMENT_EXPIRE:" + new Date());
         List <Payment> paymentList = paymentService.findAll();
         for (Payment payment: paymentList){
             if(LocalDateTimeUtils.checkExpireTime(payment.getExpiredDate())){
@@ -31,6 +31,6 @@ public class JobPaymentCheckExpired {
             }
             paymentService.save(payment);
         }
-        logger.info("-------------->END-CHECK_PAYMENTN_EXPIRE:" + new Date());
+        logger.info("-------------->END-CHECK_PAYMENT_EXPIRE:" + new Date());
     }
 }
