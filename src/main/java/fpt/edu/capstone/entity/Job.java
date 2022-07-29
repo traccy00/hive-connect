@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Where(clause = "is_deleted = 0")
 @Entity
 @Table(name = "job")
 public class Job extends BaseEntity {
@@ -88,4 +90,7 @@ public class Job extends BaseEntity {
 
     @Column(name = "vietnam_country_id")
     private long countryId;
+
+    @Column(name = "flag")
+    private String flag;
 }

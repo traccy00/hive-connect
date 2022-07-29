@@ -46,6 +46,8 @@ public class JobServiceImpl implements JobService {
 
     private final FieldsService fieldsService;
 
+    private final ImageService imageService;
+
     @Override
     public void createJob(CreateJobRequest request) {
         long companyId = request.getCompanyId();
@@ -63,6 +65,7 @@ public class JobServiceImpl implements JobService {
         Object CreateJobRequest = request;
         Job job = modelMapper.map(CreateJobRequest, Job.class);
         job.create();
+        job.setFlag(request.getFlag());
         jobRepository.save(job);
     }
 
@@ -103,12 +106,13 @@ public class JobServiceImpl implements JobService {
     public void updateJob(UpdateJobRequest request) {
         Job job = jobRepository.getById(request.getJobId());
         if (job == null) {
-            throw new HiveConnectException("Job does not exist");
+            throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
         Object UpdateJobRequest = request;
         job = modelMapper.map(UpdateJobRequest, Job.class);
         job.update();
-        jobRepository.saveAndFlush(job);
+        job.setFlag(request.getFlag());
+        jobRepository.save(job);
     }
 
     @Override
@@ -162,17 +166,20 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Page<Job> getNewestJobList(Pageable pageable) {
-        return jobRepository.getNewestJob(pageable, true, 0);
+        String flag = Enums.Flag.Posted.getStatus();
+        return jobRepository.getNewestJob(pageable, true, 0, flag);
     }
 
     @Override
     public Page<Job> getUrgentJobList(Pageable pageable) {
-        return jobRepository.getUrgentJob(pageable, true, 0);
+        String flag = Enums.Flag.Posted.getStatus();
+        return jobRepository.getUrgentJob(pageable, true, 0, flag);
     }
 
     @Override
     public Page<Job> getPopularJobList(Pageable pageable) {
-        return jobRepository.getPopularJob(pageable, true, 0);
+        String flag = Enums.Flag.Posted.getStatus();
+        return jobRepository.getPopularJob(pageable, true, 0, flag);
     }
 
     @Override
@@ -236,7 +243,8 @@ public class JobServiceImpl implements JobService {
     public ResponseDataPagination getJobByFieldId(Integer pageNo, Integer pageSize, long id) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<Job> listByCareer = jobRepository.getListJobByFieldId(pageable, id);
+        String flag = Enums.Flag.Posted.getStatus();
+        Page<Job> listByCareer = jobRepository.getListJobByFieldId(pageable, id, flag);
         List <DetailJobResponse> response = listByCareer.stream().
                 map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
         for (DetailJobResponse res: response) {
@@ -247,7 +255,10 @@ public class JobServiceImpl implements JobService {
             res.setCompanyName(company.getName());
             res.setFieldName(fields.getFieldName());
             res.setRecruiterName(recruiter.getFullName());
-//            res.setAvatar(company.getAvatar());
+            Image image = imageService.getImageCompany(company.getId(), true);
+            if(image != null) {
+                res.setAvatar(image.getUrl());
+            }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
