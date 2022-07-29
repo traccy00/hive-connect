@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProfileViewerService {
     Page<ProfileViewer> getProfileViewerOfCv(Pageable pageable, long cvId);
@@ -14,4 +15,10 @@ public interface ProfileViewerService {
     ProfileViewer getByCvIdAndViewerId(long cvId, long viewerId);
 
     public List<ProfileViewer> findAll(PageRequest pageRequest);
+
+    Optional<ProfileViewer> getByCvIdAndViewerIdOptional(long cvId, long viewerId);
+
+
+
+
 }

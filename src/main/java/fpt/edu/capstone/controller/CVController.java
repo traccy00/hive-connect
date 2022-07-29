@@ -1,6 +1,8 @@
 package fpt.edu.capstone.controller;
 
+import com.amazonaws.services.apigateway.model.Op;
 import com.sendgrid.helpers.mail.objects.Email;
+import fpt.edu.capstone.dto.CV.CVProfileResponse;
 import fpt.edu.capstone.dto.CV.CVResponse;
 import fpt.edu.capstone.dto.CV.UpdateCVSummaryRequest;
 import fpt.edu.capstone.entity.*;
@@ -10,6 +12,7 @@ import fpt.edu.capstone.utils.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -27,6 +30,9 @@ public class CVController {
 
     @Autowired
     private CVService cvService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private CertificateService certificateService;
@@ -51,6 +57,15 @@ public class CVController {
 
     @Autowired
     private MajorService majorService;
+
+    @Autowired
+    private RecruiterService recruiterService;
+
+    @Autowired
+    private CandidateService candidateService;
+
+    @Autowired
+    private ProfileViewerService profileViewerService;
 
     //Them phan add summary
 
@@ -416,6 +431,84 @@ public class CVController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Other skill is not exist", null);
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/get-cv-with-pay")
+    public ResponseData getCvWithPay(@RequestParam long recruiterId, @RequestParam long candidateId) {
+        try {
+            Optional<Recruiter> r = recruiterService.findById(recruiterId);
+            Optional<Candidate> c = candidateService.findById(candidateId);
+            if(!r.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Không tìm thấy người tuyển dụng này");
+            }
+            if(!c.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Không tìm thấy ứng viên này");
+            }
+
+            List<CV> cv = cvService.findCvByCandidateId(candidateId);
+            if(cv == null) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Ứng viên này không có CV");
+            }
+
+            Recruiter recruiter = r.get();
+
+            CVProfileResponse cvProfileResponse = new CVProfileResponse();
+            List<Certificate> certificates = certificateService.getListCertificateByCvId(cv.get(0).getId());
+            List<Education> educations = educationService.getListEducationByCvId(cv.get(0).getId());
+            List<Language> languages = languageService.getListLanguageByCvId(cv.get(0).getId());
+            List<MajorLevel> majorLevels = majorLevelService.getListMajorLevelByCvId(cv.get(0).getId());
+            List<OtherSkill> otherSkills = otherSkillService.getListOtherSkillByCvId(cv.get(0).getId());
+            List<WorkExperience> workExperiences = workExperienceService.getListWorkExperienceByCvId(cv.get(0).getId());
+            cvProfileResponse.setCandidateId(candidateId);
+            cvProfileResponse.setCertificates(certificates);
+            cvProfileResponse.setEducations(educations);
+            cvProfileResponse.setLanguages(languages);
+            cvProfileResponse.setSummary(cv.get(0).getSummary());
+            cvProfileResponse.setMajorLevels(majorLevels);
+            cvProfileResponse.setOtherSkills(otherSkills);
+            cvProfileResponse.setWorkExperiences(workExperiences);
+            Candidate candidate = c.get();
+            cvProfileResponse.setCandidateId(candidate.getId());
+            cvProfileResponse.setGender(candidate.isGender());
+            cvProfileResponse.setBirthDate(candidate.getBirthDate());
+            cvProfileResponse.setCountry(candidate.getCountry());
+            cvProfileResponse.setFullName(candidate.getFullName());
+            cvProfileResponse.setAddress(candidate.getAddress());
+            cvProfileResponse.setSocialLink(candidate.getSocialLink());
+            cvProfileResponse.setAvatarUrl(candidate.getAvatarUrl());
+            cvProfileResponse.setExperienceLevel(candidate.getExperienceLevel());
+            cvProfileResponse.setIntroduction(candidate.getIntroduction());
+
+            Optional<Users> u = userService.findByIdOp(candidate.getUserId());
+            Users users = u.get();
+            String phoneNumber = users.getPhone();;
+            String email = users.getEmail();
+            String message = "";
+
+            Optional<ProfileViewer> profileViewer = profileViewerService.getByCvIdAndViewerIdOptional(cv.get(0).getId (), recruiter.getId());
+            if(profileViewer.isPresent()) {
+                cvProfileResponse.setEmail(email);
+                cvProfileResponse.setPhoneNumber(phoneNumber);
+                message = "Đọc toàn bộ thông tin";
+            } else if (recruiter.getTotalCvView() > 0) {
+                cvProfileResponse.setEmail(email);
+                cvProfileResponse.setPhoneNumber(phoneNumber);
+                recruiterService.updateTotalCvView(recruiter.getTotalCvView()-1, recruiter.getId());
+                message =  "Đọc toàn bộ thông tin";
+            } else if (recruiter.getTotalCvView() == 0 ) {
+                cvProfileResponse.setEmail("*****@gmail.com");
+                cvProfileResponse.setPhoneNumber("**********");
+                message = "Bạn đã hết lượt xem thông tin liên hệ của ứng viên CV";
+            }else {
+                cvProfileResponse.setEmail("*****@gmail.com");
+                cvProfileResponse.setPhoneNumber("**********");
+                message = "Bạn hãy mua gói để xem thông tin liên hệ của ứng viên";
+            }
+
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), message, cvProfileResponse);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ex.getMessage());
         }
     }
 

@@ -1,5 +1,7 @@
 package fpt.edu.capstone.controller;
 
+import com.amazonaws.services.apigateway.model.Op;
+import fpt.edu.capstone.dto.CV.CVProfileResponse;
 import fpt.edu.capstone.dto.CV.ViewCvResponse;
 import fpt.edu.capstone.dto.candidate.CVBaseInformationRequest;
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
@@ -91,17 +93,6 @@ public class CandidateController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
     }
-
-//    @PostMapping("/insert")
-//    public ResponseData insertCandidate(@RequestBody Candidate newCandidate){
-//       try{
-//           System.out.println(newCandidate.toString());
-//           candidateService.insertCandidate(newCandidate);
-//           return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Add candicate successful");
-//        } catch (Exception ex) {
-//           return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
-//       }
-//    }
 
     @PutMapping("/{id}")
     public ResponseData updateCandidate(@RequestBody Candidate newCandidate, @PathVariable long id){
@@ -344,13 +335,6 @@ public class CandidateController {
         }
     }
 
-//    @GetMapping("/get-jobs-applied-of-candidate")
-//    public ResponseData getJobsAppliedOfCandidate(@RequestParam long userId) {
-//        try {
-//            List<AppliedJo>
-//        } catch (Exception e) {
-//
-//        }
-//    }
+
 }
 

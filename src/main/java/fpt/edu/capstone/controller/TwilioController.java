@@ -43,7 +43,7 @@ public class TwilioController {
             Twilio.init(twilioProperties.getAccountSid(), twilioProperties.getAuthToken());
             Verification verification = Verification.creator(
                             twilioProperties.getServiceId(),
-                            phone,
+                            "+84"+phone,
                             "sms")
                     .create();
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Send OTP success", "Successful");
