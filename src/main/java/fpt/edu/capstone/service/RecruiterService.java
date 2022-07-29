@@ -44,4 +44,6 @@ public interface RecruiterService {
     Recruiter approveLicense(ApprovalLicenseRequest request);
 
     Recruiter getById(long recruiterId);
+
+    void updateTotalCvView(Recruiter recruiter);
 }

@@ -179,9 +179,10 @@ public class PaymentServiceImpl implements PaymentService {
         if (recruiter == null){
             throw new HiveConnectException("Nhà tuyển dụng có id = "+ recruiter.getId()+ "không tồn tại");
         }
-        if(!payment.isExpiredStatus()){
-            throw new HiveConnectException("Gói dịch vụ đang trong thời hạn sử dụng. Hãy mua lại sau khi hết hạn.");
-        }
+        //TODO: CHƯA XỬ LÍ XONG CHECK GÓI ĐÃ MUA TRƯỚC ĐÓ CÒN HẠN HAY KHÔNG
+//        if(!payment.isExpiredStatus()){
+//            throw new HiveConnectException("Gói dịch vụ đang trong thời hạn sử dụng. Hãy mua lại sau khi hết hạn.");
+//        }
         payment.setCommand(PaymentConfig.COMMAND);
         payment.setCurrCode(PaymentConfig.CURR_CODE);
         payment.setLocal(PaymentConfig.LOCATE_DEFAULT);
@@ -193,9 +194,12 @@ public class PaymentServiceImpl implements PaymentService {
         if(vnpResponseCode.equals("00")){
             System.out.println("Thanh toán thành công");
             paymentRepository.save(payment);
+
+            Integer totalCv = paymentRepository.countByTotalCvView(payment.getRecruiterId());
+            recruiter.setTotalCvView(totalCv);
+            recruiterService.updateTotalCvView(recruiter);
         }
-        Integer totalCv = paymentRepository.countByTotalCvView(payment.getRecruiterId());
-        recruiter.setTotalCvView(60);
+
 
         if(vnpResponseCode.equals("07")){
             throw new HiveConnectException("Trừ tiền thành công. Giao dịch bị nghi ngờ");

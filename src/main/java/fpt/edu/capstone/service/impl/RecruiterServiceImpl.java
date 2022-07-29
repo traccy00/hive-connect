@@ -192,4 +192,9 @@ public class RecruiterServiceImpl implements RecruiterService {
     public Recruiter getById(long recruiterId) {
         return recruiterRepository.getById(recruiterId);
     }
+
+    @Override
+    public void updateTotalCvView(Recruiter recruiter) {
+        recruiterRepository.save(recruiter);
+    }
 }
