@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.CV.ViewCvResponse;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.CV;
 import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.entity.ProfileViewer;
@@ -41,7 +42,7 @@ public class ProfileManageServiceImpl implements ProfileManageService {
         List<ProfileViewer> responseList = new ArrayList<>();
         Candidate candidate = candidateService.getCandidateById(candidateId);
         if (candidate == null) {
-            throw new HiveConnectException("Ứng viên không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
@@ -70,7 +71,7 @@ public class ProfileManageServiceImpl implements ProfileManageService {
         }
         Recruiter recruiter = recruiterService.getRecruiterById(response.getViewerId());
         if (recruiter == null) {
-            throw new HiveConnectException("Người dùng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         ProfileViewer profileViewer = profileViewerService.getByCvIdAndViewerId(response.getCvId(), response.getViewerId());
         if (profileViewer == null) {

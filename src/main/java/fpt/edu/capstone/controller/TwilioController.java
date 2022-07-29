@@ -3,11 +3,13 @@ package fpt.edu.capstone.controller;
 import com.twilio.Twilio;
 import com.twilio.rest.verify.v2.service.Verification;
 import fpt.edu.capstone.common.Twilio.TwilioProperties;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +48,10 @@ public class TwilioController {
                             phone,
                             "sms")
                     .create();
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Send OTP success", "Successful");
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.SEND_OTP_SUCCESS);
 
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -73,7 +75,7 @@ public class TwilioController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Denied", verificationCheck.getStatus());
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 

@@ -61,4 +61,15 @@ public class Enums {
         private String status;
     }
 
+    public enum BannerPosition {
+        Spotlight("spotlight"), HomeBannerA("homepageBannerA"), HomeBannerB("homepageBannerB"), HomeBannerC("homepageBannerC"),
+        JobBannerA("jobBannerA"), JobBannerB("jobBannerB"), JobBannerC("jobBannerC");;
+
+        BannerPosition(String status) {this.status = status;}
+
+        public String getStatus() {return status;}
+
+        private String status;
+    }
+
 }

@@ -1,11 +1,19 @@
 package fpt.edu.capstone.entity;
 
 import fpt.edu.capstone.utils.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "banner_active")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BannerActive extends BaseEntity {
 
     @Id
@@ -15,8 +23,8 @@ public class BannerActive extends BaseEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "banner_id")
-    private long bannerId;
+    @Column(name = "payment_id")
+    private long paymentId;
 
     @Column(name = "display_position")
     private String displayPosition;

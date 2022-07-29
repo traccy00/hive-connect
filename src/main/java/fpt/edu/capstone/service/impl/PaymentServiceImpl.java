@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.common.payment.PaymentConfig;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
 import fpt.edu.capstone.entity.Payment;
@@ -238,6 +239,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment findById(long id) {
+        if(!paymentRepository.findById(id).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.PAYMENT_DOES_NOT_EXIST);
+        }
         return paymentRepository.findById(id).get();
     }
 

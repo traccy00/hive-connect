@@ -1,7 +1,8 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.dto.banner.ConfigBannerRequest;
+import fpt.edu.capstone.dto.banner.UpdateBannerRequest;
 import fpt.edu.capstone.entity.Banner;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +17,11 @@ public interface BannerService {
 
     void deleteBanner(long bannerId);
 
-    Optional<Banner> findById(long bannerId);
+    Banner findById(long bannerId);
 
     List<Banner> searchByFiler(boolean screen, LocalDateTime startDate, LocalDateTime endDate);
+
+    Banner insertBanner(ConfigBannerRequest request);
+
+    void updateBanner(UpdateBannerRequest request);
 }

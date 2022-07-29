@@ -54,7 +54,7 @@ public class CompanyController {
         try {
             Optional<Recruiter> recruiter = recruiterService.findById(request.getCreatorId());
             if (!recruiter.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Người dùng không tồn tại", request.getCreatorId());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST, request.getCreatorId());
             }
             Company company = companyService.createCompany(request);
             recruiterService.updateCompany(company.getId(), recruiter.get().getId());

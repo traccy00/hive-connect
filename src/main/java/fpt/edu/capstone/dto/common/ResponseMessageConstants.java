@@ -24,6 +24,7 @@ public interface ResponseMessageConstants {
     String CHANGE_PASSWORD_SUCCESS = "Thay đổi mật khẩu thành công";
     String CHANGE_PASSWORD_FAILED = "Thay đổi mật khẩu thất bại";
     String RESEND_EMAIL_SUCCESS = "Gửi lại xác thực không thành công";
+
     //USER
     String USER_DOES_NOT_EXIST = "Người dùng không tồn tại";
     String USER_IS_INACTIVE = "Tài khoản người dùng không hoạt động";
@@ -58,4 +59,26 @@ public interface ResponseMessageConstants {
     String UPDATE_SUCCESSFULLY = "Cập nhật thành công";
 
     String HAVE_NOT_FOLLOWED_JOB = "Bạn chưa theo dõi công việc nào cả";
+
+    //COMPANY
+    String SEND_OTP_SUCCESS = "Gửi OTP thành công.";
+    String NO_REQUEST_JOIN_COMPANY_SENT = "Chưa tạo yêu cầu tham gia công ty nào.";
+    String NO_REQUEST_JOIN_COMPANY_RECEIVED = "Không có yêu cầu tham gia công ty của bạn.";
+
+    //BANNER
+    String CREATE_BANNER_FAIL = "Tạo banner thất bại";
+
+    //CV
+    String CV_NOT_EXIST = "CV không tồn tại";
+    String YOUR_CV_EXISTED = "CV không tồn tại";
+
+    //PAYMENT
+    String PRICE_EQUAL_GREATER_THAN_ZERO = "Giá của gói lớn hơn hoặc bằng 0.";
+    String BANNER_IMAGE_INVALID = "Ảnh banner không hợp lệ";
+    String BANNER_POSITION_INVALID = "Chọn một hoặc nhiều vị trí hiển thị banner.";
+    String DISCOUNT_PRICE_INVALID = "Giá khuyến mãi không hợp lệ";
+    String RENTAL_PACKAGE_DOES_NOT_EXIST = "Nhóm gói không tồn tại";
+    String DETAIL_PACKAGE_DOES_NOT_EXIST = "Gói không tồn tại";
+    String BANNER_TITLE_HAVE_ALREADY_EXISTED = "Tên gói đã tồn tại";
+    String PAYMENT_DOES_NOT_EXIST = "Giao dịch không tồn tại";
 }

@@ -57,7 +57,7 @@ public class JobServiceImpl implements JobService {
             throw new HiveConnectException("Công ty của nhà tuyển dụng không tồn tại.");
         }
         if (!recruiterService.existById(recruiterId)) {
-            throw new HiveConnectException("Nhà tuyển dụng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         if (!fieldsService.existById(fieldId)) {
             throw new HiveConnectException("Lĩnh vực kinh doanh không tồn tại.");
@@ -107,6 +107,9 @@ public class JobServiceImpl implements JobService {
         Job job = jobRepository.getById(request.getJobId());
         if (job == null) {
             throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
+        }
+        if(job.getFlag().equals(Enums.Flag.Posted.getStatus())) {
+            return;
         }
         Object UpdateJobRequest = request;
         job = modelMapper.map(UpdateJobRequest, Job.class);
