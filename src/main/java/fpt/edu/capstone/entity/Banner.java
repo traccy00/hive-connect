@@ -64,6 +64,4 @@ public class Banner extends BaseEntity {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
-
-
 }
