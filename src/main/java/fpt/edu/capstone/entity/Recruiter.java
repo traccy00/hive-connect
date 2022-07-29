@@ -72,4 +72,7 @@ public class Recruiter extends BaseEntity {
 
     @Column(name = "avatar_url")
     private String avatarUrl;
+
+    @Column(name = "total_cv_view")
+    private Integer totalCvView;
 }

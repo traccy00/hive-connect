@@ -194,6 +194,9 @@ public class PaymentServiceImpl implements PaymentService {
             System.out.println("Thanh toán thành công");
             paymentRepository.save(payment);
         }
+        Integer totalCv = paymentRepository.countByTotalCvView(payment.getRecruiterId());
+        recruiter.setTotalCvView(60);
+
         if(vnpResponseCode.equals("07")){
             throw new HiveConnectException("Trừ tiền thành công. Giao dịch bị nghi ngờ");
         }

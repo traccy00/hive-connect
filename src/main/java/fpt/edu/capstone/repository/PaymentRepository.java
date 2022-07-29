@@ -31,4 +31,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     Payment findByRecruiterIdAndBannerId(long recId, long bannerId);
 
     Payment findByRecruiterIdAndDetailPackageId(long recId, long detailPackageId);
+
+    @Query(value = "select sum(dp.max_cv_view)  from payment p join detail_package dp on dp.id = p.detail_package_id  where p.recruiter_id = ?1 ", nativeQuery = true)
+    Integer countByTotalCvView(long recId);
 }
