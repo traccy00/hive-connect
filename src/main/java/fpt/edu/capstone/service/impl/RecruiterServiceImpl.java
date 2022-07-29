@@ -194,7 +194,7 @@ public class RecruiterServiceImpl implements RecruiterService {
     }
 
     @Override
-    public void updateTotalCvView(Recruiter recruiter) {
-        recruiterRepository.save(recruiter);
+    public void updateTotalCvView(long total, long recruiterId) {
+        recruiterRepository.updateTotalCvView(total, recruiterId);
     }
 }

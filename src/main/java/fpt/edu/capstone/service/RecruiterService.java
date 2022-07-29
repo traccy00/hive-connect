@@ -45,5 +45,5 @@ public interface RecruiterService {
 
     Recruiter getById(long recruiterId);
 
-    void updateTotalCvView(Recruiter recruiter);
+    void updateTotalCvView(long total, long recruiterId);
 }

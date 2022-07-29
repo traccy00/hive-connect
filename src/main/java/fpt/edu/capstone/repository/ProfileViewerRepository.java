@@ -6,6 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 public interface ProfileViewerRepository extends JpaRepository<ProfileViewer, Long> {
 
     @Query(value = "select * from profile_viewer pv " +
@@ -16,4 +19,7 @@ public interface ProfileViewerRepository extends JpaRepository<ProfileViewer, Lo
 
     @Query(value = "select * from profile_viewer pv where pv.cv_id = ?1 and pv.viewer_id = ?2", nativeQuery = true)
     ProfileViewer getByCvIdAndViewerId(long cvId, long viewerId);
+
+    @Query(value = "select * from profile_viewer pv where pv.cv_id = ?1 and pv.viewer_id = ?2", nativeQuery = true)
+    Optional<ProfileViewer> getByCvIdAndViewerIdOptional(long cvId, long viewerId);
 }
