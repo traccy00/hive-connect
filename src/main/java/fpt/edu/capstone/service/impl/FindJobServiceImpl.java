@@ -62,7 +62,7 @@ public class FindJobServiceImpl implements FindJobService {
             throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
         if (!candidateService.existsById(request.getCandidateId())) {
-            throw new HiveConnectException("Ứng viên không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         //if exists candidate account, candidate has already applied the job
         AppliedJob appliedJob1 = appliedJobService.getAppliedJobBefore(request.getCandidateId(), request.getJobId());

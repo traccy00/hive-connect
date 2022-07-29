@@ -113,55 +113,6 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/get-all-banner")
-    public ResponseData getAllBanner() {
-        try {
-            List<Banner> banners = bannerService.getAllBanner();
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", banners);
-        } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
-        }
-    }
-
-    @PutMapping("/update-banner")
-    public ResponseData updateBanner(Banner newBanner) {
-        try {
-            bannerService.updateBanner(newBanner);
-            Optional<Banner> banner = bannerService.findById(newBanner.getId());
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", banner.get());
-        } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
-        }
-    }
-
-    @PostMapping("/insert-banner")
-    public ResponseData insertBanner(Banner newBanner) {
-        try {
-            Banner banner = bannerService.insertBanner(newBanner);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", banner);
-        } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
-        }
-    }
-
-    //    @GetMapping("/search-banner")
-//    public ResponseData searchReportedUsers(
-//            @RequestParam(defaultValue = "true", required = false) String screen,
-//            @RequestParam(required = false)  @DateTimeFormat(pattern = "dd/MM/yyyy")
-//                    LocalDate minDate,
-//            @RequestParam(required = false)  @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate maxDate
-//
-//    ) {
-//        try {
-//             = screen + "=true";
-//            List<Banner> banners = bannerService.searchByFiler(screen, LocalDateTime.of(minDate, LocalTime.MIN), LocalDateTime.of(maxDate, LocalTime.MAX));
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, banners);
-//        } catch (Exception e) {
-//            String msg = LogUtils.printLogStackTrace(e);
-//            logger.error(msg);
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
-//        }
-//    }
     @PutMapping("/update-reported")
     public ResponseData updateReportedStatus(@RequestParam String status,
                                              @RequestParam(defaultValue = "-1", required = false) long userId,
@@ -184,7 +135,7 @@ public class AdminController {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Cancel report successful", null);
             }
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -203,7 +154,7 @@ public class AdminController {
         } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 

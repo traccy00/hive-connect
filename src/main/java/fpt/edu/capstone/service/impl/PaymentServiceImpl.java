@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.common.payment.PaymentConfig;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
 import fpt.edu.capstone.entity.Payment;
@@ -179,9 +180,10 @@ public class PaymentServiceImpl implements PaymentService {
         if (recruiter == null){
             throw new HiveConnectException("Nhà tuyển dụng có id = "+ recruiter.getId()+ "không tồn tại");
         }
-        if(!payment.isExpiredStatus()){
-            throw new HiveConnectException("Gói dịch vụ đang trong thời hạn sử dụng. Hãy mua lại sau khi hết hạn.");
-        }
+        //TODO: CHƯA XỬ LÍ XONG CHECK GÓI ĐÃ MUA TRƯỚC ĐÓ CÒN HẠN HAY KHÔNG
+//        if(!payment.isExpiredStatus()){
+//            throw new HiveConnectException("Gói dịch vụ đang trong thời hạn sử dụng. Hãy mua lại sau khi hết hạn.");
+//        }
         payment.setCommand(PaymentConfig.COMMAND);
         payment.setCurrCode(PaymentConfig.CURR_CODE);
         payment.setLocal(PaymentConfig.LOCATE_DEFAULT);
@@ -193,9 +195,12 @@ public class PaymentServiceImpl implements PaymentService {
         if(vnpResponseCode.equals("00")){
             System.out.println("Thanh toán thành công");
             paymentRepository.save(payment);
+
+            Integer totalCv = paymentRepository.countByTotalCvView(payment.getRecruiterId());
+            recruiter.setTotalCvView(totalCv);
+            recruiterService.updateTotalCvView(recruiter);
         }
-        Integer totalCv = paymentRepository.countByTotalCvView(payment.getRecruiterId());
-        recruiter.setTotalCvView(60);
+
 
         if(vnpResponseCode.equals("07")){
             throw new HiveConnectException("Trừ tiền thành công. Giao dịch bị nghi ngờ");
@@ -234,6 +239,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment findById(long id) {
+        if(!paymentRepository.findById(id).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.PAYMENT_DOES_NOT_EXIST);
+        }
         return paymentRepository.findById(id).get();
     }
 

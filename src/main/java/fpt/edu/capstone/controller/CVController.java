@@ -5,6 +5,7 @@ import com.sendgrid.helpers.mail.objects.Email;
 import fpt.edu.capstone.dto.CV.CVProfileResponse;
 import fpt.edu.capstone.dto.CV.CVResponse;
 import fpt.edu.capstone.dto.CV.UpdateCVSummaryRequest;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
@@ -112,14 +113,14 @@ public class CVController {
         try {
             List<CV> cv = cvService.findCvByCandidateId(candidateId);
             if (!cv.isEmpty()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "You have CV already", null);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.YOUR_CV_EXISTED, null);
             }
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
         LocalDateTime nowDate = LocalDateTime.now();
         CV cv = cvService.insertCv(candidateId, 0, "", nowDate, nowDate);
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create CV successful", cv);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, cv);
     }
 
     @PostMapping("/insert-education")
@@ -186,11 +187,11 @@ public class CVController {
         try {
             List<Major> majors = majorService.getAllMajorByFieldId(fieldId);
             if (majors.isEmpty()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Major is empty", null);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Major is empty");
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Success", majors);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, majors);
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -205,7 +206,7 @@ public class CVController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Major Level Success", majorLevel);
 
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ex.getMessage());
         }
     }
 
@@ -219,7 +220,7 @@ public class CVController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not fnid this cv", updateCVSummaryRequest.getCvId());
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -232,9 +233,9 @@ public class CVController {
                 cvService.updateUpdatedDateOfCV(id, nowDate);
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update updated date success", nowDate);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"CV is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -298,7 +299,7 @@ public class CVController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Work experience is not exist", null);
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -331,7 +332,7 @@ public class CVController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Certificate is not exist", null);
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -348,7 +349,7 @@ public class CVController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Language is not exist", null);
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -414,7 +415,7 @@ public class CVController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Other skill is not exist", null);
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -430,7 +431,7 @@ public class CVController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Other skill is not exist", null);
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 

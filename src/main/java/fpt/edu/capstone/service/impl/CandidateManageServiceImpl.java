@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.candidate.AppliedJobCandidateResponse;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.entity.AppliedJob;
 import fpt.edu.capstone.entity.Company;
@@ -38,7 +39,7 @@ public class CandidateManageServiceImpl implements CandidateManageService {
     @Override
     public ResponseDataPagination searchAppliedJobsOfCandidate(Integer pageNo, Integer pageSize, long candidateId, String approvalStatus) {
         if(!candidateService.existsById(candidateId)) {
-            throw new HiveConnectException("Người dùng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         List<AppliedJobCandidateResponse> responseList = new ArrayList<>();
 

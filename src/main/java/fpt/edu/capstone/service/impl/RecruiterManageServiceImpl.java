@@ -3,6 +3,8 @@ package fpt.edu.capstone.service.impl;
 import fpt.edu.capstone.dto.CV.FindCVResponse;
 import fpt.edu.capstone.dto.CV.IFindCVResponse;
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
+import fpt.edu.capstone.dto.banner.UploadBannerRequest;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CompanyInformationResponse;
 import fpt.edu.capstone.dto.recruiter.*;
 import fpt.edu.capstone.entity.*;
@@ -57,12 +59,18 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     private final EducationService educationService;
 
+    private final PaymentService paymentService;
+
+    private final BannerService bannerService;
+
+    private final BannerActiveRepository bannerActiveRepository;
+
     @Override
     public CommonRecruiterInformationResponse getCommonInforOfRecruiter(long recruiterId) {
         CommonRecruiterInformationResponse response = new CommonRecruiterInformationResponse();
         Optional<Recruiter> optionalRecruiter = recruiterRepository.findById(recruiterId);
         if (!optionalRecruiter.isPresent()) {
-            throw new HiveConnectException("Người dùng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         int step = 0;
         int totalStep = 3;
@@ -154,7 +162,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     public RecruiterProfileResponse updateRecruiterInformation(long recruiterId, RecruiterUpdateProfileRequest request) throws Exception {
         Recruiter recruiter = recruiterService.getById(recruiterId);
         if (recruiter == null) {
-            throw new HiveConnectException("Người dùng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         if (request == null) {
             throw new HiveConnectException("Không có dữ liệu thay đổi, không thể cập nhật");
@@ -191,12 +199,12 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         Users user = userService.getUserById(userId);
         //recruiter tồn tại nhưng user không tồn tại (database lỗi)
         if (user == null) {
-            throw new HiveConnectException("Người dùng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         RecruiterProfileResponse profileResponse = new RecruiterProfileResponse();
         Recruiter recruiter = recruiterRepository.getRecruiterByUserId(userId);
         if (recruiter == null) {
-            throw new HiveConnectException("Nhà tuyển dụng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         profileResponse.setRecruiterId(recruiter.getId());
         profileResponse.setUserName(user.getUsername());
@@ -363,5 +371,71 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
+    }
+
+    @Override
+    public void uploadBanner(long recruiterId, UploadBannerRequest request) {
+        if(recruiterService.getRecruiterById(recruiterId) == null) {
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        }
+        Payment payment = paymentService.findById(request.getPaymentId());
+        //xem gói mà nhà tuyển dụng mua có những tính năng nào
+        Banner banner = bannerService.findById(payment.getBannerId());
+        if(banner.isSpotlight()) {
+            BannerActive bannerActive = new BannerActive();
+            bannerActive.setImageUrl(request.getSpotLightImage());
+            bannerActive.setPaymentId(payment.getId());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.Spotlight.getStatus());
+            bannerActive.create();
+            bannerActiveRepository.save(bannerActive);
+        }
+        if(banner.isHomepageBannerA()) {
+            BannerActive bannerActive = new BannerActive();
+            bannerActive.setImageUrl(request.getHomepageBannerAImage());
+            bannerActive.setPaymentId(payment.getId());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.HomeBannerA.getStatus());
+            bannerActive.create();
+            bannerActiveRepository.save(bannerActive);
+        }
+        if(banner.isHomePageBannerB()) {
+            BannerActive bannerActive = new BannerActive();
+            bannerActive.setImageUrl(request.getHomepageBannerBImage());
+            bannerActive.setPaymentId(payment.getId());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.HomeBannerB.getStatus());
+            bannerActive.create();
+            bannerActiveRepository.save(bannerActive);
+        }
+        if(banner.isHomePageBannerC()) {
+            BannerActive bannerActive = new BannerActive();
+            bannerActive.setImageUrl(request.getHomepageBannerCImage());
+            bannerActive.setPaymentId(payment.getId());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.HomeBannerC.getStatus());
+            bannerActive.create();
+            bannerActiveRepository.save(bannerActive);
+        }
+        if(banner.isJobBannerA()) {
+            BannerActive bannerActive = new BannerActive();
+            bannerActive.setImageUrl(request.getJobBannerAImage());
+            bannerActive.setPaymentId(payment.getId());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.JobBannerA.getStatus());
+            bannerActive.create();
+            bannerActiveRepository.save(bannerActive);
+        }
+        if(banner.isJobBannerB()) {
+            BannerActive bannerActive = new BannerActive();
+            bannerActive.setImageUrl(request.getJobBannerBImage());
+            bannerActive.setPaymentId(payment.getId());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.JobBannerB.getStatus());
+            bannerActive.create();
+            bannerActiveRepository.save(bannerActive);
+        }
+        if(banner.isJobBannerC()) {
+            BannerActive bannerActive = new BannerActive();
+            bannerActive.setImageUrl(request.getJobBannerCImage());
+            bannerActive.setPaymentId(payment.getId());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.JobBannerC.getStatus());
+            bannerActive.create();
+            bannerActiveRepository.save(bannerActive);
+        }
     }
 }

@@ -104,7 +104,7 @@ public class RecruiterServiceImpl implements RecruiterService {
                                    MultipartFile additionalMultipartFile) throws Exception {
         Optional<Recruiter> optionalRecruiter = findById(recruiterId);
         if (!optionalRecruiter.isPresent()) {
-            throw new HiveConnectException("Người dùng không tồn tại, không thể đăng tải giấy phép kinh doanh");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         if (optionalRecruiter.get().getCompanyId() == 0) {
             throw new HiveConnectException("Nhà tuyển dụng chưa có thông tin công ty. Vui lòng cập nhật thông tin công ty trước.");
@@ -162,7 +162,7 @@ public class RecruiterServiceImpl implements RecruiterService {
     public Recruiter approveLicense(ApprovalLicenseRequest request) {
         Optional<Recruiter> optionalRecruiter = recruiterRepository.findById(request.getRecruiterId());
         if (!optionalRecruiter.isPresent()) {
-            throw new HiveConnectException("Người dùng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         //accept , reject
         if (request.getType().equals("1")) {

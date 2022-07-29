@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
     public Users lockUnlockUser(long userId) {
         Users user = userRepository.getById(userId);
         if(user == null) {
-            throw new HiveConnectException("Người dùng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         if(user.isLocked()) {
             user.setLocked(false);
@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
     public Users activeDeactiveUser(long userId) {
         Users user = userRepository.getById(userId);
         if(user == null) {
-            throw new HiveConnectException("Người dùng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         if(user.isActive()) {
             user.setActive(false);
