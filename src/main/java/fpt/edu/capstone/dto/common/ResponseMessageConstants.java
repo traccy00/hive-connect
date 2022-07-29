@@ -36,6 +36,7 @@ public interface ResponseMessageConstants {
     String TOKEN_INVALID = "MSG_TOKEN_INVALID";
 
     //JOB
+    String JOB_DOES_NOT_EXIST = "Tin tuyển dụng không tồn tại";
     String CREATE_JOB_SUCCESS = "Tạo tin tuyển dụng thành công.";
     String CREATE_JOB_FAILED = "Tạo tin tuyển dụng thất bại.";
     String UPDATE_JOB_SUCCESS = "Cập nhật tin tuyển dụng thành công.";
@@ -45,8 +46,6 @@ public interface ResponseMessageConstants {
     String PAYMENT_SUCCESS = "Thanh toán thành công";
     String PAYMENT_FAILED = "Thanh toán thất bại";
     String CHANGE_JOB_PAYMENT_ACTIVE_SUCCESS = "Thay đổi kích hoạt công việc thành công";
-    //JOB
-    String JOB_DOES_NOT_EXIST = "Tin tuyển dụng không tồn tại";
 
     //AMAZON
     String AMAZON_SAVE_URL = "https://hive-connect-images.s3.us-west-1.amazonaws.com/hiveconnect/";

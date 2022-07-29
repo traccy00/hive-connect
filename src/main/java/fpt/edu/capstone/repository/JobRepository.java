@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,20 +37,20 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     boolean existsById(long id);
 
-    @Query(value = "select * from Job where work_form like  upper(concat('%', :workForm ,'%'))", nativeQuery = true)
+    @Query(value = "select * from Job where work_form like  upper(concat('%', :workForm ,'%')) and flag = ?3", nativeQuery = true)
     Page<Job> getListJobByWorkForm(Pageable pageable, @Param("workForm") String workForm);
 
-    @Query(value = "select * from job where is_new_job = ?1 and (is_deleted = ?2 or is_deleted is null)", nativeQuery = true)
-    Page<Job> getNewestJob(Pageable pageable, boolean isNewJob, int isDeleted);
+    @Query(value = "select * from job where is_new_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3", nativeQuery = true)
+    Page<Job> getNewestJob(Pageable pageable, boolean isNewJob, int isDeleted, String flag);
 
-    @Query(value = "select * from job where is_urgent_job = ?1 and (is_deleted = ?2 or is_deleted is null)", nativeQuery = true)
-    Page<Job> getUrgentJob(Pageable pageable, boolean isUrgentJob, int isDeleted);
+    @Query(value = "select * from job where is_urgent_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3", nativeQuery = true)
+    Page<Job> getUrgentJob(Pageable pageable, boolean isUrgentJob, int isDeleted, String flag);
 
-    @Query(value = "select * from job where is_popular_job = ?1 and (is_deleted = ?2 or is_deleted is null)", nativeQuery = true)
-    Page<Job> getPopularJob(Pageable pageable, boolean b, int i);
+    @Query(value = "select * from job where is_popular_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3", nativeQuery = true)
+    Page<Job> getPopularJob(Pageable pageable, boolean isPopularJob, int isDeleted, String flag);
 
-    @Query("Select c from Job c where c.fieldId = :fieldId and c.isDeleted = 0")
-    Page<Job> getListJobByFieldId(Pageable pageable, @Param("fieldId") long fieldId);
+    @Query("Select c from Job c where c.fieldId = :fieldId and c.isDeleted = 0 and flag = :flag")
+    Page<Job> getListJobByFieldId(Pageable pageable, @Param("fieldId") long fieldId, @Param("flag") String flag);
 
     @Query("select c from Job c where c.jobDescription like lower(concat('%', :majorName ,'%')) or c.jobRequirement like  lower(concat('%', :majorName ,'%'))")
     List <Job> getListSuggestJobByCv(String majorName);

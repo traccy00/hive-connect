@@ -50,4 +50,15 @@ public class Enums {
             return  map.get((type));
         }
     }
+
+    public enum Flag {
+        Draft("Draft"), Posted("Posted");
+
+        Flag(String status) {this.status = status;}
+
+        public String getStatus() {return status;}
+
+        private String status;
+    }
+
 }
