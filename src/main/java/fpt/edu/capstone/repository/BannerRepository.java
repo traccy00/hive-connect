@@ -19,4 +19,7 @@ public interface BannerRepository extends JpaRepository<Banner, Long> {
 
     @Query(value = "Select * from banner b where (?1 = true) and b.created_at > ?2 and b.created_at <?3", nativeQuery = true)
     List<Banner> searchWithfilter(boolean screen, LocalDateTime startDate, LocalDateTime endDate);
+
+    @Query(value = "select * from banner b where lower(b.title) = lower(?)", nativeQuery = true)
+    List<Banner> getBannersByTitle(String title);
 }

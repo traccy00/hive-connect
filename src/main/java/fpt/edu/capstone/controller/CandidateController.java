@@ -88,7 +88,7 @@ public class CandidateController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find candidate by this user id", null);
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -128,7 +128,7 @@ public class CandidateController {
             }
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", updateCandidate.getId());
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
 
     }
@@ -175,7 +175,7 @@ public class CandidateController {
                 }
                 return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", candidateId);
             }catch (Exception ex) {
-                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
             }
     }
 
@@ -185,12 +185,12 @@ public class CandidateController {
                 Optional<Candidate> candidate = candidateService.findById(candidateId);
                 if(candidate.isPresent()){ //Check if this user is candidate
                         CVImported cvImported =  cvImportedService.save(file,"CV",candidateId);
-                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Upload CV successful", cvImported.getId());
+                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, cvImported.getId());
                 }else {
-                    return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", candidateId);
+                    return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST, candidateId);
                 }
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -277,7 +277,7 @@ public class CandidateController {
             Follow insertedFollow = followService.insertFollow(follow);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Follow successful", insertedFollow);
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage());
         }
     }
 
@@ -308,7 +308,7 @@ public class CandidateController {
         }catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage());
         }
     }
 
@@ -323,7 +323,7 @@ public class CandidateController {
         }catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage());
         }
     }
 

@@ -59,7 +59,7 @@ public class RecruiterController {
             Recruiter recruiter1 = recruiterService.insertRecruiter(userId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Insert recruiter successful", recruiter1);
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -115,11 +115,11 @@ public class RecruiterController {
         try {
             Optional<RequestJoinCompany> requestJoinCompanyOp = requestJoinCompanyService.getSentRequest(senderId);
             if (requestJoinCompanyOp.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", requestJoinCompanyOp.get());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, requestJoinCompanyOp.get());
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No request was sent", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.NO_REQUEST_JOIN_COMPANY_SENT);
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -130,11 +130,11 @@ public class RecruiterController {
         try {
             Optional<List<RequestJoinCompany>> requestJoinCompanyOp = requestJoinCompanyService.getReceiveRequest(approverId);
             if (requestJoinCompanyOp.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful", requestJoinCompanyOp.get());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, requestJoinCompanyOp.get());
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No request have been received", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.NO_REQUEST_JOIN_COMPANY_RECEIVED, null);
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -148,7 +148,7 @@ public class RecruiterController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "succesful", newRequestJoinCompany);
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
