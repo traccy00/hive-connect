@@ -1,8 +1,10 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.login.LoginGoogleRequest;
+import fpt.edu.capstone.dto.register.ChangePasswordRequest;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.dto.register.RegisterRequest;
+import fpt.edu.capstone.dto.register.ResetPasswordRequest;
 import fpt.edu.capstone.entity.Users;
 
 import java.util.HashMap;
@@ -39,4 +41,16 @@ public interface UserService {
     void updatePhoneNumber(String phoneNumber, long userId);
 
     Users loginGoogle(LoginGoogleRequest request);
+
+    void changePassword(String username, ChangePasswordRequest request);
+
+    Users findByEmail(String email);
+
+    Users findByResetPasswordToken(String resetPasswordToken);
+
+    void forgotPassword(String email) throws Exception;
+
+    void updatePassword(Users user, ResetPasswordRequest request);
+
+    void resetPassword(ResetPasswordRequest request);
 }

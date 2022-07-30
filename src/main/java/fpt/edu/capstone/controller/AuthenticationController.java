@@ -6,6 +6,7 @@ import fpt.edu.capstone.dto.login.LoginRequest;
 import fpt.edu.capstone.dto.login.UserInforResponse;
 import fpt.edu.capstone.dto.register.ChangePasswordRequest;
 import fpt.edu.capstone.dto.register.RegisterRequest;
+import fpt.edu.capstone.dto.register.ResetPasswordRequest;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.security.TokenUtils;
@@ -230,26 +231,10 @@ public class AuthenticationController {
 
     @PostMapping("/password/{username}")
     @Operation(summary = "change password user")
-    public ResponseData changePassword(@PathVariable(name = "username") String username, @RequestBody ChangePasswordRequest request) throws Exception {
+    public ResponseData changePassword(@PathVariable(name = "username") String username,
+                                       @RequestBody ChangePasswordRequest request) {
         try {
-            Optional<Users> optionalUsers = userService.findUserByUserName(username);
-            if (!optionalUsers.isPresent()) {
-                throw new HiveConnectException("Tên người dùng: " + username + "không tìm thấy.");
-            }
-            String oldPassword = request.getOldPassword().trim();
-            String newPassword = request.getNewPassword().trim();
-            String confirmPassword = request.getConfirmPassword().trim();
-
-            Users user = optionalUsers.get();
-            if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-                throw new HiveConnectException("Mật khẩu cũ không đúng.");
-            }
-            if (!StringUtils.equals(newPassword, confirmPassword)) {
-                throw new HiveConnectException("Xác nhận mật khẩu không đúng.");
-            }
-
-            user.setPassword(passwordEncoder.encode(newPassword));
-            userService.saveUser(user);
+            userService.changePassword(username, request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CHANGE_PASSWORD_SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -260,14 +245,74 @@ public class AuthenticationController {
 
     //TODO : namnh
     @PostMapping("/login-google")
-    public ResponseData loginGoogle(@RequestBody LoginGoogleRequest request){
+    public ResponseData loginGoogle(@RequestBody LoginGoogleRequest request) {
         try {
             Users authUser = userService.loginGoogle(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus());
-        } catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    /*
+     * @author Mai
+     */
+    // Sending a simple Email
+//    @PostMapping("/sendMail")
+//    @Operation(summary = "send email")
+//    public ResponseData sendMail(@RequestBody EmailDetails details) {
+//        try {
+//            String status = emailService.sendSimpleMail(details);
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), status);
+//        } catch (Exception e) {
+//            String msg = LogUtils.printLogStackTrace(e);
+//            logger.error(msg);
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Error while Sending Mail!!!");
+//        }
+//    }
+
+    /*
+     * @author Mai
+     */
+    // Sending email with attachment
+//    @PostMapping("/sendMailWithAttachment")
+//    public ResponseData sendMailWithAttachment(@RequestBody EmailDetails details) {
+//        try {
+//            String status = emailService.sendMailWithAttachment(details);
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), status);
+//        } catch (Exception e) {
+//            String msg = LogUtils.printLogStackTrace(e);
+//            logger.error(msg);
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Error while Sending Mail!!");
+//        }
+//    }
+
+    @PostMapping("/forgot-password")
+    @Operation(summary = "user forgot password, system will send a mail to user's email with reset password token link")
+    public ResponseData processForgotPassword(@RequestParam String email) {
+        try {
+            userService.forgotPassword(email);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Chúng tôi đã gửi mail làm mới mật khẩu tới " + email + ", vui lòng kiểm tra.");
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @PostMapping("/reset-password")
+    @Operation(summary = "reset password for function forgot password")
+    public ResponseData processResetPassword(@RequestBody ResetPasswordRequest request) {
+        try {
+            userService.resetPassword(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                    ResponseMessageConstants.CHANGE_PASSWORD_SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),e.getMessage());
         }
     }
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Enums {
     public enum ResponseStatus {
-        SUCCESS("Success"), ERROR("Error"), NOT_FOUND("NOT_FOUND");
+        SUCCESS("Success"), ERROR("Error"), NOT_FOUND("NotFound");
 
         ResponseStatus(String status) {
             this.status = status;
@@ -62,8 +62,8 @@ public class Enums {
     }
 
     public enum BannerPosition {
-        Spotlight("spotlight"), HomeBannerA("homepageBannerA"), HomeBannerB("homepageBannerB"), HomeBannerC("homepageBannerC"),
-        JobBannerA("jobBannerA"), JobBannerB("jobBannerB"), JobBannerC("jobBannerC");;
+        SPOTLIGHT("spotlight"), HOME_BANNER_A("homepageBannerA"), HOME_BANNER_B("homepageBannerB"), HOME_BANNER_C("homepageBannerC"),
+        JOB_BANNER_A("jobBannerA"), JOB_BANNER_B("jobBannerB"), JOB_BANNER_C("jobBannerC");;
 
         BannerPosition(String status) {this.status = status;}
 

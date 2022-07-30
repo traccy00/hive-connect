@@ -51,14 +51,19 @@ public class AdminManageServiceTest {
 
     @Mock
     private RecruiterService recruiterService;
+
     @Mock
     private ModelMapper modelMapper;
+
     @Mock
     private ReportedRepository reportedRepository;
+
     @Mock
     private UserService userService;
+
     @Mock
     private JobService jobService;
+
     @Mock
     private ReportedService reportedService;
 

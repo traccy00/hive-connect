@@ -385,7 +385,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getSpotLightImage());
             bannerActive.setPaymentId(payment.getId());
-            bannerActive.setDisplayPosition(Enums.BannerPosition.Spotlight.getStatus());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.SPOTLIGHT.getStatus());
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
@@ -393,7 +393,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getHomepageBannerAImage());
             bannerActive.setPaymentId(payment.getId());
-            bannerActive.setDisplayPosition(Enums.BannerPosition.HomeBannerA.getStatus());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.HOME_BANNER_A.getStatus());
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
@@ -401,7 +401,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getHomepageBannerBImage());
             bannerActive.setPaymentId(payment.getId());
-            bannerActive.setDisplayPosition(Enums.BannerPosition.HomeBannerB.getStatus());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.HOME_BANNER_B.getStatus());
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
@@ -409,7 +409,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getHomepageBannerCImage());
             bannerActive.setPaymentId(payment.getId());
-            bannerActive.setDisplayPosition(Enums.BannerPosition.HomeBannerC.getStatus());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.HOME_BANNER_C.getStatus());
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
@@ -417,7 +417,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getJobBannerAImage());
             bannerActive.setPaymentId(payment.getId());
-            bannerActive.setDisplayPosition(Enums.BannerPosition.JobBannerA.getStatus());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.JOB_BANNER_A.getStatus());
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
@@ -425,7 +425,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getJobBannerBImage());
             bannerActive.setPaymentId(payment.getId());
-            bannerActive.setDisplayPosition(Enums.BannerPosition.JobBannerB.getStatus());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.JOB_BANNER_B.getStatus());
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
@@ -433,7 +433,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getJobBannerCImage());
             bannerActive.setPaymentId(payment.getId());
-            bannerActive.setDisplayPosition(Enums.BannerPosition.JobBannerC.getStatus());
+            bannerActive.setDisplayPosition(Enums.BannerPosition.JOB_BANNER_C.getStatus());
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
