@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.login.LoginGoogleRequest;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.entity.Role;
@@ -163,5 +164,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updatePhoneNumber(String phoneNumber, long userId) {
         userRepository.updatePhoneNumber(phoneNumber, userId);
+    }
+
+    @Override
+    public Users loginGoogle(LoginGoogleRequest request) {
+        if (StringUtils.isBlank(request.getEmail())) {
+            throw new HiveConnectException(ResponseMessageConstants.DATA_INVALID);
+        }
+        return null;
     }
 }

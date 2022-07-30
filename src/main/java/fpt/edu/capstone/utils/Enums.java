@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Enums {
     public enum ResponseStatus {
-        SUCCESS("Success"), ERROR("Error");
+        SUCCESS("Success"), ERROR("Error"), NOT_FOUND("NOT_FOUND");
 
         ResponseStatus(String status) {
             this.status = status;

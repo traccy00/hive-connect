@@ -197,8 +197,8 @@ public class PaymentServiceImpl implements PaymentService {
             paymentRepository.save(payment);
 
             Integer totalCv = paymentRepository.countByTotalCvView(payment.getRecruiterId());
-            recruiter.setTotalCvView(totalCv);
-            recruiterService.updateTotalCvView(recruiter);
+//            recruiter.setTotalCvView(totalCv);
+            recruiterService.updateTotalCvView(totalCv, payment.getRecruiterId());
         }
 
 

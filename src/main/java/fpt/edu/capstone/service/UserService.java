@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.dto.login.LoginGoogleRequest;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.entity.Users;
@@ -36,4 +37,6 @@ public interface UserService {
     Users activeDeactiveUser(long userId);
 
     void updatePhoneNumber(String phoneNumber, long userId);
+
+    Users loginGoogle(LoginGoogleRequest request);
 }

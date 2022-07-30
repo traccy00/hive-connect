@@ -1,6 +1,7 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.login.LoginGoogleRequest;
 import fpt.edu.capstone.dto.login.LoginRequest;
 import fpt.edu.capstone.dto.login.UserInforResponse;
 import fpt.edu.capstone.dto.register.ChangePasswordRequest;
@@ -251,6 +252,19 @@ public class AuthenticationController {
             userService.saveUser(user);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CHANGE_PASSWORD_SUCCESS);
         } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    //TODO : namnh
+    @PostMapping("/login-google")
+    public ResponseData loginGoogle(@RequestBody LoginGoogleRequest request){
+        try {
+            Users authUser = userService.loginGoogle(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus());
+        } catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

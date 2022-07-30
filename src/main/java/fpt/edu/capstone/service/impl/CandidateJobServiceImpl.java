@@ -180,8 +180,8 @@ public class CandidateJobServiceImpl implements CandidateJobService {
 
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-
-        Page <Job> jobs = jobRepository.getListJobByWorkForm(pageable, workForm);
+        String flag = Enums.Flag.Posted.getStatus();
+        Page <Job> jobs = jobRepository.getListJobByWorkForm(pageable, workForm,flag);
 
         if (jobs.hasContent()) {
             for (Job job : jobs) {
