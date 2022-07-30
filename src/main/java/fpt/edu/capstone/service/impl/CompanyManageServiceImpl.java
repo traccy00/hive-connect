@@ -70,7 +70,7 @@ public class CompanyManageServiceImpl implements CompanyManageService {
                 || (request.getCompanyAddress() == null && request.getCompanyAddress().trim().isEmpty())
                 || (request.getTaxCode() == null && request.getTaxCode().trim().isEmpty())
                 || (request.getMapUrl() == null && request.getMapUrl().trim().isEmpty())) {
-            throw new HiveConnectException("Vui lòng điền vào thông tin bắt buộc");
+            throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
         }
         company.setEmail(request.getCompanyEmail());
         company.setPhone(request.getCompanyPhone());
