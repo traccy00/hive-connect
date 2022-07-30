@@ -17,8 +17,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -116,10 +118,6 @@ public class PaymentController {
         }
     }
 
-    /**
-     * TODO : NOT WORKING - CHECK THIS API
-     * Nam
-     */
     @GetMapping("/total-revenue")
     public ResponseData getTotalProfit(@RequestParam(value = "startDate") String startDate,
                                        @RequestParam(value = "endDate") String endDate,
@@ -127,8 +125,9 @@ public class PaymentController {
                                        @RequestParam(defaultValue = "10") Integer pageSize){
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDateTime start = LocalDateTime.parse(startDate, formatter);
-            LocalDateTime end = LocalDateTime.parse(endDate, formatter);
+            LocalDateTime start = LocalDate.parse(startDate, formatter).atStartOfDay();
+            LocalDateTime end = LocalDate.parse(endDate, formatter).atStartOfDay();
+
             ResponseDataPagination pagination = paymentService.getRevenue(start, end, pageNo, pageSize);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS, pagination);
         } catch (Exception e){

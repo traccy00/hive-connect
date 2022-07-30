@@ -139,10 +139,12 @@ public class PaymentServiceImpl implements PaymentService {
     public ResponseDataPagination getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        LocalDateTime startDate = start.truncatedTo(ChronoUnit.DAYS);
-        end = startDate.plusDays(1);
-        Page<Payment> payments = paymentRepository.getRevenueInMonth(startDate, end, pageable);
-
+        Page<Payment> payments = paymentRepository.getRevenueInMonth(start, end, pageable);
+        List <Payment> totalRevenue = payments.getContent();
+        long total = 0;
+        for (Payment p: totalRevenue){
+            total += p.getAmount();
+        }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
         responseDataPagination.setData(payments.toList());
