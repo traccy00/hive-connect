@@ -74,7 +74,7 @@ public class AdminManageServiceImpl implements AdminManageService {
                 || (request.getUserAddress() == null || request.getUserAddress().trim().isEmpty())
                 || (request.getUserEmail() == null || request.getUserEmail().trim().isEmpty())
                 || (request.getReportReason() == null || request.getReportReason().trim().isEmpty())) {
-            throw new HiveConnectException("Vui lòng điền các thông tin bắt buộc");
+            throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
         }
         Report report = modelMapper.map(request, Report.class);
         Job job = jobService.getJobById(request.getJobId());

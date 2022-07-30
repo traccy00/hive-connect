@@ -58,4 +58,7 @@ public class Users extends BaseEntity {
 
     @Column(name = "avatar")
     private String avatar;
+
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
 }

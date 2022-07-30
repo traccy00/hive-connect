@@ -2,18 +2,21 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.login.LoginGoogleRequest;
+import fpt.edu.capstone.dto.register.ChangePasswordRequest;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.dto.register.RegisterRequest;
+import fpt.edu.capstone.dto.register.ResetPasswordRequest;
 import fpt.edu.capstone.entity.Role;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.UserRepository;
+import fpt.edu.capstone.service.EmailService;
 import fpt.edu.capstone.service.LoginService;
 import fpt.edu.capstone.service.RoleService;
 import fpt.edu.capstone.service.UserService;
 import lombok.AllArgsConstructor;
+import net.bytebuddy.utility.RandomString;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +35,12 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final EmailService emailService;
+
     @Override
     public Users getUserById(long id) {
         Optional<Users> optionalUser = userRepository.findById(id);
-        if(!optionalUser.isPresent()) {
+        if (!optionalUser.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         return optionalUser.get();
@@ -43,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<Users> findUserByUserName(String userName) {
-        return userRepository.findByUsernameAndIsDeleted(userName,0);
+        return userRepository.findByUsernameAndIsDeleted(userName, 0);
     }
 
     @Override
@@ -65,14 +70,14 @@ public class UserServiceImpl implements UserService {
 //        }
 
         Optional<Users> userExistByUserName = userRepository.findByUsername(request.getUsername());
-        if(userExistByUserName.isPresent()) {
+        if (userExistByUserName.isPresent()) {
             throw new HiveConnectException("Tên đăng nhập đã được sử dụng");
         }
         Optional<Users> userExistByEmail = userRepository.findByEmail(request.getEmail());
-        if(userExistByEmail.isPresent()) {
+        if (userExistByEmail.isPresent()) {
             throw new HiveConnectException("Email đã được sử dụng");
         }
-        if(!StringUtils.equals(request.getPassword(),request.getConfirmPassword())){
+        if (!StringUtils.equals(request.getPassword(), request.getConfirmPassword())) {
             throw new HiveConnectException("Mật khẩu xác nhận không đúng");
         }
         Users user = new Users();
@@ -132,10 +137,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Users lockUnlockUser(long userId) {
         Users user = userRepository.getById(userId);
-        if(user == null) {
+        if (user == null) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
-        if(user.isLocked()) {
+        if (user.isLocked()) {
             user.setLocked(false);
         } else {
             user.setLocked(true);
@@ -148,10 +153,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Users activeDeactiveUser(long userId) {
         Users user = userRepository.getById(userId);
-        if(user == null) {
+        if (user == null) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
-        if(user.isActive()) {
+        if (user.isActive()) {
             user.setActive(false);
         } else {
             user.setActive(true);
@@ -172,5 +177,93 @@ public class UserServiceImpl implements UserService {
             throw new HiveConnectException(ResponseMessageConstants.DATA_INVALID);
         }
         return null;
+    }
+
+    @Override
+    public void changePassword(String username, ChangePasswordRequest request) {
+        Optional<Users> optionalUsers = findUserByUserName(username);
+        if (!optionalUsers.isPresent()) {
+            throw new HiveConnectException("Tên người dùng: " + username + "không tìm thấy.");
+        }
+        String oldPassword = request.getOldPassword().trim();
+        String newPassword = request.getNewPassword().trim();
+        String confirmPassword = request.getConfirmPassword().trim();
+
+        Users user = optionalUsers.get();
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new HiveConnectException("Mật khẩu cũ không đúng.");
+        }
+        if (!StringUtils.equals(newPassword, confirmPassword)) {
+            throw new HiveConnectException("Xác nhận mật khẩu không đúng.");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        saveUser(user);
+    }
+
+
+    @Override
+    public Users findByEmail(String email) {
+        if (!userRepository.findByEmail(email).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        }
+        return userRepository.findByEmail(email).get();
+    }
+
+    @Override
+    public Users findByResetPasswordToken(String resetPasswordToken) {
+        if (!userRepository.findByResetPasswordToken(resetPasswordToken).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.REQUEST_NOT_EXIST);
+        }
+        return userRepository.findByResetPasswordToken(resetPasswordToken).get();
+    }
+
+    @Override
+    public void forgotPassword(String email) throws Exception {
+        try {
+            //verify user by email
+            Users user = findByEmail(email);
+            //generate reset token
+            String token = RandomString.make(30);
+            user.setResetPasswordToken(token);
+            userRepository.save(user);
+            //send mail with link reset token to user's email
+            String resetPasswordLink = "http://localhost:8081/auth/reset_password?token=" + token;
+            emailService.sendResetPasswordEmail(user.getEmail(), resetPasswordLink);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequest request) {
+        if (request.getResetPasswordToken() == null || request.getResetPasswordToken().trim().isEmpty()) {
+            throw new HiveConnectException(ResponseMessageConstants.TOKEN_INVALID);
+        }
+        //dựa vào đường link reset password từ email của user, xem có user nào trong db có token như vậy không
+        Users user = findByResetPasswordToken(request.getResetPasswordToken());
+        if ((request.getNewPassword() == null || request.getNewPassword().trim().isEmpty())
+                || (request.getConfirmPassword() == null || request.getConfirmPassword().trim().isEmpty())) {
+            throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
+        }
+        updatePassword(user, request);
+    }
+
+    @Override
+    public void updatePassword(Users user, ResetPasswordRequest request) {
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String encodedPassword = passwordEncoder.encode(newPassword);
+//        user.setPassword(encodedPassword);
+//        user.setResetPasswordToken(null);
+//        userRepository.save(user);
+
+        String newPassword = request.getNewPassword().trim();
+        String confirmPassword = request.getConfirmPassword().trim();
+        if (!StringUtils.equals(newPassword, confirmPassword)) {
+            throw new HiveConnectException("Xác nhận mật khẩu không đúng.");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordToken(null);
+        user.update();
+        saveUser(user);
     }
 }

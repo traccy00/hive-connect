@@ -3,9 +3,10 @@ package fpt.edu.capstone.dto.common;
 public interface ResponseMessageConstants {
     String SUCCESS = "MSG_SUCCESS";
     String ERROR = "MSG_ERROR";
-    String ACCESS_DENIED = "MSG_ACCESS_DENIED";
-    String DATA_INVALID = "DATA_INVALID";
-    String DATA_IS_NULL_OR_EMPTY = "DATA_IS_NULL_OR_EMPTY";
+    String ACCESS_DENIED = "Truy cập bị từ chối.";
+    String DATA_INVALID = "Dữ liệu không hợp lệ.";
+    String DATA_IS_NULL_OR_EMPTY = "Không có dữ liệu.";
+    String REQUEST_NOT_EXIST = "Không tìm thấy người dùng hoặc yêu cầu không tồn tại.";
 
     // LOGIN
     String LOGIN_ACCESS_DENIED = "MSG_LOGIN_ACCESS_DENIED";
@@ -19,8 +20,8 @@ public interface ResponseMessageConstants {
     String USERNAME_OR_PASSWORD_INCORRECT = "MSG_USERNAME_OR_PASSWORD_INCORRECT";
 
     //REGISTER
-    String REGISTER_SUCCESS = "REGISTER_SUCCESS";
-    String REGISTER_FAILED = "REGISTER_FAILED";
+    String REGISTER_SUCCESS = "Đăng ký thành công.";
+    String REGISTER_FAILED = "Đăng ký thất bại.";
     String CHANGE_PASSWORD_SUCCESS = "Thay đổi mật khẩu thành công";
     String CHANGE_PASSWORD_FAILED = "Thay đổi mật khẩu thất bại";
     String RESEND_EMAIL_SUCCESS = "Gửi lại xác thực không thành công";
@@ -31,10 +32,11 @@ public interface ResponseMessageConstants {
     String USER_IS_DELETED = "Người dùng đã bị xóa";
 
     // COMMON
-    String UPDATE_FAILED = "MSG_UPDATE_FAILED";
-    String DELETE_FAILED = "MSG_DELETE_FAILED";
-    String TOKEN_EXPIRED = "MSG_TOKEN_EXPIRED";
-    String TOKEN_INVALID = "MSG_TOKEN_INVALID";
+    String UPDATE_FAILED = "Cập nhật thất bại.";
+    String DELETE_FAILED = "Xóa thất bại.";
+    String TOKEN_EXPIRED = "Mã token hết hạn.";
+    String TOKEN_INVALID = "Mã token không hợp lệ.";
+    String REQUIRE_INPUT_MANDATORY_FIELD = "Vui lòng điền vào thông tin bắt buộc.";
 
     //JOB
     String JOB_DOES_NOT_EXIST = "Tin tuyển dụng không tồn tại";
@@ -81,4 +83,6 @@ public interface ResponseMessageConstants {
     String DETAIL_PACKAGE_DOES_NOT_EXIST = "Gói không tồn tại";
     String BANNER_TITLE_HAVE_ALREADY_EXISTED = "Tên gói đã tồn tại";
     String PAYMENT_DOES_NOT_EXIST = "Giao dịch không tồn tại";
+    String SEND_RESET_PASSWORD_MAIL_SUCCESS = "Chúng tôi đã gửi mail làm mới mật khẩu tới email của bạn. Vui lòng kiểm tra email.";
+    String SEND_EMAIL_FAIL = "Có lỗi xảy ra. Gửi email không thành công!";
 }
