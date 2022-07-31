@@ -1,5 +1,6 @@
 package fpt.edu.capstone.dto.recruiter;
 
+import fpt.edu.capstone.entity.Banner;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,14 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DetailPaymentPackageInforResponse {
-    private long groupPackageId;
-    private String groupPackageName;
-    private String detailPackageName;
-    private long price;
-    private long discountPrice;
-    private String timeExpired;
-    private boolean isRelatedJob;
-    private boolean isSuggestJob;
-    //banner package group only use this field
-    private long maxCvView;
+    NormalPaymentPackage normalPaymentPackage;
+    Banner bannerPaymentPackage;
 }

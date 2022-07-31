@@ -4,6 +4,7 @@ import fpt.edu.capstone.dto.banner.ConfigBannerRequest;
 import fpt.edu.capstone.dto.banner.UpdateBannerRequest;
 import fpt.edu.capstone.dto.banner.UploadBannerRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.recruiter.DetailPurchasedPackageResponse;
 import fpt.edu.capstone.entity.Banner;
 import fpt.edu.capstone.entity.BannerActive;
 import fpt.edu.capstone.service.BannerActiveService;
@@ -105,10 +106,11 @@ public class BannerController {
 
     @GetMapping("/get-detail-purchased-package/{recruiterId}")
     public ResponseData getDetailPurchasedPackage(@PathVariable long recruiterId,
-                                                  @RequestParam long purchasedPackageId) {
+                                                  @RequestParam long paymentId) {
         try {
-            recruiterManageService.getDetailPurchasedPackage(recruiterId, purchasedPackageId);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+            DetailPurchasedPackageResponse response = recruiterManageService
+                    .getDetailPurchasedPackage(recruiterId, paymentId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, response);
         }catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

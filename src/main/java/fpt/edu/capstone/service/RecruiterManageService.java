@@ -35,7 +35,7 @@ public interface RecruiterManageService {
 
     void uploadBanner(long recruiterId, UploadBannerRequest request);
 
-    DetailPurchasedPackageResponse getDetailPurchasedPackage(long recruiterId, long purchasedDetailPackageId);
+    DetailPurchasedPackageResponse getDetailPurchasedPackage(long recruiterId, long paymentId);
 
     ResponseDataPagination getJobOfRecruiter(Integer pageNo, Integer pageSize, long paymentId);
 
