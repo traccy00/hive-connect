@@ -35,7 +35,7 @@ public class BannerController {
     private final RecruiterManageService recruiterManageService;
 
     //config cho các gói banner
-    @Operation(summary = "Create new banner package on Manage Banner screen - Admin module")
+    @Operation(summary = "Admin module - Create new banner package on Manage Banner screen")
     @PostMapping("/config-banner")
     public ResponseData insertBanner(@RequestBody ConfigBannerRequest request) {
         try {
@@ -48,7 +48,7 @@ public class BannerController {
         }
     }
 
-    @Operation(summary = "Get list all banner package on Manage Banner screen - Admin module")
+    @Operation(summary = "Admin module - Get list all banner package on Manage Banner screen")
     @GetMapping("/get-all-banner-package")
     public ResponseData getAllBanner(@RequestParam(value = "name", required = false) String title,
                                      @RequestParam(value = "status", required = false) boolean isDeleted,
@@ -65,10 +65,23 @@ public class BannerController {
     }
 
     @PutMapping("/update-banner-package")
-    @Operation(summary = "Update banner package on Manage Banner screen - Admin module")
+    @Operation(summary = "Admin module - Update banner package on Manage Banner screen")
     public ResponseData updateBanner(UpdateBannerRequest request) {
         try {
             bannerService.updateBanner(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @DeleteMapping
+    @Operation(summary = "Admin module - Delete a banner package of banner group")
+    public ResponseData deleteBanner(@RequestParam long bannerPackageId) {
+        try {
+            bannerService.deleteBanner(bannerPackageId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -90,27 +103,22 @@ public class BannerController {
         }
     }
 
-    //    @GetMapping("/search-banner")
-//    public ResponseData searchReportedUsers(
-//            @RequestParam(defaultValue = "true", required = false) String screen,
-//            @RequestParam(required = false)  @DateTimeFormat(pattern = "dd/MM/yyyy")
-//                    LocalDate minDate,
-//            @RequestParam(required = false)  @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate maxDate
-//
-//    ) {
-//        try {
-//             = screen + "=true";
-//            List<Banner> banners = bannerService.searchByFiler(screen, LocalDateTime.of(minDate, LocalTime.MIN), LocalDateTime.of(maxDate, LocalTime.MAX));
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, banners);
-//        } catch (Exception e) {
-//            String msg = LogUtils.printLogStackTrace(e);
-//            logger.error(msg);
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
-//        }
-//    }
+    @GetMapping("/get-detail-purchased-package/{recruiterId}")
+    public ResponseData getDetailPurchasedPackage(@PathVariable long recruiterId,
+                                                  @RequestParam long purchasedPackageId) {
+        try {
+            recruiterManageService.getDetailPurchasedPackage(recruiterId, purchasedPackageId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        }catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
 
     @GetMapping("/get-banner-for-candidate")
-    @Operation(summary = "Display banner for candidate")
+    @Operation(summary = "Candidate module - Display banner for candidate")
     public ResponseData displayBannerForCandidate(@RequestParam String displayPosition) {
         try {
             List<BannerActive> bannerActives = bannerActiveService.getBannersByPosition(displayPosition);
@@ -121,6 +129,5 @@ public class BannerController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
-
 
 }

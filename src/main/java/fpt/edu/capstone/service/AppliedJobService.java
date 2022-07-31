@@ -25,4 +25,6 @@ public interface AppliedJobService {
 
     CountCandidateApplyPercentageResponse countApplyPercentage(long recruiterId);
 
+    int countAppliedCVOfJob(long jobId);
+
 }

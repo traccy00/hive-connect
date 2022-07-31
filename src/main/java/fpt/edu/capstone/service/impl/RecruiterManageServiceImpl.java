@@ -6,6 +6,7 @@ import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.banner.UploadBannerRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CompanyInformationResponse;
+import fpt.edu.capstone.dto.job.JobForRecruiterResponse;
 import fpt.edu.capstone.dto.recruiter.*;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -64,6 +65,12 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     private final BannerService bannerService;
 
     private final BannerActiveRepository bannerActiveRepository;
+
+    private final DetailPackageService detailPackageService;
+
+    private final RentalPackageService rentalPackageService;
+
+    private final BannerActiveService bannerActiveService;
 
     @Override
     public CommonRecruiterInformationResponse getCommonInforOfRecruiter(long recruiterId) {
@@ -311,7 +318,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
             response.setCareerGoal(candidate.getIntroduction());
             response.setCandidateAddress(candidate.getAddress());
-            response.setSumExperienceYear(iFindCVResponse.getSumExperienceYear());
+//            response.setSumExperienceYear(iFindCVResponse.getSumExperienceYear());
             responseList.add(response);
         }
 
@@ -357,7 +364,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
             response.setCareerGoal(candidate.getIntroduction());
             response.setCandidateAddress(candidate.getAddress());
-            response.setSumExperienceYear(iFindCVResponse.getSumExperienceYear());
+//            response.setSumExperienceYear(iFindCVResponse.getSumExperienceYear());
             responseList.add(response);
         }
 
@@ -437,5 +444,91 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
+    }
+
+    @Override
+    public ResponseDataPagination getJobOfRecruiter(Integer pageNo, Integer pageSize, long recruiterId) {
+        List<JobForRecruiterResponse> responseList = new ArrayList<>();
+
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+
+        if(!recruiterService.existById(recruiterId)) {
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        }
+        Page<Job> jobsListOfRecruiter = jobService.getJobOfRecruiter(pageable, recruiterId);
+        if(jobsListOfRecruiter.hasContent()) {
+            for(Job job : jobsListOfRecruiter) {
+                JobForRecruiterResponse response = new JobForRecruiterResponse();
+                response.setJobId(job.getId());
+                response.setJobName(job.getJobName());
+                Company company = companyService.getCompanyById(job.getCompanyId());
+                if(company == null) {
+                    //company không tồn tại mà đã tạo được job
+                    throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
+                }
+                response.setCompanyName(company.getName());
+                response.setWorkPlace(job.getWorkPlace());
+                response.setFromSalary(job.getFromSalary());
+                response.setToSalary(job.getToSalary());
+
+                int applyCount = appliedJobService.countAppliedCVOfJob(job.getId());
+                response.setApplyCount(applyCount);
+//                response.getViewCount();
+                response.setStartDate(job.getStartDate());
+                response.setEndDate(job.getEndDate());
+                responseList.add(response);
+            }
+        }
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(responseList);
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(jobsListOfRecruiter.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobsListOfRecruiter.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
+    }
+
+    @Override
+    public DetailPurchasedPackageResponse getDetailPurchasedPackage(long recruiterId, long paymentId) {
+        Payment payment = paymentService.findById(paymentId);
+        //lấy thông tin của gói mua
+        DetailPaymentPackageInforResponse detailPPInforRes = new DetailPaymentPackageInforResponse();
+        DetailPackage detailPackage = detailPackageService.findById(payment.getDetailPackageId());
+        Optional<RentalPackage> rentalPackage = rentalPackageService.findById(detailPackage.getRentalPackageId());
+        if(!rentalPackage.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.RENTAL_PACKAGE_DOES_NOT_EXIST + ". " + ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
+        }
+        detailPPInforRes.setGroupPackageId(detailPackage.getRentalPackageId());
+        detailPPInforRes.setGroupPackageName(rentalPackage.get().getPackageGroup());
+        detailPPInforRes.setDetailPackageName(detailPackage.getDetailName());
+        detailPPInforRes.setPrice(detailPackage.getPrice());
+        detailPPInforRes.setDiscountPrice(detailPackage.getDiscount());
+        detailPPInforRes.setTimeExpired(detailPackage.getTimeExpired());
+        detailPPInforRes.setRelatedJob(detailPackage.isRelatedJob());
+        detailPPInforRes.setSuggestJob(detailPackage.isSuggestJob());
+        detailPPInforRes.setMaxCvView(detailPackage.getMaxCvView());
+        //lấy chi tiết recruiter đã upload cái gì cho gói này
+        if(payment.getBannerId() > 0) {
+            BannerDetailPurchasedResponse bannerDetailPurchasedRes = new BannerDetailPurchasedResponse();
+            List<BannerActive> bannerActiveOfPayment = bannerActiveService.getAllByPaymentId(paymentId);
+            List<BannerPositionDetailResponse> positionResponseList = new ArrayList<>();
+            for(BannerActive bannerActive : bannerActiveOfPayment) {
+                BannerPositionDetailResponse positionResponse = new BannerPositionDetailResponse();
+                positionResponse.setPosition(bannerActive.getDisplayPosition());
+                positionResponse.setImageUrl(bannerActive.getImageUrl());
+                positionResponse.setApprovalStatus(bannerActive.getApprovalStatus());
+                positionResponseList.add(positionResponse);
+            }
+            bannerDetailPurchasedRes.setBannerPositionDetailResponseList(positionResponseList);
+        } else {
+            if(payment.getDetailPackageId() > 0) {
+                JobDetailPurchasedResponse jobDetailPurchasedRes = new JobDetailPurchasedResponse();
+            }
+        }
+        return null;
     }
 }

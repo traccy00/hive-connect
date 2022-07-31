@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Where(clause = "is_deleted = false")
 public class BannerActive extends BaseEntity {
 
     @Id
@@ -31,4 +33,7 @@ public class BannerActive extends BaseEntity {
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
+
+    @Column(name = "approval_status")
+    private String approvalStatus;
 }

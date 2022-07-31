@@ -34,7 +34,7 @@ public class JobController {
 
     private final CandidateJobService candidateJobService;
 
-    private final RecruiterJobService recruiterJobService;
+    private final RecruiterManageService recruiterManageService;
 
     private final ModelMapper modelMapper;
 
@@ -297,7 +297,7 @@ public class JobController {
                                               @RequestParam(defaultValue = "10") Integer pageSize,
                                               @RequestParam("recruiterId") long recruiterId) {
         try {
-            ResponseDataPagination pagination = recruiterJobService.getJobOfRecruiter(pageNo, pageSize, recruiterId);
+            ResponseDataPagination pagination = recruiterManageService.getJobOfRecruiter(pageNo, pageSize, recruiterId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

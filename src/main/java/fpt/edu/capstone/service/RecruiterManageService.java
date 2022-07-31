@@ -4,6 +4,7 @@ import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.banner.UploadBannerRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CompanyInformationResponse;
+import fpt.edu.capstone.dto.recruiter.DetailPurchasedPackageResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
 import fpt.edu.capstone.entity.Banner;
@@ -33,4 +34,9 @@ public interface RecruiterManageService {
                                   String candidateAddress, String techStack);
 
     void uploadBanner(long recruiterId, UploadBannerRequest request);
+
+    DetailPurchasedPackageResponse getDetailPurchasedPackage(long recruiterId, long purchasedDetailPackageId);
+
+    ResponseDataPagination getJobOfRecruiter(Integer pageNo, Integer pageSize, long paymentId);
+
 }

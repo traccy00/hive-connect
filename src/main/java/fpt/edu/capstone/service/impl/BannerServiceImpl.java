@@ -49,7 +49,10 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public void deleteBanner(long bannerId) {
-
+        bannerRepository.deleteById(bannerId);
+        if(bannerRepository.findById(bannerId).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.DELETE_FAILED);
+        }
     }
 
     @Override

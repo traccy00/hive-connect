@@ -9,6 +9,7 @@ public interface ResponseMessageConstants {
     String REQUEST_NOT_EXIST = "Không tìm thấy người dùng hoặc yêu cầu không tồn tại.";
     String CREATE_FAIL = "Tạo thất bại";
     String ROLE_NAME_EXISTS = "Loại người dùng này đã tồn tại";
+    String PLEASE_TRY_TO_CONTACT_ADMIN = "Có lỗi xảy ra, vui lòng liên hệ quản trị hệ thống.";
 
     // LOGIN
     String LOGIN_ACCESS_DENIED = "MSG_LOGIN_ACCESS_DENIED";

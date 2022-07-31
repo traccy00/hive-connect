@@ -45,4 +45,7 @@ public interface AppliedJobRepository extends JpaRepository<AppliedJob, Long> {
     @Query(value = "select count(aj.candidate_id) as totalApplied, aj.job_id as jobId, j.number_recruits as numberRecruits " +
             "from applied_job aj join job j on aj.job_id = j.id where j.recruiter_id = ? group by job_id , number_recruits", nativeQuery = true)
     CountCandidateApplyPercentageResponse countApplyPercentage(long recruiterId);
+
+    @Query(value = "select count(*) from applied_job aj where job_id = ? and is_applied = true", nativeQuery = true)
+    int countAppliedCVOfAJob(long jobId);
 }
