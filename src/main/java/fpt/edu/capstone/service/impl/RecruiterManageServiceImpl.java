@@ -10,7 +10,9 @@ import fpt.edu.capstone.dto.job.JobForRecruiterResponse;
 import fpt.edu.capstone.dto.recruiter.*;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
-import fpt.edu.capstone.repository.*;
+import fpt.edu.capstone.repository.BannerActiveRepository;
+import fpt.edu.capstone.repository.RecruiterRepository;
+import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
@@ -71,6 +73,10 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     private final RentalPackageService rentalPackageService;
 
     private final BannerActiveService bannerActiveService;
+
+    private final FieldsService fieldsService;
+
+    private final CountryService countryService;
 
     @Override
     public CommonRecruiterInformationResponse getCommonInforOfRecruiter(long recruiterId) {
@@ -235,7 +241,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         profileResponse.setGender(recruiter.isGender());
         profileResponse.setPosition(recruiter.getPosition());
         profileResponse.setLinkedinAccount(recruiter.getLinkedinAccount());
-        if(recruiter.getCompanyId() == 0) {
+        if (recruiter.getCompanyId() == 0) {
             profileResponse.setJoinedCompany(false);
         } else if (recruiter.getCompanyId() > 0) {
             profileResponse.setJoinedCompany(true);
@@ -298,7 +304,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
         Page<IFindCVResponse> cvList = cvService.findCVForRecruiter(pageable, //experienceOption,
                 candidateAddress, techStack);
-        for(IFindCVResponse iFindCVResponse : cvList) {
+        for (IFindCVResponse iFindCVResponse : cvList) {
             FindCVResponse response = new FindCVResponse();
             Optional<CV> cv = cvService.findCvById(iFindCVResponse.getCvId());
             Candidate candidate = candidateService.getCandidateById(cv.get().getCandidateId());
@@ -307,7 +313,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             List<WorkExperience> workExperiences = workExperienceService.
                     getListWorkExperienceByCvId(iFindCVResponse.getCvId());
             List<String> workPositionExperiences = new ArrayList<>();
-            for(WorkExperience workExperience : workExperiences) {
+            for (WorkExperience workExperience : workExperiences) {
                 workPositionExperiences.add(workExperience.getPosition() + " - " + workExperience.getCompanyName());
             }
             response.setWorkPositionExperiences(workPositionExperiences);
@@ -336,15 +342,15 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     @Override
     public ResponseDataPagination findCVTest(Integer pageNo, Integer pageSize, int experienceOption,
-                                         String candidateAddress,
-                                         String techStack) {
+                                             String candidateAddress,
+                                             String techStack) {
         List<FindCVResponse> responseList = new ArrayList<>();
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
         Page<IFindCVResponse> cvList = cvService.findCVTest(pageable, experienceOption,
                 candidateAddress, techStack);
-        for(IFindCVResponse iFindCVResponse : cvList) {
+        for (IFindCVResponse iFindCVResponse : cvList) {
             FindCVResponse response = new FindCVResponse();
             Optional<CV> cv = cvService.findCvById(iFindCVResponse.getCvId());
             Candidate candidate = candidateService.getCandidateById(cv.get().getCandidateId());
@@ -353,7 +359,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             List<WorkExperience> workExperiences = workExperienceService.
                     getListWorkExperienceByCvId(iFindCVResponse.getCvId());
             List<String> workPositionExperiences = new ArrayList<>();
-            for(WorkExperience workExperience : workExperiences) {
+            for (WorkExperience workExperience : workExperiences) {
                 workPositionExperiences.add(workExperience.getPosition() + " - " + workExperience.getCompanyName());
             }
             response.setWorkPositionExperiences(workPositionExperiences);
@@ -382,13 +388,13 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     @Override
     public void uploadBanner(long recruiterId, UploadBannerRequest request) {
-        if(recruiterService.getRecruiterById(recruiterId) == null) {
+        if (recruiterService.getRecruiterById(recruiterId) == null) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         Payment payment = paymentService.findById(request.getPaymentId());
         //xem gói mà nhà tuyển dụng mua có những tính năng nào
         Banner banner = bannerService.findById(payment.getBannerId());
-        if(banner.isSpotlight()) {
+        if (banner.isSpotlight()) {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getSpotLightImage());
             bannerActive.setPaymentId(payment.getId());
@@ -396,7 +402,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
-        if(banner.isHomepageBannerA()) {
+        if (banner.isHomepageBannerA()) {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getHomepageBannerAImage());
             bannerActive.setPaymentId(payment.getId());
@@ -404,7 +410,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
-        if(banner.isHomePageBannerB()) {
+        if (banner.isHomePageBannerB()) {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getHomepageBannerBImage());
             bannerActive.setPaymentId(payment.getId());
@@ -412,7 +418,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
-        if(banner.isHomePageBannerC()) {
+        if (banner.isHomePageBannerC()) {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getHomepageBannerCImage());
             bannerActive.setPaymentId(payment.getId());
@@ -420,7 +426,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
-        if(banner.isJobBannerA()) {
+        if (banner.isJobBannerA()) {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getJobBannerAImage());
             bannerActive.setPaymentId(payment.getId());
@@ -428,7 +434,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
-        if(banner.isJobBannerB()) {
+        if (banner.isJobBannerB()) {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getJobBannerBImage());
             bannerActive.setPaymentId(payment.getId());
@@ -436,7 +442,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             bannerActive.create();
             bannerActiveRepository.save(bannerActive);
         }
-        if(banner.isJobBannerC()) {
+        if (banner.isJobBannerC()) {
             BannerActive bannerActive = new BannerActive();
             bannerActive.setImageUrl(request.getJobBannerCImage());
             bannerActive.setPaymentId(payment.getId());
@@ -453,17 +459,17 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
-        if(!recruiterService.existById(recruiterId)) {
+        if (!recruiterService.existById(recruiterId)) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         Page<Job> jobsListOfRecruiter = jobService.getJobOfRecruiter(pageable, recruiterId);
-        if(jobsListOfRecruiter.hasContent()) {
-            for(Job job : jobsListOfRecruiter) {
+        if (jobsListOfRecruiter.hasContent()) {
+            for (Job job : jobsListOfRecruiter) {
                 JobForRecruiterResponse response = new JobForRecruiterResponse();
                 response.setJobId(job.getId());
                 response.setJobName(job.getJobName());
                 Company company = companyService.getCompanyById(job.getCompanyId());
-                if(company == null) {
+                if (company == null) {
                     //company không tồn tại mà đã tạo được job
                     throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
                 }
@@ -494,41 +500,56 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     @Override
     public DetailPurchasedPackageResponse getDetailPurchasedPackage(long recruiterId, long paymentId) {
+        DetailPurchasedPackageResponse response = new DetailPurchasedPackageResponse();
         Payment payment = paymentService.findById(paymentId);
         //lấy thông tin của gói mua
         DetailPaymentPackageInforResponse detailPPInforRes = new DetailPaymentPackageInforResponse();
-        DetailPackage detailPackage = detailPackageService.findById(payment.getDetailPackageId());
-        Optional<RentalPackage> rentalPackage = rentalPackageService.findById(detailPackage.getRentalPackageId());
-        if(!rentalPackage.isPresent()) {
-            throw new HiveConnectException(ResponseMessageConstants.RENTAL_PACKAGE_DOES_NOT_EXIST + ". " + ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
-        }
-        detailPPInforRes.setGroupPackageId(detailPackage.getRentalPackageId());
-        detailPPInforRes.setGroupPackageName(rentalPackage.get().getPackageGroup());
-        detailPPInforRes.setDetailPackageName(detailPackage.getDetailName());
-        detailPPInforRes.setPrice(detailPackage.getPrice());
-        detailPPInforRes.setDiscountPrice(detailPackage.getDiscount());
-        detailPPInforRes.setTimeExpired(detailPackage.getTimeExpired());
-        detailPPInforRes.setRelatedJob(detailPackage.isRelatedJob());
-        detailPPInforRes.setSuggestJob(detailPackage.isSuggestJob());
-        detailPPInforRes.setMaxCvView(detailPackage.getMaxCvView());
-        //lấy chi tiết recruiter đã upload cái gì cho gói này
         if(payment.getBannerId() > 0) {
-            BannerDetailPurchasedResponse bannerDetailPurchasedRes = new BannerDetailPurchasedResponse();
-            List<BannerActive> bannerActiveOfPayment = bannerActiveService.getAllByPaymentId(paymentId);
-            List<BannerPositionDetailResponse> positionResponseList = new ArrayList<>();
-            for(BannerActive bannerActive : bannerActiveOfPayment) {
-                BannerPositionDetailResponse positionResponse = new BannerPositionDetailResponse();
-                positionResponse.setPosition(bannerActive.getDisplayPosition());
-                positionResponse.setImageUrl(bannerActive.getImageUrl());
-                positionResponse.setApprovalStatus(bannerActive.getApprovalStatus());
-                positionResponseList.add(positionResponse);
-            }
-            bannerDetailPurchasedRes.setBannerPositionDetailResponseList(positionResponseList);
+            Banner banner = bannerService.findById(payment.getBannerId());
+            detailPPInforRes.setBannerPaymentPackage(banner);
         } else {
-            if(payment.getDetailPackageId() > 0) {
-                JobDetailPurchasedResponse jobDetailPurchasedRes = new JobDetailPurchasedResponse();
+            if (payment.getDetailPackageId() > 0) {
+                NormalPaymentPackage normalPP = new NormalPaymentPackage();
+                DetailPackage detailPackage = detailPackageService.findById(payment.getDetailPackageId());
+                Optional<RentalPackage> rentalPackage = rentalPackageService.findById(detailPackage.getRentalPackageId());
+                if (!rentalPackage.isPresent()) {
+                    throw new HiveConnectException(ResponseMessageConstants.RENTAL_PACKAGE_DOES_NOT_EXIST + ". " + ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
+                }
+                normalPP.setGroupPackageId(detailPackage.getRentalPackageId());
+                normalPP.setGroupPackageName(rentalPackage.get().getPackageGroup());
+                normalPP.setDetailPackageName(detailPackage.getDetailName());
+                normalPP.setPrice(detailPackage.getPrice());
+                normalPP.setDiscountPrice(detailPackage.getDiscount());
+                normalPP.setTimeExpired(detailPackage.getTimeExpired());
+                normalPP.setRelatedJob(detailPackage.isRelatedJob());
+                normalPP.setSuggestJob(detailPackage.isSuggestJob());
+                normalPP.setMaxCvView(detailPackage.getMaxCvView());
+                detailPPInforRes.setNormalPaymentPackage(normalPP);
             }
         }
-        return null;
+        response.setInforPPRes(detailPPInforRes);
+        //lấy chi tiết recruiter đã upload cái gì cho gói này
+        if (payment.getBannerId() > 0) {
+            BannerDetailPurchasedResponse bannerDetailPurchasedRes = new BannerDetailPurchasedResponse();
+            List<BannerPositionDetailResponse> bannerActiveOfPayment = bannerActiveService
+                    .getAllBannerByPaymentId(paymentId);
+            bannerDetailPurchasedRes.setBannerPosRes(bannerActiveOfPayment);
+            response.setBannerPurchasedPPRes(bannerDetailPurchasedRes);
+        } else {
+            if (payment.getDetailPackageId() > 0) {
+                Job selectedJob = jobService.getJobById(payment.getJobId());
+                JobDetailPurchasedResponse jobDetailPurchasedRes = modelMapper
+                        .map(selectedJob, JobDetailPurchasedResponse.class);
+                Optional<Company> company = companyService.findById(selectedJob.getCompanyId());
+                jobDetailPurchasedRes.setCompanyName(company.get().getName());
+                Fields field = fieldsService.getById(selectedJob.getFieldId());
+                jobDetailPurchasedRes.setFieldName(field.getFieldName());
+                Optional<VietnamCountry> country = countryService.findById(selectedJob.getCountryId());
+                jobDetailPurchasedRes.setCountry(country.get().getCountryName());
+
+                response.setJobPurchasedPPRes(jobDetailPurchasedRes);
+            }
+        }
+        return response;
     }
 }

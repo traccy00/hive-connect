@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @Setter
 public class BannerDetailPurchasedResponse {
-    private List<BannerPositionDetailResponse> bannerPositionDetailResponseList;
+    private List<BannerPositionDetailResponse> bannerPosRes;
 }
