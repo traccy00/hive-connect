@@ -9,11 +9,9 @@ import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.service.NotificationService;
 import fpt.edu.capstone.service.UserService;
-import fpt.edu.capstone.utils.Enums;
-import fpt.edu.capstone.utils.LogUtils;
-import fpt.edu.capstone.utils.ResponseData;
-import fpt.edu.capstone.utils.ResponseDataUser;
+import fpt.edu.capstone.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +32,8 @@ public class UserController {
 
     private final UserService userService;
 
+    private final NotificationService notificationService;
+
     @PostMapping("/update/{userId}")
     @Operation(summary = "update user")
     public ResponseData login(@RequestBody UpdateUserRequest request, @PathVariable long userId) throws Exception {
@@ -48,5 +48,12 @@ public class UserController {
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
+    }
+
+    @GetMapping("/get-all-notification")
+    ResponseDataPagination getAllNotification(@RequestParam(defaultValue = "0") Integer pageNo,
+                                              @RequestParam(defaultValue = "10") Integer pageSize,
+                                              @RequestParam long userId) {
+        return notificationService.getAllNotificationByUserId(pageNo, pageSize, userId);
     }
 }

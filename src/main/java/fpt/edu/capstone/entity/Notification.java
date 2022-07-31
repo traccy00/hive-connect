@@ -1,67 +1,42 @@
 package fpt.edu.capstone.entity;
-//thông báo của Fwork cho user hoặc company về chính sách, thay đổi,....
+
+import io.micrometer.core.annotation.Counted;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "notification")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Notification {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String text;
-    private long companyId;// thông báo cho cá nhân công ty hoặc người dùng, có thể thông báo người dùng ABC đang được công ty CMC quan tâm đánh giá CV
-    private long userId;
-    private boolean status;
-    private boolean isBanner; // thông báo trên banner của web
 
-    public Notification(long id, String text, long companyId, long userId, boolean status, boolean isBanner) {
-        this.id = id;
-        this.text = text;
-        this.companyId = companyId;
-        this.userId = userId;
-        this.status = status;
-        this.isBanner = isBanner;
-    }
+    @Column(name = "receiver_id")
+    private long receiverId;
 
-    public long getId() {
-        return id;
-    }
+    @Column(name = "type")
+    private long type;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    @Column(name = "date")
+    private LocalDateTime date;
 
-    public String getText() {
-        return text;
-    }
+    @Column(name = "content")
+    private String content;
 
-    public void setText(String text) {
-        this.text = text;
-    }
+    @Column(name = "is_seen")
+    private boolean isSeen;
 
-    public long getCompanyId() {
-        return companyId;
-    }
+    @Column(name = "is_delete")
+    private boolean isDelete;
 
-    public void setCompanyId(long companyId) {
-        this.companyId = companyId;
-    }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public boolean isBanner() {
-        return isBanner;
-    }
-
-    public void setBanner(boolean banner) {
-        isBanner = banner;
-    }
 }

@@ -5,22 +5,24 @@ import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
+import fpt.edu.capstone.entity.Company;
+import fpt.edu.capstone.entity.Notification;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.RequestJoinCompany;
-import fpt.edu.capstone.service.RecruiterManageService;
-import fpt.edu.capstone.service.RecruiterService;
-import fpt.edu.capstone.service.RequestJoinCompanyService;
+import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +38,10 @@ public class RecruiterController {
     private final RecruiterManageService recruiterManageService;
 
     private final RequestJoinCompanyService requestJoinCompanyService;
+
+    private final CompanyService companyService;
+
+    private final NotificationService notificationService;
 
     @GetMapping("/recruiter-profile/{userId}")
     public ResponseData getRecruiterProfile(@PathVariable("userId") long userId) {
@@ -142,6 +148,18 @@ public class RecruiterController {
     @Operation(summary = "recruiter thực hiện approve/deny request company")
     public ResponseData getReceiveRequest(@RequestBody RequestJoinCompany newRequestJoinCompany) {
         try {
+
+            //Add notification
+
+            String appr = newRequestJoinCompany.getStatus().toLowerCase().equals("deny") ? " chấp thuận" : " đồng ý";
+            Optional<Company> company = companyService.findById(newRequestJoinCompany.getCompanyId());
+            String content = "Yêu cầu vào công ty "+ company.get().getName() +" vừa được" + appr;
+            Recruiter r = recruiterService.getRecruiterById(newRequestJoinCompany.getSenderId());
+            Notification notification = new Notification(0, r.getUserId(), 3, LocalDateTime.now(), content, false, false);
+            notificationService.insertNotification(notification);
+
+
+
             requestJoinCompanyService.approveRequest(newRequestJoinCompany.getStatus(), newRequestJoinCompany.getId());
             if (!newRequestJoinCompany.getStatus().toLowerCase().equals("deny")) {
                 recruiterService.updateCompany(newRequestJoinCompany.getCompanyId(), newRequestJoinCompany.getSenderId());

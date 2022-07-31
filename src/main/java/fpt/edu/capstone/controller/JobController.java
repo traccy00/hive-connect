@@ -3,8 +3,7 @@ package fpt.edu.capstone.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.Report;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
@@ -20,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/job")
@@ -43,6 +44,14 @@ public class JobController {
     private final AdminManageService adminManageService;
 
     private final PaymentService paymentService;
+
+    private final NotificationService notificationService;
+
+    private final FollowService followService;
+
+    private final CandidateService candidateService;
+
+    private final RecruiterService recruiterService;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -110,6 +119,21 @@ public class JobController {
     public ResponseData updateJob(@RequestBody UpdateJobRequest request) {
         try {
             jobService.updateJob(request);
+            //Add notification
+            Optional<List<Follow>> followsOP = followService.getAllFollowerOfAJob(request.getJobId());
+            if(followsOP.isPresent()) { //Neu co nguoi theo doi moi add notification
+                List<Follow> follows = followsOP.get();
+                String content = "Công việc"+ request.getJobName() +"đã có sự thay đổi, Ấn để xem";
+                for(Follow f : follows) {
+                    Optional<Candidate> c = candidateService.findById(f.getFollowerId());
+                    Notification notification = new Notification(0, c.get().getUserId(), 6, LocalDateTime.now(), content, false, false);
+                    notificationService.insertNotification(notification);
+                }
+            }
+
+            //Get all candidate following this job
+
+
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_JOB_SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -133,9 +157,21 @@ public class JobController {
     @PostMapping("/apply-job")
     public ResponseData applyJob(@RequestBody AppliedJobRequest request) {
         try {
+
             findJobService.appliedJob(request);
+
+
+            //Add Notification
+            Job j = jobService.getJobById(request.getJobId());
+            Recruiter r = recruiterService.getRecruiterById(j.getRecruiterId());
+            Notification notification = new Notification(0, r.getUserId(), 1, LocalDateTime.now(), j.getJobName()+ " " + "vừa nhận được lượt ứng tuyển mới", false, false);
+            notificationService.insertNotification(notification);
+
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
                     new ObjectMapper().writeValueAsString(request));
+
+
+
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
@@ -284,6 +320,15 @@ public class JobController {
     public ResponseData approveJob(@RequestBody ApprovalJobRequest approvalJobRequest) {
         try {
             candidateJobService.approveJob(approvalJobRequest);
+
+            //Add Notification
+            String appr = approvalJobRequest.getApprovalStatus().equals("Approved") ? " chấp thuận" : " từ chối";
+            Job j = jobService.getJobById(approvalJobRequest.getJobId());
+            String content = "Đơn ứng tuyển của bạn vào " + j.getJobName() + " vừa được" +appr;
+            Candidate c = candidateService.getCandidateById(approvalJobRequest.getCandidateId());
+            Notification notification = new Notification(0, c.getUserId(), 2, LocalDateTime.now(), content, false, false);
+            notificationService.insertNotification(notification);
+
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
