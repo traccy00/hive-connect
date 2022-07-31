@@ -11,6 +11,7 @@ import fpt.edu.capstone.service.RentalPackageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -34,11 +35,15 @@ public class PackageController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/list-package")
-    public ResponseData getListDetailPackage(@RequestParam(value = "name", defaultValue = "") String name ,
-                                             @RequestParam(value = "rentalPackageId", defaultValue = "0", required = false) long rentalPackageId){
+    public ResponseData getListDetailPackage(@RequestParam(defaultValue = "1") Integer pageNo,
+                                             @RequestParam(defaultValue = "10") Integer pageSize,
+                                             @RequestParam(value = "name", defaultValue = "") String name ,
+                                             @RequestParam(value = "rentalPackageId", defaultValue = "0", required = false) long rentalPackageId,
+                                             @RequestParam(value = "status") boolean isDeleted){
         try {
-            List<DetailPackage> list =  detailPackageService.getListDetailPackageFilter(name, rentalPackageId);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS,list);
+            ResponseDataPagination pagination = detailPackageService.getListDetailPackageFilter(pageNo, pageSize, name, rentalPackageId, isDeleted);
+
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS,pagination);
         }catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

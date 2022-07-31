@@ -1,12 +1,13 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.entity.DetailPackage;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface DetailPackageService {
-    List<DetailPackage> getListDetailPackageFilter(String name, long rentalId);
+    ResponseDataPagination getListDetailPackageFilter(Integer pageNo, Integer pageSize, String name, long rentalId, boolean isDeleted);
 
     DetailPackage findById(long id);
 
