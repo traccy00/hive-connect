@@ -7,4 +7,6 @@ import java.util.List;
 public interface BannerActiveService {
 
     List<BannerActive> getBannersByPosition(String displayPosition);
+
+    List<BannerActive> getAllByPaymentId(long paymentId);
 }

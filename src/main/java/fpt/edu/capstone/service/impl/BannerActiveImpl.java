@@ -18,4 +18,9 @@ public class BannerActiveImpl implements BannerActiveService {
     public List<BannerActive> getBannersByPosition(String displayPosition) {
         return bannerActiveRepository.getBannerByPosition(displayPosition);
     }
+
+    @Override
+    public List<BannerActive> getAllByPaymentId(long paymentId) {
+        return bannerActiveRepository.getAllByPaymentId(paymentId);
+    }
 }

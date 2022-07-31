@@ -1,8 +1,12 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.common.user.GooglePojo;
 import fpt.edu.capstone.dto.admin.user.CandidateManageResponse;
 import fpt.edu.capstone.dto.candidate.CVBaseInformationRequest;
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.Candidate;
+import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.CandidateRepository;
 import fpt.edu.capstone.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +85,18 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public void save(Candidate candidate) {
         candidateRepository.save(candidate);
+    }
+
+    @Override
+    public void insertGoogleCandidate(GooglePojo googlePojo, Users user) {
+        Candidate candidate = new Candidate();
+        candidate.setFullName(googlePojo.getName());
+        candidate.setAvatarUrl(googlePojo.getPicture());
+        candidate.setUserId(user.getId());
+        candidateRepository.save(candidate);
+        if(!candidateRepository.findById(candidate.getId()).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.CREATE_FAIL);
+        }
     }
 
 }

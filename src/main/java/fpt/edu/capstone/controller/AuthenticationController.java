@@ -1,5 +1,7 @@
 package fpt.edu.capstone.controller;
 
+import fpt.edu.capstone.common.user.GooglePojo;
+import fpt.edu.capstone.common.user.GoogleUtils;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.login.LoginGoogleRequest;
 import fpt.edu.capstone.dto.login.LoginRequest;
@@ -9,6 +11,7 @@ import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.dto.register.ResetPasswordRequest;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.security.TokenUtils;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.service.impl.SecurityUserServiceImpl;
@@ -19,6 +22,7 @@ import fpt.edu.capstone.utils.ResponseDataUser;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,6 +44,8 @@ import java.util.Optional;
 public class AuthenticationController {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
+    private final ModelMapper modelMapper;
+
     private final UserService userService;
 
     private final CandidateService candidateService;
@@ -57,6 +63,10 @@ public class AuthenticationController {
     private final TokenUtils jwtTokenUtil;
 
     private final ConfirmTokenService confirmTokenService;
+
+    private final GoogleUtils googleUtils;
+
+    private final UserRepository userRepository;
 
     @PostMapping("/login")
     @Operation(summary = "Login user")
@@ -131,9 +141,106 @@ public class AuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             throw new Exception("Tài khoản bị khóa", e);
         } catch (BadCredentialsException e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             throw new Exception("Sai tên đăng nhập hoặc mật khẩu", e);
+        }
+    }
+
+    //TODO : namnh
+    @PostMapping("/login-google")
+    public ResponseDataUser loginGoogle(@RequestBody LoginGoogleRequest request) {
+        try {
+            GooglePojo googlePojo = new GooglePojo();
+            googlePojo.setEmail(request.getEmail());
+            googlePojo.setName(request.getName());
+            googlePojo.setPicture(request.getPicture());
+
+            if (StringUtils.containsWhitespace(request.getEmail())) {
+                return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
+                        ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
+            }
+
+            //đã có tài khoản Hive Connect với Google account này
+            if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+                //tìm user theo email google trả về
+                Users user = userService.findByEmail(request.getEmail());
+                //thực hiện login bình thường
+                authenticate(user.getUsername(), request.getPassword());
+                user.setLastLoginTime(LocalDateTime.now());
+                userService.saveUser(user);
+                //lấy token
+                String username = request.getUsername();
+                logger.info("login with username {}", username);
+                final UserDetails userDetails = securityUserService.loadUserByUsername(username);
+                String token = jwtTokenUtil.generateToken(userDetails);
+                //trả data cho FE
+                UserInforResponse response = new UserInforResponse();
+                response.setUser(user);
+                if (user.getRoleId() == 3) {
+                    Optional<Candidate> candidate = candidateService.findCandidateByUserId(user.getId());
+                    if (!candidate.isPresent()) {
+                        throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+                    }
+                    response.setCandidate(candidate.get());
+                }
+                if (user.getRoleId() == 2) {
+                    Optional<Recruiter> recruiter = recruiterService.findRecruiterByUserId(user.getId());
+                    if (!recruiter.isPresent()) {
+                        throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+                    }
+                    if (recruiter.get().getCompanyId() == 0) {
+                        response.setJoinedCompany(false);
+                    } else if (recruiter.get().getCompanyId() > 0) {
+                        response.setJoinedCompany(true);
+                    }
+                    if (recruiter.get().getBusinessLicenseApprovalStatus() != null
+                            && recruiter.get().getBusinessLicenseApprovalStatus()
+                            .equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+                        response.setApprovedBusinessLicense(true);
+                    } else {
+                        response.setApprovedBusinessLicense(false);
+                    }
+                    response.setRecruiter(recruiter.get());
+                }
+                return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.LOGIN_SUCCESS, response, token);
+                //chưa có tài khoản Hive Connect với Google account này
+            } else {
+//                UserDetails userDetails = googleUtils.buildUser(googlePojo);
+                //lưu user vào database table user
+                RegisterRequest registerRequest = modelMapper.map(request, RegisterRequest.class);
+                userService.registerUser(registerRequest);
+                //lưu theo role
+                Users user = userService.getByUserName(request.getUsername());
+                if (user.getRoleId() == 3) {
+                    candidateService.insertGoogleCandidate(googlePojo, user);
+                }
+                if (user.getRoleId() == 2) {
+                    recruiterService.insertGoogleRecruiter(googlePojo, user);
+                }
+                //không có authen của security
+                ConfirmToken confirmToken = new ConfirmToken(user.getId());
+                // Generate token and save to DB
+                confirmTokenService.saveConfirmToken(confirmToken);
+                // Cần lấy ra token để truyền vào url cho verify
+                ConfirmToken cf = confirmTokenService.getByUserId(user.getId());
+                String mailToken = cf.getConfirmationToken();
+                confirmTokenService.verifyEmailUser(request.getEmail(), mailToken);
+
+                UserDetails userDetails = securityUserService.loadUserByUsername(user.getUsername());
+                String jwtToken = jwtTokenUtil.generateToken(userDetails);
+                return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.SUCCESS, user, jwtToken);
+            }
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 
@@ -243,19 +350,6 @@ public class AuthenticationController {
         }
     }
 
-    //TODO : namnh
-    @PostMapping("/login-google")
-    public ResponseData loginGoogle(@RequestBody LoginGoogleRequest request) {
-        try {
-            Users authUser = userService.loginGoogle(request);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus());
-        } catch (Exception e) {
-            String msg = LogUtils.printLogStackTrace(e);
-            logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
-        }
-    }
-
     /*
      * @author Mai
      */
@@ -294,7 +388,7 @@ public class AuthenticationController {
     public ResponseData processForgotPassword(@RequestParam String email) {
         try {
             userService.forgotPassword(email);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Chúng tôi đã gửi mail làm mới mật khẩu tới " + email + ", vui lòng kiểm tra.");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Chúng tôi đã gửi mail làm mới mật khẩu tới " + email + ", vui lòng kiểm tra.");
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
@@ -312,7 +406,7 @@ public class AuthenticationController {
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),e.getMessage());
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 }

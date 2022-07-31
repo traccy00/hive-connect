@@ -1,13 +1,17 @@
 package fpt.edu.capstone.controller;
 
+import fpt.edu.capstone.dto.common.CreateRoleUserRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.Fields;
+import fpt.edu.capstone.entity.Role;
 import fpt.edu.capstone.entity.VietnamCountry;
 import fpt.edu.capstone.service.CountryService;
 import fpt.edu.capstone.service.FieldsService;
+import fpt.edu.capstone.service.RoleService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +32,9 @@ public class CommonController {
     private final FieldsService fieldsService;
 
     private final CountryService countryService;
+
+    private final RoleService roleService;
+
     @GetMapping("/get-list-field")
     public ResponseData getListCareer(){
         try {
@@ -54,5 +61,30 @@ public class CommonController {
     public ResponseData getListHashtag(){
         //lấy ra được ngành nghề hiển thị trong thanh combobox
         return null;
+    }
+
+    @PostMapping("/create-role")
+    public ResponseData createRole(@RequestBody CreateRoleUserRequest request) {
+        try {
+            Role role = roleService.createRole(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, role);
+        }catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-all-role")
+    @Operation(summary = "Admin module - get all role in system")
+    public ResponseData createRole() {
+        try {
+            List<Role> role = roleService.getAllRole();
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, role);
+        }catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
     }
 }
