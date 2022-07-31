@@ -39,7 +39,7 @@ public class PackageController {
                                              @RequestParam(defaultValue = "10") Integer pageSize,
                                              @RequestParam(value = "name", defaultValue = "") String name ,
                                              @RequestParam(value = "rentalPackageId", defaultValue = "0", required = false) long rentalPackageId,
-                                             @RequestParam(value = "status") boolean isDeleted){
+                                             @RequestParam(value = "status",required = false) boolean isDeleted){
         try {
             ResponseDataPagination pagination = detailPackageService.getListDetailPackageFilter(pageNo, pageSize, name, rentalPackageId, isDeleted);
 

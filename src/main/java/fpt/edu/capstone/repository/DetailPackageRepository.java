@@ -14,7 +14,7 @@ public interface DetailPackageRepository extends JpaRepository<DetailPackage, Lo
     @Query(value = "select d from DetailPackage d where " +
             "(lower(d.detailName) like lower(concat('%', :name, '%')) or :name is null or :name ='') " +
             "and d.rentalPackageId =:rentalId or 0 =:rentalId " +
-            "and d.isDeleted =:status or :status is null ")
+            "and (d.isDeleted =:status or :status is null) ")
     Page<DetailPackage> getListFilter(Pageable pageable, @Param("name") String name,
                                       @Param("rentalId") long rentalId, @Param("status") boolean isDeleted);
 

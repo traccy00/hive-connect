@@ -5,6 +5,7 @@ import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
+import fpt.edu.capstone.dto.recruiter.UploadBusinessLicenseRequest;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.RequestJoinCompany;
 import fpt.edu.capstone.service.RecruiterManageService;
@@ -201,11 +202,9 @@ public class RecruiterController {
     }
 
     @PutMapping("/upload-business-license")
-    public ResponseData uploadBusinessLicense(@RequestPart("recruiterId") long recruiterId,
-                                              @RequestPart(value = "businessMultipartFile", required = false) MultipartFile businessMultipartFile,
-                                              @RequestPart(value = "additionalMultipartFile", required = false) MultipartFile additionalMultipartFile) {
+    public ResponseData uploadBusinessLicense(@ModelAttribute UploadBusinessLicenseRequest request) {
         try {
-            Recruiter recruiter = recruiterService.uploadLicense(recruiterId, businessMultipartFile, additionalMultipartFile);
+            Recruiter recruiter = recruiterService.uploadLicense(request.getRecruiterId(), request.getBusinessMultipartFile(), request.getAdditionalMultipartFile());
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, recruiter);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
