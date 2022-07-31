@@ -1,9 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.common.EmailDetails;
-import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.common.user.EmailDetails;
 import fpt.edu.capstone.service.EmailService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;

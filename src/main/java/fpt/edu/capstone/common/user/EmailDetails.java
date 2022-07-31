@@ -1,4 +1,4 @@
-package fpt.edu.capstone.common;
+package fpt.edu.capstone.common.user;
 
 // Java Program to Illustrate EmailDetails Class
 

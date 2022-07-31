@@ -274,7 +274,7 @@ public class CandidateController {
 
         @GetMapping("/followed-job")
     @Operation(summary = "Get list followed job with candidate id")
-    public ResponseData getListFollowedJob(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getListFollowedJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                            @RequestParam(defaultValue = "10") Integer pageSize,
                                            @RequestParam long candidateId) {
         try{
@@ -320,7 +320,7 @@ public class CandidateController {
 
     @GetMapping("/get-applied-jobs-of-candidate")
     @Operation(summary = "View list applied job and approval status of a Candidate")
-    public ResponseData searchListAppliedJob(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData searchListAppliedJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                              @RequestParam(defaultValue = "10") Integer pageSize,
                                              @RequestParam long candidateId,
                                              @RequestParam(required = false, defaultValue = StringUtils.EMPTY) String approvalStatus) {

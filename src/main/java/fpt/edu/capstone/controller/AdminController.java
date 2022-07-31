@@ -140,7 +140,7 @@ public class AdminController {
     }
 
     @GetMapping("/get-reported-job")
-    public ResponseData getReportedJob(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getReportedJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                        @RequestParam(defaultValue = "10") Integer pageSize,
                                        @RequestParam(value = "createdAtFrom", required = false) LocalDateTime createdAtFrom,
                                        @RequestParam(value = "createdAtTo", required = false) LocalDateTime createdAtTo,

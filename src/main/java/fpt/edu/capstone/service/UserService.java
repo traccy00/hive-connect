@@ -40,8 +40,6 @@ public interface UserService {
 
     void updatePhoneNumber(String phoneNumber, long userId);
 
-    Users loginGoogle(LoginGoogleRequest request);
-
     void changePassword(String username, ChangePasswordRequest request);
 
     Users findByEmail(String email);

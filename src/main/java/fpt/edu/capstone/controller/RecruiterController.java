@@ -153,7 +153,7 @@ public class RecruiterController {
     }
 
     @GetMapping("/get-recruiter-by-company")
-    public ResponseData getRecruiterByCompany(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getRecruiterByCompany(@RequestParam(defaultValue = "0") Integer pageNo,
                                                         @RequestParam(defaultValue = "10") Integer pageSize,
                                                         @RequestParam("companyId") long companyId) {
         try {

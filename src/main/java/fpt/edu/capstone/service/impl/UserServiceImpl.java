@@ -172,14 +172,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Users loginGoogle(LoginGoogleRequest request) {
-        if (StringUtils.isBlank(request.getEmail())) {
-            throw new HiveConnectException(ResponseMessageConstants.DATA_INVALID);
-        }
-        return null;
-    }
-
-    @Override
     public void changePassword(String username, ChangePasswordRequest request) {
         Optional<Users> optionalUsers = findUserByUserName(username);
         if (!optionalUsers.isPresent()) {
