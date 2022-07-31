@@ -7,6 +7,8 @@ public interface ResponseMessageConstants {
     String DATA_INVALID = "Dữ liệu không hợp lệ.";
     String DATA_IS_NULL_OR_EMPTY = "Không có dữ liệu.";
     String REQUEST_NOT_EXIST = "Không tìm thấy người dùng hoặc yêu cầu không tồn tại.";
+    String CREATE_FAIL = "Tạo thất bại";
+    String ROLE_NAME_EXISTS = "Loại người dùng này đã tồn tại";
 
     // LOGIN
     String LOGIN_ACCESS_DENIED = "MSG_LOGIN_ACCESS_DENIED";

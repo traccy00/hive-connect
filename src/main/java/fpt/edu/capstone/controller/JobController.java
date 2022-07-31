@@ -60,7 +60,7 @@ public class JobController {
     }
 
     @GetMapping("/find-job")
-    public ResponseData searchListJobFilter(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData searchListJobFilter(@RequestParam(defaultValue = "0") Integer pageNo,
                                             @RequestParam(defaultValue = "10") Integer pageSize,
                                             @RequestParam(defaultValue = "0", value = "fieldId", required = false) long fieldId,
                                             @RequestParam(defaultValue = "0", value = "countryId", required = false) long countryId,
@@ -145,7 +145,7 @@ public class JobController {
 
     //Recruiter: Get list CV applied a job
     @GetMapping("/list-cv-applied-a-job/{jobId}")
-    public ResponseData getListCandidateAppliedJob(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getListCandidateAppliedJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                                    @RequestParam(defaultValue = "10") Integer pageSize,
                                                    @PathVariable long jobId) {
         try {
@@ -171,7 +171,7 @@ public class JobController {
 //    }
 
     @GetMapping("/popular-job")
-    public ResponseData getPopularJob(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getPopularJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                       @RequestParam(defaultValue = "10") Integer pageSize) {
         // get list lấy ra công việc phỏ biến
         try {
@@ -185,7 +185,7 @@ public class JobController {
     }
 
     @GetMapping("/new-job")
-    public ResponseData getListNewJob(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getListNewJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                       @RequestParam(defaultValue = "10") Integer pageSize) {
         // get list lấy ra công việc mới nhất
         //sort by created At
@@ -200,7 +200,7 @@ public class JobController {
     }
 
     @GetMapping("/urgent-job")
-    public ResponseData getListUrgentJob(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getListUrgentJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                          @RequestParam(defaultValue = "10") Integer pageSize) {
         // get list lấy ra công việc cần tuyển gấp
         try {
@@ -228,7 +228,7 @@ public class JobController {
     }
 
     @GetMapping("/remote-job")
-    public ResponseData getListRemoteJob(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getListRemoteJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                          @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
             ResponseDataPagination pagination = candidateJobService.getListJobByWorkForm(pageNo, pageSize, "REMOTE");
@@ -241,7 +241,7 @@ public class JobController {
     }
 
     @GetMapping("/fulltime-job")
-    public ResponseData getListFulltimeJob(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getListFulltimeJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                            @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
             ResponseDataPagination pagination = candidateJobService.getListJobByWorkForm(pageNo, pageSize, "FULLTIME");
@@ -254,7 +254,7 @@ public class JobController {
     }
 
     @GetMapping("/parttime-job")
-    public ResponseData getListParttimeJob(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getListParttimeJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                            @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
             ResponseDataPagination pagination = candidateJobService.getListJobByWorkForm(pageNo, pageSize, "PARTTIME");
@@ -267,7 +267,7 @@ public class JobController {
     }
 
     @GetMapping("/job-by-field")
-    public ResponseData getJobByCareer(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getJobByCareer(@RequestParam(defaultValue = "0") Integer pageNo,
                                        @RequestParam(defaultValue = "10") Integer pageSize,
                                        @RequestParam(value = "id") long fieldId) {
         try {
@@ -293,7 +293,7 @@ public class JobController {
     }
 
     @GetMapping("/get-jobs-of-recruiter")
-    public ResponseData getJobListOfRecruiter(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getJobListOfRecruiter(@RequestParam(defaultValue = "0") Integer pageNo,
                                               @RequestParam(defaultValue = "10") Integer pageSize,
                                               @RequestParam("recruiterId") long recruiterId) {
         try {
@@ -307,7 +307,7 @@ public class JobController {
     }
 
     @GetMapping("/get-jobs-by-company")
-    public ResponseData getJobByCompany(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getJobByCompany(@RequestParam(defaultValue = "0") Integer pageNo,
                                         @RequestParam(defaultValue = "10") Integer pageSize,
                                         @RequestParam("companyId") long companyId) {
         try {

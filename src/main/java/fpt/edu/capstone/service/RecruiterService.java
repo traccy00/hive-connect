@@ -1,9 +1,11 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.common.user.GooglePojo;
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
 import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
 import fpt.edu.capstone.entity.Recruiter;
+import fpt.edu.capstone.entity.Users;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,4 +48,6 @@ public interface RecruiterService {
     Recruiter getById(long recruiterId);
 
     void updateTotalCvView(long total, long recruiterId);
+
+    void insertGoogleRecruiter(GooglePojo googlePojo, Users user);
 }

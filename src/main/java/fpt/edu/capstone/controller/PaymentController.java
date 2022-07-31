@@ -121,7 +121,7 @@ public class PaymentController {
     @GetMapping("/total-revenue")
     public ResponseData getTotalProfit(@RequestParam(value = "startDate") String startDate,
                                        @RequestParam(value = "endDate") String endDate,
-                                       @RequestParam(defaultValue = "1") Integer pageNo,
+                                       @RequestParam(defaultValue = "0") Integer pageNo,
                                        @RequestParam(defaultValue = "10") Integer pageSize){
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

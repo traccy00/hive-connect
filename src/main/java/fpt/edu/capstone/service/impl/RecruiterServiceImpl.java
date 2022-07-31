@@ -1,10 +1,12 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.common.user.GooglePojo;
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
 import fpt.edu.capstone.entity.Recruiter;
+import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.CompanyRepository;
 import fpt.edu.capstone.repository.RecruiterRepository;
@@ -196,5 +198,14 @@ public class RecruiterServiceImpl implements RecruiterService {
     @Override
     public void updateTotalCvView(long total, long recruiterId) {
         recruiterRepository.updateTotalCvView(total, recruiterId);
+    }
+
+    @Override
+    public void insertGoogleRecruiter(GooglePojo googlePojo, Users user) {
+        Recruiter recruiter = new Recruiter();
+        recruiter.setFullName(googlePojo.getName());
+        recruiter.setAvatarUrl(googlePojo.getPicture());
+        recruiter.setUserId(user.getId());
+        recruiterRepository.save(recruiter);
     }
 }
