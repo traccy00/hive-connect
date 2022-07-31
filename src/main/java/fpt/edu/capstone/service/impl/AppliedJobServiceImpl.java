@@ -63,4 +63,9 @@ public class AppliedJobServiceImpl implements AppliedJobService {
     public CountCandidateApplyPercentageResponse countApplyPercentage(long recruiterId) {
         return appliedJobRepository.countApplyPercentage(recruiterId);
     }
+
+    @Override
+    public int countAppliedCVOfJob(long jobId) {
+        return appliedJobRepository.countAppliedCVOfAJob(jobId);
+    }
 }

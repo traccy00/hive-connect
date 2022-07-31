@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.DetailPackage;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.DetailPackageRepository;
@@ -40,6 +41,9 @@ public class DetailPackageServiceImpl implements DetailPackageService {
 
     @Override
     public DetailPackage findById(long id) {
+        if(!detailPackageRepository.findById(id).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.DETAIL_PACKAGE_DOES_NOT_EXIST);
+        }
         return detailPackageRepository.findById(id).get();
     }
 
@@ -55,10 +59,7 @@ public class DetailPackageServiceImpl implements DetailPackageService {
 
     @Override
     public void updateDetailPackage(DetailPackage detailPackage) {
-        DetailPackage dp = detailPackageRepository.getById(detailPackage.getId());
-        if(dp == null){
-            throw new HiveConnectException("Gói dịch vụ không tồn tại");
-        }
+        findById(detailPackage.getId());
         detailPackageRepository.saveAndFlush(detailPackage);
     }
 

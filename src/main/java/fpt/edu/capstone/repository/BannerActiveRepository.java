@@ -12,4 +12,6 @@ public interface BannerActiveRepository extends JpaRepository<BannerActive, Long
 
     @Query(value = "select * from banner_active ba where ba.display_position = ?", nativeQuery = true)
     List<BannerActive> getBannerByPosition(String displayPosition);
+
+    List<BannerActive> getAllByPaymentId(long paymentId);
 }
