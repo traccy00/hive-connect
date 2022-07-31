@@ -106,7 +106,7 @@ public class PaymentController {
     @Operation(summary = "kiểm tra rec đã mua gói package nào và gói package đó còn trong thời hạn sử dụng ko")
     public ResponseData recruiterBuyPackage(@RequestParam(value = "recruiterId") long recruiterId){
         try {
-            List<Payment> payment = paymentService.findRecruiterPurchasedPackage(recruiterId);
+            List<PaymentDTO> payment = paymentService.findRecruiterPurchasedPackage(recruiterId);
             if (payment.isEmpty()){
                 throw new HiveConnectException("Recruiter chưa mua gói dịch vụ nào.");
             }

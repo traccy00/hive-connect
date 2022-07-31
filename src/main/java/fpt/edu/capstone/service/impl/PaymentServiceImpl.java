@@ -8,6 +8,7 @@ import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.PaymentRepository;
+import fpt.edu.capstone.service.DetailPackageService;
 import fpt.edu.capstone.service.PaymentService;
 import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.utils.Enums;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -36,6 +38,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
 
     private final RecruiterService recruiterService;
+
+    private final DetailPackageService detailPackageService;
     @Override
     public PaymentResponseDTO getPaymentVNPay(PaymentDTO paymentDTO) throws UnsupportedEncodingException {
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
@@ -119,20 +123,30 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<Payment> findRecruiterPurchasedPackage(long recruiterId) {
+    public List<PaymentDTO> findRecruiterPurchasedPackage(long recruiterId) {
+
         List<Payment> payment = paymentRepository.findByRecruiterIdAndExpiredStatusFalse(recruiterId);
         if (payment == null) {
             throw new HiveConnectException("Nhà tuyển dụng chưa mua gói dịch vụ nào");
         }
         //If exist : check expireDate package
-        for (Payment p : payment) {
-            LocalDateTime now = LocalDateTime.now();
-            int a = now.compareTo(p.getExpiredDate());
-            if(a < 0){
-                throw new HiveConnectException("Gói dịch vụ đã hết hạn sử dụng");
+//        for (Payment p : payment) {
+//            LocalDateTime now = LocalDateTime.now();
+//            int a = now.compareTo(p.getExpiredDate());
+//            if(a < 0){
+//                throw new HiveConnectException("Gói dịch vụ đã hết hạn sử dụng");
+//            }
+//        }
+        List <PaymentDTO> paymentDTOList = payment.stream().
+                map(payment1 -> modelMapper.map(payment1, PaymentDTO.class)).collect(Collectors.toList());
+        for (PaymentDTO paymentDTO : paymentDTOList){
+            if(paymentDTO.equals(paymentDTOList.get(0))){
+                paymentDTOList.remove(paymentDTOList.get(0));
             }
+            paymentDTO.setDetailPackageName(detailPackageService.findNameById(paymentDTO.getDetailPackageId()));
+            paymentDTOList.add(paymentDTO);
         }
-        return payment;
+        return paymentDTOList;
     }
 
     @Override

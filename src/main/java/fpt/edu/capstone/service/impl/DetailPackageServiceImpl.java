@@ -42,4 +42,9 @@ public class DetailPackageServiceImpl implements DetailPackageService {
         }
         detailPackageRepository.saveAndFlush(detailPackage);
     }
+
+    @Override
+    public String findNameById(long id) {
+        return detailPackageRepository.findDetailNameById(id);
+    }
 }

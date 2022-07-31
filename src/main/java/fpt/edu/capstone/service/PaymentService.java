@@ -17,7 +17,7 @@ public interface PaymentService {
 
     List<Payment> getListPaymentOrderByDate();
 
-    List<Payment> findRecruiterPurchasedPackage(long recruiterId);
+    List<PaymentDTO> findRecruiterPurchasedPackage(long recruiterId);
 
     ResponseDataPagination getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize);
 

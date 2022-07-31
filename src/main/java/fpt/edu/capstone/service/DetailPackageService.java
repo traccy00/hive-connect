@@ -15,4 +15,6 @@ public interface DetailPackageService {
     void saveDetailPackage(DetailPackage detailPackage);
 
     void updateDetailPackage(DetailPackage detailPackage);
+
+    String findNameById(long id);
 }
