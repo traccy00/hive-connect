@@ -226,4 +226,16 @@ public class RecruiterController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+    @GetMapping("/get-business-license/{id}")
+    public ResponseData getBusinessLicense(@PathVariable("id") long recruiterId) {
+        try {
+            Recruiter recruiter = recruiterService.getRecruiterById(recruiterId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, recruiter);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
 }
