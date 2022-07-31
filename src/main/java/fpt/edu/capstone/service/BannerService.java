@@ -3,6 +3,7 @@ package fpt.edu.capstone.service;
 import fpt.edu.capstone.dto.banner.ConfigBannerRequest;
 import fpt.edu.capstone.dto.banner.UpdateBannerRequest;
 import fpt.edu.capstone.entity.Banner;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,4 +25,6 @@ public interface BannerService {
     Banner insertBanner(ConfigBannerRequest request);
 
     void updateBanner(UpdateBannerRequest request);
+
+    ResponseDataPagination getBannerByFilter(Integer pageNo, Integer pageSize, String title, boolean isDeleted);
 }

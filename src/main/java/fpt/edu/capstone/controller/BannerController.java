@@ -12,6 +12,7 @@ import fpt.edu.capstone.service.RecruiterManageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -49,10 +50,13 @@ public class BannerController {
 
     @Operation(summary = "Get list all banner package on Manage Banner screen - Admin module")
     @GetMapping("/get-all-banner-package")
-    public ResponseData getAllBanner() {
+    public ResponseData getAllBanner(@RequestParam(value = "name", required = false) String title,
+                                     @RequestParam(value = "status", required = false) boolean isDeleted,
+                                     @RequestParam(defaultValue = "1") Integer pageNo,
+                                     @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
-            List<Banner> banners = bannerService.getAllBanner();
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, banners);
+            ResponseDataPagination pagination = bannerService.getBannerByFilter(pageNo, pageSize, title, isDeleted);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

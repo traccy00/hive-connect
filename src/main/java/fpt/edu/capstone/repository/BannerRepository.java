@@ -1,9 +1,12 @@
 package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.entity.Banner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -22,4 +25,8 @@ public interface BannerRepository extends JpaRepository<Banner, Long> {
 
     @Query(value = "select * from banner b where lower(b.title) = lower(?)", nativeQuery = true)
     List<Banner> getBannersByTitle(String title);
+
+    @Query("select b from Banner b where (lower(b.title) like lower(concat('%', :name ,'%')) or :name is null or :name = '') " +
+            "and (b.isDeleted =:isDeleted or :isDeleted is null)")
+    Page<Banner> getBannerByFilter(Pageable pageable, @Param("name") String title,@Param("isDeleted") boolean isDeleted);
 }

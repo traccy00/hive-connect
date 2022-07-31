@@ -8,8 +8,14 @@ import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.BannerRepository;
 import fpt.edu.capstone.service.BannerService;
 import fpt.edu.capstone.service.RentalPackageService;
+import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -102,5 +108,24 @@ public class BannerServiceImpl implements BannerService {
             throw new HiveConnectException(ResponseMessageConstants.DETAIL_PACKAGE_DOES_NOT_EXIST);
         }
         bannerRepository.save(detailBannerPackage.get());
+    }
+
+    @Override
+    public ResponseDataPagination getBannerByFilter(Integer pageNo, Integer pageSize, String title, boolean isDeleted) {
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+        Page<Banner> bannerPage = bannerRepository.getBannerByFilter(pageable, title, isDeleted);
+        List <Banner> bannerList = bannerPage.getContent();
+
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(bannerList);
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(bannerPage.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(bannerPage.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
     }
 }
