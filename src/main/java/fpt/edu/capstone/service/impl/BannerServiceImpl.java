@@ -76,9 +76,9 @@ public class BannerServiceImpl implements BannerService {
         if(request.getDiscount() > request.getPrice()) {
             throw new HiveConnectException(ResponseMessageConstants.DISCOUNT_PRICE_INVALID);
         }
-        if(request.getImage() == null || request.getImage().trim().isEmpty()) {
-            throw new HiveConnectException(ResponseMessageConstants.BANNER_IMAGE_INVALID);
-        }
+//        if(request.getImage() == null || request.getImage().trim().isEmpty()) {
+//            throw new HiveConnectException(ResponseMessageConstants.BANNER_IMAGE_INVALID);
+//        }
         if(request.isSpotlight() == false
                 && request.isHomepageBannerA() == false && request.isHomePageBannerB() == false && request.isHomePageBannerC() == false
                 && request.isJobBannerA() == false && request.isJobBannerB() == false && request.isJobBannerC() == false) {
