@@ -37,19 +37,19 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     boolean existsById(long id);
 
-    @Query(value = "select * from Job where work_form like  upper(concat('%', :workForm ,'%')) and flag = :flag", nativeQuery = true)
-    Page<Job> getListJobByWorkForm(Pageable pageable, @Param("workForm") String workForm, @Param("flag") String flag);
+        @Query(value = "select * from Job where work_form like upper(concat('%', :workForm ,'%')) and flag =:flag order by random()", nativeQuery = true)
+    Page<Job> getListJobByWorkForm(Pageable pageable, @Param("workForm") String workForm,@Param("flag") String flag);
 
-    @Query(value = "select * from job where is_new_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3", nativeQuery = true)
+    @Query(value = "select * from job where is_new_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
     Page<Job> getNewestJob(Pageable pageable, boolean isNewJob, int isDeleted, String flag);
 
-    @Query(value = "select * from job where is_urgent_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3", nativeQuery = true)
+    @Query(value = "select * from job where is_urgent_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
     Page<Job> getUrgentJob(Pageable pageable, boolean isUrgentJob, int isDeleted, String flag);
 
-    @Query(value = "select * from job where is_popular_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3", nativeQuery = true)
+    @Query(value = "select * from job where is_popular_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
     Page<Job> getPopularJob(Pageable pageable, boolean isPopularJob, int isDeleted, String flag);
 
-    @Query("Select c from Job c where c.fieldId = :fieldId and c.isDeleted = 0 and c.flag = :flag")
+    @Query(value = "Select * from Job where field_id =:fieldId and is_deleted = 0 and flag =:flag order by random()", nativeQuery = true)
     Page<Job> getListJobByFieldId(Pageable pageable, @Param("fieldId") long fieldId, @Param("flag") String flag);
 
     @Query("select c from Job c where c.jobDescription like lower(concat('%', :majorName ,'%')) or c.jobRequirement like  lower(concat('%', :majorName ,'%'))")
