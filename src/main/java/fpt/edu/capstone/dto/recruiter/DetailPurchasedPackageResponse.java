@@ -1,7 +1,14 @@
 package fpt.edu.capstone.dto.recruiter;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Map;
+
+@Getter
+@Setter
 public class DetailPurchasedPackageResponse {
-    DetailPaymentPackageInforResponse paymentPackageInformationResponse;
-    BannerDetailPurchasedResponse bannerDetailPurchasedResponse;
-    JobDetailPurchasedResponse jobDetailPurchasedResponse;
+    DetailPaymentPackageInfoResponse infoPPRes;
+    Map<String,BannerPositionDetailResponse> banner;
+    JobDetailPurchasedResponse jobPurchasedPPRes;
 }

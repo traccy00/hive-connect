@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetailPaymentPackageInforResponse {
+public class NormalPaymentPackage {
     private long groupPackageId;
     private String groupPackageName;
     private String detailPackageName;

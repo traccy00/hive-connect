@@ -88,4 +88,5 @@ public interface ResponseMessageConstants {
     String PAYMENT_DOES_NOT_EXIST = "Giao dịch không tồn tại";
     String SEND_RESET_PASSWORD_MAIL_SUCCESS = "Chúng tôi đã gửi mail làm mới mật khẩu tới email của bạn. Vui lòng kiểm tra email.";
     String SEND_EMAIL_FAIL = "Có lỗi xảy ra. Gửi email không thành công!";
+    String DETAIL_PAYMENT_NOT_FOUND = "Không tìm thấy gói dịch vụ";
 }
