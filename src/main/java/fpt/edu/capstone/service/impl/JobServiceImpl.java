@@ -119,6 +119,11 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public void saveJob(Job job) {
+        jobRepository.save(job);
+    }
+
+    @Override
     public void deleteJob(long jobId) {
         Job job = jobRepository.getById(jobId);
         if(job == null){

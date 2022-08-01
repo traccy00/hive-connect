@@ -16,10 +16,10 @@ import java.util.List;
 @Component
 @EnableScheduling
 @AllArgsConstructor
-public class JobPaymentCheckExpired {
+public class JobScheduler {
     private final PaymentService paymentService;
 
-    private static final Logger logger = LoggerFactory.getLogger(JobPaymentCheckExpired.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobScheduler.class);
 
     @Scheduled(fixedDelay = 50000)
     public void checkPaymentExpire(){
