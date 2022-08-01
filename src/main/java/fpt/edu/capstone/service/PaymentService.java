@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.payment.PaymentDTO;
+import fpt.edu.capstone.dto.payment.PaymentResponse;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
 import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.utils.ResponseDataPagination;
@@ -17,7 +18,7 @@ public interface PaymentService {
 
     List<Payment> getListPaymentOrderByDate();
 
-    List<PaymentDTO> findRecruiterPurchasedPackage(long recruiterId);
+    List<PaymentResponse> findRecruiterPurchasedPackage(long recruiterId);
 
     ResponseDataPagination getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize);
 

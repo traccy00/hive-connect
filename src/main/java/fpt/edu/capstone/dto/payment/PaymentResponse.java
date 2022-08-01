@@ -9,9 +9,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentDTO {
+public class PaymentResponse {
+    private long paymentId;
     private long recruiterId;
     private long detailPackageId;
+    private String detailPackageName;
     private long bannerId;
     private long jobId;
     private int amount;

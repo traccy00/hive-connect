@@ -3,6 +3,7 @@ package fpt.edu.capstone.service.impl;
 import fpt.edu.capstone.common.payment.PaymentConfig;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
+import fpt.edu.capstone.dto.payment.PaymentResponse;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
 import fpt.edu.capstone.entity.DetailPackage;
 import fpt.edu.capstone.entity.Job;
@@ -128,7 +129,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<PaymentDTO> findRecruiterPurchasedPackage(long recruiterId) {
+    public List<PaymentResponse> findRecruiterPurchasedPackage(long recruiterId) {
 
         List<Payment> payment = paymentRepository.findByRecruiterIdAndExpiredStatusFalse(recruiterId);
         if (payment == null) {
@@ -142,9 +143,9 @@ public class PaymentServiceImpl implements PaymentService {
 //                throw new HiveConnectException("Gói dịch vụ đã hết hạn sử dụng");
 //            }
 //        }
-        List <PaymentDTO> response = new ArrayList<>();
+        List <PaymentResponse> response = new ArrayList<>();
         for (Payment dto : payment){
-            PaymentDTO dto1 = new PaymentDTO();
+            PaymentResponse dto1 = new PaymentResponse();
             dto1.setPaymentId(dto.getId());
             dto1.setRecruiterId(dto.getRecruiterId());
             dto1.setDetailPackageId(dto.getDetailPackageId());
@@ -234,6 +235,9 @@ public class PaymentServiceImpl implements PaymentService {
 
             //Kích hoạt tính năng gói package đó cho Job tương ứng
             Job job = jobService.getJobById(payment.getJobId());
+            if(job == null){
+                throw new HiveConnectException("Công việc có id = "+ job.getId()+ "không tồn tại");
+            }
             if(detailPackage.getRentalPackageId() == 2){
                 job.setPopularJob(true);
                 job.setUrgentJob(true);

@@ -4,6 +4,7 @@ import com.twilio.twiml.voice.Pay;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.payment.JobActivePaymentDTO;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
+import fpt.edu.capstone.dto.payment.PaymentResponse;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
 import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -106,7 +107,7 @@ public class PaymentController {
     @Operation(summary = "kiểm tra rec đã mua gói package nào và gói package đó còn trong thời hạn sử dụng ko")
     public ResponseData recruiterBuyPackage(@RequestParam(value = "recruiterId") long recruiterId){
         try {
-            List<PaymentDTO> payment = paymentService.findRecruiterPurchasedPackage(recruiterId);
+            List<PaymentResponse> payment = paymentService.findRecruiterPurchasedPackage(recruiterId);
             if (payment.isEmpty()){
                 throw new HiveConnectException("Recruiter chưa mua gói dịch vụ nào.");
             }
