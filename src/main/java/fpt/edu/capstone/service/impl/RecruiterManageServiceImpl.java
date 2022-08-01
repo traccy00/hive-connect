@@ -27,9 +27,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -502,54 +500,71 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     public DetailPurchasedPackageResponse getDetailPurchasedPackage(long recruiterId, long paymentId) {
         DetailPurchasedPackageResponse response = new DetailPurchasedPackageResponse();
         Payment payment = paymentService.findById(paymentId);
-        //lấy thông tin của gói mua
-        DetailPaymentPackageInforResponse detailPPInforRes = new DetailPaymentPackageInforResponse();
-        if(payment.getBannerId() > 0) {
-            Banner banner = bannerService.findById(payment.getBannerId());
-            detailPPInforRes.setBannerPaymentPackage(banner);
-        } else {
-            if (payment.getDetailPackageId() > 0) {
-                NormalPaymentPackage normalPP = new NormalPaymentPackage();
-                DetailPackage detailPackage = detailPackageService.findById(payment.getDetailPackageId());
-                Optional<RentalPackage> rentalPackage = rentalPackageService.findById(detailPackage.getRentalPackageId());
-                if (!rentalPackage.isPresent()) {
-                    throw new HiveConnectException(ResponseMessageConstants.RENTAL_PACKAGE_DOES_NOT_EXIST + ". " + ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
-                }
-                normalPP.setGroupPackageId(detailPackage.getRentalPackageId());
-                normalPP.setGroupPackageName(rentalPackage.get().getPackageGroup());
-                normalPP.setDetailPackageName(detailPackage.getDetailName());
-                normalPP.setPrice(detailPackage.getPrice());
-                normalPP.setDiscountPrice(detailPackage.getDiscount());
-                normalPP.setTimeExpired(detailPackage.getTimeExpired());
-                normalPP.setRelatedJob(detailPackage.isRelatedJob());
-                normalPP.setSuggestJob(detailPackage.isSuggestJob());
-                normalPP.setMaxCvView(detailPackage.getMaxCvView());
-                detailPPInforRes.setNormalPaymentPackage(normalPP);
-            }
-        }
-        response.setInforPPRes(detailPPInforRes);
+        response.setInfoPPRes(getDetailPaymentPackageInfo(payment));
         //lấy chi tiết recruiter đã upload cái gì cho gói này
-        if (payment.getBannerId() > 0) {
-            BannerDetailPurchasedResponse bannerDetailPurchasedRes = new BannerDetailPurchasedResponse();
-            List<BannerPositionDetailResponse> bannerActiveOfPayment = bannerActiveService
-                    .getAllBannerByPaymentId(paymentId);
-            bannerDetailPurchasedRes.setBannerPosRes(bannerActiveOfPayment);
-            response.setBannerPurchasedPPRes(bannerDetailPurchasedRes);
-        } else {
-            if (payment.getDetailPackageId() > 0) {
-                Job selectedJob = jobService.getJobById(payment.getJobId());
-                JobDetailPurchasedResponse jobDetailPurchasedRes = modelMapper
-                        .map(selectedJob, JobDetailPurchasedResponse.class);
-                Optional<Company> company = companyService.findById(selectedJob.getCompanyId());
-                jobDetailPurchasedRes.setCompanyName(company.get().getName());
-                Fields field = fieldsService.getById(selectedJob.getFieldId());
-                jobDetailPurchasedRes.setFieldName(field.getFieldName());
-                Optional<VietnamCountry> country = countryService.findById(selectedJob.getCountryId());
-                jobDetailPurchasedRes.setCountry(country.get().getCountryName());
-
-                response.setJobPurchasedPPRes(jobDetailPurchasedRes);
-            }
-        }
+        response.setBanner(getDetailPaymentBanner(payment));
+        response.setJobPurchasedPPRes(getDetailPaymentJob(payment));
         return response;
+    }
+
+    private JobDetailPurchasedResponse getDetailPaymentJob(Payment payment) {
+        if (payment.getDetailPackageId() > 0) {
+            Job selectedJob = jobService.getJobById(payment.getJobId());
+            JobDetailPurchasedResponse jobDetailPurchasedRes = modelMapper
+                    .map(selectedJob, JobDetailPurchasedResponse.class);
+            Optional<Company> company = companyService.findById(selectedJob.getCompanyId());
+            jobDetailPurchasedRes.setCompanyName(company.get().getName());
+            Fields field = fieldsService.getById(selectedJob.getFieldId());
+            jobDetailPurchasedRes.setFieldName(field.getFieldName());
+            Optional<VietnamCountry> country = countryService.findById(selectedJob.getCountryId());
+            jobDetailPurchasedRes.setCountry(country.get().getCountryName());
+
+            return jobDetailPurchasedRes;
+        }
+        return null;
+    }
+
+    private Map<String, BannerPositionDetailResponse> getDetailPaymentBanner(Payment payment) {
+        if (payment.getBannerId() > 0) {
+            List<BannerPositionDetailResponse> bannerActiveOfPayment = bannerActiveService
+                    .getAllBannerByPaymentId(payment.getId());
+            Map<String, BannerPositionDetailResponse> bannerResponse = new HashMap<>();
+            for (BannerPositionDetailResponse detail : bannerActiveOfPayment) {
+                bannerResponse.put(detail.getDisplayPosition(), detail);
+            }
+            return bannerResponse;
+        }
+        return null;
+    }
+
+    private DetailPaymentPackageInfoResponse getDetailPaymentPackageInfo(Payment payment) {
+
+        if (payment.getBannerId() <= 0 && payment.getDetailPackageId() <= 0) {
+            throw new HiveConnectException(ResponseMessageConstants.DETAIL_PAYMENT_NOT_FOUND + ". " + ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
+        }
+        //lấy thông tin của gói mua
+        DetailPaymentPackageInfoResponse detailPPIInfoRes = new DetailPaymentPackageInfoResponse();
+        if (payment.getBannerId() > 0) {
+            Banner banner = bannerService.findById(payment.getBannerId());
+            detailPPIInfoRes.setBannerPaymentPackage(banner);
+        }
+        if (payment.getDetailPackageId() > 0) {
+            NormalPaymentPackage normalPP = new NormalPaymentPackage();
+            DetailPackage detailPackage = detailPackageService.findById(payment.getDetailPackageId());
+            RentalPackage rentalPackage = rentalPackageService.findById(detailPackage.getRentalPackageId())
+                    .orElseThrow(() -> new HiveConnectException(
+                            ResponseMessageConstants.RENTAL_PACKAGE_DOES_NOT_EXIST + ". " + ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN));
+            normalPP.setGroupPackageId(detailPackage.getRentalPackageId());
+            normalPP.setGroupPackageName(rentalPackage.getPackageGroup());
+            normalPP.setDetailPackageName(detailPackage.getDetailName());
+            normalPP.setPrice(detailPackage.getPrice());
+            normalPP.setDiscountPrice(detailPackage.getDiscount());
+            normalPP.setTimeExpired(detailPackage.getTimeExpired());
+            normalPP.setRelatedJob(detailPackage.isRelatedJob());
+            normalPP.setSuggestJob(detailPackage.isSuggestJob());
+            normalPP.setMaxCvView(detailPackage.getMaxCvView());
+            detailPPIInfoRes.setNormalPaymentPackage(normalPP);
+        }
+        return detailPPIInfoRes;
     }
 }

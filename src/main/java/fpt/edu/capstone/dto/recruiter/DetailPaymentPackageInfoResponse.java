@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetailPaymentPackageInforResponse {
+public class DetailPaymentPackageInfoResponse {
     NormalPaymentPackage normalPaymentPackage;
     Banner bannerPaymentPackage;
 }
