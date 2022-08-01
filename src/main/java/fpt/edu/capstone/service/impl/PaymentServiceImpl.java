@@ -4,11 +4,14 @@ import fpt.edu.capstone.common.payment.PaymentConfig;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
+import fpt.edu.capstone.entity.DetailPackage;
+import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.PaymentRepository;
 import fpt.edu.capstone.service.DetailPackageService;
+import fpt.edu.capstone.service.JobService;
 import fpt.edu.capstone.service.PaymentService;
 import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.utils.Enums;
@@ -40,6 +43,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final RecruiterService recruiterService;
 
     private final DetailPackageService detailPackageService;
+
+    private final JobService jobService;
     @Override
     public PaymentResponseDTO getPaymentVNPay(PaymentDTO paymentDTO) throws UnsupportedEncodingException {
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
@@ -137,16 +142,23 @@ public class PaymentServiceImpl implements PaymentService {
 //                throw new HiveConnectException("Gói dịch vụ đã hết hạn sử dụng");
 //            }
 //        }
-        List <PaymentDTO> paymentDTOList = payment.stream().
-                map(payment1 -> modelMapper.map(payment1, PaymentDTO.class)).collect(Collectors.toList());
-        for (PaymentDTO paymentDTO : paymentDTOList){
-            if(paymentDTO.equals(paymentDTOList.get(0))){
-                paymentDTOList.remove(paymentDTOList.get(0));
-            }
-            paymentDTO.setDetailPackageName(detailPackageService.findNameById(paymentDTO.getDetailPackageId()));
-            paymentDTOList.add(paymentDTO);
+        List <PaymentDTO> response = new ArrayList<>();
+        for (Payment dto : payment){
+            PaymentDTO dto1 = new PaymentDTO();
+            dto1.setPaymentId(dto.getId());
+            dto1.setRecruiterId(dto.getRecruiterId());
+            dto1.setDetailPackageId(dto.getDetailPackageId());
+            dto1.setDetailPackageName(detailPackageService.findNameById(dto.getDetailPackageId()));
+            dto1.setBannerId(dto.getBannerId());
+            dto1.setJobId(dto.getJobId());
+            dto1.setAmount(dto.getAmount());
+            dto1.setOrderType(dto.getOrderType());
+            dto1.setDescription(dto.getDescription());
+            dto1.setBankCode(dto.getBankCode());
+
+            response.add(dto1);
         }
-        return paymentDTOList;
+        return response;
     }
 
     @Override
@@ -212,9 +224,22 @@ public class PaymentServiceImpl implements PaymentService {
             System.out.println("Thanh toán thành công");
             paymentRepository.save(payment);
 
-            Integer totalCv = paymentRepository.countByTotalCvView(payment.getRecruiterId());
-//            recruiter.setTotalCvView(totalCv);
-            recruiterService.updateTotalCvView(totalCv, payment.getRecruiterId());
+            DetailPackage detailPackage = detailPackageService.findById(payment.getDetailPackageId());
+
+            //Kích hoạt số lượng cv mà recruiter được xem full thông tin
+            if(detailPackage.getRentalPackageId() == 1){
+                Integer totalCv = paymentRepository.countByTotalCvView(payment.getRecruiterId());
+                recruiterService.updateTotalCvView(totalCv, payment.getRecruiterId());
+            }
+
+            //Kích hoạt tính năng gói package đó cho Job tương ứng
+            Job job = jobService.getJobById(payment.getJobId());
+            if(detailPackage.getRentalPackageId() == 2){
+                job.setPopularJob(true);
+                job.setUrgentJob(true);
+                job.setNewJob(true);
+                jobService.saveJob(job);
+            }
         }
 
 

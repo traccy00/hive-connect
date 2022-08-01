@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentDTO {
+    private long paymentId;
     private long recruiterId;
     private long detailPackageId;
     private String detailPackageName;
