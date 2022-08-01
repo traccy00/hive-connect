@@ -12,7 +12,7 @@ import lombok.Setter;
 public class PaymentDTO {
     private long recruiterId;
     private long detailPackageId;
-    private long bannerId;
+    private long bannerId; // banner package id
     private long jobId;
     private int amount;
     private String orderType;
