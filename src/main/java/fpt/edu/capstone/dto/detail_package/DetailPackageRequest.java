@@ -23,6 +23,5 @@ public class DetailPackageRequest {
 //    private boolean isUrgent;
 //    private boolean isHot;
 //    private boolean isGoodJob;
-    private boolean isDeleted;
     private int maxCvView;
 }
