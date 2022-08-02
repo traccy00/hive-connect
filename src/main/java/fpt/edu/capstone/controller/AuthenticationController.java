@@ -72,22 +72,48 @@ public class AuthenticationController {
     @Operation(summary = "Login user")
     public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
-            authenticate(request.getUsername().trim(), request.getPassword().trim());
+//            authenticate(request.getUsername().trim(), request.getPassword().trim());
+//            String username = request.getUsername();
+//            logger.info("login with username {}", username);
+//            if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(request.getPassword())) {
+//                return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
+//                        ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
+//            }
+//
+//            final UserDetails userDetails = securityUserService.loadUserByUsername(username);
+//
+//            Optional<Users> optionalUser = userService.findUserByUserName(username);
+//            if (!optionalUser.isPresent()) {
+//                throw new HiveConnectException("Username: " + username + "not found");
+//            }
+//            Users user = optionalUser.get();
+//            String token = jwtTokenUtil.generateToken(userDetails);
+
             String username = request.getUsername();
-            logger.info("login with username {}", username);
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(request.getPassword())) {
                 return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
                         ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
             }
-
-            final UserDetails userDetails = securityUserService.loadUserByUsername(username);
-
             Optional<Users> optionalUser = userService.findUserByUserName(username);
             if (!optionalUser.isPresent()) {
                 throw new HiveConnectException("Username: " + username + "not found");
             }
             Users user = optionalUser.get();
+            if(!user.isVerifiedEmail()) {
+                return new ResponseDataUser(Enums.ResponseStatus.EMAIL_NOT_VERIFIED.getStatus(),
+                        ResponseMessageConstants.LOGIN_FAILED);
+            }
+            if(!user.isVerifiedPhone()) {
+                return new ResponseDataUser(Enums.ResponseStatus.COMPANY_NOT_VERIFIED.getStatus(),
+                        ResponseMessageConstants.LOGIN_FAILED);
+            }
+            //security
+            authenticate(request.getUsername().trim(), request.getPassword().trim());
+            logger.info("login with username {}", username);
+
+            final UserDetails userDetails = securityUserService.loadUserByUsername(username);
             String token = jwtTokenUtil.generateToken(userDetails);
+
 
             user.setLastLoginTime(LocalDateTime.now());
             userService.saveUser(user);

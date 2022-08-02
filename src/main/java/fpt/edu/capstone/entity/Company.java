@@ -1,5 +1,6 @@
 package fpt.edu.capstone.entity;
 
+import fpt.edu.capstone.utils.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "companies")
 @Setter
 @Getter
-public class Company {
+public class Company extends BaseEntity {
 
     @Id
     @Column(name = "id")
@@ -53,4 +54,7 @@ public class Company {
 
     @Column(name = "creator_id") //Id của thằng recruiter tạo công ty
     private long creatorId;
+
+    @Column(name = "is_locked")
+    private boolean isLocked;
 }

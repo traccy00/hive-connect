@@ -1,6 +1,8 @@
 package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.entity.Company;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,5 +31,5 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     void updateCompanyAvatarUrl(String avatarId, long companyId);
 
     @Query(value = "select * from companies c where name like concat('%',:companyName,'%')", nativeQuery = true)
-    List<Company> getAllByName(@Param("companyName") String companyName);
+    Page<Company> getAllByName(Pageable pageable, @Param("companyName") String companyName);
 }

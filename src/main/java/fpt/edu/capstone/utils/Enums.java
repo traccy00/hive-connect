@@ -5,7 +5,8 @@ import java.util.Map;
 
 public class Enums {
     public enum ResponseStatus {
-        SUCCESS("Success"), ERROR("Error"), NOT_FOUND("NotFound");
+        SUCCESS("Success"), ERROR("Error"), NOT_FOUND("NotFound"),
+        EMAIL_NOT_VERIFIED("EmailNotVerified"), COMPANY_NOT_VERIFIED("CompanyNotVerified");
 
         ResponseStatus(String status) {
             this.status = status;
