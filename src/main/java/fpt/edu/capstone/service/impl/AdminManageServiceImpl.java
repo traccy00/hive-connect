@@ -1,12 +1,14 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
+import fpt.edu.capstone.dto.banner.ApproveBannerRequest;
 import fpt.edu.capstone.dto.banner.BannerForApprovalResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.ReportJobRequest;
 import fpt.edu.capstone.dto.job.ReportedJobResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.repository.BannerActiveRepository;
 import fpt.edu.capstone.repository.ReportedRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
@@ -48,6 +50,8 @@ public class AdminManageServiceImpl implements AdminManageService {
     private final PaymentService paymentService;
 
     private final CompanyService companyService;
+
+    private final BannerActiveRepository bannerActiveRepository;
 
     @Override
     public List<LicenseApprovalResponse> searchLicenseApprovalForAdmin(String businessApprovalStatus, String additionalApprovalStatus) {
@@ -121,8 +125,18 @@ public class AdminManageServiceImpl implements AdminManageService {
     }
 
     @Override
-    public void approveBanner(long bannerActiveId) {
-
+    public void approveBanner(ApproveBannerRequest request) {
+        BannerActive bannerActive = bannerActiveService.findById(request.getBannerActiveId());
+        if(bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
+            if (!request.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())
+                    && !request.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT.getStatus())) {
+                throw new HiveConnectException(ResponseMessageConstants.APPROVAL_STATUS_INVALID);
+            }
+            bannerActive.setApprovalStatus(request.getApprovalStatus());
+            bannerActiveRepository.save(bannerActive);
+        } else {
+            throw new HiveConnectException(ResponseMessageConstants.APPROVAL_WAS_PROCESSED);
+        }
     }
 
     @Override
@@ -132,20 +146,21 @@ public class AdminManageServiceImpl implements AdminManageService {
 
         Page<BannerActive> bannerActives = bannerActiveService.getAllBannerForApproval(pageable);
         List<BannerForApprovalResponse> responseList = new ArrayList<>();
-        if(bannerActives.hasContent()) {
+        if (bannerActives.hasContent()) {
             for (BannerActive bannerActive : bannerActives) {
                 Payment payment = paymentService.findById(bannerActive.getPaymentId());
                 BannerForApprovalResponse response = new BannerForApprovalResponse();
+                response.setBannerActiveId(bannerActive.getId());
                 response.setDisplayPosition(bannerActive.getDisplayPosition());
                 Banner banner = bannerService.findById(payment.getBannerId());
                 response.setPackageName(banner.getTitle());
                 Optional<Recruiter> recruiter = recruiterService.findById(payment.getRecruiterId());
-                if(!recruiter.isPresent()) {
+                if (!recruiter.isPresent()) {
                     throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
                 }
                 Optional<Company> company = companyService.findById(recruiter.get().getCompanyId());
                 response.setRecruiterName(recruiter.get().getFullName());
-                if(company.isPresent()) {
+                if (company.isPresent()) {
                     response.setCompanyId(recruiter.get().getCompanyId());
                     response.setCompanyName(company.get().getName());
                 }

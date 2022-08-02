@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.recruiter.BannerPositionDetailResponse;
+import fpt.edu.capstone.entity.Banner;
 import fpt.edu.capstone.entity.BannerActive;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,4 +19,6 @@ public interface BannerActiveService {
     BannerActive findByPaymentIdAndPosition(long paymentId, String position);
 
     Page<BannerActive> getAllBannerForApproval(Pageable pageable);
+
+    BannerActive findById(long id);
 }

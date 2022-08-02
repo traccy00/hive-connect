@@ -1,5 +1,6 @@
 package fpt.edu.capstone.controller;
 
+import fpt.edu.capstone.dto.banner.ApproveBannerRequest;
 import fpt.edu.capstone.dto.banner.ConfigBannerRequest;
 import fpt.edu.capstone.dto.banner.UpdateBannerRequest;
 import fpt.edu.capstone.dto.banner.UploadBannerRequest;
@@ -110,10 +111,9 @@ public class BannerController {
 
     @PutMapping("/approve-banner")
     @Operation(summary = "Amin module - approve banner of recruiter")
-    public ResponseData approveBanner(@RequestParam long bannerActiveId) {
+    public ResponseData approveBanner(@RequestBody ApproveBannerRequest request) {
         try {
-
-            adminManageService.approveBanner(bannerActiveId);
+            adminManageService.approveBanner(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

@@ -10,6 +10,8 @@ public interface ResponseMessageConstants {
     String CREATE_FAIL = "Tạo thất bại";
     String ROLE_NAME_EXISTS = "Loại người dùng này đã tồn tại";
     String PLEASE_TRY_TO_CONTACT_ADMIN = "Có lỗi xảy ra, vui lòng liên hệ quản trị hệ thống.";
+    String APPROVAL_STATUS_INVALID = "Trạng thái duyệt không hợp lệ.";
+    String APPROVAL_WAS_PROCESSED = "Quản lí đã xử lí yêu cầu này.";
 
     // LOGIN
     String LOGIN_ACCESS_DENIED = "MSG_LOGIN_ACCESS_DENIED";
@@ -80,6 +82,7 @@ public interface ResponseMessageConstants {
     //PAYMENT
     String PRICE_EQUAL_GREATER_THAN_ZERO = "Giá của gói lớn hơn hoặc bằng 0.";
     String BANNER_IMAGE_INVALID = "Ảnh banner không hợp lệ";
+    String BANNER_IMAGE_DOES_NOT_EXIST = "Ảnh banner không tồn tại.";
     String BANNER_POSITION_INVALID = "Chọn một hoặc nhiều vị trí hiển thị banner.";
     String DISCOUNT_PRICE_INVALID = "Giá khuyến mãi không hợp lệ";
     String RENTAL_PACKAGE_DOES_NOT_EXIST = "Nhóm gói không tồn tại";

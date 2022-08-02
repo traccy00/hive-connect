@@ -432,32 +432,32 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.JOB_BANNER_C.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.JOB_BANNER_C.getStatus(), request.getJobBannerCImage());
-            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED)) {
-                //can not change banner image if admin approved
-                return;
-            } else if (bannerActive != null
-                    && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)) {
-                bannerActive.setImageUrl(request.getJobBannerCImage());
-                bannerActive.update();
-                bannerActiveRepository.save(bannerActive);
-            } else {
-                BannerActive newBannerActive = new BannerActive();
-                newBannerActive.setImageUrl(request.getJobBannerCImage());
-                newBannerActive.setPaymentId(payment.getId());
-                bannerActive.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-                newBannerActive.setDisplayPosition(Enums.BannerPosition.JOB_BANNER_C.getStatus());
-                newBannerActive.create();
-                bannerActiveRepository.save(newBannerActive);
-            }
+//            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+//                //can not change banner image if admin approved
+//                return;
+//            } else if (bannerActive != null
+//                    && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
+//                bannerActive.setImageUrl(request.getJobBannerCImage());
+//                bannerActive.update();
+//                bannerActiveRepository.save(bannerActive);
+//            } else {
+//                BannerActive newBannerActive = new BannerActive();
+//                newBannerActive.setImageUrl(request.getJobBannerCImage());
+//                newBannerActive.setPaymentId(payment.getId());
+//                bannerActive.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+//                newBannerActive.setDisplayPosition(Enums.BannerPosition.JOB_BANNER_C.getStatus());
+//                newBannerActive.create();
+//                bannerActiveRepository.save(newBannerActive);
+//            }
         }
     }
 
-    private void setupBanner(Payment payment, BannerActive bannerActive,  String bannerDisplayPosition, String item) {
-            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED)) {
+    private void setupBanner(Payment payment, BannerActive bannerActive, String bannerDisplayPosition, String item) {
+        if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
             //can not change banner image if admin approved
             return;
         } else if (bannerActive != null
-                && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)) {
+                && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
             bannerActive.setImageUrl(item);
             bannerActive.update();
             bannerActiveRepository.save(bannerActive);
@@ -532,7 +532,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     private JobDetailPurchasedResponse getDetailPaymentJob(Payment payment) {
         if (payment.getDetailPackageId() > 0) {
-            if(payment.getJobId() > 0) {
+            if (payment.getJobId() > 0) {
                 Job selectedJob = jobService.getJobById(payment.getJobId());
                 JobDetailPurchasedResponse jobDetailPurchasedRes = modelMapper
                         .map(selectedJob, JobDetailPurchasedResponse.class);
@@ -553,7 +553,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (payment.getBannerId() > 0) {
             List<BannerPositionDetailResponse> bannerActiveOfPayment = bannerActiveService
                     .getAllBannerByPaymentId(payment.getId());
-            if(bannerActiveOfPayment != null && !bannerActiveOfPayment.isEmpty()) {
+            if (bannerActiveOfPayment != null && !bannerActiveOfPayment.isEmpty()) {
                 Map<String, BannerPositionDetailResponse> bannerResponse = new HashMap<>();
                 for (BannerPositionDetailResponse detail : bannerActiveOfPayment) {
                     bannerResponse.put(detail.getDisplayPosition(), detail);

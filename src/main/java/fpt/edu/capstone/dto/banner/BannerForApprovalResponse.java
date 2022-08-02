@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BannerForApprovalResponse {
+    private long bannerActiveId;
     private String displayPosition;
     private String packageName;
     private String recruiterName;
