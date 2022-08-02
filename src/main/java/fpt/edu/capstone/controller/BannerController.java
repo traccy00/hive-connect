@@ -94,11 +94,12 @@ public class BannerController {
         }
     }
 
-    @GetMapping("/get-banner-of-recruiter")
+    @GetMapping("/get-banner-for-approval")
     @Operation(summary = "Admin module - Get banner upload by recruiter for approval")
-    public ResponseData getBannerOfRecruiterForAdmin() {
+    public ResponseData getBannerOfRecruiterForAdmin(@RequestParam(defaultValue = "0") Integer pageNo,
+                                                     @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
-            ResponseDataPagination pagination = adminManageService.getBannerOfRecruiterForAdmin();
+            ResponseDataPagination pagination = adminManageService.getBannerOfRecruiterForAdmin(pageNo, pageSize);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

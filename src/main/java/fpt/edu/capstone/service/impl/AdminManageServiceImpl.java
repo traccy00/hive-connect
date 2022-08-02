@@ -1,12 +1,11 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
+import fpt.edu.capstone.dto.banner.BannerForApprovalResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.ReportJobRequest;
 import fpt.edu.capstone.dto.job.ReportedJobResponse;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.Recruiter;
-import fpt.edu.capstone.entity.Report;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.ReportedRepository;
 import fpt.edu.capstone.service.*;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -40,6 +40,14 @@ public class AdminManageServiceImpl implements AdminManageService {
     private final JobService jobService;
 
     private final ReportedService reportedService;
+
+    private final BannerActiveService bannerActiveService;
+
+    private final BannerService bannerService;
+
+    private final PaymentService paymentService;
+
+    private final CompanyService companyService;
 
     @Override
     public List<LicenseApprovalResponse> searchLicenseApprovalForAdmin(String businessApprovalStatus, String additionalApprovalStatus) {
@@ -118,7 +126,46 @@ public class AdminManageServiceImpl implements AdminManageService {
     }
 
     @Override
-    public ResponseDataPagination getBannerOfRecruiterForAdmin() {
-        return null;
+    public ResponseDataPagination getBannerOfRecruiterForAdmin(Integer pageNo, Integer pageSize) {
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+
+        Page<BannerActive> bannerActives = bannerActiveService.getAllBannerForApproval(pageable);
+        List<BannerForApprovalResponse> responseList = new ArrayList<>();
+        if(bannerActives.hasContent()) {
+            for (BannerActive bannerActive : bannerActives) {
+                Payment payment = paymentService.findById(bannerActive.getPaymentId());
+                BannerForApprovalResponse response = new BannerForApprovalResponse();
+                response.setDisplayPosition(bannerActive.getDisplayPosition());
+                Banner banner = bannerService.findById(payment.getBannerId());
+                response.setPackageName(banner.getTitle());
+                Optional<Recruiter> recruiter = recruiterService.findById(payment.getRecruiterId());
+                if(!recruiter.isPresent()) {
+                    throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+                }
+                Optional<Company> company = companyService.findById(recruiter.get().getCompanyId());
+                response.setRecruiterName(recruiter.get().getFullName());
+                if(company.isPresent()) {
+                    response.setCompanyId(recruiter.get().getCompanyId());
+                    response.setCompanyName(company.get().getName());
+                }
+                response.setApplyStartDate(payment.getCreatedAt());
+                response.setApplyEndDate(payment.getExpiredDate());
+                response.setBuyDate(payment.getCreatedAt());
+                response.setApprovalDate(bannerActive.getApprovalDate());
+                response.setApprovalStatus(bannerActive.getApprovalStatus());
+                responseList.add(response);
+            }
+        }
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(responseList);
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(bannerActives.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(bannerActives.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
     }
 }

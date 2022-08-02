@@ -34,7 +34,6 @@ public class JobScheduler {
     private final NotificationService notificationService;
 
     private final RecruiterService recruiterService;
-    private static final Logger logger = LoggerFactory.getLogger(JobPaymentCheckExpired.class);
 
     @Scheduled(fixedDelay = 50000)
     public void checkPaymentExpire(){

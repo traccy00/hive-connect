@@ -401,149 +401,74 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (banner.isSpotlight()) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.SPOTLIGHT.getStatus());
-            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED)) {
-                //can not change banner image if admin approved
-                return;
-            } else if (bannerActive != null
-                    && (bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)
-                    || bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT))) {
-                bannerActive.setImageUrl(request.getSpotLightImage());
-                bannerActive.update();
-                bannerActiveRepository.save(bannerActive);
-            } else if (bannerActive == null) {
-                BannerActive newBannerActive = new BannerActive();
-                newBannerActive.setImageUrl(request.getSpotLightImage());
-                newBannerActive.setPaymentId(payment.getId());
-                newBannerActive.setDisplayPosition(Enums.BannerPosition.SPOTLIGHT.getStatus());
-                newBannerActive.create();
-                bannerActiveRepository.save(newBannerActive);
-            }
+            setupBanner(payment, bannerActive, Enums.BannerPosition.SPOTLIGHT.getStatus(), request.getSpotLightImage());
         }
         if (banner.isHomepageBannerA()) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.HOME_BANNER_A.getStatus());
-            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED)) {
-                //can not change banner image if admin approved
-                return;
-            } else if (bannerActive != null
-                    && (bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)
-                    || bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT))) {
-                bannerActive.setImageUrl(request.getHomepageBannerAImage());
-                bannerActive.update();
-                bannerActiveRepository.save(bannerActive);
-            } else if (bannerActive == null) {
-                BannerActive newBannerActive = new BannerActive();
-                newBannerActive.setImageUrl(request.getHomepageBannerAImage());
-                newBannerActive.setPaymentId(payment.getId());
-                newBannerActive.setDisplayPosition(Enums.BannerPosition.HOME_BANNER_A.getStatus());
-                newBannerActive.create();
-                bannerActiveRepository.save(newBannerActive);
-            }
+            setupBanner(payment, bannerActive, Enums.BannerPosition.HOME_BANNER_A.getStatus(), request.getHomepageBannerAImage());
         }
         if (banner.isHomePageBannerB()) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.HOME_BANNER_B.getStatus());
-            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED)) {
-                //can not change banner image if admin approved
-                return;
-            } else if (bannerActive != null
-                    && (bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)
-                    || bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT))) {
-                bannerActive.setImageUrl(request.getHomepageBannerBImage());
-                bannerActive.update();
-                bannerActiveRepository.save(bannerActive);
-            } else if (bannerActive == null) {
-                BannerActive newBannerActive = new BannerActive();
-                newBannerActive.setImageUrl(request.getHomepageBannerBImage());
-                newBannerActive.setPaymentId(payment.getId());
-                newBannerActive.setDisplayPosition(Enums.BannerPosition.HOME_BANNER_B.getStatus());
-                newBannerActive.create();
-                bannerActiveRepository.save(newBannerActive);
-            }
+            setupBanner(payment, bannerActive, Enums.BannerPosition.HOME_BANNER_B.getStatus(), request.getHomepageBannerBImage());
         }
         if (banner.isHomePageBannerC()) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.HOME_BANNER_C.getStatus());
-            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED)) {
-                //can not change banner image if admin approved
-                return;
-            } else if (bannerActive != null
-                    && (bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)
-                    || bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT))) {
-                bannerActive.setImageUrl(request.getHomepageBannerCImage());
-                bannerActive.update();
-                bannerActiveRepository.save(bannerActive);
-            } else if (bannerActive == null) {
-                BannerActive newBannerActive = new BannerActive();
-                newBannerActive.setImageUrl(request.getHomepageBannerCImage());
-                newBannerActive.setPaymentId(payment.getId());
-                newBannerActive.setDisplayPosition(Enums.BannerPosition.HOME_BANNER_C.getStatus());
-                newBannerActive.create();
-                bannerActiveRepository.save(newBannerActive);
-            }
+            setupBanner(payment, bannerActive, Enums.BannerPosition.HOME_BANNER_C.getStatus(), request.getHomepageBannerCImage());
         }
         if (banner.isJobBannerA()) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.JOB_BANNER_A.getStatus());
-            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED)) {
-                //can not change banner image if admin approved
-                return;
-            } else if (bannerActive != null
-                    && (bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)
-                    || bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT))) {
-                bannerActive.setImageUrl(request.getJobBannerAImage());
-                bannerActive.update();
-                bannerActiveRepository.save(bannerActive);
-            } else if (bannerActive == null) {
-                BannerActive newBannerActive = new BannerActive();
-                newBannerActive.setImageUrl(request.getJobBannerAImage());
-                newBannerActive.setPaymentId(payment.getId());
-                newBannerActive.setDisplayPosition(Enums.BannerPosition.JOB_BANNER_A.getStatus());
-                newBannerActive.create();
-                bannerActiveRepository.save(newBannerActive);
-            }
+            setupBanner(payment, bannerActive, Enums.BannerPosition.JOB_BANNER_A.getStatus(), request.getJobBannerAImage());
         }
         if (banner.isJobBannerB()) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.JOB_BANNER_B.getStatus());
-            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED)) {
-                //can not change banner image if admin approved
-                return;
-            } else if (bannerActive != null
-                    && (bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)
-                    || bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT))) {
-                bannerActive.setImageUrl(request.getJobBannerBImage());
-                bannerActive.update();
-                bannerActiveRepository.save(bannerActive);
-            } else if (bannerActive == null) {
-                BannerActive newBannerActive = new BannerActive();
-                newBannerActive.setImageUrl(request.getJobBannerBImage());
-                newBannerActive.setPaymentId(payment.getId());
-                newBannerActive.setDisplayPosition(Enums.BannerPosition.JOB_BANNER_B.getStatus());
-                newBannerActive.create();
-                bannerActiveRepository.save(newBannerActive);
-            }
+            setupBanner(payment, bannerActive, Enums.BannerPosition.JOB_BANNER_B.getStatus(), request.getJobBannerBImage());
         }
         if (banner.isJobBannerC()) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.JOB_BANNER_C.getStatus());
+            setupBanner(payment, bannerActive, Enums.BannerPosition.JOB_BANNER_C.getStatus(), request.getJobBannerCImage());
             if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED)) {
                 //can not change banner image if admin approved
                 return;
             } else if (bannerActive != null
-                    && (bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)
-                    || bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT))) {
+                    && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)) {
                 bannerActive.setImageUrl(request.getJobBannerCImage());
                 bannerActive.update();
                 bannerActiveRepository.save(bannerActive);
-            } else if (bannerActive == null) {
+            } else {
                 BannerActive newBannerActive = new BannerActive();
                 newBannerActive.setImageUrl(request.getJobBannerCImage());
                 newBannerActive.setPaymentId(payment.getId());
+                bannerActive.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
                 newBannerActive.setDisplayPosition(Enums.BannerPosition.JOB_BANNER_C.getStatus());
                 newBannerActive.create();
                 bannerActiveRepository.save(newBannerActive);
             }
+        }
+    }
+
+    private void setupBanner(Payment payment, BannerActive bannerActive,  String bannerDisplayPosition, String item) {
+            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED)) {
+            //can not change banner image if admin approved
+            return;
+        } else if (bannerActive != null
+                && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING)) {
+            bannerActive.setImageUrl(item);
+            bannerActive.update();
+            bannerActiveRepository.save(bannerActive);
+        } else {
+            BannerActive newBannerActive = new BannerActive();
+            newBannerActive.setImageUrl(item);
+            newBannerActive.setPaymentId(payment.getId());
+            bannerActive.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+            newBannerActive.setDisplayPosition(bannerDisplayPosition);
+            newBannerActive.create();
+            bannerActiveRepository.save(newBannerActive);
         }
     }
 
