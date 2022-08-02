@@ -233,17 +233,17 @@ public class PaymentServiceImpl implements PaymentService {
                 recruiterService.updateTotalCvView(totalCv, payment.getRecruiterId());
             }
 
-            //Kích hoạt tính năng gói package đó cho Job tương ứng
-            Job job = jobService.getJobById(payment.getJobId());
-            if(job == null){
-                throw new HiveConnectException("Công việc có id = "+ job.getId()+ "không tồn tại");
-            }
-            if(detailPackage.getRentalPackageId() == 2){
-                job.setPopularJob(true);
-                job.setUrgentJob(true);
-                job.setNewJob(true);
-//                jobService.saveJob(job);
-            }
+//            //Kích hoạt tính năng gói package đó cho Job tương ứng
+//            Job job = jobService.getJobById(payment.getJobId());
+//            if(job == null){
+//                throw new HiveConnectException("Công việc có id = "+ job.getId()+ "không tồn tại");
+//            }
+//            if(detailPackage.getRentalPackageId() == 2){
+//                job.setPopularJob(true);
+//                job.setUrgentJob(true);
+//                job.setNewJob(true);
+////                jobService.saveJob(job);
+//            }
         }
 
 

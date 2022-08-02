@@ -20,5 +20,5 @@ public interface AdminManageService {
 
     void approveBanner(long bannerActiveId);
 
-    ResponseDataPagination getBannerOfRecruiterForAdmin();
+    ResponseDataPagination getBannerOfRecruiterForAdmin(Integer pageNo, Integer pageSize);
 }

@@ -2,6 +2,8 @@ package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.dto.recruiter.BannerPositionDetailResponse;
 import fpt.edu.capstone.entity.BannerActive;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,4 +24,7 @@ public interface BannerActiveRepository extends JpaRepository<BannerActive, Long
     List<BannerPositionDetailResponse> getBannerActiveByPaymentId(long paymentId);
 
     BannerActive findByPaymentIdAndDisplayPosition(long paymentId, String displayPosition);
+
+    @Query(value = "select * from banner_active ba", nativeQuery = true)
+    Page<BannerActive> getAllBannerForApproval(Pageable pageable);
 }

@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "banner_active")
@@ -36,4 +37,7 @@ public class BannerActive extends BaseEntity {
 
     @Column(name = "approval_status")
     private String approvalStatus;
+
+    @Column(name = "approval_date")
+    private LocalDateTime approvalDate;
 }
