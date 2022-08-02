@@ -68,52 +68,28 @@ public class AuthenticationController {
 
     private final UserRepository userRepository;
 
+    private final RequestJoinCompanyService requestJoinCompanyService;
+
     @PostMapping("/login")
     @Operation(summary = "Login user")
     public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
-//            authenticate(request.getUsername().trim(), request.getPassword().trim());
-//            String username = request.getUsername();
-//            logger.info("login with username {}", username);
-//            if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(request.getPassword())) {
-//                return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
-//                        ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
-//            }
-//
-//            final UserDetails userDetails = securityUserService.loadUserByUsername(username);
-//
-//            Optional<Users> optionalUser = userService.findUserByUserName(username);
-//            if (!optionalUser.isPresent()) {
-//                throw new HiveConnectException("Username: " + username + "not found");
-//            }
-//            Users user = optionalUser.get();
-//            String token = jwtTokenUtil.generateToken(userDetails);
-
+            authenticate(request.getUsername().trim(), request.getPassword().trim());
             String username = request.getUsername();
+            logger.info("login with username {}", username);
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(request.getPassword())) {
                 return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
                         ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
             }
+
+            final UserDetails userDetails = securityUserService.loadUserByUsername(username);
+
             Optional<Users> optionalUser = userService.findUserByUserName(username);
             if (!optionalUser.isPresent()) {
                 throw new HiveConnectException("Username: " + username + "not found");
             }
             Users user = optionalUser.get();
-            if(!user.isVerifiedEmail()) {
-                return new ResponseDataUser(Enums.ResponseStatus.EMAIL_NOT_VERIFIED.getStatus(),
-                        ResponseMessageConstants.LOGIN_FAILED);
-            }
-            if(!user.isVerifiedPhone()) {
-                return new ResponseDataUser(Enums.ResponseStatus.COMPANY_NOT_VERIFIED.getStatus(),
-                        ResponseMessageConstants.LOGIN_FAILED);
-            }
-            //security
-            authenticate(request.getUsername().trim(), request.getPassword().trim());
-            logger.info("login with username {}", username);
-
-            final UserDetails userDetails = securityUserService.loadUserByUsername(username);
             String token = jwtTokenUtil.generateToken(userDetails);
-
 
             user.setLastLoginTime(LocalDateTime.now());
             userService.saveUser(user);
@@ -135,8 +111,15 @@ public class AuthenticationController {
                 }
                 if (recruiter.get().getCompanyId() == 0) {
                     response.setJoinedCompany(false);
+                    Optional<RequestJoinCompany> requestJoinCompany = requestJoinCompanyService.findById(recruiter.get().getId());
+                    if(requestJoinCompany.isPresent()) {
+                        response.setCreatedOrRequestedJoinCompany(true);
+                    } else {
+                        response.setCreatedOrRequestedJoinCompany(false);
+                    }
                 } else if (recruiter.get().getCompanyId() > 0) {
                     response.setJoinedCompany(true);
+                    response.setCreatedOrRequestedJoinCompany(true);
                 }
                 if (recruiter.get().getBusinessLicenseApprovalStatus() != null
                         && recruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
@@ -152,6 +135,12 @@ public class AuthenticationController {
                     throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
                 }
                 response.setAdmin(admin.get());
+            }
+
+            if(!user.isVerifiedEmail()) {
+                response.setVerifiedEmail(false);
+            } else {
+                response.setVerifiedEmail(true);
             }
 
             return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS, response, token);

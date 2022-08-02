@@ -99,12 +99,12 @@ public class CVController {
                 cvResponse.setMajorLevels(majorLevels);
                 cvResponse.setOtherSkills(otherSkills);
                 cvResponse.setWorkExperiences(workExperiences);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Success", cvResponse);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, cvResponse);
             } else {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No CV be found", null);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
             }
         } catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "No cv be founded", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
         }
     }
 
@@ -113,7 +113,8 @@ public class CVController {
         try {
             List<CV> cv = cvService.findCvByCandidateId(candidateId);
             if (!cv.isEmpty()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.YOUR_CV_EXISTED, null);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.YOUR_CV_EXISTED);
             }
         } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
@@ -127,59 +128,61 @@ public class CVController {
     public ResponseData insertEducation(@RequestBody Education newEdudation) {
         Optional<CV> cv = cvService.findCvById(newEdudation.getCvId());
         if(!cv.isPresent()) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
         }
         Education ed =  educationService.insertEducation(newEdudation);
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Education Success", ed);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CREATE_SUCCESSFULLY, ed);
     }
 
     @PostMapping("/insert-work-exp")
     public ResponseData insertWorkExp(@RequestBody WorkExperience newWorkExperience) {
         Optional<CV> cv = cvService.findCvById(newWorkExperience.getCvId());
         if(!cv.isPresent()) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
         }
         WorkExperience workExperience =  workExperienceService.insertWorkExperience(newWorkExperience);
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Work Experience Success", workExperience);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CREATE_SUCCESSFULLY,
+                workExperience);
     }
 
     @PostMapping("/insert-language")
     public ResponseData insertLanguage(@RequestBody Language newLanguage) {
         Optional<CV> cv = cvService.findCvById(newLanguage.getCvId());
         if(!cv.isPresent()) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
         }
         Language language = languageService.insertLanguage(newLanguage);
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create New Language Success", language);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CREATE_SUCCESSFULLY,
+                language);
     }
 
     @PostMapping("/insert-other-skill")
     public ResponseData insertOtherSkill(@RequestBody OtherSkill newOtherSkill) {
         Optional<CV> cv = cvService.findCvById(newOtherSkill.getCvId());
         if(!cv.isPresent()) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
         }
         OtherSkill otherSkill = otherSkillService.insertOtherSkill(newOtherSkill);
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Other Skill Success", otherSkill);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CREATE_SUCCESSFULLY, otherSkill);
     }
 
     @PostMapping("/insert-certificate")
     public ResponseData insertCert(@RequestBody Certificate newCertificate) {
         Optional<CV> cv = cvService.findCvById(newCertificate.getCvId());
         if(!cv.isPresent()) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
         }
         Certificate certificate = certificateService.insertCertificate(newCertificate);
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Certificate Success", certificate);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CREATE_SUCCESSFULLY, certificate);
     }
 
     @GetMapping("/get-all-field")
     public ResponseData getAllField() {
         List<Fields> fields = fieldsService.getAllField();
         if(fields.isEmpty()) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),"Have no any field", null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),"Không có lĩnh vực môn nào");
         }
-        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Success", fields);
+        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, fields);
     }
 
     @GetMapping("/get-major-by-field")
@@ -187,7 +190,7 @@ public class CVController {
         try {
             List<Major> majors = majorService.getAllMajorByFieldId(fieldId);
             if (majors.isEmpty()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Major is empty");
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Chuyên môn trống.");
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, majors);
         } catch (Exception ex) {
@@ -200,10 +203,10 @@ public class CVController {
         try{
             Optional<CV> cv = cvService.findCvById(newMajorLevel.getCvId());
             if(!cv.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "CV is not exist", null);
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
             }
             MajorLevel majorLevel = majorLevelService.insertNewMajorLevel(newMajorLevel);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Create Major Level Success", majorLevel);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CREATE_SUCCESSFULLY, majorLevel);
 
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ex.getMessage());
@@ -216,9 +219,11 @@ public class CVController {
             Optional<CV> cv = cvService.findCvById(updateCVSummaryRequest.getCvId());
             if(cv.isPresent()) {
                 cvService.updateSummary(updateCVSummaryRequest.getCvId(), updateCVSummaryRequest.getNewSummary());
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update Summary Success", updateCVSummaryRequest.getNewSummary());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, updateCVSummaryRequest.getNewSummary());
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not fnid this cv", updateCVSummaryRequest.getCvId());
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CV_NOT_EXIST,
+                    updateCVSummaryRequest.getCvId());
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
@@ -231,7 +236,8 @@ public class CVController {
             if(cv.isPresent()) {
                 LocalDateTime nowDate = LocalDateTime.now();
                 cvService.updateUpdatedDateOfCV(id, nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update updated date success", nowDate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, nowDate);
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
         }catch (Exception ex) {
@@ -247,9 +253,10 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 educationService.updateEducation(updateEducation);
                 cvService.updateUpdatedDateOfCV(updateEducation.getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update education success", updateEducation);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, updateEducation);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Education is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Học vấn trống.", null);
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
@@ -263,9 +270,10 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 educationService.deleteEducation(education.get().getId());
                 cvService.updateUpdatedDateOfCV(education.get().getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete education success", education);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.DELETE_SUCCESSFULLY, education);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Education is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Học vấn trống.", null);
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
@@ -279,9 +287,10 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 workExperienceService.updateWordExperience(updateWorkExperience);
                 cvService.updateUpdatedDateOfCV(updateWorkExperience.getCvId()    , nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update work experience success", updateWorkExperience);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, updateWorkExperience);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Work experience is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Kinh nghiệm làm việc trống.");
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
@@ -295,9 +304,10 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 workExperienceService.deleteWordExperience(workExperience.get());
                 cvService.updateUpdatedDateOfCV(workExperience.get().getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete work experience success", workExperience);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.DELETE_SUCCESSFULLY, workExperience);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Work experience is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Kinh nghiệm làm việc trống.", null);
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
@@ -312,11 +322,12 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 certificateService.updateService(updateCertificate);
                 cvService.updateUpdatedDateOfCV(updateCertificate.getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update certificate success", updateCertificate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, updateCertificate);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Certificate is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Bằng cấp trống.");
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -328,9 +339,10 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 certificateService.deleteCertificate(certificate.get());
                 cvService.updateUpdatedDateOfCV(certificate.get().getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete certificate success", certificate.get());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.DELETE_SUCCESSFULLY, certificate.get());
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Certificate is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Bằng cấp trống.");
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
@@ -345,9 +357,9 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 languageService.updateLanguage(updateLanguage);
                 cvService.updateUpdatedDateOfCV(updateLanguage.getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update language success", updateLanguage);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_SUCCESSFULLY, updateLanguage);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Language is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Ngoại ngữ trống.");
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
@@ -361,9 +373,10 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 languageService.deleteLanguage(language.get());
                 cvService.updateUpdatedDateOfCV(language.get().getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete language success", language.get());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.DELETE_SUCCESSFULLY, language.get());
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Language is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Ngoại ngữ trống.");
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
@@ -378,11 +391,12 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 majorLevelService.updateMajorLevel(updateMajorLevel);
                 cvService.updateUpdatedDateOfCV(updateMajorLevel.getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update major level success", updateMajorLevel);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, updateMajorLevel);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Major level is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Trình độ, chuyên môn trống.");
         }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -394,9 +408,10 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 majorLevelService.deleteMajorLevel(majorLevel.get());
                 cvService.updateUpdatedDateOfCV(majorLevel.get().getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete language success", majorLevel);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.DELETE_SUCCESSFULLY, majorLevel);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Major level is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Trình độ, chuyên môn trống.");
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
@@ -411,9 +426,10 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 otherSkillService.updateOtherSKill(updateOtherSkill);
                 cvService.updateUpdatedDateOfCV(updateOtherSkill.getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update other skill success", updateOtherSkill);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, updateOtherSkill);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Other skill is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Kỹ năng khác trống.");
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
@@ -427,9 +443,9 @@ public class CVController {
                 LocalDateTime nowDate = LocalDateTime.now();
                 otherSkillService.deleteOtherSkill(otherSkill.get());
                 cvService.updateUpdatedDateOfCV(otherSkill.get().getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "delete other skill success", otherSkill.get());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.DELETE_SUCCESSFULLY, otherSkill.get());
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),"Other skill is not exist", null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Kỹ năng khác trống.");
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
@@ -441,10 +457,12 @@ public class CVController {
             Optional<Recruiter> r = recruiterService.findById(recruiterId);
             Optional<Candidate> c = candidateService.findById(candidateId);
             if(!r.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Không tìm thấy người tuyển dụng này");
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.RECRUITER_DOES_NOT_EXIST);
             }
             if(!c.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Không tìm thấy ứng viên này");
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.CANDIDATE_DOES_NOT_EXIST);
             }
 
             List<CV> cv = cvService.findCvByCandidateId(candidateId);

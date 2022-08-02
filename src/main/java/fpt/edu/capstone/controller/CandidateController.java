@@ -115,9 +115,11 @@ public class CandidateController {
             Optional<Candidate> candidate = candidateService.findById(updateCandidate.getId());
             if(candidate.isPresent()) {
               candidateService.updateCandidateInformation(updateCandidate);
-              return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update successful", updateCandidate);
+              return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                      ResponseMessageConstants.UPDATE_SUCCESSFULLY, updateCandidate);
             }
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", updateCandidate.getId());
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST,
+                    updateCandidate.getId());
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
@@ -147,9 +149,11 @@ public class CandidateController {
                 response.setGender(candidateNewInfor.isGender());
 
 
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update successful", response);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, response);
             }
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", cvBaseInformationRequest.getUserId());
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST,
+                    cvBaseInformationRequest.getUserId());
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
@@ -162,9 +166,11 @@ public class CandidateController {
                 Optional<Candidate> candidate = candidateService.findById(candidateId);
                 if(candidate.isPresent()) {
                     candidateService.updateIsNeedJob(!candidate.get().isNeedJob(), candidate.get().getId());
-                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Update successful", candidate.get().isNeedJob());
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                            ResponseMessageConstants.UPDATE_SUCCESSFULLY, candidate.get().isNeedJob());
                 }
-                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Can not find this candidate", candidateId);
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),
+                        ResponseMessageConstants.USER_DOES_NOT_EXIST, candidateId);
             }catch (Exception ex) {
                 return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
             }

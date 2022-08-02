@@ -16,4 +16,6 @@ public class UserInforResponse {
     private Admin admin;
     private boolean joinedCompany;
     private boolean approvedBusinessLicense;
+    private boolean isVerifiedEmail;
+    private boolean createdOrRequestedJoinCompany;
 }

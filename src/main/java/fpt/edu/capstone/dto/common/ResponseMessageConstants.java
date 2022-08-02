@@ -8,16 +8,20 @@ public interface ResponseMessageConstants {
     String DATA_IS_NULL_OR_EMPTY = "Không có dữ liệu.";
     String REQUEST_NOT_EXIST = "Không tìm thấy người dùng hoặc yêu cầu không tồn tại.";
     String CREATE_FAIL = "Tạo thất bại";
+    String CREATE_SUCCESSFULLY = "Tạo thất bại";
     String ROLE_NAME_EXISTS = "Loại người dùng này đã tồn tại";
     String PLEASE_TRY_TO_CONTACT_ADMIN = "Có lỗi xảy ra, vui lòng liên hệ quản trị hệ thống.";
     String APPROVAL_STATUS_INVALID = "Trạng thái duyệt không hợp lệ.";
     String APPROVAL_WAS_PROCESSED = "Quản lí đã xử lí yêu cầu này.";
+    String DELETE_SUCCESSFULLY = "Xóa thành công";
+    String RECRUITER_DOES_NOT_EXIST = "Không tìm thấy người tuyển dụng này";
+    String CANDIDATE_DOES_NOT_EXIST = "Không tìm thấy ứng viên này";
 
     // LOGIN
-    String LOGIN_ACCESS_DENIED = "MSG_LOGIN_ACCESS_DENIED";
-    String LOGIN_EXCEPTION = "MSG_LOGIN_EXCEPTION";
-    String LOGIN_SUCCESS = "MSG_LOGIN_SUCCESS";
-    String LOGIN_FAILED = "MSG_LOGIN_FAILED";
+    String LOGIN_ACCESS_DENIED = "Đăng nhập bị từ chối.";
+    String LOGIN_EXCEPTION = "Đăng nhập xảy ra lỗi";
+    String LOGIN_SUCCESS = "Đăng nhập thành công";
+    String LOGIN_FAILED = "Đăng nhập thất bại";
     String LOGIN_PROVIDER_INVALID = "MSG_LOGIN_PROVIDER_INVALID";
     String LOGIN_REFRESH_EXCEPTION = "MSG_LOGIN_REFRESH_EXCEPTION";
     String USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS = "MSG_USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS";
