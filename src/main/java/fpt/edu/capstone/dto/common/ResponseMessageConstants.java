@@ -76,9 +76,14 @@ public interface ResponseMessageConstants {
     String HAVE_NOT_FOLLOWED_JOB = "Bạn chưa theo dõi công việc nào cả";
 
     //COMPANY
+    String COMPANY_DOES_NOT_EXIST = "Công ty không tồn tại.";
     String SEND_OTP_SUCCESS = "Gửi OTP thành công.";
     String NO_REQUEST_JOIN_COMPANY_SENT = "Chưa tạo yêu cầu tham gia công ty nào.";
     String NO_REQUEST_JOIN_COMPANY_RECEIVED = "Không có yêu cầu tham gia công ty của bạn.";
+    String YOU_DONT_HAVE_PERMISSION = "Không có quyền chỉnh sửa";
+    String TAX_CODE_EXISTS = "Mã số thuế đã được sử dụng cho công ty khác";
+    String COMPANY_NAME_EXISTS = "Tên công ty đã được sử dụng";
+    String FIELD_WORK_OF_COMPANY_DOES_NOT_EXIST = "Lĩnh vực công ty không tồn tại";
 
     //BANNER
     String CREATE_BANNER_FAIL = "Tạo banner thất bại";

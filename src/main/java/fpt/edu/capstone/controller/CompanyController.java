@@ -14,6 +14,8 @@ import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
+import fpt.edu.capstone.utils.ResponseDataPagination;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +58,7 @@ public class CompanyController {
             if (!recruiter.isPresent()) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST, request.getCreatorId());
             }
-            Company company = companyService.createCompany(request);
+            Company company = companyManageService.createCompany(request);
             recruiterService.updateCompany(company.getId(), recruiter.get().getId());
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, company);
         } catch (Exception e) {
@@ -92,16 +94,34 @@ public class CompanyController {
     }
 
     @GetMapping("/search-company")
-    public ResponseData searchCompany(@RequestParam(value = "companyName", required = false) String companyName) {
+    @Operation(summary = "Dùng chung - Get list all company")
+    public ResponseData searchCompany(@RequestParam(defaultValue = "0") Integer pageNo,
+                                      @RequestParam(defaultValue = "10") Integer pageSize,
+                                      @RequestParam(value = "companyName", required = false) String companyName) {
         try {
-            List<Company> careers = companyService.searchCompany(companyName);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, careers);
+            ResponseDataPagination pagination = companyManageService.searchCompany(pageNo, pageSize, companyName);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
+                    pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
         }
     }
+
+    @PutMapping("/lock-unlock-company")
+    @Operation(summary = "Admin module - Lock, unlock a company")
+    public ResponseData lockUnlockCompany(@RequestParam long companyId) {
+        try {
+            companyManageService.lockCompany(companyId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
+
 
     @PutMapping("/update-company-information/{recruiterId}")
     public ResponseData updateCompanyInformation(@PathVariable("recruiterId") long recruiterId,

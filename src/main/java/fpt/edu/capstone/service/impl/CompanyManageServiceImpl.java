@@ -2,16 +2,24 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CompanyResponse;
+import fpt.edu.capstone.dto.company.CreateCompanyRequest;
 import fpt.edu.capstone.dto.company.TopCompanyResponse;
 import fpt.edu.capstone.dto.company.UpdateCompanyInforRequest;
 import fpt.edu.capstone.entity.Company;
+import fpt.edu.capstone.entity.Fields;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.exception.HiveConnectException;
-import fpt.edu.capstone.service.AppliedJobService;
-import fpt.edu.capstone.service.CompanyManageService;
-import fpt.edu.capstone.service.CompanyService;
-import fpt.edu.capstone.service.RecruiterService;
+import fpt.edu.capstone.repository.CompanyRepository;
+import fpt.edu.capstone.repository.ImageRepository;
+import fpt.edu.capstone.service.*;
+import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,6 +31,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CompanyManageServiceImpl implements CompanyManageService {
 
+    private final ModelMapper modelMapper;
+
     private final AppliedJobService appliedJobService;
 
     private final ImageServiceImpl imageService;
@@ -30,6 +40,12 @@ public class CompanyManageServiceImpl implements CompanyManageService {
     private final RecruiterService recruiterService;
 
     private final CompanyService companyService;
+
+    private final CompanyRepository companyRepository;
+
+    private final FieldsService fieldsService;
+
+    private final ImageRepository imageRepository;
 
     @Override
     public List<TopCompanyResponse> getTop12Companies() {
@@ -57,10 +73,10 @@ public class CompanyManageServiceImpl implements CompanyManageService {
         }
         Company company = companyService.getCompanyById(request.getCompanyId());
         if (company == null) {
-            throw new HiveConnectException("Công ty không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.COMPANY_DOES_NOT_EXIST);
         }
         if (company.getCreatorId() != recruiterId) {
-            throw new HiveConnectException("Không có quyền chỉnh sửa");
+            throw new HiveConnectException(ResponseMessageConstants.YOU_DONT_HAVE_PERMISSION);
         }
         if ((request.getCompanyEmail() == null && request.getCompanyEmail().trim().isEmpty())
                 || (request.getCompanyPhone() == null && request.getCompanyPhone().trim().isEmpty())
@@ -94,7 +110,7 @@ public class CompanyManageServiceImpl implements CompanyManageService {
         }
         //xóa cái nào thì trả id của cái đó
         List<Long> deleteImageIdList = request.getDeleteImageIdList();
-        if(deleteImageIdList != null && !deleteImageIdList.isEmpty()) {
+        if (deleteImageIdList != null && !deleteImageIdList.isEmpty()) {
             imageService.deleteImageById(deleteImageIdList);
         }
 
@@ -104,5 +120,70 @@ public class CompanyManageServiceImpl implements CompanyManageService {
             imageService.saveImageCompany(false, false, company.getId(), uploadImageUrlList);
         }
         return null;
+    }
+
+    @Override
+    public ResponseDataPagination searchCompany(Integer pageNo, Integer pageSize, String companyName) {
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+        Page<Company> companyPageable = companyService.searchCompany(pageable, companyName);
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(companyPageable.getContent());
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(companyPageable.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(companyPageable.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
+    }
+
+    @Override
+    public void lockCompany(long companyId) {
+        Optional<Company> company = companyService.findById(companyId);
+        if (!company.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.COMPANY_DOES_NOT_EXIST);
+        }
+        if (company.get().isLocked()) {
+            company.get().setLocked(false);
+        } else if (!company.get().isLocked()) {
+            company.get().setLocked(true);
+        }
+        company.get().update();
+        companyRepository.save(company.get());
+    }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public Company createCompany(CreateCompanyRequest request) {
+        if (companyRepository.getCompanyByName(request.getName()).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.COMPANY_NAME_EXISTS);
+        }
+        Optional<Fields> field = fieldsService.findById(request.getFieldWork());
+        if (!field.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.FIELD_WORK_OF_COMPANY_DOES_NOT_EXIST);
+        }
+        if ((request.getName() == null || request.getName().trim().isEmpty())
+                || (request.getEmail() == null || request.getEmail().trim().isEmpty())
+                || (request.getPhoneNumber() == null || request.getPhoneNumber().trim().isEmpty())
+                || (request.getTaxCode() == null || request.getTaxCode().trim().isEmpty())
+                || (request.getAddress() == null || request.getAddress().trim().isEmpty())
+                || (request.getNumberEmployees() == null || request.getNumberEmployees().trim().isEmpty())) {
+            throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
+        }
+        if (companyRepository.getCompanyByTaxcode(request.getTaxCode().trim()).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.TAX_CODE_EXISTS);
+        }
+        Company company = modelMapper.map(request, Company.class);
+        company.create();
+        companyRepository.save(company);
+
+        Image image = new Image();
+        image.setCompanyId(company.getId());
+        image.setAvatar(true);
+        imageRepository.save(image);
+        Company savedCompany = companyRepository.getCompanyById(company.getId());
+        return savedCompany;
     }
 }
