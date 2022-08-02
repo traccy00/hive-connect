@@ -5,16 +5,10 @@ import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
 import fpt.edu.capstone.dto.payment.PaymentResponse;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
-import fpt.edu.capstone.entity.DetailPackage;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.Payment;
-import fpt.edu.capstone.entity.Recruiter;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.PaymentRepository;
-import fpt.edu.capstone.service.DetailPackageService;
-import fpt.edu.capstone.service.JobService;
-import fpt.edu.capstone.service.PaymentService;
-import fpt.edu.capstone.service.RecruiterService;
+import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
@@ -46,12 +40,15 @@ public class PaymentServiceImpl implements PaymentService {
     private final DetailPackageService detailPackageService;
 
     private final JobService jobService;
+
+    private final BannerService bannerService;
+
     @Override
     public PaymentResponseDTO getPaymentVNPay(PaymentDTO paymentDTO) throws UnsupportedEncodingException {
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
         String randomTransactionCode = PaymentConfig.getRandomNumber(8);
         payment.setTransactionCode(randomTransactionCode);
-        int amount = paymentDTO.getAmount() * 100;
+        int amount = paymentDTO.getAmount();
 
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -131,35 +128,35 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<PaymentResponse> findRecruiterPurchasedPackage(long recruiterId) {
 
-        List<Payment> payment = paymentRepository.findByRecruiterIdAndExpiredStatusFalse(recruiterId);
-        if (payment == null) {
-            throw new HiveConnectException("Nhà tuyển dụng chưa mua gói dịch vụ nào");
+        List<Payment> payments = paymentRepository.findByRecruiterIdAndExpiredStatusFalse(recruiterId);
+        if (payments == null) {
+            throw new HiveConnectException(ResponseMessageConstants.NO_PURCHASED_PACKAGE);
         }
-        //If exist : check expireDate package
-//        for (Payment p : payment) {
-//            LocalDateTime now = LocalDateTime.now();
-//            int a = now.compareTo(p.getExpiredDate());
-//            if(a < 0){
-//                throw new HiveConnectException("Gói dịch vụ đã hết hạn sử dụng");
-//            }
-//        }
-        List <PaymentResponse> response = new ArrayList<>();
-        for (Payment dto : payment){
-            PaymentResponse dto1 = new PaymentResponse();
-            dto1.setPaymentId(dto.getId());
-            dto1.setRecruiterId(dto.getRecruiterId());
-            dto1.setDetailPackageId(dto.getDetailPackageId());
-            dto1.setDetailPackageName(detailPackageService.findNameById(dto.getDetailPackageId()));
-            dto1.setBannerId(dto.getBannerId());
-            dto1.setJobId(dto.getJobId());
-            dto1.setAmount(dto.getAmount());
-            dto1.setOrderType(dto.getOrderType());
-            dto1.setDescription(dto.getDescription());
-            dto1.setBankCode(dto.getBankCode());
+        List <PaymentResponse> responseList = new ArrayList<>();
+        for (Payment payment : payments){
+            PaymentResponse response = new PaymentResponse();
+            response.setPaymentId(payment.getId());
+            response.setRecruiterId(payment.getRecruiterId());
+            response.setDetailPackageId(payment.getDetailPackageId());
+            if(payment.getDetailPackageId() > 0) {
+                DetailPackage normalPP = detailPackageService.findById(payment.getDetailPackageId());
+                response.setDetailPackageName(normalPP.getDetailName());
+            } else {
+                if(payment.getBannerId() > 0) {
+                    Banner banner = bannerService.findById(payment.getBannerId());
+                    response.setDetailPackageName(banner.getTitle());
+                }
+            }
+            response.setBannerId(payment.getBannerId());
+            response.setJobId(payment.getJobId());
+            response.setAmount(payment.getAmount());
+            response.setOrderType(payment.getOrderType());
+            response.setDescription(payment.getDescription());
+            response.setBankCode(payment.getBankCode());
 
-            response.add(dto1);
+            responseList.add(response);
         }
-        return response;
+        return responseList;
     }
 
     @Override

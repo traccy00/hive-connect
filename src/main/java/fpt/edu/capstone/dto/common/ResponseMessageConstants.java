@@ -30,6 +30,14 @@ public interface ResponseMessageConstants {
     String CHANGE_PASSWORD_SUCCESS = "Thay đổi mật khẩu thành công";
     String CHANGE_PASSWORD_FAILED = "Thay đổi mật khẩu thất bại";
     String RESEND_EMAIL_SUCCESS = "Gửi lại xác thực không thành công";
+    String EMAIL_EXISTS = "Email đã được sử dụng.";
+    String USERNAME_EXISTS = "Tên đăng nhập đã được sử dụng.";
+    String ROLE_DOES_NOT_EXISTS = "Loại vai trò người dùng không tồn tại trong hệ thống";
+
+    //CHANGE PASSWORD
+    String CONFIRM_PASSWORD_WRONG = "Xác nhận mật khẩu không đúng.";
+    String OLD_PASSWORD_WRONG = "Mật khẩu cũ không đúng.";
+    String USERNAME_DOES_NOT_EXIST = "Tên người dùng không tìm thấy.";
 
     //USER
     String USER_DOES_NOT_EXIST = "Người dùng không tồn tại";
@@ -103,4 +111,5 @@ public interface ResponseMessageConstants {
     String VNP_RESPONSE_CODE_65 = "Giao dịch không thành công do: Tài khoản của Quý khách đã vượt quá hạn mức giao dịch trong ngày.";
     String VNP_RESPONSE_CODE_79 = "Giao dịch không thành công do: KH nhập sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch";
     String VNP_RESPONSE_CODE_99 = "Các lỗi khác";
+    String NO_PURCHASED_PACKAGE = "Nhà tuyển dụng chưa mua gói dịch vụ nào";
 }
