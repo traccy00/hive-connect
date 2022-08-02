@@ -151,6 +151,18 @@ public class AuthenticationController {
         }
     }
 
+    @GetMapping("/check-email-registered")
+    public ResponseData checkEmailRegistered(@RequestParam String email) {
+        try {
+            boolean isRegistered = userRepository.findByEmail(email).isPresent();
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, isRegistered);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
+
     //TODO : namnh
     @PostMapping("/login-google")
     public ResponseDataUser loginGoogle(@RequestBody LoginGoogleRequest request) {

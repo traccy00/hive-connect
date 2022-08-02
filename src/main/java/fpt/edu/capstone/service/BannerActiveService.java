@@ -11,5 +11,7 @@ public interface BannerActiveService {
 
     List<BannerActive> getAllByPaymentId(long paymentId);
 
-    public List<BannerPositionDetailResponse> getAllBannerByPaymentId(long paymentId);
+    List<BannerPositionDetailResponse> getAllBannerByPaymentId(long paymentId);
+
+    BannerActive findByPaymentIdAndPosition(long paymentId, String position);
 }

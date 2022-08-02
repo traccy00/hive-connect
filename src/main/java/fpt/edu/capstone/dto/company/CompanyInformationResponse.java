@@ -30,6 +30,6 @@ public class CompanyInformationResponse {
     private String taxCode;
     private String mapUrl;
     private boolean isCreator;
-    private List<String> companyImageUrlList;
+    private List<CompanyImageResponse> companyImageUrlList;
     private String coverImageUrl;
 }

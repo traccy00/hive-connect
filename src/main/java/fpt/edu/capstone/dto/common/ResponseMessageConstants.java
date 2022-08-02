@@ -89,4 +89,15 @@ public interface ResponseMessageConstants {
     String SEND_RESET_PASSWORD_MAIL_SUCCESS = "Chúng tôi đã gửi mail làm mới mật khẩu tới email của bạn. Vui lòng kiểm tra email.";
     String SEND_EMAIL_FAIL = "Có lỗi xảy ra. Gửi email không thành công!";
     String DETAIL_PAYMENT_NOT_FOUND = "Không tìm thấy gói dịch vụ";
+    String VNP_RESPONSE_CODE_07 = "Trừ tiền thành công. Giao dịch bị nghi ngờ";
+    String VNP_RESPONSE_CODE_09 = "Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.";
+    String VNP_RESPONSE_CODE_10 = "Giao dịch không thành công do: Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần";
+    String VNP_RESPONSE_CODE_11 = "Giao dịch không thành công do: Đã hết hạn chờ thanh toán. Xin quý khách vui lòng thực hiện lại giao dịch.";
+    String VNP_RESPONSE_CODE_12 = "Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng bị khóa.";
+    String VNP_RESPONSE_CODE_13 = "Giao dịch không thành công do Quý khách nhập sai mật khẩu xác thực giao dịch (OTP). Xin quý khách vui lòng thực hiện lại giao dịch.";
+    String VNP_RESPONSE_CODE_24 = "Giao dịch không thành công do: Khách hàng hủy giao dịch";
+    String VNP_RESPONSE_CODE_51 = "Giao dịch không thành công do: Tài khoản của quý khách không đủ số dư để thực hiện giao dịch.";
+    String VNP_RESPONSE_CODE_65 = "Giao dịch không thành công do: Tài khoản của Quý khách đã vượt quá hạn mức giao dịch trong ngày.";
+    String VNP_RESPONSE_CODE_79 = "Giao dịch không thành công do: KH nhập sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch";
+    String VNP_RESPONSE_CODE_99 = "Các lỗi khác";
 }

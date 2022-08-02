@@ -18,4 +18,5 @@ public class JobForRecruiterResponse {
     private long applyCount;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private String flag;
 }

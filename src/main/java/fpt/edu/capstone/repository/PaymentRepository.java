@@ -38,4 +38,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query(value = "select * from payment p where p.banner_id > 0", nativeQuery = true)
     List<Payment> getPaymentBanner();
 
+    Payment findByIdAndRecruiterId(long id, long recruiterId);
 }
