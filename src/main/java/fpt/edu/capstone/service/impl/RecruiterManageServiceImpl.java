@@ -532,17 +532,19 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     private JobDetailPurchasedResponse getDetailPaymentJob(Payment payment) {
         if (payment.getDetailPackageId() > 0) {
-            Job selectedJob = jobService.getJobById(payment.getJobId());
-            JobDetailPurchasedResponse jobDetailPurchasedRes = modelMapper
-                    .map(selectedJob, JobDetailPurchasedResponse.class);
-            Optional<Company> company = companyService.findById(selectedJob.getCompanyId());
-            jobDetailPurchasedRes.setCompanyName(company.get().getName());
-            Fields field = fieldsService.getById(selectedJob.getFieldId());
-            jobDetailPurchasedRes.setFieldName(field.getFieldName());
-            Optional<VietnamCountry> country = countryService.findById(selectedJob.getCountryId());
-            jobDetailPurchasedRes.setCountry(country.get().getCountryName());
+            if(payment.getJobId() > 0) {
+                Job selectedJob = jobService.getJobById(payment.getJobId());
+                JobDetailPurchasedResponse jobDetailPurchasedRes = modelMapper
+                        .map(selectedJob, JobDetailPurchasedResponse.class);
+                Optional<Company> company = companyService.findById(selectedJob.getCompanyId());
+                jobDetailPurchasedRes.setCompanyName(company.get().getName());
+                Fields field = fieldsService.getById(selectedJob.getFieldId());
+                jobDetailPurchasedRes.setFieldName(field.getFieldName());
+                Optional<VietnamCountry> country = countryService.findById(selectedJob.getCountryId());
+                jobDetailPurchasedRes.setCountry(country.get().getCountryName());
 
-            return jobDetailPurchasedRes;
+                return jobDetailPurchasedRes;
+            }
         }
         return null;
     }
@@ -551,11 +553,13 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (payment.getBannerId() > 0) {
             List<BannerPositionDetailResponse> bannerActiveOfPayment = bannerActiveService
                     .getAllBannerByPaymentId(payment.getId());
-            Map<String, BannerPositionDetailResponse> bannerResponse = new HashMap<>();
-            for (BannerPositionDetailResponse detail : bannerActiveOfPayment) {
-                bannerResponse.put(detail.getDisplayPosition(), detail);
+            if(bannerActiveOfPayment != null && !bannerActiveOfPayment.isEmpty()) {
+                Map<String, BannerPositionDetailResponse> bannerResponse = new HashMap<>();
+                for (BannerPositionDetailResponse detail : bannerActiveOfPayment) {
+                    bannerResponse.put(detail.getDisplayPosition(), detail);
+                }
+                return bannerResponse;
             }
-            return bannerResponse;
         }
         return null;
     }
