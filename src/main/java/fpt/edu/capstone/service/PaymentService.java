@@ -31,4 +31,7 @@ public interface PaymentService {
     List<Payment> findAll();
 
     void save(Payment payment);
+
+    Payment findByIdAndRecruiterId(long id, long recruiterId);
+
 }

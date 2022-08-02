@@ -111,4 +111,14 @@ public class AdminManageServiceImpl implements AdminManageService {
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
     }
+
+    @Override
+    public void approveBanner(long bannerActiveId) {
+
+    }
+
+    @Override
+    public ResponseDataPagination getBannerOfRecruiterForAdmin() {
+        return null;
+    }
 }

@@ -7,6 +7,7 @@ import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.DetailPurchasedPackageResponse;
 import fpt.edu.capstone.entity.Banner;
 import fpt.edu.capstone.entity.BannerActive;
+import fpt.edu.capstone.service.AdminManageService;
 import fpt.edu.capstone.service.BannerActiveService;
 import fpt.edu.capstone.service.BannerService;
 import fpt.edu.capstone.service.RecruiterManageService;
@@ -35,6 +36,8 @@ public class BannerController {
 
     private final RecruiterManageService recruiterManageService;
 
+    private final AdminManageService adminManageService;
+
     //config cho các gói banner
     @Operation(summary = "Admin module - Create new banner package on Manage Banner screen")
     @PostMapping("/config-banner")
@@ -49,7 +52,7 @@ public class BannerController {
         }
     }
 
-    @Operation(summary = "Admin module - Get list all banner package on Manage Banner screen")
+    @Operation(summary = "Admin module - Get list all BANNER PAYMENT PACKAGE on Manage Banner screen")
     @GetMapping("/get-all-banner-package")
     public ResponseData getAllBanner(@RequestParam(value = "name", required = false) String title,
                                      @RequestParam(value = "status", required = false) boolean isDeleted,
@@ -78,11 +81,38 @@ public class BannerController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete-banner")
     @Operation(summary = "Admin module - Delete a banner package of banner group")
     public ResponseData deleteBanner(@RequestParam long bannerPackageId) {
         try {
             bannerService.deleteBanner(bannerPackageId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-banner-of-recruiter")
+    @Operation(summary = "Admin module - Get banner upload by recruiter for approval")
+    public ResponseData getBannerOfRecruiterForAdmin() {
+        try {
+            ResponseDataPagination pagination = adminManageService.getBannerOfRecruiterForAdmin();
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @PutMapping("/approve-banner")
+    @Operation(summary = "Amin module - approve banner of recruiter")
+    public ResponseData approveBanner(@RequestParam long bannerActiveId) {
+        try {
+
+            adminManageService.approveBanner(bannerActiveId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -105,6 +135,7 @@ public class BannerController {
     }
 
     @GetMapping("/get-detail-purchased-package/{recruiterId}")
+    @Operation(summary = "Recruiter module - get detail of recruiter's purchased package")
     public ResponseData getDetailPurchasedPackage(@PathVariable long recruiterId,
                                                   @RequestParam long paymentId) {
         try {
@@ -126,6 +157,19 @@ public class BannerController {
             List<BannerActive> bannerActives = bannerActiveService.getBannersByPosition(displayPosition);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, bannerActives);
         }catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @GetMapping("/detail-banner-package")
+    @Operation(summary = "Dùng chung - Get detail of a banner payment package by id")
+    public ResponseData getDetailBannerPackage(@RequestParam long bannerPackageId) {
+        try {
+            Banner banner = bannerService.findById(bannerPackageId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, banner);
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

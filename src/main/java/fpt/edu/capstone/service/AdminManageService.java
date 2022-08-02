@@ -2,10 +2,8 @@ package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
 import fpt.edu.capstone.dto.job.ReportJobRequest;
-import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.Report;
 import fpt.edu.capstone.utils.ResponseDataPagination;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,4 +17,8 @@ public interface AdminManageService {
     ResponseDataPagination searchReportedJob(Integer pageNo, Integer pageSize, LocalDateTime createdAtFrom,
                                              LocalDateTime createAtTo, LocalDateTime updatedAtFrom,
                                              LocalDateTime updatedAtTo, String jobName);
+
+    void approveBanner(long bannerActiveId);
+
+    ResponseDataPagination getBannerOfRecruiterForAdmin();
 }

@@ -94,7 +94,9 @@ public class CompanyManageServiceImpl implements CompanyManageService {
         }
         //xóa cái nào thì trả id của cái đó
         List<Long> deleteImageIdList = request.getDeleteImageIdList();
-        imageService.deleteImageById(deleteImageIdList);
+        if(deleteImageIdList != null && !deleteImageIdList.isEmpty()) {
+            imageService.deleteImageById(deleteImageIdList);
+        }
 
         //upload introduction image list of company
         uploadImageUrlList = request.getUploadImageUrlList();

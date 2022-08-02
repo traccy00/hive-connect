@@ -242,43 +242,43 @@ public class PaymentServiceImpl implements PaymentService {
                 job.setPopularJob(true);
                 job.setUrgentJob(true);
                 job.setNewJob(true);
-                jobService.saveJob(job);
+//                jobService.saveJob(job);
             }
         }
 
 
         if(vnpResponseCode.equals("07")){
-            throw new HiveConnectException("Trừ tiền thành công. Giao dịch bị nghi ngờ");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_07);
         }
         if(vnpResponseCode.equals("09")){
-            throw new HiveConnectException("Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_09);
         }
         if(vnpResponseCode.equals("10")){
-            throw new HiveConnectException("Giao dịch không thành công do: Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_10);
         }
         if(vnpResponseCode.equals("11")){
-            throw new HiveConnectException("Giao dịch không thành công do: Đã hết hạn chờ thanh toán. Xin quý khách vui lòng thực hiện lại giao dịch.");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_11);
         }
         if(vnpResponseCode.equals("12")){
-            throw new HiveConnectException("Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng bị khóa.");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_12);
         }
         if(vnpResponseCode.equals("13")){
-            throw new HiveConnectException("Giao dịch không thành công do Quý khách nhập sai mật khẩu xác thực giao dịch (OTP). Xin quý khách vui lòng thực hiện lại giao dịch.");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_13);
         }
         if(vnpResponseCode.equals("24")){
-            throw new HiveConnectException("Giao dịch không thành công do: Khách hàng hủy giao dịch");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_24);
         }
         if(vnpResponseCode.equals("51")){
-            throw new HiveConnectException("Giao dịch không thành công do: Tài khoản của quý khách không đủ số dư để thực hiện giao dịch.");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_51);
         }
         if(vnpResponseCode.equals("65")){
-            throw new HiveConnectException("Giao dịch không thành công do: Tài khoản của Quý khách đã vượt quá hạn mức giao dịch trong ngày.");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_65);
         }
         if(vnpResponseCode.equals("79")){
-            throw new HiveConnectException("Giao dịch không thành công do: KH nhập sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_79);
         }
         if(vnpResponseCode.equals("99")){
-            throw new HiveConnectException("Các lỗi khác");
+            throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_99);
         }
     }
 
@@ -303,6 +303,11 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void save(Payment payment) {
         paymentRepository.save(payment);
+    }
+
+    @Override
+    public Payment findByIdAndRecruiterId(long id, long recruiterId) {
+        return paymentRepository.findByIdAndRecruiterId(id, recruiterId);
     }
 
     @Override
