@@ -283,7 +283,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<JobResponse> getListSuggestJobByCv(long candidateId) {
         if (!candidateService.existsById(candidateId)) {
-            throw new HiveConnectException("Candidate does not exist");
+            throw new HiveConnectException(ResponseMessageConstants.CANDIDATE_DOES_NOT_EXIST);
         }
         CV cv = cvService.getCVByCandidateId(candidateId);
         List<MajorLevel> majorLevel = majorLevelService.getListMajorLevelByCvId(cv.getId()); // lấy ra major của candidate để filter

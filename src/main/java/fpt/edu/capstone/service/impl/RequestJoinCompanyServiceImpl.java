@@ -50,4 +50,9 @@ public class RequestJoinCompanyServiceImpl implements RequestJoinCompanyService 
     public void approveRequest(String status, long id) {
         requestJoinCompanyRepository.approveRequest(status, id);
     }
+
+    @Override
+    public Optional<RequestJoinCompany> findById(long id) {
+        return requestJoinCompanyRepository.findById(id);
+    }
 }

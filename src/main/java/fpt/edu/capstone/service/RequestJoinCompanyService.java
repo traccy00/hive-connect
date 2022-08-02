@@ -14,4 +14,6 @@ public interface RequestJoinCompanyService {
     public Optional<List<RequestJoinCompany>> getReceiveRequest(long approverId);
 
     void approveRequest(String status, long id);
+
+    Optional<RequestJoinCompany> findById(long id);
 }
