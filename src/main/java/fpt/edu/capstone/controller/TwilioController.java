@@ -58,6 +58,7 @@ public class TwilioController {
     @PostMapping("/verify-otp")
     public ResponseData veirfyotp(@RequestParam("phone") String phone, @RequestParam("code") String code) {
         try {
+            phone = "+84" + phone;
             Twilio.init(twilioProperties.getAccountSid(), twilioProperties.getAuthToken());
             VerificationCheck verificationCheck = VerificationCheck.creator(
                             twilioProperties.getServiceId(),

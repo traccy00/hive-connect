@@ -1,5 +1,6 @@
 package fpt.edu.capstone.repository;
 
+import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.dto.candidate.FollowingResponse;
 import fpt.edu.capstone.entity.Follow;
 import org.springframework.data.domain.Pageable;
@@ -28,4 +29,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     @Query(value = "select f.id as id, f.follower_id  as followerId, f.followed_id as followedId, f.type as type, j.job_name as jobName  from follow f join job j on f.followed_id = j.id where f.follower_id = ?1 and f.type = 1", nativeQuery = true)
     Page<FollowingResponse> getFollowedJobByCandidateID(Pageable pageable, long candidateId);
+
+    @Query(value = "select * from follow where type = 1 and followed_id = ?1", nativeQuery = true)
+    Optional<List<Follow>> getAllFollowerOfAJob(long jobId);
 }

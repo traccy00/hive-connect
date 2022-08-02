@@ -101,4 +101,9 @@ public class FollowServiceImpl implements FollowService {
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
     }
+
+    @Override
+    public Optional<List<Follow>> getAllFollowerOfAJob(long jobId) {
+        return followRepository.getAllFollowerOfAJob(jobId);
+    }
 }
