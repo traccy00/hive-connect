@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.dto.detail_package.CreateOpenCvPackageRequest;
 import fpt.edu.capstone.entity.DetailPackage;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 
@@ -18,4 +19,6 @@ public interface DetailPackageService {
     void updateDetailPackage(DetailPackage detailPackage);
 
     String findNameById(long id);
+
+    void createOpenCvPackage(CreateOpenCvPackageRequest request);
 }

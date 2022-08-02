@@ -1,6 +1,7 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.detail_package.CreateOpenCvPackageRequest;
 import fpt.edu.capstone.dto.detail_package.DetailPackageRequest;
 import fpt.edu.capstone.dto.rental_package.RentalPackageRequest;
 import fpt.edu.capstone.entity.DetailPackage;
@@ -77,8 +78,8 @@ public class PackageController {
         }
     }
 
-    @PostMapping("/create-new-package")
-    @Operation(summary = "tạo gói dịch vụ con thuộc nhóm dịch vụ. ví dụ nhóm dv : Quảng cáo tin, dv con : tin tuyển dụng")
+    @PostMapping("/create-main-package")
+    @Operation(summary = "Admin module - tạo gói DỊCH VỤ CHÍNH")
     public ResponseData createSubPackage(@RequestBody DetailPackageRequest request){
         try {
             if(!rentalPackageService.existById(request.getRentalPackageId())){
@@ -95,6 +96,20 @@ public class PackageController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+    @PostMapping("/create-open-cv-package")
+    @Operation(summary = "Admin module - tạo gói DỊCH VỤ MỞ HỒ SƠ ỨNG VIÊN")
+    public ResponseData createOpenCvPackage(@RequestBody CreateOpenCvPackageRequest request){
+        try {
+            detailPackageService.createOpenCvPackage(request);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS);
+        }catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
 
     @PutMapping("/update-new-package")
     @Operation(summary = "chỉnh sửa dịch vụ con")
