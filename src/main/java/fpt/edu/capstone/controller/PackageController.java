@@ -82,7 +82,7 @@ public class PackageController {
     public ResponseData createSubPackage(@RequestBody DetailPackageRequest request){
         try {
             if(!rentalPackageService.existById(request.getRentalPackageId())){
-                throw new HiveConnectException("Nhóm dịch vụ không tồn tại");
+                throw new HiveConnectException(ResponseMessageConstants.PAYMENT_DOES_NOT_EXIST);
             }
             DetailPackage p = modelMapper.map(request, DetailPackage.class);
             p.setDeleted(false);

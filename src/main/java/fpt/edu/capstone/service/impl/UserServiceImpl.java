@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     public void registerUser(RegisterRequest request) {
         Optional<Role> optionalRole = roleService.findRoleById(request.getRoleId());
         if (!optionalRole.isPresent()) {
-            throw new HiveConnectException("Loại vai trò người dùng không tồn tại trong hệ thống");
+            throw new HiveConnectException(ResponseMessageConstants.ROLE_DOES_NOT_EXISTS);
         }
         //check exist email username
 //        Optional <Users> checkExisted = userRepository.checkExistedUserByUsernameOrEmail(request.getUsername(),request.getEmail());
@@ -71,14 +71,14 @@ public class UserServiceImpl implements UserService {
 
         Optional<Users> userExistByUserName = userRepository.findByUsername(request.getUsername());
         if (userExistByUserName.isPresent()) {
-            throw new HiveConnectException("Tên đăng nhập đã được sử dụng");
+            throw new HiveConnectException(ResponseMessageConstants.USERNAME_EXISTS);
         }
         Optional<Users> userExistByEmail = userRepository.findByEmail(request.getEmail());
         if (userExistByEmail.isPresent()) {
-            throw new HiveConnectException("Email đã được sử dụng");
+            throw new HiveConnectException(ResponseMessageConstants.EMAIL_EXISTS);
         }
         if (!StringUtils.equals(request.getPassword(), request.getConfirmPassword())) {
-            throw new HiveConnectException("Mật khẩu xác nhận không đúng");
+            throw new HiveConnectException(ResponseMessageConstants.CONFIRM_PASSWORD_WRONG);
         }
         Users user = new Users();
         user.setUsername(request.getUsername());
@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
     public void changePassword(String username, ChangePasswordRequest request) {
         Optional<Users> optionalUsers = findUserByUserName(username);
         if (!optionalUsers.isPresent()) {
-            throw new HiveConnectException("Tên người dùng: " + username + "không tìm thấy.");
+            throw new HiveConnectException(ResponseMessageConstants.USERNAME_DOES_NOT_EXIST);
         }
         String oldPassword = request.getOldPassword().trim();
         String newPassword = request.getNewPassword().trim();
@@ -183,10 +183,10 @@ public class UserServiceImpl implements UserService {
 
         Users user = optionalUsers.get();
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new HiveConnectException("Mật khẩu cũ không đúng.");
+            throw new HiveConnectException(ResponseMessageConstants.OLD_PASSWORD_WRONG);
         }
         if (!StringUtils.equals(newPassword, confirmPassword)) {
-            throw new HiveConnectException("Xác nhận mật khẩu không đúng.");
+            throw new HiveConnectException(ResponseMessageConstants.CONFIRM_PASSWORD_WRONG);
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         saveUser(user);
@@ -219,7 +219,7 @@ public class UserServiceImpl implements UserService {
             user.setResetPasswordToken(token);
             userRepository.save(user);
             //send mail with link reset token to user's email
-            String resetPasswordLink = "http://localhost:8081/auth/reset_password?token=" + token;
+            String resetPasswordLink = "http://localhost:8081/auth/forgot-password?token=" + token;
             emailService.sendResetPasswordEmail(user.getEmail(), resetPasswordLink);
         } catch (Exception e) {
             throw e;
@@ -251,7 +251,7 @@ public class UserServiceImpl implements UserService {
         String newPassword = request.getNewPassword().trim();
         String confirmPassword = request.getConfirmPassword().trim();
         if (!StringUtils.equals(newPassword, confirmPassword)) {
-            throw new HiveConnectException("Xác nhận mật khẩu không đúng.");
+            throw new HiveConnectException(ResponseMessageConstants.CONFIRM_PASSWORD_WRONG);
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setResetPasswordToken(null);
