@@ -1,7 +1,9 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.BannerPositionDetailResponse;
 import fpt.edu.capstone.entity.BannerActive;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.BannerActiveRepository;
 import fpt.edu.capstone.service.BannerActiveService;
 import lombok.AllArgsConstructor;
@@ -40,6 +42,14 @@ public class BannerActiveImpl implements BannerActiveService {
     @Override
     public Page<BannerActive> getAllBannerForApproval(Pageable pageable) {
         return bannerActiveRepository.getAllBannerForApproval(pageable);
+    }
+
+    @Override
+    public BannerActive findById(long id) {
+        if(!bannerActiveRepository.findById(id).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.BANNER_IMAGE_DOES_NOT_EXIST);
+        }
+        return bannerActiveRepository.findById(id).get();
     }
 
 

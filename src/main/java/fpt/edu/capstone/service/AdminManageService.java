@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
+import fpt.edu.capstone.dto.banner.ApproveBannerRequest;
 import fpt.edu.capstone.dto.job.ReportJobRequest;
 import fpt.edu.capstone.entity.Report;
 import fpt.edu.capstone.utils.ResponseDataPagination;
@@ -18,7 +19,7 @@ public interface AdminManageService {
                                              LocalDateTime createAtTo, LocalDateTime updatedAtFrom,
                                              LocalDateTime updatedAtTo, String jobName);
 
-    void approveBanner(long bannerActiveId);
+    void approveBanner(ApproveBannerRequest request);
 
     ResponseDataPagination getBannerOfRecruiterForAdmin(Integer pageNo, Integer pageSize);
 }
