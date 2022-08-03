@@ -108,4 +108,14 @@ public interface CVRepository extends JpaRepository<CV, Long> {
                                              @Param("experienceYearSearch2") int experienceYearSearch2,
                                              @Param("candidateAddress") String candidateAddress,
                                              @Param("techStack") String techStack);
+
+    @Query(value = "select c from CV c " +
+            "join Candidate ca on c.candidateId  = ca.id " +
+            "left join MajorLevel ml on c.id  = ml.cvId " +
+            "left join Major m on m.id = ml.majorId " +
+            "where (lower(ca.address) like lower (concat('%',:candidateAddress,'%')) or :candidateAddress is null or :candidateAddress = '') " +
+            "and (lower(m.majorName) like lower (concat('%',:techStack,'%')) or :techStack is null or :techStack = '')  " +
+            "and (lower(c.totalExperienceYear) like lower (concat('%',:experience,'%')) or :experience is null or :experience = '') ")
+    Page<CV> findCVFilter(Pageable pageable,@Param("experience") String experience,
+                          @Param("candidateAddress") String candidateAddress,@Param("techStack") String techStack);
 }

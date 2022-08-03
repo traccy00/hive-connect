@@ -73,6 +73,11 @@ public class CVServiceImpl implements CVService {
         cvRepository.save(cv);
     }
 
+    @Override
+    public Page<CV> findCVFilter(Pageable pageable, String experience, String candidateAddress, String techStack) {
+        return cvRepository.findCVFilter(pageable, experience, candidateAddress, techStack);
+    }
+
     public CV getCVByCandidateId(long candidateId) { //Nam
         return cvRepository.getByCandidateId(candidateId);
     }

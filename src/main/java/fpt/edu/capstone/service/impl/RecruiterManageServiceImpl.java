@@ -522,6 +522,24 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     }
 
     @Override
+    public ResponseDataPagination findCVFilter(Integer pageNo, Integer pageSize, String experience, String candidateAddress, String techStack) {
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+        Page<CV> cvPage  = cvService.findCVFilter(pageable,experience,candidateAddress,techStack);
+
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(cvPage.getContent());
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(cvPage.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(cvPage.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
+    }
+
+    @Override
     public DetailPurchasedPackageResponse getDetailPurchasedPackage(long recruiterId, long paymentId) {
         DetailPurchasedPackageResponse response = new DetailPurchasedPackageResponse();
         Payment payment = paymentService.findById(paymentId);

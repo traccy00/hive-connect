@@ -32,4 +32,6 @@ public interface CVService {
                                              String techStack);
 
     void save(CV cv);
+
+    Page<CV> findCVFilter(Pageable pageable, String experience, String candidateAddress, String techStack);
 }

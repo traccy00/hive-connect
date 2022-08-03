@@ -185,34 +185,51 @@ public class RecruiterController {
         }
     }
 
-    @GetMapping("/find-cv")
+//    @GetMapping("/find-cv")
+//    public ResponseData findCv(@RequestParam(defaultValue = "0") Integer pageNo,
+//                               @RequestParam(defaultValue = "10") Integer pageSize,
+//                               //@RequestParam(defaultValue = "0") int experienceYearOption,
+//                               @RequestParam(required = false) String candidateAddress,
+//                               @RequestParam(required = false) String techStacks) {
+//        try {
+//            ResponseDataPagination pagination = recruiterManageService.findCV(pageNo, pageSize, //experienceYearOption,
+//                    candidateAddress, techStacks);
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
+//        } catch (Exception e) {
+//            String msg = LogUtils.printLogStackTrace(e);
+//            logger.error(msg);
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+//        }
+//    }
+//
+//    @GetMapping("/find-cv-test")
+//    public ResponseData findCvTest(@RequestParam(defaultValue = "0") Integer pageNo,
+//                               @RequestParam(defaultValue = "10") Integer pageSize,
+//                               @RequestParam(defaultValue = "0") int experienceYearOption,
+//                               @RequestParam(required = false) String candidateAddress,
+//                               @RequestParam(required = false) String techStacks) {
+//        try {
+//            ResponseDataPagination pagination = recruiterManageService.findCVTest(pageNo, pageSize, experienceYearOption,
+//                    candidateAddress, techStacks);
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
+//        } catch (Exception e) {
+//            String msg = LogUtils.printLogStackTrace(e);
+//            logger.error(msg);
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+//        }
+//    }
+
+    @GetMapping("find-cv")
     public ResponseData findCv(@RequestParam(defaultValue = "0") Integer pageNo,
                                @RequestParam(defaultValue = "10") Integer pageSize,
-                               //@RequestParam(defaultValue = "0") int experienceYearOption,
+                               @RequestParam(required = false) String experienceYear,
                                @RequestParam(required = false) String candidateAddress,
                                @RequestParam(required = false) String techStacks) {
         try {
-            ResponseDataPagination pagination = recruiterManageService.findCV(pageNo, pageSize, //experienceYearOption,
-                    candidateAddress, techStacks);
+            ResponseDataPagination pagination = recruiterManageService.
+                    findCVFilter(pageNo, pageSize, experienceYear, candidateAddress, techStacks);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
-        } catch (Exception e) {
-            String msg = LogUtils.printLogStackTrace(e);
-            logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
-        }
-    }
-
-    @GetMapping("/find-cv-test")
-    public ResponseData findCvTest(@RequestParam(defaultValue = "0") Integer pageNo,
-                               @RequestParam(defaultValue = "10") Integer pageSize,
-                               @RequestParam(defaultValue = "0") int experienceYearOption,
-                               @RequestParam(required = false) String candidateAddress,
-                               @RequestParam(required = false) String techStacks) {
-        try {
-            ResponseDataPagination pagination = recruiterManageService.findCVTest(pageNo, pageSize, experienceYearOption,
-                    candidateAddress, techStacks);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
-        } catch (Exception e) {
+        } catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

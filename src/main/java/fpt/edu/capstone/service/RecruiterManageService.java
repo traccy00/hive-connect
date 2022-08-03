@@ -39,4 +39,6 @@ public interface RecruiterManageService {
 
     ResponseDataPagination getJobOfRecruiter(Integer pageNo, Integer pageSize, long paymentId);
 
+    ResponseDataPagination findCVFilter(Integer pageNo, Integer pageSize, String experience, String candidateAddress, String techStack);
+
 }

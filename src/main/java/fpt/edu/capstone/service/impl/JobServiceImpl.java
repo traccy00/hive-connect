@@ -129,7 +129,7 @@ public class JobServiceImpl implements JobService {
         if(job == null){
             throw new HiveConnectException("Công việc không tồn tại");
         }
-        jobRepository.deleteById(jobId);
+        jobRepository.deleteJob(jobId);
     }
 
     @Override
