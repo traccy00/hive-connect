@@ -195,8 +195,6 @@ public class AdminManageServiceImpl implements AdminManageService {
 
     @Override
     public ResponseDataPagination searchUsersForAdmin(String selectTab, Integer pageNo, Integer pageSize, String username, String email) {
-        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
         Page users;
@@ -209,10 +207,9 @@ public class AdminManageServiceImpl implements AdminManageService {
         } else {
             throw new HiveConnectException("Vui lòng chọn danh sách loại người dùng.");
         }
-
-        responseDataPagination.setData(users);
-
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
+        responseDataPagination.setData(users.getContent());
         pagination.setCurrentPage(pageNo);
         pagination.setPageSize(pageSize);
         pagination.setTotalPage(users.getTotalPages());

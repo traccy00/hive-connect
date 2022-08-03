@@ -77,7 +77,7 @@ public class CompanyController {
         } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
+            return new ResponseData(Enums.ResponseStatus.NOTFOUND.getStatus(), ex.getMessage());
         }
     }
 

@@ -111,7 +111,7 @@ public class JobController {
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+            return new ResponseData(Enums.ResponseStatus.NOTFOUND.getStatus(), e.getMessage());
         }
     }
 
