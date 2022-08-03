@@ -6,6 +6,7 @@ import fpt.edu.capstone.dto.job.ReportedJobResponse;
 import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.entity.*;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -113,28 +114,15 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/update-reported")
-    public ResponseData updateReportedStatus(@RequestParam String status,
-                                             @RequestParam(defaultValue = "-1", required = false) long userId,
-                                             @RequestParam(defaultValue = "-1", required = false) long postId,
+    @PutMapping("/approve-reported")
+    public ResponseData updateReportedStatus(@RequestParam String approvalStatus,
                                              @RequestParam long reportId) {
         try {
-            if (status.toLowerCase().equals("delete")) {
-                Optional<Job> jobOptional = jobService.findById(postId);
-                if (jobOptional.isPresent()) {
-                    jobService.updateIsDeleted(1, jobOptional.get().getId());
-                    reportedService.updateReportedStatus("deleted", reportId);
-                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Delete post successful", jobOptional.get());
-                } else {
-                    //co can xu ly user khong ?
-                    return null;
-                }
-
-            } else {
-                reportedService.updateReportedStatus("Cancel", reportId);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Cancel report successful", null);
-            }
+            String msg = adminManageService.approveReportedJob(approvalStatus, reportId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), msg);
         } catch (Exception ex) {
+            String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
@@ -200,7 +188,7 @@ public class AdminController {
 
     @PutMapping("approve-license")
     @Operation(summary = "Admin approve license")
-    public ResponseData approvaLicense(@RequestBody ApprovalLicenseRequest request) {
+    public ResponseData approveLicense(@RequestBody ApprovalLicenseRequest request) {
         try {
             Recruiter recruiter = recruiterService.approveLicense(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, recruiter);

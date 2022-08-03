@@ -27,4 +27,6 @@ public interface AdminManageService {
 
     ResponseDataPagination searchReportedUsers(Integer pageNo, Integer pageSize, String username, String personReportName,
                                                List<Long> userId, List<Long> personReportId);
+
+    String approveReportedJob(String approvalStatus, long reportId);
 }
