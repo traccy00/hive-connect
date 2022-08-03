@@ -67,13 +67,13 @@ public class AdminController {
 
     @GetMapping("/search-users")
     @Operation(summary = "search/get list users account (Recruiter, Candidate, Admin) for Admin App")
-    public ResponseData searchCandidatesForAdmin(@RequestParam(defaultValue = "0") Integer pageNo,
+    public ResponseData searchUsersForAdmin(@RequestParam(defaultValue = "0") Integer pageNo,
                                                  @RequestParam(defaultValue = "10") Integer pageSize,
                                                  @RequestParam(required = false) String username,
                                                  @RequestParam(required = false) String email,
                                                  @RequestParam String tab) {
         try {
-            ResponseDataPagination pagination = adminService.searchUsersForAdmin(tab, pageNo, pageSize, username, email);
+            ResponseDataPagination pagination = adminManageService.searchUsersForAdmin(tab, pageNo, pageSize, username, email);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -91,7 +91,7 @@ public class AdminController {
                                             @RequestParam(required = false) @Size(max = 1) List<Long> userId,
                                             @RequestParam(required = false) @Size(max = 1) List<Long> personReportId) {
         try {
-            ResponseDataPagination pagination = adminService.searchReportedUsers(pageNo, pageSize, username,
+            ResponseDataPagination pagination = adminManageService.searchReportedUsers(pageNo, pageSize, username,
                     personReportName, userId, personReportId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
@@ -210,4 +210,6 @@ public class AdminController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+    @PutMapping("")
 }
