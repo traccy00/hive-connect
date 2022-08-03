@@ -31,7 +31,7 @@ public interface ReportedRepository extends JpaRepository<Report, Long> {
     @Query(value = "Update reported set approval_reported_status = ?1 where id = ?2", nativeQuery = true)
     void updateReportedStatus(String status, long id);
 
-    @Query(value = "select j.job_name as jobName, c.name as companyName, r2.user_id as reportedUserId, r.fullname as fullName, " +
+    @Query(value = "select j.id as jobId,r.id as reportId, j.job_name as jobName, c.name as companyName, r2.user_id as reportedUserId, r.fullname as fullName, " +
             "r.phone as phone, r.user_address as userAddress, r.user_email as userEmail, " +
             "r.created_at as createdAt, r.person_report_id as personReportId, r.updated_at as updatedAt, r.approval_reported_status as approvalReportedStatus " +
             "from reported r " +

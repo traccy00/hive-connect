@@ -3,6 +3,8 @@ package fpt.edu.capstone.dto.job;
 import java.time.LocalDateTime;
 
 public interface ReportedJobResponse {
+    long getJobId();
+    long getReportId();
     String getJobName();
     String getCompanyName();
     long getReportedUserId();

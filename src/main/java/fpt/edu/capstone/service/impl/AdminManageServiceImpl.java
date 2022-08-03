@@ -10,10 +10,12 @@ import fpt.edu.capstone.dto.job.ReportedJobResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.BannerActiveRepository;
+import fpt.edu.capstone.repository.JobRepository;
 import fpt.edu.capstone.repository.ReportedRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -58,6 +60,8 @@ public class AdminManageServiceImpl implements AdminManageService {
     private final CandidateService candidateService;
 
     private final AdminService adminService;
+
+    private final JobRepository jobRepository;
 
     @Override
     public List<LicenseApprovalResponse> searchLicenseApprovalForAdmin(String businessApprovalStatus, String additionalApprovalStatus) {
@@ -132,7 +136,7 @@ public class AdminManageServiceImpl implements AdminManageService {
     @Override
     public void approveBanner(ApproveBannerRequest request) {
         BannerActive bannerActive = bannerActiveService.findById(request.getBannerActiveId());
-        if(bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
+        if (bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
             if (!request.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())
                     && !request.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT.getStatus())) {
                 throw new HiveConnectException(ResponseMessageConstants.APPROVAL_STATUS_INVALID);
@@ -228,7 +232,7 @@ public class AdminManageServiceImpl implements AdminManageService {
         Pageable pageable = PageRequest.of(pageReq, pageSize);
         List<Users> users = userService.findAll();
         List<Long> userIdListIfEmpty = users.stream().map(Users::getId).collect(Collectors.toList());
-        if ( userIdList == null) {
+        if (userIdList == null) {
             userIdList = userIdListIfEmpty;
         }
         if (personReportId == null) {
@@ -247,5 +251,41 @@ public class AdminManageServiceImpl implements AdminManageService {
         responseDataPagination.setPagination(pagination);
 
         return responseDataPagination;
+    }
+
+    public String approveReportedJob(String approvalStatus, long reportId) {
+        if (approvalStatus != null && (!approvalStatus.equals(Enums.ApprovalStatus.APPROVED.getStatus())
+                && !approvalStatus.equals(Enums.ApprovalStatus.REJECT.getStatus()))) {
+            throw new HiveConnectException(ResponseMessageConstants.APPROVAL_STATUS_INVALID);
+        }
+        Optional<Report> report = reportedRepository.findById(reportId);
+        if (!report.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.REPORTED_JOB_DOES_NOT_EXIST);
+        }
+        if (!report.get().getApprovalReportedStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
+            throw new HiveConnectException(ResponseMessageConstants.APPROVAL_WAS_PROCESSED);
+        }
+        Job job = jobService.getJobById(report.get().getJobId());
+        if (job == null) {
+            throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
+        }
+        if (approvalStatus.equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+            job.setIsDeleted(1);
+            job.update();
+            jobRepository.save(job);
+//            jobService.updateIsDeleted(1, job.get().getId());
+            report.get().setApprovalReportedStatus(approvalStatus);
+            report.get().update();
+            reportedRepository.save(report.get());
+//            reportedService.updateReportedStatus(approvalStatus, reportId);
+            return ResponseMessageConstants.DELETE_SUCCESSFULLY;
+        } else if (approvalStatus.equals(Enums.ApprovalStatus.REJECT.getStatus())) {
+            report.get().setApprovalReportedStatus(approvalStatus);
+            report.get().update();
+            reportedRepository.save(report.get());
+//            reportedService.updateReportedStatus(approvalStatus, reportId);
+            return ResponseMessageConstants.CANCEL_REPORT_JOB_SUCCESSFULLY;
+        }
+        return null;
     }
 }
