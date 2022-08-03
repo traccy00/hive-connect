@@ -94,7 +94,7 @@ public interface ResponseMessageConstants {
 
     //CV
     String CV_NOT_EXIST = "CV không tồn tại";
-    String YOUR_CV_EXISTED = "CV không tồn tại";
+    String YOUR_CV_EXISTED = "CV đã tồn tại";
 
     //PAYMENT
     String PRICE_EQUAL_GREATER_THAN_ZERO = "Giá của gói lớn hơn hoặc bằng 0.";

@@ -15,9 +15,6 @@ public interface CVService {
     CV getCVByCandidateId(long candidateId); //nam
 
     //giu
-    CV insertCv(long candidateId, long isDeleted, String summary, LocalDateTime createAt, LocalDateTime updateAt);
-
-    //giu
     Optional<CV> findCvById(long id);
 
     void updateSummary(long cvId, String newSummary);
@@ -33,4 +30,6 @@ public interface CVService {
     Page<IFindCVResponse> findCVTest(Pageable pageable, int experienceOption,
                                              String candidateAddress,
                                              String techStack);
+
+    void save(CV cv);
 }

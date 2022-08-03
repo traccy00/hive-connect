@@ -83,10 +83,10 @@ public interface CVRepository extends JpaRepository<CV, Long> {
             ") " +
             "select t1.cv_id cvId, sum(experience_year) sumExperienceYear from t1  " +
             "group by cv_id " +
-            "having ((extract(year from sum(experience_year))::numeric(9,2)) < :experienceYearSearch1 and :experienceOption = 1) " +
-            "or ((extract(year from sum(experience_year))::numeric(9,2)) >= :experienceYearSearch1 " +
-            "and (extract(year from sum(experience_year))::numeric(9,2)) < :experienceYearSearch2 and :experienceOption = 2) " +
-            "or ((extract(year from sum(experience_year))::numeric(9,2)) >= :experienceYearSearch2 and :experienceOption = 3) " +
+            "having ((extract(year from sum(experience_year))) < :experienceYearSearch1 and :experienceOption = 1) " +
+            "or ((extract(year from sum(experience_year))) >= :experienceYearSearch1 " +
+            "and (extract(year from sum(experience_year))) < :experienceYearSearch2 and :experienceOption = 2) " +
+            "or ((extract(year from sum(experience_year))) >= :experienceYearSearch2 and :experienceOption = 3) " +
             "or :experienceOption = 0",                                                                                                             //search all experience year
             nativeQuery = true)
 //    @Query(value = "  select t1.cv_id as cvId, sum(experience_year) as sumExperienceYear from " +

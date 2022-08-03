@@ -24,12 +24,6 @@ public class CVServiceImpl implements CVService {
     }
 
     @Override
-    public CV insertCv(long candidateId, long isDeleted, String summary, LocalDateTime createAt, LocalDateTime updateAt) {
-        CV newCV = new CV(0, candidateId, isDeleted, summary, createAt,updateAt);
-        return cvRepository.save(newCV);
-    }
-
-    @Override
     public Optional<CV> findCvById(long id) {
         return cvRepository.findById(id);
     }
@@ -72,6 +66,11 @@ public class CVServiceImpl implements CVService {
         int experienceYearSearch2 = 3;
         return cvRepository.findCvTest(pageable, experienceOption, experienceYearSearch1, experienceYearSearch2,
                 candidateAddress, techStack);
+    }
+
+    @Override
+    public void save(CV cv) {
+        cvRepository.save(cv);
     }
 
     public CV getCVByCandidateId(long candidateId) { //Nam

@@ -1,9 +1,11 @@
 package fpt.edu.capstone.entity;
 
+import fpt.edu.capstone.utils.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "cv")
 @AllArgsConstructor
 @NoArgsConstructor
-public class CV {
+public class CV extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +31,6 @@ public class CV {
     @Column(name = "summary")
     private String summary;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
+    @Column(name = "total_experience_year")
+    private String totalExperienceYear;
 }

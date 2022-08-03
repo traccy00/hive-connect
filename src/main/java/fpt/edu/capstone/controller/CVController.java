@@ -3,13 +3,16 @@ package fpt.edu.capstone.controller;
 import com.amazonaws.services.apigateway.model.Op;
 import com.sendgrid.helpers.mail.objects.Email;
 import fpt.edu.capstone.dto.CV.CVProfileResponse;
+import fpt.edu.capstone.dto.CV.CVRequest;
 import fpt.edu.capstone.dto.CV.CVResponse;
 import fpt.edu.capstone.dto.CV.UpdateCVSummaryRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.*;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +71,9 @@ public class CVController {
     @Autowired
     private ProfileViewerService profileViewerService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     //Them phan add summary
 
     @GetMapping("/get-list-CV")
@@ -108,10 +114,15 @@ public class CVController {
         }
     }
 
-    @GetMapping("/create-cv")
-    public ResponseData createCV(@RequestParam long candidateId) {
+    @PostMapping("/create-cv")
+    public ResponseData createCV(@RequestBody CVRequest request) {
         try {
-            List<CV> cv = cvService.findCvByCandidateId(candidateId);
+            Candidate c = candidateService.getCandidateById(request.getCandidateId());
+            if(c == null){
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.CANDIDATE_DOES_NOT_EXIST);
+            }
+            List<CV> cv = cvService.findCvByCandidateId(request.getCandidateId());
             if (!cv.isEmpty()) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
                         ResponseMessageConstants.YOUR_CV_EXISTED);
@@ -119,8 +130,10 @@ public class CVController {
         } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
-        LocalDateTime nowDate = LocalDateTime.now();
-        CV cv = cvService.insertCv(candidateId, 0, "", nowDate, nowDate);
+        CV cv = modelMapper.map(request, CV.class);
+        cv.create();
+        cv.setIsDeleted(0);
+        cvService.save(cv);
         return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, cv);
     }
 
