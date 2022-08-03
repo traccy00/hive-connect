@@ -18,8 +18,4 @@ public interface AdminService {
 
     Page<AdminManageResponse> searchAdmins(Pageable pageable, String username, String email);
 
-    ResponseDataPagination searchUsersForAdmin(String selectTab, Integer pageNo, Integer pageSize, String username, String email);
-
-    ResponseDataPagination searchReportedUsers(Integer pageNo, Integer pageSize, String username, String personReportName,
-                                               List<Long> userId, List<Long> personReportId);
 }

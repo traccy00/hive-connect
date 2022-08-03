@@ -2,48 +2,39 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
 import fpt.edu.capstone.dto.job.ReportJobRequest;
+import fpt.edu.capstone.dto.job.ReportedJobResponse;
 import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.Report;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.repository.ReportedRepository;
-import fpt.edu.capstone.service.*;
+import fpt.edu.capstone.service.JobService;
+import fpt.edu.capstone.service.RecruiterService;
+import fpt.edu.capstone.service.ReportedService;
+import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
-import io.swagger.v3.oas.models.info.License;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import static org.mockito.Mockito.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-@RunWith(MockitoJUnitRunner.class)
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ActiveProfiles(profiles = { "db2-local", "ia-off"})
-//@WebAppConfiguration
-//@ContextConfiguration(locations = { "classpath:spring/*.xml" })
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
-//@NoArgsConstructor
+@RunWith(MockitoJUnitRunner.class)
 public class AdminManageServiceTest {
 
     @InjectMocks
@@ -67,45 +58,72 @@ public class AdminManageServiceTest {
     @Mock
     private ReportedService reportedService;
 
-//    @BeforeClass
-//    public static void setUpBeforeClass() throws Exception {
-//        System.out.println("before class");
-//    }
-//    @Before
-//    public void setUp() throws Exception {
-//        MockitoAnnotations.initMocks(this);
-//    }
+    @Mock
+    private Page<ReportedJobResponse> reportedJobResponsePage;
+
+    @Mock
+    private Pageable pageable;
 
     @Test
     public void searchLicenseApprovalForAdmin() {
-//        String businessApprovalStatus = Enums.ApprovalStatus.APPROVED.getStatus();
-//        String additionalApprovalStatus = Enums.ApprovalStatus.APPROVED.getStatus();
-//        List<LicenseApprovalResponse> responseList = new ArrayList<>();
-//        List<Recruiter> recruiters = new ArrayList<>();
-//        LicenseApprovalResponse response = new LicenseApprovalResponse();
-//        Recruiter recruiter = new Recruiter(1, 1, "FPT Software", "Mai Le",
-//                true, true, "HR", null, businessApprovalStatus,
-//                additionalApprovalStatus, null, null, 1, false,
-//                "Hà Nội", null, null, null);
-//        recruiters.add(recruiter);
-//        when(recruiterService
-//                .searchLicenseApprovalForAdmin(businessApprovalStatus, additionalApprovalStatus))
-//                .thenReturn(recruiters);
-//        responseList.add(response);
-//        when(adminManageService
-//                .searchLicenseApprovalForAdmin(businessApprovalStatus, additionalApprovalStatus))
-//                .thenReturn(responseList);
+        String businessApprovalStatus = Enums.ApprovalStatus.APPROVED.getStatus();
+        String additionalApprovalStatus = Enums.ApprovalStatus.APPROVED.getStatus();
+        List<LicenseApprovalResponse> responseList = new ArrayList<>();
+        List<Recruiter> recruiters = new ArrayList<>();
+        LicenseApprovalResponse response = new LicenseApprovalResponse();
+        Recruiter recruiter = new Recruiter();
+        recruiter.setUserId(1);
+        recruiter.setCompanyId(1);
+        recruiter.setCompanyName("FPT Software");
+        recruiter.setFullName("Lê Thị Tiểu Mai");
+        recruiter.setPosition("HR");
+        recruiter.setUserId(1);
+        recruiter.setDeleted(false);
+        recruiters.add(recruiter);
+        when(recruiterService
+                .searchLicenseApprovalForAdmin(businessApprovalStatus, additionalApprovalStatus))
+                .thenReturn(recruiters);
+        responseList.add(response);
+        when(adminManageService
+                .searchLicenseApprovalForAdmin(businessApprovalStatus, additionalApprovalStatus))
+                .thenReturn(responseList);
     }
 
     @Test
     public void reportJob() {
+        ReportJobRequest request = new ReportJobRequest();
+        request.setFullName("Lê Thị Tiểu Mai");
+        request.setPhone("0379700427");
+        request.setUserAddress("Hà Nội");
+        request.setReportReason("Tin tuyển dụng có thông tin không chính xác.");
+        request.setJobId(2);
+
         Users user = new Users();
         user.setId(1);
         user.setUsername("mai");
+        when(userService.getUserById(1)).thenReturn(user);
+
+        Job job = new Job();
+        job.setId(2);
+        when(jobService.getJobById(2)).thenReturn(job);
+
         Report report = new Report();
+
         when(adminManageService.reportJob(Mockito.any(ReportJobRequest.class), 1)).thenReturn(report);
-        when(userService.getUserById(6)).thenReturn(new Users());
-//        Job job = new Job();
-//        when(jobService.getJobById(1)).thenReturn(job);
+    }
+
+    @Test
+    public void searchReportedJob() {
+        int pageNo = 0;
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+//        Pageable pageable = PageRequest.of(0, 10);
+//        when(PageRequest.of(anyInt(), anyInt())).thenReturn(PageRequest.of(0, 10));
+//        when(reportedService.searchReportedJob(eq(pageable), any(LocalDateTime.class), any(LocalDateTime.class), any(LocalDateTime.class), any(LocalDateTime.class), anyString()))
+//                .thenReturn(reportedJobResponsePage);
+//        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+//        Pagination pagination = new Pagination();
+//
+//        when(adminManageService.searchReportedJob(anyInt(), anyInt(), any(LocalDateTime.class), any(LocalDateTime.class), any(LocalDateTime.class), any(LocalDateTime.class), anyString()))
+//                .thenReturn(responseDataPagination);
     }
 }
