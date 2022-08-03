@@ -210,6 +210,4 @@ public class AdminController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
-
-    @PutMapping("")
 }
