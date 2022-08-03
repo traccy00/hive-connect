@@ -119,7 +119,7 @@ public class BannerServiceImpl implements BannerService {
     public ResponseDataPagination getBannerByFilter(Integer pageNo, Integer pageSize, String title, boolean isDeleted) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<Banner> bannerPage = bannerRepository.getBannerByFilter(pageable, title, isDeleted);
+        Page<Banner> bannerPage = bannerRepository.getBannerByFilter(pageable, title,3,  isDeleted);
         List <Banner> bannerList = bannerPage.getContent();
 
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
@@ -132,5 +132,10 @@ public class BannerServiceImpl implements BannerService {
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
+    }
+
+    @Override
+    public Page<Banner> getListFilter(Pageable pageable, String name, long rentalId, boolean isDeleted) {
+        return bannerRepository.getBannerByFilter(pageable, name, rentalId, isDeleted);
     }
 }

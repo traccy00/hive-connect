@@ -2,9 +2,11 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.detail_package.CreateOpenCvPackageRequest;
+import fpt.edu.capstone.entity.Banner;
 import fpt.edu.capstone.entity.DetailPackage;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.DetailPackageRepository;
+import fpt.edu.capstone.service.BannerService;
 import fpt.edu.capstone.service.DetailPackageService;
 import fpt.edu.capstone.service.RentalPackageService;
 import fpt.edu.capstone.utils.Enums;
@@ -30,21 +32,35 @@ public class DetailPackageServiceImpl implements DetailPackageService {
 
     private final RentalPackageService rentalPackageService;
 
+    private final BannerService bannerService;
+
     @Override
     public ResponseDataPagination getListDetailPackageFilter(Integer pageNo, Integer pageSize, String name, long rentalId, boolean isDeleted) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<DetailPackage> packagePage = detailPackageRepository.getListFilter(pageable, name, rentalId, isDeleted);
 
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
-        responseDataPagination.setData(packagePage.toList());
-        pagination.setCurrentPage(pageNo);
-        pagination.setPageSize(pageSize);
-        pagination.setTotalPage(packagePage.getTotalPages());
-        pagination.setTotalRecords(Integer.parseInt(String.valueOf(packagePage.getTotalElements())));
-        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-        responseDataPagination.setPagination(pagination);
+        if(rentalId == 1 || rentalId == 2 ){
+            Page<DetailPackage> packagePage = detailPackageRepository.getListFilter(pageable, name, rentalId, isDeleted);
+            responseDataPagination.setData(packagePage.toList());
+            pagination.setCurrentPage(pageNo);
+            pagination.setPageSize(pageSize);
+            pagination.setTotalPage(packagePage.getTotalPages());
+            pagination.setTotalRecords(Integer.parseInt(String.valueOf(packagePage.getTotalElements())));
+            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+            responseDataPagination.setPagination(pagination);
+        }
+        if(rentalId == 3){
+            Page <Banner> bannerPage = bannerService.getListFilter(pageable, name, rentalId, isDeleted);
+            responseDataPagination.setData(bannerPage.toList());
+            pagination.setCurrentPage(pageNo);
+            pagination.setPageSize(pageSize);
+            pagination.setTotalPage(bannerPage.getTotalPages());
+            pagination.setTotalRecords(Integer.parseInt(String.valueOf(bannerPage.getTotalElements())));
+            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+            responseDataPagination.setPagination(pagination);
+        }
         return responseDataPagination;
     }
 
