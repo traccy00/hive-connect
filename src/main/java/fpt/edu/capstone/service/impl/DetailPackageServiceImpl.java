@@ -2,6 +2,7 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.detail_package.CreateOpenCvPackageRequest;
+import fpt.edu.capstone.dto.rental_package.RentalPackageResponse;
 import fpt.edu.capstone.entity.Banner;
 import fpt.edu.capstone.entity.DetailPackage;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -41,6 +42,29 @@ public class DetailPackageServiceImpl implements DetailPackageService {
 
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
+
+        if(rentalId == 0){
+            RentalPackageResponse packageResponse = new RentalPackageResponse();
+            Page<DetailPackage> packagePage = detailPackageRepository.getListFilter(pageable, name, rentalId, isDeleted);
+            Page <Banner> bannerPage = bannerService.getListFilter(pageable, name, rentalId, isDeleted);
+
+            packageResponse.setDetailPackage(packagePage.getContent());
+            packageResponse.setBanner(bannerPage.getContent());
+
+            long totalPage = packagePage.getTotalPages() + bannerPage.getTotalPages()-1;
+            int totalRecords = Integer.parseInt(String.valueOf(packagePage.getTotalElements())) +
+                    Integer.parseInt(String.valueOf(bannerPage.getTotalElements()));
+
+            responseDataPagination.setData(packageResponse);
+            pagination.setCurrentPage(pageNo);
+            pagination.setPageSize(pageSize);
+            pagination.setTotalPage(totalPage);
+            pagination.setTotalRecords(totalRecords);
+            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+            responseDataPagination.setPagination(pagination);
+
+        }
+
         if(rentalId == 1 || rentalId == 2 ){
             Page<DetailPackage> packagePage = detailPackageRepository.getListFilter(pageable, name, rentalId, isDeleted);
             responseDataPagination.setData(packagePage.toList());
