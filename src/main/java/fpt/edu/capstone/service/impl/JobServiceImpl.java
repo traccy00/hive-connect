@@ -1,10 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.job.CreateJobRequest;
-import fpt.edu.capstone.dto.job.DetailJobResponse;
-import fpt.edu.capstone.dto.job.JobResponse;
-import fpt.edu.capstone.dto.job.UpdateJobRequest;
+import fpt.edu.capstone.dto.job.*;
 import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -233,6 +230,22 @@ public class JobServiceImpl implements JobService {
             responseList.add(jobResponse);
         }
         return responseList;
+    }
+
+    @Override
+    public HomePageData getDataHomePage() {
+        HomePageData data = new HomePageData();
+        int pageReq = 0 >= 1 ? 0 - 1 : 0;
+        Pageable pageable = PageRequest.of(pageReq, 10);
+        String flag = Enums.Flag.Posted.getStatus();
+        data.setFulltimeJob(jobRepository.getListJobByWorkForm(pageable,"FULLTIME", flag).getContent());
+        data.setParttimeJob(jobRepository.getListJobByWorkForm(pageable,"PARTTIME", flag).getContent());
+        data.setParttimeJob(jobRepository.getListJobByWorkForm(pageable,"REMOTE", flag).getContent());
+        data.setPopularJob(jobRepository.getPopularJob(pageable, true, 0, flag).getContent());
+        data.setNewJob(jobRepository.getNewestJob(pageable,true,0,flag).getContent());
+        data.setUrgentJob(jobRepository.getUrgentJob(pageable,true,0,flag).getContent());
+        data.setJobByFields(jobRepository.getListJobByFieldId(pageable, 1, flag).getContent());
+        return data;
     }
 
     @Override

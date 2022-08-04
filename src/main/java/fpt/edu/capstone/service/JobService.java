@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.job.CreateJobRequest;
+import fpt.edu.capstone.dto.job.HomePageData;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.dto.job.UpdateJobRequest;
 import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
@@ -53,4 +54,6 @@ public interface JobService {
     List<Job> getJobByRecruiterId(long recId);
 
     List<JobResponse> getSameJobsOtherCompanies(long detailJobId);
+
+    HomePageData getDataHomePage();
 }

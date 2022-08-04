@@ -68,6 +68,19 @@ public class JobController {
         }
     }
 
+    //TODO: GET ALL DATA HOMEPAGE
+    @GetMapping("/all-job-data-homepage")
+    public ResponseData getAllDataHomepage(){
+        try {
+            HomePageData data = jobService.getDataHomePage();
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),data);
+        }catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
     @GetMapping("/find-job")
     public ResponseData searchListJobFilter(@RequestParam(defaultValue = "0") Integer pageNo,
                                             @RequestParam(defaultValue = "10") Integer pageSize,
