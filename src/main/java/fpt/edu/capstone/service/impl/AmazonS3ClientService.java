@@ -59,19 +59,19 @@ public class AmazonS3ClientService {
         }
 
         AWSCredentials credentials = new BasicAWSCredentials(
-                "AKIAXYJP2KLRA46NTLAN",
-                "RlosMR/wqvzZ/eNWCUgU1bw3EAJuZx46kXzkeg1Z"
+                "AKIAUL6TQRSBHSELAXGH",
+                "kiDX9cpEw/dKpnm6TQsO/SMLrA/MJ9DJnoFo7FmM"
         );
         AmazonS3 s3client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(Regions.US_WEST_1)
+                .withRegion(Regions.AP_SOUTHEAST_1)
                 .build();
-        String bucketName = "hive-connect-images";
-//        List<Bucket> buckets = s3client.listBuckets();
-//        for (Bucket bucket : buckets) {
-//            System.out.println(bucket.getName());
-//        }
+        String bucketName = "hive-connect";
+        List<Bucket> buckets = s3client.listBuckets();
+        for (Bucket bucket : buckets) {
+            System.out.println(bucket.getName());
+        }
         File file = convertMultiPartToFile(multipartFile);
         s3client.putObject(bucketName,"hiveconnect/" + fileName, file);
         return fileName;

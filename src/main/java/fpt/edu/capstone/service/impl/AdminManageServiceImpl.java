@@ -32,36 +32,36 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
 public class AdminManageServiceImpl implements AdminManageService {
-
-    private final RecruiterService recruiterService;
-
-    private final ModelMapper modelMapper;
-
-    private final ReportedRepository reportedRepository;
-
-    private final UserService userService;
-
-    private final JobService jobService;
-
-    private final ReportedService reportedService;
-
-    private final BannerActiveService bannerActiveService;
-
-    private final BannerService bannerService;
-
-    private final PaymentService paymentService;
-
-    private final CompanyService companyService;
-
-    private final BannerActiveRepository bannerActiveRepository;
-
-    private final CandidateService candidateService;
-
-    private final AdminService adminService;
-
-    private final JobRepository jobRepository;
+    @Autowired
+    private  RecruiterService recruiterService;
+    @Autowired
+    private  ModelMapper modelMapper;
+    @Autowired
+    private  ReportedRepository reportedRepository;
+    @Autowired
+    private  UserService userService;
+    @Autowired
+    private  JobService jobService;
+    @Autowired
+    private  ReportedService reportedService;
+    @Autowired
+    private  BannerActiveService bannerActiveService;
+    @Autowired
+    private  BannerService bannerService;
+    @Autowired
+    private  PaymentService paymentService;
+    @Autowired
+    private  CompanyService companyService;
+    @Autowired
+    private  BannerActiveRepository bannerActiveRepository;
+    @Autowired
+    private  CandidateService candidateService;
+    @Autowired
+    private  AdminService adminService;
+    @Autowired
+    private  JobRepository jobRepository;
 
     @Override
     public List<LicenseApprovalResponse> searchLicenseApprovalForAdmin(String businessApprovalStatus, String additionalApprovalStatus) {
