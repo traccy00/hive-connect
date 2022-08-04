@@ -10,8 +10,5 @@ public class LoginGoogleRequest {
     private String name;
     private String email;
     private String picture;
-    private String username;
-    private String password;
-    private String confirmPassword;
     private long roleId;
 }

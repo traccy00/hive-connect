@@ -192,16 +192,20 @@ public class AuthenticationController {
                         ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
             }
 
+            String email = request.getEmail();
+            String[] s = email.split("@");
+            String username = s[0];
+
             //đã có tài khoản Hive Connect với Google account này
             if (userRepository.findByEmail(request.getEmail()).isPresent()) {
                 //tìm user theo email google trả về
                 Users user = userService.findByEmail(request.getEmail());
                 //thực hiện login bình thường
-                authenticate(user.getUsername(), request.getPassword());
+//                authenticate(user.getUsername(), request.getPassword());
                 user.setLastLoginTime(LocalDateTime.now());
+                user.setUsername(username);
                 userService.saveUser(user);
                 //lấy token
-                String username = request.getUsername();
                 logger.info("login with username {}", username);
                 final UserDetails userDetails = securityUserService.loadUserByUsername(username);
                 String token = jwtTokenUtil.generateToken(userDetails);
@@ -243,7 +247,7 @@ public class AuthenticationController {
                 RegisterRequest registerRequest = modelMapper.map(request, RegisterRequest.class);
                 userService.registerUser(registerRequest);
                 //lưu theo role
-                Users user = userService.getByUserName(request.getUsername());
+                Users user = userService.getByUserName(username);
                 if (user.getRoleId() == 3) {
                     candidateService.insertGoogleCandidate(googlePojo, user);
                 }
