@@ -68,7 +68,8 @@ public interface ResponseMessageConstants {
     String CHANGE_JOB_PAYMENT_ACTIVE_SUCCESS = "Thay đổi kích hoạt công việc thành công";
 
     //AMAZON
-    String AMAZON_SAVE_URL = "https://hive-connect-images.s3.us-west-1.amazonaws.com/hiveconnect/";
+//    String AMAZON_SAVE_URL = "https://hive-connect-images.s3.us-west-1.amazonaws.com/hiveconnect/";
+    String AMAZON_SAVE_URL = "https://hive-connect.s3.ap-southeast-1.amazonaws.com/hiveconnect/";
     String UPLOAD_IMAGE_EXCEPTION = "MSG_UPLOAD_IMAGE_EXCEPTION";
     String REQUEST_EXCEPTION = "MSG_REQUEST_EXCEPTION";
     String UPLOAD_IMG_EXCEPTION = "MSG_UPLOAD_IMG_EXCEPTION";

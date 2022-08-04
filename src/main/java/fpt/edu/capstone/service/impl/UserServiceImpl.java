@@ -39,11 +39,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users getUserById(long id) {
-        Optional<Users> optionalUser = userRepository.findById(id);
-        if (!optionalUser.isPresent()) {
-            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
-        }
-        return optionalUser.get();
+//        Optional<Users> optionalUser = userRepository.findById(id);
+//        if (!optionalUser.isPresent()) {
+//            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+//        }
+//        return optionalUser.get();
+        return userRepository.getUserById(id);
     }
 
     @Override

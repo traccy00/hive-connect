@@ -64,6 +64,8 @@ public class AdminManageServiceTest {
     @Mock
     private Pageable pageable;
 
+
+
     @Test
     public void searchLicenseApprovalForAdmin() {
         String businessApprovalStatus = Enums.ApprovalStatus.APPROVED.getStatus();
@@ -84,32 +86,40 @@ public class AdminManageServiceTest {
                 .searchLicenseApprovalForAdmin(businessApprovalStatus, additionalApprovalStatus))
                 .thenReturn(recruiters);
         responseList.add(response);
-        when(adminManageService
-                .searchLicenseApprovalForAdmin(businessApprovalStatus, additionalApprovalStatus))
-                .thenReturn(responseList);
+//        when(adminManageService
+//                .searchLicenseApprovalForAdmin(businessApprovalStatus, additionalApprovalStatus))
+//                .thenReturn(responseList);
+//        adminManageService.searchLicenseApprovalForAdmin()
     }
 
     @Test
+    //(expected = Exception.class)
     public void reportJob() {
         ReportJobRequest request = new ReportJobRequest();
-        request.setFullName("Lê Thị Tiểu Mai");
-        request.setPhone("0379700427");
-        request.setUserAddress("Hà Nội");
-        request.setReportReason("Tin tuyển dụng có thông tin không chính xác.");
-        request.setJobId(2);
+        long userId = 1;
 
+//        request.setFullName("Lê Thị Tiểu Mai");
+//        request.setPhone("0379700427");
+//        request.setUserAddress("Hà Nội");
+//        request.setReportReason("Tin tuyển dụng có thông tin không chính xác.");
+//        request.setJobId(2);
+//
         Users user = new Users();
         user.setId(1);
         user.setUsername("mai");
-        when(userService.getUserById(1)).thenReturn(user);
+//        when(userService.getUserById(anyInt())).thenReturn(user);
+//        userService.getUserById()
+//
+//        Job job = new Job();
+//        job.setId(2);
+//        when(jobService.getJobById(2)).thenReturn(job);
+//
+//        Report report = new Report();
+//
+//        when(adminManageService.reportJob(Mockito.any(ReportJobRequest.class), 1)).thenReturn(report);
 
-        Job job = new Job();
-        job.setId(2);
-        when(jobService.getJobById(2)).thenReturn(job);
+        adminManageService.reportJob(request, userId);
 
-        Report report = new Report();
-
-        when(adminManageService.reportJob(Mockito.any(ReportJobRequest.class), 1)).thenReturn(report);
     }
 
     @Test
