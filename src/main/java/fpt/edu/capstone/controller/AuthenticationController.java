@@ -203,11 +203,12 @@ public class AuthenticationController {
                 Users user = userService.findByEmail(request.getEmail());
                 //thực hiện login bình thường
                 user.setLastLoginTime(LocalDateTime.now());
+                user.setPassword(passwordEncoder.encode("1"));
                 userService.saveUser(user);
                 //lấy token
                 logger.info("login with username {}", username);
-//                final UserDetails userDetails = securityUserService.loadUserByUsernameGoogle(username);
-//                String token = jwtTokenUtil.generateToken(userDetails);
+                final UserDetails userDetails = securityUserService.loadUserByUsername(username);
+                String token = jwtTokenUtil.generateToken(userDetails);
                 //trả data cho FE
                 UserInforResponse response = new UserInforResponse();
                 response.setUser(user);
@@ -237,8 +238,13 @@ public class AuthenticationController {
                     }
                     response.setRecruiter(recruiter.get());
                 }
+                if(!user.isVerifiedEmail()) {
+                    response.setVerifiedEmail(false);
+                } else {
+                    response.setVerifiedEmail(true);
+                }
                 return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(),
-                        ResponseMessageConstants.LOGIN_SUCCESS, response);
+                        ResponseMessageConstants.LOGIN_SUCCESS, response, token);
                 //chưa có tài khoản Hive Connect với Google account này
             } else {
                 //lưu user vào database table user
@@ -261,10 +267,10 @@ public class AuthenticationController {
                 String mailToken = cf.getConfirmationToken();
                 confirmTokenService.verifyEmailUser(request.getEmail(), mailToken);
 
-//                UserDetails userDetails = securityUserService.loadUserByUsernameGoogle(user.getUsername());
-//                String jwtToken = jwtTokenUtil.generateToken(userDetails);
+                UserDetails userDetails = securityUserService.loadUserByUsername(user.getUsername());
+                String jwtToken = jwtTokenUtil.generateToken(userDetails);
                 return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(),
-                        ResponseMessageConstants.SUCCESS, user);
+                        ResponseMessageConstants.SUCCESS, user, jwtToken);
             }
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

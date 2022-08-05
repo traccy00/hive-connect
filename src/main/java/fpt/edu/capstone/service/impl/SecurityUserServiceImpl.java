@@ -40,19 +40,4 @@ public class SecurityUserServiceImpl implements UserDetailsService {
                 .credentialsExpired(false).disabled(false)
                 .build();
     }
-
-    public UserDetails loadUserByUsernameGoogle(String username) throws UsernameNotFoundException {
-        Optional<Users> optionUser = userRepository.findByUsername(username);
-        if (!optionUser.isPresent()) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-        Users user = optionUser.get();
-        Role role = roleService.getRoleById(user.getRoleId());
-
-        return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
-                .authorities(role.getName())
-                .accountExpired(false).accountLocked(false)
-                .credentialsExpired(false).disabled(false)
-                .build();
-    }
 }
