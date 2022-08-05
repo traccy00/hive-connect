@@ -240,7 +240,7 @@ public class JobServiceImpl implements JobService {
         String flag = Enums.Flag.Posted.getStatus();
         data.setFulltimeJob(jobRepository.getListJobByWorkForm(pageable,"FULLTIME", flag).getContent());
         data.setParttimeJob(jobRepository.getListJobByWorkForm(pageable,"PARTTIME", flag).getContent());
-        data.setParttimeJob(jobRepository.getListJobByWorkForm(pageable,"REMOTE", flag).getContent());
+        data.setRemoteJob(jobRepository.getListJobByWorkForm(pageable,"REMOTE", flag).getContent());
         data.setPopularJob(jobRepository.getPopularJob(pageable, true, 0, flag).getContent());
         data.setNewJob(jobRepository.getNewestJob(pageable,true,0,flag).getContent());
         data.setUrgentJob(jobRepository.getUrgentJob(pageable,true,0,flag).getContent());
