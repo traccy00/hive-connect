@@ -84,6 +84,7 @@ public class CandidateController {
                 response.setSocialLink(candidateNN.getSocialLink());
                 response.setUserId(candidateNN.getUserId());
                 response.setPhoneNumber(user.get().getPhone());
+                response.setVerifiedPhone(user.get().isVerifiedPhone());
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Find candidate successful", response);
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find candidate by this user id", null);

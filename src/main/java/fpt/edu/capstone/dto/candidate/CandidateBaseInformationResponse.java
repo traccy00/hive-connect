@@ -21,5 +21,5 @@ public class CandidateBaseInformationResponse {
     private long experienceLevel;
     private String introduction;
     private String phoneNumber;
-
+    private boolean isVerifiedPhone;
 }
