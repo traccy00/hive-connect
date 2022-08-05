@@ -130,4 +130,14 @@ public class DetailPackageServiceImpl implements DetailPackageService {
             throw new HiveConnectException(ResponseMessageConstants.CREATE_FAIL);
         }
     }
+
+    @Override
+    public void deleteDetailPackage(long detailPackageId) {
+        Optional<DetailPackage> detailPackage = detailPackageRepository.findById(detailPackageId);
+        if(!detailPackage.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.DETAIL_PACKAGE_DOES_NOT_EXIST);
+        }
+        detailPackage.get().setDeleted(true);
+        detailPackageRepository.save(detailPackage.get());
+    }
 }

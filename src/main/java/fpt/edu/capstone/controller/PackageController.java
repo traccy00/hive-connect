@@ -139,4 +139,16 @@ public class PackageController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+    @DeleteMapping("/delete-detail-package")
+    @Operation(summary = "Admin module - Delete main package and open cv package")
+    public ResponseData deleteDetailPackage(@RequestParam long detailPackageId) {
+        try {
+            detailPackageService.deleteDetailPackage(detailPackageId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.DELETE_SUCCESSFULLY);
+        } catch (Exception e) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+
+    }
 }

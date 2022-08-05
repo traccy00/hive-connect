@@ -72,7 +72,7 @@ public class AmazonS3ClientService {
         for (Bucket bucket : buckets) {
             System.out.println(bucket.getName());
         }
-        File file = convertMultiPartToFile(multipartFile);
+        File file = convertMultiPartToFile(multipartFile, fileName);
         s3client.putObject(bucketName,"hiveconnect/" + fileName, file);
         return fileName;
     }
@@ -82,11 +82,14 @@ public class AmazonS3ClientService {
         return ResponseMessageConstants.AMAZON_SAVE_URL + fileName;
     }
 
-    private File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File convertFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convertFile);
-        fos.write(file.getBytes());
-        fos.close();
-        return convertFile;
+    private File convertMultiPartToFile(MultipartFile file, String fileName) throws IOException {
+//        File convertFile = new File(file.getOriginalFilename());
+//        FileOutputStream fos = new FileOutputStream(convertFile);
+//        fos.write(file.getBytes());
+//        fos.close();
+//        return convertFile;
+        File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+fileName);
+        file.transferTo(convFile);
+        return convFile;
     }
 }
