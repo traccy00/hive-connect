@@ -7,6 +7,7 @@ import fpt.edu.capstone.dto.login.LoginGoogleRequest;
 import fpt.edu.capstone.dto.login.LoginRequest;
 import fpt.edu.capstone.dto.login.UserInforResponse;
 import fpt.edu.capstone.dto.register.ChangePasswordRequest;
+import fpt.edu.capstone.dto.register.RegisterGoogleRequest;
 import fpt.edu.capstone.dto.register.RegisterRequest;
 import fpt.edu.capstone.dto.register.ResetPasswordRequest;
 import fpt.edu.capstone.entity.*;
@@ -201,14 +202,12 @@ public class AuthenticationController {
                 //tìm user theo email google trả về
                 Users user = userService.findByEmail(request.getEmail());
                 //thực hiện login bình thường
-//                authenticate(user.getUsername(), request.getPassword());
                 user.setLastLoginTime(LocalDateTime.now());
-                user.setUsername(username);
                 userService.saveUser(user);
                 //lấy token
                 logger.info("login with username {}", username);
-                final UserDetails userDetails = securityUserService.loadUserByUsername(username);
-                String token = jwtTokenUtil.generateToken(userDetails);
+//                final UserDetails userDetails = securityUserService.loadUserByUsernameGoogle(username);
+//                String token = jwtTokenUtil.generateToken(userDetails);
                 //trả data cho FE
                 UserInforResponse response = new UserInforResponse();
                 response.setUser(user);
@@ -239,13 +238,12 @@ public class AuthenticationController {
                     response.setRecruiter(recruiter.get());
                 }
                 return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(),
-                        ResponseMessageConstants.LOGIN_SUCCESS, response, token);
+                        ResponseMessageConstants.LOGIN_SUCCESS, response);
                 //chưa có tài khoản Hive Connect với Google account này
             } else {
-//                UserDetails userDetails = googleUtils.buildUser(googlePojo);
                 //lưu user vào database table user
-                RegisterRequest registerRequest = modelMapper.map(request, RegisterRequest.class);
-                userService.registerUser(registerRequest);
+                RegisterGoogleRequest registerRequest = modelMapper.map(request, RegisterGoogleRequest.class);
+                userService.registerGoogleUser(registerRequest);
                 //lưu theo role
                 Users user = userService.getByUserName(username);
                 if (user.getRoleId() == 3) {
@@ -263,10 +261,10 @@ public class AuthenticationController {
                 String mailToken = cf.getConfirmationToken();
                 confirmTokenService.verifyEmailUser(request.getEmail(), mailToken);
 
-                UserDetails userDetails = securityUserService.loadUserByUsername(user.getUsername());
-                String jwtToken = jwtTokenUtil.generateToken(userDetails);
+//                UserDetails userDetails = securityUserService.loadUserByUsernameGoogle(user.getUsername());
+//                String jwtToken = jwtTokenUtil.generateToken(userDetails);
                 return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(),
-                        ResponseMessageConstants.SUCCESS, user, jwtToken);
+                        ResponseMessageConstants.SUCCESS, user);
             }
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

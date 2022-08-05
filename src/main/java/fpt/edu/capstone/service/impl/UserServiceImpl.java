@@ -2,10 +2,7 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.login.LoginGoogleRequest;
-import fpt.edu.capstone.dto.register.ChangePasswordRequest;
-import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
-import fpt.edu.capstone.dto.register.RegisterRequest;
-import fpt.edu.capstone.dto.register.ResetPasswordRequest;
+import fpt.edu.capstone.dto.register.*;
 import fpt.edu.capstone.entity.Role;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -86,6 +83,34 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
+        user.setRoleId(request.getRoleId());
+        user.setVerifiedEmail(false);
+        user.setVerifiedPhone(false);
+        user.create();
+        userRepository.save(user);
+    }
+
+    @Override
+    public void registerGoogleUser(RegisterGoogleRequest request) {
+        String email = request.getEmail();
+        String[] s = email.split("@");
+        String username = s[0];
+
+        Optional<Role> optionalRole = roleService.findRoleById(request.getRoleId());
+        if (!optionalRole.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.ROLE_DOES_NOT_EXISTS);
+        }
+        Optional<Users> userExistByUserName = userRepository.findByUsername(username);
+        if (userExistByUserName.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.USERNAME_EXISTS);
+        }
+        Optional<Users> userExistByEmail = userRepository.findByEmail(request.getEmail());
+        if (userExistByEmail.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.EMAIL_EXISTS);
+        }
+        Users user = new Users();
+        user.setUsername(username);
+        user.setEmail(request.getEmail());
         user.setRoleId(request.getRoleId());
         user.setVerifiedEmail(false);
         user.setVerifiedPhone(false);

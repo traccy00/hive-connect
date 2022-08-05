@@ -1,10 +1,7 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.login.LoginGoogleRequest;
-import fpt.edu.capstone.dto.register.ChangePasswordRequest;
-import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
-import fpt.edu.capstone.dto.register.RegisterRequest;
-import fpt.edu.capstone.dto.register.ResetPasswordRequest;
+import fpt.edu.capstone.dto.register.*;
 import fpt.edu.capstone.entity.Users;
 
 import java.util.HashMap;
@@ -19,6 +16,8 @@ public interface UserService {
     Users saveUser(Users user);
 
     void registerUser(RegisterRequest request);
+
+    void registerGoogleUser(RegisterGoogleRequest request);
 
     Users getByUserName(String username);
 

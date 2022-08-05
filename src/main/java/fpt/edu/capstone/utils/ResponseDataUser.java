@@ -13,6 +13,12 @@ public class ResponseDataUser {
         this.message = message;
     }
 
+    public ResponseDataUser(String status, String message,Object data) {
+        this.data = data;
+        this.status = status;
+        this.message = message;
+    }
+
     public ResponseDataUser(String status, String message) {
         this.status = status;
         this.message = message;

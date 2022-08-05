@@ -35,7 +35,7 @@ public class JobScheduler {
 
     private final RecruiterService recruiterService;
 
-    @Scheduled(fixedDelay = 50000)
+    @Scheduled(fixedDelay = 900000)
     public void checkPaymentExpire(){
         logger.info("-------------->START-CHECK_PAYMENT_EXPIRE:" + new Date());
         List <Payment> paymentList = paymentService.findAll();

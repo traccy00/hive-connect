@@ -535,7 +535,7 @@ public class CVController {
                 viewCvResponse.setCandidateId(candidate.getId());
                 viewCvResponse.setCvId(cvId);
                 viewCvResponse.setViewerId(recruiterId);
-                profileManageService.insertWhoViewCv(response);
+                profileManageService.insertWhoViewCv(viewCvResponse);
                 message =  "Đọc toàn bộ thông tin";
             } else if (recruiter.getTotalCvView() == 0 ) {
                 cvProfileResponse.setEmail("*****@gmail.com");
