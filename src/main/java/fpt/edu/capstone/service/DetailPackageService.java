@@ -21,4 +21,6 @@ public interface DetailPackageService {
     String findNameById(long id);
 
     void createOpenCvPackage(CreateOpenCvPackageRequest request);
+
+    void deleteDetailPackage(long detailPackageId);
 }

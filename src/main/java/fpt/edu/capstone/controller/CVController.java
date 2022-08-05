@@ -2,10 +2,7 @@ package fpt.edu.capstone.controller;
 
 import com.amazonaws.services.apigateway.model.Op;
 import com.sendgrid.helpers.mail.objects.Email;
-import fpt.edu.capstone.dto.CV.CVProfileResponse;
-import fpt.edu.capstone.dto.CV.CVRequest;
-import fpt.edu.capstone.dto.CV.CVResponse;
-import fpt.edu.capstone.dto.CV.UpdateCVSummaryRequest;
+import fpt.edu.capstone.dto.CV.*;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -73,6 +70,9 @@ public class CVController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private ProfileManageService profileManageService;
 
     //Them phan add summary
 
@@ -530,6 +530,12 @@ public class CVController {
                 cvProfileResponse.setPhoneNumber(phoneNumber);
                 recruiterService.updateTotalCvView(recruiter.getTotalCvView()-1, recruiter.getId());
                 //Tieu mai them : insert profileviewed
+                //Tieu mai them
+                ViewCvResponse viewCvResponse = new ViewCvResponse();
+                viewCvResponse.setCandidateId(candidate.getId());
+                viewCvResponse.setCvId(cvId);
+                viewCvResponse.setViewerId(recruiterId);
+                profileManageService.insertWhoViewCv(response);
                 message =  "Đọc toàn bộ thông tin";
             } else if (recruiter.getTotalCvView() == 0 ) {
                 cvProfileResponse.setEmail("*****@gmail.com");

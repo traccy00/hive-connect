@@ -82,7 +82,7 @@ public class BannerController {
         }
     }
 
-    @DeleteMapping("/delete-banner")
+    @DeleteMapping("/delete-banner-package")
     @Operation(summary = "Admin module - Delete a banner package of banner group")
     public ResponseData deleteBanner(@RequestParam long bannerPackageId) {
         try {
