@@ -242,6 +242,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateIsVerifyPhone(boolean isVerifyPhone, long userId) {
+        userRepository.updateIsVerifyPhone(isVerifyPhone, userId);
+    }
+
+    @Override
     public void updatePassword(Users user, ResetPasswordRequest request) {
 //        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        String encodedPassword = passwordEncoder.encode(newPassword);

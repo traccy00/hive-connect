@@ -529,7 +529,7 @@ public class CVController {
                 cvProfileResponse.setEmail(email);
                 cvProfileResponse.setPhoneNumber(phoneNumber);
                 recruiterService.updateTotalCvView(recruiter.getTotalCvView()-1, recruiter.getId());
-                //Tieu mai them
+                //Tieu mai them : insert profileviewed
                 message =  "Đọc toàn bộ thông tin";
             } else if (recruiter.getTotalCvView() == 0 ) {
                 cvProfileResponse.setEmail("*****@gmail.com");
