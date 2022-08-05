@@ -465,20 +465,16 @@ public class CVController {
     }
 
     @GetMapping("/get-cv-with-pay")
-    public ResponseData getCvWithPay(@RequestParam long recruiterId, @RequestParam long candidateId) {
+    public ResponseData getCvWithPay(@RequestParam long recruiterId, @RequestParam long cvId) {
         try {
             Optional<Recruiter> r = recruiterService.findById(recruiterId);
-            Optional<Candidate> c = candidateService.findById(candidateId);
+            Optional<CV> cv = cvService.findCvById(cvId);
+
             if(!r.isPresent()) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
                         ResponseMessageConstants.RECRUITER_DOES_NOT_EXIST);
             }
-            if(!c.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
-                        ResponseMessageConstants.CANDIDATE_DOES_NOT_EXIST);
-            }
 
-            List<CV> cv = cvService.findCvByCandidateId(candidateId);
             if(cv == null) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Ứng viên này không có CV");
             }
@@ -486,20 +482,26 @@ public class CVController {
             Recruiter recruiter = r.get();
 
             CVProfileResponse cvProfileResponse = new CVProfileResponse();
-            List<Certificate> certificates = certificateService.getListCertificateByCvId(cv.get(0).getId());
-            List<Education> educations = educationService.getListEducationByCvId(cv.get(0).getId());
-            List<Language> languages = languageService.getListLanguageByCvId(cv.get(0).getId());
-            List<MajorLevel> majorLevels = majorLevelService.getListMajorLevelByCvId(cv.get(0).getId());
-            List<OtherSkill> otherSkills = otherSkillService.getListOtherSkillByCvId(cv.get(0).getId());
-            List<WorkExperience> workExperiences = workExperienceService.getListWorkExperienceByCvId(cv.get(0).getId());
-            cvProfileResponse.setCandidateId(candidateId);
+            List<Certificate> certificates = certificateService.getListCertificateByCvId(cv.get().getId());
+            List<Education> educations = educationService.getListEducationByCvId(cv.get().getId());
+            List<Language> languages = languageService.getListLanguageByCvId(cv.get().getId());
+            List<MajorLevel> majorLevels = majorLevelService.getListMajorLevelByCvId(cv.get().getId());
+            List<OtherSkill> otherSkills = otherSkillService.getListOtherSkillByCvId(cv.get().getId());
+            List<WorkExperience> workExperiences = workExperienceService.getListWorkExperienceByCvId(cv.get().getId());
+            cvProfileResponse.setCandidateId(cv.get().getCandidateId());
             cvProfileResponse.setCertificates(certificates);
             cvProfileResponse.setEducations(educations);
             cvProfileResponse.setLanguages(languages);
-            cvProfileResponse.setSummary(cv.get(0).getSummary());
+            cvProfileResponse.setSummary(cv.get().getSummary());
             cvProfileResponse.setMajorLevels(majorLevels);
             cvProfileResponse.setOtherSkills(otherSkills);
             cvProfileResponse.setWorkExperiences(workExperiences);
+
+            Optional<Candidate> c = candidateService.findById(cv.get().getId());
+            if(!c.isPresent()) {
+                return  new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Không tìm thấy ứng viên này");
+            }
+
             Candidate candidate = c.get();
             cvProfileResponse.setCandidateId(candidate.getId());
             cvProfileResponse.setGender(candidate.isGender());
@@ -518,7 +520,7 @@ public class CVController {
             String email = users.getEmail();
             String message = "";
 
-            Optional<ProfileViewer> profileViewer = profileViewerService.getByCvIdAndViewerIdOptional(cv.get(0).getId (), recruiter.getId());
+            Optional<ProfileViewer> profileViewer = profileViewerService.getByCvIdAndViewerIdOptional(cv.get().getId (), recruiter.getId());
             if(profileViewer.isPresent()) {
                 cvProfileResponse.setEmail(email);
                 cvProfileResponse.setPhoneNumber(phoneNumber);
