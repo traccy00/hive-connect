@@ -1,28 +1,16 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.login.LoginRequest;
-import fpt.edu.capstone.dto.login.UserInforResponse;
 import fpt.edu.capstone.dto.user.UpdateUserRequest;
-import fpt.edu.capstone.entity.Admin;
-import fpt.edu.capstone.entity.Candidate;
-import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.Users;
-import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.NotificationService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/user")

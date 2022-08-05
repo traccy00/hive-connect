@@ -1,6 +1,5 @@
 package fpt.edu.capstone.controller;
 
-import com.twilio.twiml.voice.Pay;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.payment.JobActivePaymentDTO;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
@@ -18,7 +17,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;

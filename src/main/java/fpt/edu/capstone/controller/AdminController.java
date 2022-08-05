@@ -2,11 +2,9 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.job.ReportedJobResponse;
 import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.entity.*;
-import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -23,7 +21,6 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -45,8 +42,8 @@ public class AdminController {
 
     private final RecruiterService recruiterService;
 
-    private final LocalDateTime minDate = LocalDateTime.MIN;
-    private final LocalDateTime maxDate = LocalDateTime.MAX;
+    private static final LocalDateTime minDate = LocalDateTime.MIN;
+    private static final LocalDateTime maxDate = LocalDateTime.MAX;
 
     private final UserService userService;
 
@@ -59,7 +56,7 @@ public class AdminController {
         //search by name, email, ...
         try {
             ResponseDataPagination pagination = adminService.getListAdmin(pageNo, pageSize);
-            return pagination;
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

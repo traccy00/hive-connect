@@ -33,12 +33,6 @@ public class Image extends BaseEntity {
     @Column(name = "company_id")
     private long companyId;
 
-    @Column(name = "candidate_post_id")
-    private long candidatePostId;
-
-    @Column(name = "recruiter_post_id")
-    private long recruiterPostId;
-
     @Column(name = "is_deleted")
     private int isDeleted = 0;
 

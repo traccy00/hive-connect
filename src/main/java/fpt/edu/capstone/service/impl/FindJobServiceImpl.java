@@ -3,7 +3,6 @@ package fpt.edu.capstone.service.impl;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.AppliedJobRequest;
 import fpt.edu.capstone.dto.job.CvAppliedJobResponse;
-import fpt.edu.capstone.dto.job.RecruiterPostResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.AppliedJobRepository;
@@ -178,10 +177,5 @@ public class FindJobServiceImpl implements FindJobService {
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
-    }
-
-    @Override
-    public List<RecruiterPostResponse> getRecruiterPosts(long recruiterId) {
-        return null;
     }
 }

@@ -10,15 +10,9 @@ public class ImageRequest {
 
     private long userId;
 
-//    private String id;
-
     private long companyId;
 
     private long eventId;
-
-    private long candidatePostId;
-
-    private long recruiterPostId;
 
     private boolean isAvatar;
 

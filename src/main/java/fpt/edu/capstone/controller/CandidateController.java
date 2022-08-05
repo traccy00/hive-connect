@@ -1,7 +1,5 @@
 package fpt.edu.capstone.controller;
 
-import com.amazonaws.services.apigateway.model.Op;
-import fpt.edu.capstone.dto.CV.CVProfileResponse;
 import fpt.edu.capstone.dto.CV.ViewCvResponse;
 import fpt.edu.capstone.dto.candidate.CVBaseInformationRequest;
 import fpt.edu.capstone.dto.candidate.CandidateBaseInformationResponse;
@@ -101,7 +99,6 @@ public class CandidateController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus() , "Can not find candidate with this id "+id);
         }
         try{
-            System.out.println(newCandidate.toString());
             candidateService.updateCandidate(newCandidate, id);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Edit candicate successful", newCandidate);
         } catch (Exception ex) {
