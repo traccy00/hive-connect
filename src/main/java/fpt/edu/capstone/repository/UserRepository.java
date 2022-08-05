@@ -60,4 +60,9 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     Optional<Users> findByResetPasswordToken(String resetPasswordToken);
 
+    @Transactional
+    @Modifying
+    @Query(value = "Update public.users set is_verified_phone = ?1 where id = ?2", nativeQuery = true)
+    void updateIsVerifyPhone(boolean isVerifyPhone, long userId);
+
 }

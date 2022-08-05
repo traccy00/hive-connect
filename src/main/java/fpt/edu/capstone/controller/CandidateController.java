@@ -132,7 +132,14 @@ public class CandidateController {
 
                 candidateService.updateCVInformation(cvBaseInformationRequest);
                 userService.updatePhoneNumber(cvBaseInformationRequest.getPhoneNumber(), cvBaseInformationRequest.getUserId());
+                //update phone verify
+                if(!users.get().getPhone().equals(cvBaseInformationRequest.getPhoneNumber())) {
+                    if(userService.findByPhoneNumber(cvBaseInformationRequest.getPhoneNumber()).isPresent()){
+                        return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Số điện thoại đã được sử dụng");
+                    }
+                    userService.updateIsVerifyPhone(false, users.get().getId());
 
+                }
                 Users usersNew = userService.getUserById(cvBaseInformationRequest.getUserId());
                 Candidate candidateNewInfor = candidateService.findCandidateByUserId(cvBaseInformationRequest.getUserId()).get();
 

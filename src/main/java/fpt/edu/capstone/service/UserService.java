@@ -51,4 +51,6 @@ public interface UserService {
     void updatePassword(Users user, ResetPasswordRequest request);
 
     void resetPassword(ResetPasswordRequest request);
+
+    void updateIsVerifyPhone(boolean isVerifyPhone, long userId);
 }

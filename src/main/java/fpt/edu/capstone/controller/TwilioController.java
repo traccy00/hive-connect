@@ -38,13 +38,14 @@ public class TwilioController {
     public ResponseData sendOtp(@RequestParam("phone") String phone)
     {
         try {
+            String phoneTwi = "+84"+phone.substring(1);
             Twilio.init(twilioProperties.getAccountSid(), twilioProperties.getAuthToken());
             Verification verification = Verification.creator(
                             twilioProperties.getServiceId(),
-                            "+84"+phone,
+                            phoneTwi,
                             "sms")
                     .create();
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.SEND_OTP_SUCCESS);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SEND_OTP_SUCCESS);
 
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
@@ -54,23 +55,22 @@ public class TwilioController {
     @PostMapping("/verify-otp")
     public ResponseData veirfyotp(@RequestParam("phone") String phone, @RequestParam("code") String code) {
         try {
-            phone = "+84" + phone;
+            String phoneTwi = "+84" + phone.substring(1);
             Twilio.init(twilioProperties.getAccountSid(), twilioProperties.getAuthToken());
             VerificationCheck verificationCheck = VerificationCheck.creator(
                             twilioProperties.getServiceId(),
                             code)
-                    .setTo(phone).create();
+                    .setTo(phoneTwi).create();
 
             System.out.println(verificationCheck.getStatus());
-            if (verificationCheck.getStatus().equals("approval")) {
+            if (verificationCheck.getStatus().equalsIgnoreCase("approved")) {
                 //Update verify phone number
                 Users re = userService.findByPhoneNumber(phone).get();
                 if(re != null){
-                    re.setVerifiedPhone(true);
+                    userService.updateIsVerifyPhone(true, re.getId());
                 }
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Approval", verificationCheck.getStatus());
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Denied", verificationCheck.getStatus());
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), verificationCheck.getStatus(), verificationCheck.getStatus());
         } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
