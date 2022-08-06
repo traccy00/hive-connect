@@ -8,6 +8,7 @@ import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -475,7 +476,7 @@ public class CVController {
                         ResponseMessageConstants.RECRUITER_DOES_NOT_EXIST);
             }
 
-            if(cv == null) {
+            if(!cv.isPresent()) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Ứng viên này không có CV");
             }
 
@@ -497,7 +498,7 @@ public class CVController {
             cvProfileResponse.setOtherSkills(otherSkills);
             cvProfileResponse.setWorkExperiences(workExperiences);
 
-            Optional<Candidate> c = candidateService.findById(cv.get().getId());
+            Optional<Candidate> c = candidateService.findById(cv.get().getCandidateId());
             if(!c.isPresent()) {
                 return  new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Không tìm thấy ứng viên này");
             }
@@ -546,9 +547,10 @@ public class CVController {
                 cvProfileResponse.setPhoneNumber("**********");
                 message = "Bạn hãy mua gói để xem thông tin liên hệ của ứng viên";
             }
-
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), message, cvProfileResponse);
         }catch (Exception ex) {
+            String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ex.getMessage());
         }
     }
