@@ -38,4 +38,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> getPaymentBanner();
 
     Payment findByIdAndRecruiterId(long id, long recruiterId);
+
+    @Query(value = "select distinct p.jobId from Payment p where p.jobId > 0 and p.expiredStatus = false ")
+    List <Long> getListJobIdInPayment();
 }

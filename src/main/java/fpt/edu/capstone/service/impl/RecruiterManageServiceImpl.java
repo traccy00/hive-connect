@@ -525,7 +525,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
         Page<CV> cvPage  = cvService.findCVFilter(pageable,experience,candidateAddress,techStack);
-//        List<CV> cvList = cvPage.getContent();
 
         List <FindCVResponse> findCVResponseList = cvPage.stream().
                 map(cv -> modelMapper.map(cv, FindCVResponse.class)).collect(Collectors.toList());

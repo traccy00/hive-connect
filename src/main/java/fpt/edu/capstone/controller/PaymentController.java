@@ -1,17 +1,24 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.dto.payment.JobActivePaymentDTO;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
 import fpt.edu.capstone.dto.payment.PaymentResponse;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
+import fpt.edu.capstone.entity.Company;
+import fpt.edu.capstone.entity.Image;
+import fpt.edu.capstone.entity.Job;
 import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.service.CompanyService;
+import fpt.edu.capstone.service.ImageService;
 import fpt.edu.capstone.service.JobService;
 import fpt.edu.capstone.service.PaymentService;
 import fpt.edu.capstone.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,6 +39,11 @@ public class PaymentController {
 
     private final JobService jobService;
 
+    private final CompanyService companyService;
+
+    private final ImageService imageService;
+
+    private final ModelMapper modelMapper;
     @PostMapping("/create-url-payment")
     public ResponseData createPayment(@RequestBody PaymentDTO paymentDTO)  {
         try {
@@ -126,6 +139,28 @@ public class PaymentController {
 
             ResponseDataPaginationRevenue pagination = paymentService.getRevenue(start, end, pageNo, pageSize);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.TOTAL_REVENUE, pagination);
+        } catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @GetMapping("/suggest-job-with-pay")
+    public ResponseData suggestJobWithPay(){
+        try {
+            List <Long> listJobId = paymentService.getListJobIdInPayment();
+            List <JobResponse> list = new ArrayList<>();
+            for (Long id: listJobId) {
+                Job job = jobService.findById(id).get();
+                Company company = companyService.getCompanyById(job.getCompanyId());
+                Image image = imageService.getImageCompany(company.getId(),true);
+                JobResponse response = modelMapper.map(job, JobResponse.class);
+                response.setCompanyName(company.getName());
+                response.setCompanyAvatar(image.getUrl());
+                list.add(response);
+            }
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,list);
         } catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

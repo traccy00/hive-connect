@@ -406,5 +406,4 @@ public class JobController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
-
 }
