@@ -177,6 +177,7 @@ public class RecruiterServiceImpl implements RecruiterService {
                 throw new HiveConnectException("Trạng thái approve không đúng, liên hệ admin");
             }
             optionalRecruiter.get().update();
+            recruiterRepository.save(optionalRecruiter.get());
         } else if (request.getType().equals("2")) {
             if (request.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
                 optionalRecruiter.get().setAdditionalLicenseApprovalStatus(Enums.ApprovalStatus.APPROVED.getStatus());

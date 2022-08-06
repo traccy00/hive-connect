@@ -1,6 +1,9 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.CV.CVProfileResponse;
 import fpt.edu.capstone.dto.CV.FindCVResponse;
+import fpt.edu.capstone.dto.CV.ViewCVWithPayResponse;
+import fpt.edu.capstone.dto.CV.ViewCvResponse;
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.banner.UploadBannerRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
@@ -16,6 +19,7 @@ import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -75,6 +79,18 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     private final FieldsService fieldsService;
 
     private final CountryService countryService;
+
+    private final CertificateService certificateService;
+
+    private final LanguageService languageService;
+
+    private final MajorLevelService majorLevelService;
+
+    private final OtherSkillService otherSkillService;
+
+    private final ProfileManageService profileManageService;
+
+    private final ProfileViewerService profileViewerService;
 
     @Override
     public CommonRecruiterInformationResponse getCommonInforOfRecruiter(long recruiterId) {
@@ -629,5 +645,90 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             detailPPIInfoRes.setNormalPaymentPackage(normalPP);
         }
         return detailPPIInfoRes;
+    }
+
+
+    @Override
+    public ViewCVWithPayResponse getCvWithPay(long recruiterId, long cvId) {
+        ViewCVWithPayResponse viewCVWithPayResponse = new ViewCVWithPayResponse();
+        Optional<Recruiter> r = recruiterService.findById(recruiterId);
+        Optional<CV> cv = cvService.findCvById(cvId);
+
+        if(!r.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.RECRUITER_DOES_NOT_EXIST);
+        }
+        if(!cv.isPresent()) {
+            throw new HiveConnectException("Ứng viên này không có CV");
+        }
+        Recruiter recruiter = r.get();
+
+        CVProfileResponse cvProfileResponse = new CVProfileResponse();
+        List<Certificate> certificates = certificateService.getListCertificateByCvId(cv.get().getId());
+        List<Education> educations = educationService.getListEducationByCvId(cv.get().getId());
+        List<Language> languages = languageService.getListLanguageByCvId(cv.get().getId());
+        List<MajorLevel> majorLevels = majorLevelService.getListMajorLevelByCvId(cv.get().getId());
+        List<OtherSkill> otherSkills = otherSkillService.getListOtherSkillByCvId(cv.get().getId());
+        List<WorkExperience> workExperiences = workExperienceService.getListWorkExperienceByCvId(cv.get().getId());
+        cvProfileResponse.setCandidateId(cv.get().getCandidateId());
+        cvProfileResponse.setCertificates(certificates);
+        cvProfileResponse.setEducations(educations);
+        cvProfileResponse.setLanguages(languages);
+        cvProfileResponse.setSummary(cv.get().getSummary());
+        cvProfileResponse.setMajorLevels(majorLevels);
+        cvProfileResponse.setOtherSkills(otherSkills);
+        cvProfileResponse.setWorkExperiences(workExperiences);
+
+        Optional<Candidate> c = candidateService.findById(cv.get().getCandidateId());
+        if(!c.isPresent()) {
+            throw new HiveConnectException("Không tìm thấy ứng viên này");
+        }
+
+        Candidate candidate = c.get();
+        cvProfileResponse.setCandidateId(candidate.getId());
+        cvProfileResponse.setGender(candidate.isGender());
+        cvProfileResponse.setBirthDate(candidate.getBirthDate());
+        cvProfileResponse.setCountry(candidate.getCountry());
+        cvProfileResponse.setFullName(candidate.getFullName());
+        cvProfileResponse.setAddress(candidate.getAddress());
+        cvProfileResponse.setSocialLink(candidate.getSocialLink());
+        cvProfileResponse.setAvatarUrl(candidate.getAvatarUrl());
+        cvProfileResponse.setExperienceLevel(candidate.getExperienceLevel());
+        cvProfileResponse.setIntroduction(candidate.getIntroduction());
+
+        Optional<Users> u = userService.findByIdOp(candidate.getUserId());
+        Users users = u.get();
+        String phoneNumber = users.getPhone();;
+        String email = users.getEmail();
+        String message = "";
+
+        Optional<ProfileViewer> profileViewer = profileViewerService.getByCvIdAndViewerIdOptional(cv.get().getId (), recruiter.getId());
+        if(profileViewer.isPresent()) {
+            cvProfileResponse.setEmail(email);
+            cvProfileResponse.setPhoneNumber(phoneNumber);
+            message = "Đọc toàn bộ thông tin";
+        } else if (recruiter.getTotalCvView() > 0) {
+            cvProfileResponse.setEmail(email);
+            cvProfileResponse.setPhoneNumber(phoneNumber);
+            recruiterService.updateTotalCvView(recruiter.getTotalCvView()-1, recruiter.getId());
+            //Tieu mai them : insert profileviewed
+            //Tieu mai them
+            ViewCvResponse viewCvResponse = new ViewCvResponse();
+            viewCvResponse.setCandidateId(candidate.getId());
+            viewCvResponse.setCvId(cvId);
+            viewCvResponse.setViewerId(recruiterId);
+            profileManageService.insertWhoViewCv(viewCvResponse);
+            message =  "Đọc toàn bộ thông tin";
+        } else if (recruiter.getTotalCvView() == 0 ) {
+            cvProfileResponse.setEmail("*****@gmail.com");
+            cvProfileResponse.setPhoneNumber("**********");
+            message = "Bạn đã hết lượt xem thông tin liên hệ của ứng viên CV";
+        }else {
+            cvProfileResponse.setEmail("*****@gmail.com");
+            cvProfileResponse.setPhoneNumber("**********");
+            message = "Bạn hãy mua gói để xem thông tin liên hệ của ứng viên";
+        }
+        viewCVWithPayResponse.setMessage(message);
+        viewCVWithPayResponse.setCvProfileResponse(cvProfileResponse);
+        return viewCVWithPayResponse;
     }
 }
