@@ -9,17 +9,15 @@ import fpt.edu.capstone.dto.banner.UploadBannerRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.CompanyImageResponse;
 import fpt.edu.capstone.dto.company.CompanyInformationResponse;
+import fpt.edu.capstone.dto.job.CvAppliedJobResponse;
 import fpt.edu.capstone.dto.job.JobForRecruiterResponse;
 import fpt.edu.capstone.dto.recruiter.*;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
-import fpt.edu.capstone.repository.BannerActiveRepository;
-import fpt.edu.capstone.repository.RecruiterRepository;
-import fpt.edu.capstone.repository.UserRepository;
+import fpt.edu.capstone.repository.*;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
-import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -88,9 +86,15 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     private final OtherSkillService otherSkillService;
 
-    private final ProfileManageService profileManageService;
-
     private final ProfileViewerService profileViewerService;
+
+    private final ProfileViewerRepository profileViewerRepository;
+
+    private final AppliedJobRepository appliedJobRepository;
+
+    private final CVRepository cvRepository;
+
+    private final EducationRepository educationRepository;
 
     @Override
     public CommonRecruiterInformationResponse getCommonInforOfRecruiter(long recruiterId) {
@@ -651,16 +655,18 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     public ViewCVWithPayResponse getCvWithPay(long recruiterId, long cvId) {
         ViewCVWithPayResponse viewCVWithPayResponse = new ViewCVWithPayResponse();
         Optional<Recruiter> r = recruiterService.findById(recruiterId);
-        Optional<CV> cv = cvService.findCvById(cvId);
-
         if(!r.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.RECRUITER_DOES_NOT_EXIST);
         }
-        if(!cv.isPresent()) {
-            throw new HiveConnectException("Ứng viên này không có CV");
-        }
         Recruiter recruiter = r.get();
-
+        Optional<CV> cv = cvService.findCvById(cvId);
+        if(!cv.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.CV_NOT_EXIST);
+        }
+        Optional<Candidate> c = candidateService.findById(cv.get().getCandidateId());
+        if(!c.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.CANDIDATE_DOES_NOT_EXIST);
+        }
         CVProfileResponse cvProfileResponse = new CVProfileResponse();
         List<Certificate> certificates = certificateService.getListCertificateByCvId(cv.get().getId());
         List<Education> educations = educationService.getListEducationByCvId(cv.get().getId());
@@ -677,10 +683,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         cvProfileResponse.setOtherSkills(otherSkills);
         cvProfileResponse.setWorkExperiences(workExperiences);
 
-        Optional<Candidate> c = candidateService.findById(cv.get().getCandidateId());
-        if(!c.isPresent()) {
-            throw new HiveConnectException("Không tìm thấy ứng viên này");
-        }
+
 
         Candidate candidate = c.get();
         cvProfileResponse.setCandidateId(candidate.getId());
@@ -715,7 +718,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             viewCvResponse.setCandidateId(candidate.getId());
             viewCvResponse.setCvId(cvId);
             viewCvResponse.setViewerId(recruiterId);
-            profileManageService.insertWhoViewCv(viewCvResponse);
+            insertWhoViewCv(viewCvResponse);
             message =  "Đọc toàn bộ thông tin";
         } else if (recruiter.getTotalCvView() == 0 ) {
             cvProfileResponse.setEmail("*****@gmail.com");
@@ -729,5 +732,94 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         viewCVWithPayResponse.setMessage(message);
         viewCVWithPayResponse.setCvProfileResponse(cvProfileResponse);
         return viewCVWithPayResponse;
+    }
+
+    @Override
+    public void insertWhoViewCv(ViewCvResponse response) {
+        Optional<CV> cv = cvService.findByIdAndCandidateId(response.getCvId(), response.getCandidateId());
+        if (!cv.isPresent()) {
+            throw new HiveConnectException("CV không tồn tại");
+        }
+        Recruiter recruiter = recruiterService.getRecruiterById(response.getViewerId());
+        if (recruiter == null) {
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        }
+        ProfileViewer profileViewer = profileViewerService.getByCvIdAndViewerId(response.getCvId(), response.getViewerId());
+        if (profileViewer == null) {
+            ProfileViewer saveProfileViewer = new ProfileViewer();
+            saveProfileViewer.setViewerId(response.getViewerId());
+            saveProfileViewer.setCvId(response.getCvId());
+            saveProfileViewer.setCandidateId(response.getCandidateId());
+            saveProfileViewer.create();
+            profileViewerRepository.save(saveProfileViewer);
+        }
+    }
+
+    @Override
+    public ResponseDataPagination getCvListAppliedJob(Integer pageNo, Integer pageSize, long jobId) {
+        List<CvAppliedJobResponse> responseList = new ArrayList<>();
+
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+
+        Optional<Job> job = jobService.findById(jobId);
+        if (!job.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
+        }
+        Page<AppliedJob> appliedJobs = appliedJobService.getCvAppliedJob(pageable, jobId, true);
+        if (appliedJobs.isEmpty()) {
+            throw new HiveConnectException("Không có CV nào ứng tuyển.");
+        }
+        CvAppliedJobResponse responseObj = new CvAppliedJobResponse();
+        responseObj.setJobId(jobId);
+        if (appliedJobs.hasContent()) {
+            for (AppliedJob appliedJob : appliedJobs) {
+                Candidate candidate = candidateService.getCandidateById(appliedJob.getCandidateId());
+                responseObj.setCandidateId(appliedJob.getCandidateId());
+                responseObj.setCandidateName(candidate.getFullName());
+
+                Image image = imageService.getAvatarCandidate(candidate.getId());
+                if(image != null) {
+                    responseObj.setAvatar(image.getUrl());
+                }
+                if (appliedJob.isUploadCv()) {
+                    //upload CV
+                    responseObj.setCvUrl(appliedJob.getCvUploadUrl());
+                }
+                CV cv = cvRepository.getByCandidateId(appliedJob.getCandidateId());
+                if (cv == null) {
+                    if (!appliedJob.isUploadCv()) {
+                        //Profile không tồn tại mà cũng không upload CV
+                        throw new HiveConnectException("Liên hệ admin");
+                    }
+                }
+                List<WorkExperience> workExperiencesOfCv = workExperienceService.getListWorkExperienceByCvId(cv.getId());
+                if (!workExperiencesOfCv.isEmpty()) {
+                    List<String> experienceDesc = workExperiencesOfCv.stream().map(WorkExperience::getPosition).collect(Collectors.toList());
+                    responseObj.setExperienceDesc(experienceDesc);
+                }
+                List<Education> educations = educationRepository.getListEducationByCvId(cv.getId());
+                if (!educations.isEmpty()) {
+                    List<String> schools = educations.stream().map(Education::getSchool).collect(Collectors.toList());
+                    responseObj.setEducations(schools);
+                }
+                responseObj.setCareerGoal(candidate.getIntroduction());
+                responseObj.setAddress(candidate.getAddress());
+//            responseObj.setExperienceYear();
+
+                responseObj.setApprovalStatus(appliedJob.getApprovalStatus());
+                responseList.add(responseObj);
+            }
+        }
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(responseList);
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(appliedJobs.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(appliedJobs.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
     }
 }

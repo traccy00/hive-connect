@@ -36,8 +36,6 @@ public class CandidateController {
 
     private CVImportedService cvImportedService;
 
-    private final ProfileManageService profileManageService;
-
     private final ProfileViewerService profileViewerService;
 
     private final FollowService followService;
@@ -52,11 +50,14 @@ public class CandidateController {
 
     private final UserService userService;
 
+    private final RecruiterManageService recruiterManageService;
+
     @GetMapping("/all")
     public ResponseData getAllCandidate() {
         try{
             List<Candidate> listAllCandidate = candidateService.getAllCandidate();
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "All of candidate", listAllCandidate);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
+                    listAllCandidate);
         }catch (Exception ex){
             logger.error(ex.getMessage());
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
@@ -85,7 +86,8 @@ public class CandidateController {
                 response.setUserId(candidateNN.getUserId());
                 response.setPhoneNumber(user.get().getPhone());
                 response.setVerifiedPhone(user.get().isVerifiedPhone());
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Find candidate successful", response);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
+                        response);
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find candidate by this user id", null);
         }catch (Exception ex) {
@@ -97,11 +99,11 @@ public class CandidateController {
     public ResponseData updateCandidate(@RequestBody Candidate newCandidate, @PathVariable long id){
         Optional<Candidate> foundedCandidate = candidateService.findById(id);
         if(!foundedCandidate.isPresent()){
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus() , "Can not find candidate with this id "+id);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus() , ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         try{
             candidateService.updateCandidate(newCandidate, id);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Edit candicate successful", newCandidate);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Sửa thông tin ứng viên thành công", newCandidate);
         } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
@@ -216,7 +218,7 @@ public class CandidateController {
     @Operation(summary = "Insert when viewer click view CV of a candidate")
     public ResponseData insertWhoViewCv(@RequestBody ViewCvResponse response) {
         try {
-            profileManageService.insertWhoViewCv(response);
+            recruiterManageService.insertWhoViewCv(response);
             ProfileViewer profileViewer = profileViewerService.getByCvIdAndViewerId(response.getCvId(), response.getViewerId());
             if(profileViewer == null) {
                 throw new HiveConnectException("Lưu người xem CV thất bại");
@@ -236,7 +238,7 @@ public class CandidateController {
                                               @RequestParam long cvId,
                                               @RequestParam long candidateId) {
         try {
-            ResponseDataPagination pagination = profileManageService
+            ResponseDataPagination pagination = candidateManageService
                     .getProfileViewer(pageNo, pageSize, cvId, candidateId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
@@ -251,33 +253,33 @@ public class CandidateController {
     public ResponseData follow(@RequestBody Follow follow) {
         try{
             if(followService.isFollowing(follow.getFollowerId(), follow.getFollowedId(), follow.getType())) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Is Follow yet", null);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Đã theo dõi.");
             }
             if(follow.getType() != 1 && follow.getType() != 2 && follow.getType() != 3) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "You must send correct type ", null);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Vui lòng nhật đúng loại.");
             }
             if(!candidateService.findById(follow.getFollowerId()).isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this follower id", follow.getFollowerId());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST, follow.getFollowerId());
             }
             if(follow.getType() == 1 ) { //job
                 if(!jobService.existsById(follow.getFollowedId())) {
-                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this job with id", follow.getFollowedId());
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.JOB_DOES_NOT_EXIST, follow.getFollowedId());
                 }
             }
             if(follow.getType() == 2 ) { //company
                 if(!companyService.existById(follow.getFollowedId())) {
-                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this company with id", follow.getFollowedId());
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.COMPANY_DOES_NOT_EXIST, follow.getFollowedId());
                 }
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful but haven't handled this case", follow.getType());
             }
             if(follow.getType() == 3 ) { //Recruiter
                 if(!recruiterService.existById(follow.getFollowedId())) {
-                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find this recruiter with id", follow.getFollowedId());
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.RECRUITER_DOES_NOT_EXIST, follow.getFollowedId());
                 }
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful but haven't handled this case", follow.getType());
             }
             Follow insertedFollow = followService.insertFollow(follow);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Follow successful", insertedFollow);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Theo dõi thành công.", insertedFollow);
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage());
         }
@@ -303,10 +305,10 @@ public class CandidateController {
     public ResponseData unfollow(@RequestParam long followerId, @RequestParam long followedId, @RequestParam long type) {
         try{
             if(!followService.isFollowing(followerId, followedId, type)) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "You have not followed this",null);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "You have not followed this");
             }
             followService.unFollow(followerId, followedId, type);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Unfollow succsess full",null);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Bỏ theo dõi thành công");
         }catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
             logger.error(msg);

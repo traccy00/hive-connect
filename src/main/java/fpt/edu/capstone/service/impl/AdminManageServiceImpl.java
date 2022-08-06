@@ -62,7 +62,7 @@ public class AdminManageServiceImpl implements AdminManageService {
     private  AdminService adminService;
     @Autowired
     private  JobRepository jobRepository;
-
+//Pending, Approved, null
     @Override
     public List<LicenseApprovalResponse> searchLicenseApprovalForAdmin(String businessApprovalStatus, String additionalApprovalStatus) {
         List<LicenseApprovalResponse> responseList = new ArrayList<>();

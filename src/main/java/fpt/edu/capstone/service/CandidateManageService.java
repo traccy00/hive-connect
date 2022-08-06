@@ -2,6 +2,7 @@ package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.CV.CVRequest;
 import fpt.edu.capstone.dto.CV.CVResponse;
+import fpt.edu.capstone.dto.job.AppliedJobRequest;
 import fpt.edu.capstone.entity.AppliedJob;
 import fpt.edu.capstone.entity.CV;
 import fpt.edu.capstone.utils.ResponseDataPagination;
@@ -16,4 +17,9 @@ public interface CandidateManageService {
     CVResponse findCvByCandidateId(long candidateId);
 
     CV createCV(CVRequest request);
+
+    ResponseDataPagination getProfileViewer(Integer pageNo, Integer pageSize, long cvId, long candidateId);
+
+    void appliedJob(AppliedJobRequest request) throws Exception;
+
 }
