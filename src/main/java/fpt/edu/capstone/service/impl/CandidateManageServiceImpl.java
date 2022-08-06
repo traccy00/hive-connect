@@ -1,18 +1,19 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.CV.CVRequest;
+import fpt.edu.capstone.dto.CV.CVResponse;
 import fpt.edu.capstone.dto.candidate.AppliedJobCandidateResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.JobResponse;
-import fpt.edu.capstone.entity.AppliedJob;
-import fpt.edu.capstone.entity.Company;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.JobHashtag;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CandidateManageServiceImpl implements CandidateManageService {
 
+    private final ModelMapper modelMapper;
+
     private final AppliedJobService appliedJobService;
 
     private final CandidateService candidateService;
@@ -36,9 +39,23 @@ public class CandidateManageServiceImpl implements CandidateManageService {
 
     private final JobHashTagService jobHashTagService;
 
+    private final CVService cvService;
+
+    private final WorkExperienceService workExperienceService;
+
+    private final MajorLevelService majorLevelService;
+
+    private final OtherSkillService otherSkillService;
+
+    private final LanguageService languageService;
+
+    private final CertificateService certificateService;
+
+    private final EducationService educationService;
+
     @Override
     public ResponseDataPagination searchAppliedJobsOfCandidate(Integer pageNo, Integer pageSize, long candidateId, String approvalStatus) {
-        if(!candidateService.existsById(candidateId)) {
+        if (!candidateService.existsById(candidateId)) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         List<AppliedJobCandidateResponse> responseList = new ArrayList<>();
@@ -47,14 +64,14 @@ public class CandidateManageServiceImpl implements CandidateManageService {
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
         Page<AppliedJob> appliedJobs = appliedJobService.searchAppliedJobsOfCandidate(pageable, candidateId, approvalStatus);
-        if(appliedJobs.hasContent()) {
-            for(AppliedJob appliedJob : appliedJobs) {
+        if (appliedJobs.hasContent()) {
+            for (AppliedJob appliedJob : appliedJobs) {
                 AppliedJobCandidateResponse response = new AppliedJobCandidateResponse();
                 response.setAppliedJobId(appliedJob.getId());
                 response.setJob(jobService.getJobById(appliedJob.getJobId()));
                 response.setApprovalStatus(appliedJob.getApprovalStatus());
                 response.setAppliedJobDate(appliedJob.getCreatedAt());
-                if(appliedJob.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+                if (appliedJob.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
                     response.setApprovalDate(appliedJob.getUpdatedAt());
                 }
                 responseList.add(response);
@@ -121,5 +138,50 @@ public class CandidateManageServiceImpl implements CandidateManageService {
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
+    }
+
+    @Override
+    public CVResponse findCvByCandidateId(long candidateId) {
+        List<CV> cv = cvService.findCvByCandidateId(candidateId);
+        if (cv == null || cv.isEmpty()) {
+            throw new HiveConnectException(ResponseMessageConstants.CV_NOT_EXIST);
+        }
+        List<Certificate> certificates = certificateService.getListCertificateByCvId(cv.get(0).getId());
+        List<Education> educations = educationService.getListEducationByCvId(cv.get(0).getId());
+        List<Language> languages = languageService.getListLanguageByCvId(cv.get(0).getId());
+        List<MajorLevel> majorLevels = majorLevelService.getListMajorLevelByCvId(cv.get(0).getId());
+        List<OtherSkill> otherSkills = otherSkillService.getListOtherSkillByCvId(cv.get(0).getId());
+        List<WorkExperience> workExperiences = workExperienceService.getListWorkExperienceByCvId(cv.get(0).getId());
+        CVResponse cvResponse = new CVResponse();
+        cvResponse.setCandidateId(candidateId);
+        cvResponse.setCreatedAt(cv.get(0).getCreatedAt());
+        cvResponse.setUpdatedAt(cv.get(0).getUpdatedAt());
+        cvResponse.setCertificates(certificates);
+        cvResponse.setIsDeleted(cv.get(0).getIsDeleted());
+        cvResponse.setEducations(educations);
+        cvResponse.setId(cv.get(0).getId());
+        cvResponse.setLanguages(languages);
+        cvResponse.setSummary(cv.get(0).getSummary());
+        cvResponse.setMajorLevels(majorLevels);
+        cvResponse.setOtherSkills(otherSkills);
+        cvResponse.setWorkExperiences(workExperiences);
+        return cvResponse;
+    }
+
+    @Override
+    public CV createCV(CVRequest request) {
+        Candidate c = candidateService.getCandidateById(request.getCandidateId());
+        if (c == null) {
+            throw new HiveConnectException(ResponseMessageConstants.CANDIDATE_DOES_NOT_EXIST);
+        }
+        List<CV> cvList = cvService.findCvByCandidateId(request.getCandidateId());
+        if (!cvList.isEmpty()) {
+            throw new HiveConnectException(ResponseMessageConstants.YOUR_CV_EXISTED);
+        }
+        CV cv = modelMapper.map(request, CV.class);
+        cv.create();
+        cv.setIsDeleted(0);
+        cvService.save(cv);
+        return cv;
     }
 }
