@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,14 +17,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FindCVResponse {
-    private long cvId;
-    private String candidateName;
-    private List<String> workPositionExperiences;
-    private List<String> schools;
-    private String careerGoal;
-    private String candidateAddress;
-    private Object sumExperienceYear;
-//    private String updatedAt;
-//    private int viewCount;
-//    private int openContactCount;
+    private long id;
+    private long candidateId;
+    private long isDeleted;
+    private String summary;
+    private String totalExperienceYear;
+    private String techStack;
+    private String address;
+    private String fullName;
+    private String avatarUrl;
 }

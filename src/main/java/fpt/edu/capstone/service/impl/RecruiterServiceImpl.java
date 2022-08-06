@@ -68,6 +68,7 @@ public class RecruiterServiceImpl implements RecruiterService {
         recruiter.setUserId(userId);
         LocalDateTime nowDate = LocalDateTime.now();
         recruiter.setCreatedAt(nowDate);
+        recruiter.setTotalCvView(-1);
         return recruiterRepository.save(recruiter);
     }
 
@@ -206,6 +207,7 @@ public class RecruiterServiceImpl implements RecruiterService {
         recruiter.setFullName(googlePojo.getName());
         recruiter.setAvatarUrl(googlePojo.getPicture());
         recruiter.setUserId(user.getId());
+        recruiter.setTotalCvView(-1);
         recruiterRepository.save(recruiter);
     }
 }
