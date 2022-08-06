@@ -31,19 +31,13 @@ public class JobController {
 
     private final JobService jobService;
 
-    private final FindJobService findJobService;
-
     private final CandidateJobService candidateJobService;
 
     private final RecruiterManageService recruiterManageService;
 
-    private final ModelMapper modelMapper;
-
     private final CandidateManageService candidateManageService;
 
     private final AdminManageService adminManageService;
-
-    private final PaymentService paymentService;
 
     private final NotificationService notificationService;
 
@@ -171,7 +165,7 @@ public class JobController {
     public ResponseData applyJob(@RequestBody AppliedJobRequest request) {
         try {
 
-            findJobService.appliedJob(request);
+            candidateManageService.appliedJob(request);
 
 
             //Add Notification
@@ -198,7 +192,7 @@ public class JobController {
                                                    @RequestParam(defaultValue = "10") Integer pageSize,
                                                    @PathVariable long jobId) {
         try {
-            ResponseDataPagination pagination = findJobService.getCvListAppliedJob(pageNo, pageSize, jobId);
+            ResponseDataPagination pagination = recruiterManageService.getCvListAppliedJob(pageNo, pageSize, jobId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
                     ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {

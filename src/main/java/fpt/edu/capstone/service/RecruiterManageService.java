@@ -1,6 +1,7 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.CV.ViewCVWithPayResponse;
+import fpt.edu.capstone.dto.CV.ViewCvResponse;
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.banner.UploadBannerRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
@@ -43,4 +44,9 @@ public interface RecruiterManageService {
     ResponseDataPagination findCVFilter(Integer pageNo, Integer pageSize, String experience, String candidateAddress, String techStack);
 
     ViewCVWithPayResponse getCvWithPay(long recruiterId, long cvId);
+
+    void insertWhoViewCv(ViewCvResponse response);
+
+    ResponseDataPagination getCvListAppliedJob(Integer pageNo, Integer pageSize, long jobId);
+
 }

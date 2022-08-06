@@ -61,7 +61,6 @@ public class AdminManageServiceImplTest {
 
         assertEquals(1,responseList.size());
 //        assertEquals(123L,responseList.get(0).getRequestUserId());
-
     }
 
     @Test

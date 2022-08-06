@@ -4,9 +4,13 @@ import fpt.edu.capstone.dto.CV.CVRequest;
 import fpt.edu.capstone.dto.CV.CVResponse;
 import fpt.edu.capstone.dto.candidate.AppliedJobCandidateResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.job.AppliedJobRequest;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.repository.AppliedJobRepository;
+import fpt.edu.capstone.repository.CVRepository;
+import fpt.edu.capstone.repository.EducationRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
@@ -17,6 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -52,6 +57,16 @@ public class CandidateManageServiceImpl implements CandidateManageService {
     private final CertificateService certificateService;
 
     private final EducationService educationService;
+
+    private final ProfileViewerService profileViewerService;
+
+    private final AppliedJobRepository appliedJobRepository;
+
+    private final ImageService imageService;
+
+    private final CVRepository cvRepository;
+
+    private final EducationRepository educationRepository;
 
     @Override
     public ResponseDataPagination searchAppliedJobsOfCandidate(Integer pageNo, Integer pageSize, long candidateId, String approvalStatus) {
@@ -183,5 +198,94 @@ public class CandidateManageServiceImpl implements CandidateManageService {
         cv.setIsDeleted(0);
         cvService.save(cv);
         return cv;
+    }
+
+    @Override
+    public ResponseDataPagination getProfileViewer(Integer pageNo, Integer pageSize, long cvId, long candidateId) {
+        List<ProfileViewer> responseList = new ArrayList<>();
+        Candidate candidate = candidateService.getCandidateById(candidateId);
+        if (candidate == null) {
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        }
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+
+        Page<ProfileViewer> profileViewersOfCv = profileViewerService.getProfileViewerOfCv(pageable, cvId);
+        if (profileViewersOfCv.hasContent()) {
+            responseList = profileViewerService.findAll(PageRequest.of(pageReq, pageSize, Sort.by(Sort.Direction.DESC, "id")));
+        }
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(responseList);
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(profileViewersOfCv.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(profileViewersOfCv.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
+    }
+
+    @Override
+    public void appliedJob(AppliedJobRequest request) throws Exception {
+        if (request.getCvUrl() == null || request.getCvUrl().trim().isEmpty()) {
+            //profile apply
+            CV cv = cvService.getCVByCandidateId(request.getCandidateId());
+            if (cv == null) {
+                throw new HiveConnectException("Bạn chưa tạo hồ sơ");
+            }
+        }
+        if (!jobService.existsById(request.getJobId())) {
+            throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
+        }
+        if (!candidateService.existsById(request.getCandidateId())) {
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        }
+        //if exists candidate account, candidate has already applied the job
+        AppliedJob appliedJob1 = appliedJobService.getAppliedJobBefore(request.getCandidateId(), request.getJobId());
+        // từng apply, có record tồn tại
+        if (appliedJob1 != null) {
+            //đâ apply
+            if (appliedJob1.isApplied()) {
+                //đã apply và đang ở trạng thái pending, có thể hủy apply
+                if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
+                    appliedJob1.setApplied(false);
+                    //đã apply và được approved
+                } else if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+                    throw new HiveConnectException("CV này đã được chấp nhận.");
+                    //đã từng apply và bị reject, có thể apply lại
+                } else if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT.getStatus())) {
+                    Object AppliedJobRequest = request;
+                    AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
+                    appliedJob.setApplied(true);
+                    appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+                    if(request.getCvUrl() != null) {
+                        appliedJob.setCvUploadUrl(request.getCvUrl());
+                        appliedJob.setUploadCv(true);
+                    }
+                    appliedJob.create();
+                    appliedJobRepository.save(appliedJob);
+                    return;
+                }
+                //đã hủy apply, cập nhật lại thành apply
+            } else {
+                appliedJob1.setApplied(true);
+            }
+            appliedJob1.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+            appliedJob1.update();
+            appliedJobRepository.save(appliedJob1);
+            //chưa từng apply
+        } else {
+            Object AppliedJobRequest = request;
+            AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
+            appliedJob.setApplied(true);
+            appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+            if(request.getCvUrl() != null) {
+                appliedJob.setCvUploadUrl(request.getCvUrl());
+                appliedJob.setUploadCv(true);
+            }
+            appliedJob.create();
+            appliedJobRepository.save(appliedJob);
+        }
     }
 }
