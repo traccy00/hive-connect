@@ -60,7 +60,7 @@ public class AdminManageServiceImplTest {
         List<LicenseApprovalResponse> responseList = adminManageService.searchLicenseApprovalForAdmin(businessApprovalStatus,additionalApprovalStatus);
 
         assertEquals(1,responseList.size());
-        assertEquals(123L,responseList.get(0).getRequestUserId());
+//        assertEquals(123L,responseList.get(0).getRequestUserId());
 
     }
 
