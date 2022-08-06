@@ -90,7 +90,7 @@ public class PaymentController {
         try {
             List<Payment> paymentList = paymentService.
                     getListPaymentFilter(recruiterId, rentalPackageId, bannerId, transactionCode, orderType);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS, paymentList);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.GET_LIST_SUCCESS, paymentList);
         } catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

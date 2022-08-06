@@ -11,12 +11,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    @Query("select p from Payment p where p.recruiterId =:recruiterId or 0 =:recruiterId " +
-            "and p.detailPackageId =:rentalPackageId or 0 =:rentalPackageId " +
-            "and p.bannerId =:bannerId or 0=:bannerId " +
+    @Query("select p from Payment p where (p.recruiterId =:recruiterId or 0 =:recruiterId) " +
+            "and (p.detailPackageId =:rentalPackageId or 0 =:rentalPackageId) " +
+            "and (p.bannerId =:bannerId or 0=:bannerId) " +
             "and (lower(p.transactionCode) like lower(concat('%', :code ,'%')) or :code is null or :code ='')" +
-            "and  (lower(p.orderType) like lower(concat('%', :type ,'%')) or :type is null or :type ='') " +
-            "and p.expiredStatus = true")
+            "and  (lower(p.orderType) like lower(concat('%', :type ,'%')) or :type is null or :type ='') ")
     List<Payment> getListPaymentFilter(@Param("recruiterId") long recruiterId,@Param("rentalPackageId") long rentalPackageId,
                                        @Param("bannerId") long bannerId,@Param("code") String transactionCode,@Param("type") String orderType);
 
