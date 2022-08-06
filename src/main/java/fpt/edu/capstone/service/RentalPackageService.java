@@ -15,4 +15,6 @@ public interface RentalPackageService {
     void saveRentalPackage(RentalPackage rentalPackage);
 
     Optional<RentalPackage> findById(long id);
+
+    String getRentalPackageName(long detailPackageId);
 }

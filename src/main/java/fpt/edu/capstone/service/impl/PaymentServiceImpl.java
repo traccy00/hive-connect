@@ -5,6 +5,7 @@ import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
 import fpt.edu.capstone.dto.payment.PaymentResponse;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
+import fpt.edu.capstone.dto.payment.RevenueResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.PaymentRepository;
@@ -12,6 +13,7 @@ import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
+import fpt.edu.capstone.utils.ResponseDataPaginationRevenue;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -38,6 +40,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final RecruiterService recruiterService;
 
     private final DetailPackageService detailPackageService;
+
+    private final RentalPackageService rentalPackageService;
 
     private final JobService jobService;
 
@@ -160,24 +164,36 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public ResponseDataPagination getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize) {
+    public ResponseDataPaginationRevenue getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
         Page<Payment> payments = paymentRepository.getRevenueInMonth(start, end, pageable);
         List <Payment> totalRevenue = payments.getContent();
+        List<RevenueResponse> revenueResponseList = totalRevenue.stream().
+                map(payment -> modelMapper.map(payment, RevenueResponse.class)).collect(Collectors.toList());
         long total = 0;
-        for (Payment p: totalRevenue){
-            total += p.getAmount();
+        for (RevenueResponse response: revenueResponseList){
+            if(response.getBannerId() == 0){
+                String rentalPackageName = rentalPackageService.getRentalPackageName(response.getDetailPackageId());
+                response.setRentalPackageName(rentalPackageName);
+            } else {
+                response.setRentalPackageName("Banner quảng cáo");
+            }
+            Recruiter recruiter = recruiterService.getRecruiterById(response.getRecruiterId());
+            response.setRecruiterName(recruiter.getFullName());
+            total += response.getAmount();
         }
-        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+
+        ResponseDataPaginationRevenue responseDataPagination = new ResponseDataPaginationRevenue();
         Pagination pagination = new Pagination();
-        responseDataPagination.setData(payments.toList());
+        responseDataPagination.setData(revenueResponseList);
         pagination.setCurrentPage(pageNo);
         pagination.setPageSize(pageSize);
         pagination.setTotalPage(payments.getTotalPages());
         pagination.setTotalRecords(Integer.parseInt(String.valueOf(payments.getTotalElements())));
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
+        responseDataPagination.setTotalRevenue(total);
         return responseDataPagination;
     }
 

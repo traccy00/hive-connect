@@ -9,10 +9,7 @@ import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.JobService;
 import fpt.edu.capstone.service.PaymentService;
-import fpt.edu.capstone.utils.Enums;
-import fpt.edu.capstone.utils.LogUtils;
-import fpt.edu.capstone.utils.ResponseData;
-import fpt.edu.capstone.utils.ResponseDataPagination;
+import fpt.edu.capstone.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -127,8 +124,8 @@ public class PaymentController {
             LocalDateTime start = LocalDate.parse(startDate, formatter).atStartOfDay();
             LocalDateTime end = LocalDate.parse(endDate, formatter).atStartOfDay();
 
-            ResponseDataPagination pagination = paymentService.getRevenue(start, end, pageNo, pageSize);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS, pagination);
+            ResponseDataPaginationRevenue pagination = paymentService.getRevenue(start, end, pageNo, pageSize);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.TOTAL_REVENUE, pagination);
         } catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

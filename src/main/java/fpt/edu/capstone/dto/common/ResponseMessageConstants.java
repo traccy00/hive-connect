@@ -124,4 +124,7 @@ public interface ResponseMessageConstants {
     String VNP_RESPONSE_CODE_79 = "Giao dịch không thành công do: KH nhập sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch";
     String VNP_RESPONSE_CODE_99 = "Các lỗi khác";
     String NO_PURCHASED_PACKAGE = "Nhà tuyển dụng chưa mua gói dịch vụ nào";
+
+    //REVENUE
+    String TOTAL_REVENUE = "Tổng doanh thu";
 }

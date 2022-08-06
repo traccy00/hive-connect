@@ -38,4 +38,9 @@ public class RentalPackageServiceImpl implements RentalPackageService {
     public Optional<RentalPackage> findById(long id) {
         return rentalPackageServiceRepository.findById(id);
     }
+
+    @Override
+    public String getRentalPackageName(long detailPackageId) {
+        return rentalPackageServiceRepository.getRentalPackageName(detailPackageId);
+    }
 }

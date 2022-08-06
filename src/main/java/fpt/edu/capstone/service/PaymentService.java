@@ -5,6 +5,7 @@ import fpt.edu.capstone.dto.payment.PaymentResponse;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
 import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.utils.ResponseDataPagination;
+import fpt.edu.capstone.utils.ResponseDataPaginationRevenue;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public interface PaymentService {
 
     List<PaymentResponse> findRecruiterPurchasedPackage(long recruiterId);
 
-    ResponseDataPagination getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize);
+    ResponseDataPaginationRevenue getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize);
 
     void savePayment(String vnpResponseCode, String vnpOrderInfo);
 
