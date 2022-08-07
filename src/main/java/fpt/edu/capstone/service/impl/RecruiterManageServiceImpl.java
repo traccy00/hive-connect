@@ -244,11 +244,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         profileResponse.setEmail(user.getEmail());
         profileResponse.setPhone(user.getPhone());
 
-        Image image = imageService.getAvatarRecruiter(recruiter.getId());
-        if (image != null) {
-            profileResponse.setAvatarName(image.getName());
-            profileResponse.setAvatarUrl(image.getUrl());
-        }
+        profileResponse.setAvatarUrl(recruiter.getAvatarUrl());
 
         Company company = companyService.getCompanyById(recruiter.getCompanyId());
         if (company != null) {
@@ -679,18 +675,14 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (appliedJobs.isEmpty()) {
             throw new HiveConnectException("Không có CV nào ứng tuyển.");
         }
-        CvAppliedJobResponse responseObj = new CvAppliedJobResponse();
-        responseObj.setJobId(jobId);
         if (appliedJobs.hasContent()) {
             for (AppliedJob appliedJob : appliedJobs) {
+                CvAppliedJobResponse responseObj = new CvAppliedJobResponse();
+                responseObj.setJobId(jobId);
                 Candidate candidate = candidateService.getCandidateById(appliedJob.getCandidateId());
                 responseObj.setCandidateId(appliedJob.getCandidateId());
                 responseObj.setCandidateName(candidate.getFullName());
-
-                Image image = imageService.getAvatarCandidate(candidate.getId());
-                if(image != null) {
-                    responseObj.setAvatar(image.getUrl());
-                }
+                responseObj.setAvatar(candidate.getAvatarUrl());
                 if (appliedJob.isUploadCv()) {
                     //upload CV
                     responseObj.setCvUrl(appliedJob.getCvUploadUrl());
@@ -715,7 +707,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                 responseObj.setCareerGoal(candidate.getIntroduction());
                 responseObj.setAddress(candidate.getAddress());
 //            responseObj.setExperienceYear();
-
                 responseObj.setApprovalStatus(appliedJob.getApprovalStatus());
                 responseList.add(responseObj);
             }
