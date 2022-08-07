@@ -1,11 +1,10 @@
 package fpt.edu.capstone.service;
 
-import fpt.edu.capstone.dto.detail_package.CreateOpenCvPackageRequest;
+import fpt.edu.capstone.dto.detail_package.CreatePackageRequest;
 import fpt.edu.capstone.dto.detail_package.DetailPackageResponse;
 import fpt.edu.capstone.entity.DetailPackage;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface DetailPackageService {
@@ -21,7 +20,7 @@ public interface DetailPackageService {
 
     String findNameById(long id);
 
-    void createOpenCvPackage(CreateOpenCvPackageRequest request);
+    void createNormalPackage(CreatePackageRequest request);
 
     void deleteDetailPackage(long detailPackageId);
 

@@ -68,6 +68,8 @@ public interface ResponseMessageConstants {
     String PAYMENT_SUCCESS = "Thanh toán thành công";
     String PAYMENT_FAILED = "Thanh toán thất bại";
     String CHANGE_JOB_PAYMENT_ACTIVE_SUCCESS = "Thay đổi kích hoạt công việc thành công";
+    String PAYMENT_PACKAGE_BENEFIT_INVALID = "Lợi ích của gói dịch vụ không hợp lệ.";
+    String PACKAGE_NAME_EXISTS = "Tên gói đã được sử dụng";
 
     //AMAZON
 //    String AMAZON_SAVE_URL = "https://hive-connect-images.s3.us-west-1.amazonaws.com/hiveconnect/";

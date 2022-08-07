@@ -1,11 +1,12 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.detail_package.CreateOpenCvPackageRequest;
+import fpt.edu.capstone.dto.detail_package.CreatePackageRequest;
 import fpt.edu.capstone.dto.detail_package.DetailPackageResponse;
 import fpt.edu.capstone.dto.rental_package.RentalPackageResponse;
 import fpt.edu.capstone.entity.Banner;
 import fpt.edu.capstone.entity.DetailPackage;
+import fpt.edu.capstone.entity.RentalPackage;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.DetailPackageRepository;
 import fpt.edu.capstone.service.BannerService;
@@ -120,14 +121,40 @@ public class DetailPackageServiceImpl implements DetailPackageService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public void createOpenCvPackage(CreateOpenCvPackageRequest request) {
-        if (!rentalPackageService.existById(request.getRentalPackageId())) {
-            throw new HiveConnectException(ResponseMessageConstants.PAYMENT_DOES_NOT_EXIST);
+    public void createNormalPackage(CreatePackageRequest request) {
+        Optional<RentalPackage> rentalPackage = rentalPackageService.findById(request.getRentalPackageId());
+        if(!rentalPackage.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.RENTAL_PACKAGE_DOES_NOT_EXIST);
         }
-        DetailPackage detailPackage = modelMapper.map(request, DetailPackage.class);
-        detailPackage.create();
-        detailPackageRepository.save(detailPackage);
-        if(!detailPackageRepository.findById(detailPackage.getId()).isPresent()) {
+        if(request.getDetailName() == null || request.getDetailName().trim().isEmpty()) {
+            throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
+        }
+        Optional<DetailPackage> existedPackage = detailPackageRepository.findByDetailName(request.getDetailName());
+        if(existedPackage.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.PACKAGE_NAME_EXISTS);
+        }
+        if(request.getPrice() < 0) {
+            throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
+        }
+        if(request.getDiscount() < 0) {
+            throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
+        }
+        if(request.getDiscount() > request.getPrice()) {
+            throw new HiveConnectException(ResponseMessageConstants.DISCOUNT_PRICE_INVALID);
+        }
+        if(request.getRentalPackageId() == 1) {
+            if(request.getMaxCvView() <= 0) {
+                throw new HiveConnectException(ResponseMessageConstants.PAYMENT_PACKAGE_BENEFIT_INVALID);
+            }
+        } else if(request.getRentalPackageId() == 2) {
+            if(!request.isRelatedJob() && !request.isSuggestJob()) {
+                throw new HiveConnectException(ResponseMessageConstants.PAYMENT_PACKAGE_BENEFIT_INVALID);
+            }
+        }
+        DetailPackage openCvPackage = modelMapper.map(request, DetailPackage.class);
+        openCvPackage.create();
+        detailPackageRepository.save(openCvPackage);
+        if(!detailPackageRepository.findById(openCvPackage.getId()).isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.CREATE_FAIL);
         }
     }
