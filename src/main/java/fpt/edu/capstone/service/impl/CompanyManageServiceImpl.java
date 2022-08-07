@@ -181,6 +181,8 @@ public class CompanyManageServiceImpl implements CompanyManageService {
         companyRepository.save(company);
 
         Image image = new Image();
+        image.setName(request.getName());
+        image.setUrl(request.getUrl());
         image.setCompanyId(company.getId());
         image.setAvatar(true);
         imageRepository.save(image);

@@ -1,8 +1,7 @@
 package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.detail_package.CreateOpenCvPackageRequest;
-import fpt.edu.capstone.dto.detail_package.DetailPackageRequest;
+import fpt.edu.capstone.dto.detail_package.CreatePackageRequest;
 import fpt.edu.capstone.dto.detail_package.DetailPackageResponse;
 import fpt.edu.capstone.dto.rental_package.RentalPackageRequest;
 import fpt.edu.capstone.entity.DetailPackage;
@@ -79,30 +78,11 @@ public class PackageController {
         }
     }
 
-    @PostMapping("/create-main-package")
-    @Operation(summary = "Admin module - tạo gói DỊCH VỤ CHÍNH")
-    public ResponseData createSubPackage(@RequestBody DetailPackageRequest request){
+    @PostMapping("/create-new-package")
+    @Operation(summary = "Admin module - tạo gói DỊCH VỤ MỞ HỒ SƠ ỨNG VIÊN VÀ GÓI DỊCH VỤ CHÍNH DÙNG CHUNG")
+    public ResponseData creatNormalPackage(@RequestBody CreatePackageRequest request){
         try {
-            if(!rentalPackageService.existById(request.getRentalPackageId())){
-                throw new HiveConnectException(ResponseMessageConstants.PAYMENT_DOES_NOT_EXIST);
-            }
-            DetailPackage p = modelMapper.map(request, DetailPackage.class);
-            p.setDeleted(false);
-            p.create();
-            detailPackageService.saveDetailPackage(p);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS);
-        }catch (Exception e){
-            String msg = LogUtils.printLogStackTrace(e);
-            logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
-        }
-    }
-
-    @PostMapping("/create-open-cv-package")
-    @Operation(summary = "Admin module - tạo gói DỊCH VỤ MỞ HỒ SƠ ỨNG VIÊN")
-    public ResponseData createOpenCvPackage(@RequestBody CreateOpenCvPackageRequest request){
-        try {
-            detailPackageService.createOpenCvPackage(request);
+            detailPackageService.createNormalPackage(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS);
         }catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);

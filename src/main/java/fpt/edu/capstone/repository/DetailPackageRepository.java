@@ -18,10 +18,12 @@ public interface DetailPackageRepository extends JpaRepository<DetailPackage, Lo
     Page<DetailPackage> getListFilter(Pageable pageable, @Param("name") String name,
                                       @Param("rentalId") long rentalId, @Param("status") boolean isDeleted);
 
-    Optional<DetailPackage> findByDetailName(String type);
+    @Query(value = "select * from detail_package dp where lower(dp.detail_name) = lower(:detailName)", nativeQuery = true)
+    Optional<DetailPackage> findByDetailName(@Param("detailName") String detailName);
 
     @Query(value = "select dp.detailName from DetailPackage dp where dp.id =:id")
     String findDetailNameById (@Param("id") long id);
 
     DetailPackage findByRentalPackageIdAndId(long rentalPackageId, long id);
+
 }

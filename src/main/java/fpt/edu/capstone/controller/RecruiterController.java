@@ -185,7 +185,7 @@ public class RecruiterController {
 
     @GetMapping("find-cv")
     public ResponseData findCv(@RequestParam(defaultValue = "0") Integer pageNo,
-                               @RequestParam(defaultValue = "10") Integer pageSize,
+                               @RequestParam(defaultValue = "6") Integer pageSize,
                                @RequestParam(required = false) String experienceYear,
                                @RequestParam(required = false) String candidateAddress,
                                @RequestParam(required = false) String techStacks) {
