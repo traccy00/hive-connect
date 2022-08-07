@@ -8,4 +8,6 @@ public interface MajorService {
     String getNameByMajorId(long majorId);
 
     List<Major> getAllMajorByFieldId(long fieldId);
+
+    List <String> getMajorNameByCVId(long cvId);
 }

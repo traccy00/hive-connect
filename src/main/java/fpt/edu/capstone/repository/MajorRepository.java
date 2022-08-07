@@ -14,4 +14,10 @@ public interface MajorRepository extends JpaRepository<Major,Long> {
 
     @Query(value = "select * from Major m where m.field_id = ?1", nativeQuery = true)
     List<Major> getAllMajorByFieldId(long fieldId);
+
+    @Query(value = "select m.major_name from major m " +
+            "left join major_level ml  on m.id = ml.major_id " +
+            "left join cv c on c.id  = ml.cv_id " +
+            "where c.id = ?1", nativeQuery = true)
+    List <String> getMajorNameByCVId(long cvId);
 }

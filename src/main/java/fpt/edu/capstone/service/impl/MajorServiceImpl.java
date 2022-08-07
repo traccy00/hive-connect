@@ -23,4 +23,9 @@ public class MajorServiceImpl implements MajorService {
         return majorRepository.getAllMajorByFieldId(fieldId);
     }
 
+    @Override
+    public List<String> getMajorNameByCVId(long cvId) {
+        return majorRepository.getMajorNameByCVId(cvId);
+    }
+
 }

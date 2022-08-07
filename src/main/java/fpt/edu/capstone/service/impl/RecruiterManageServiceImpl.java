@@ -96,6 +96,8 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     private final EducationRepository educationRepository;
 
+    private final MajorService majorService;
+
     @Override
     public CommonRecruiterInformationResponse getCommonInforOfRecruiter(long recruiterId) {
         CommonRecruiterInformationResponse response = new CommonRecruiterInformationResponse();
@@ -314,100 +316,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         return response;
     }
 
-//    @Override
-//    public ResponseDataPagination findCV(Integer pageNo, Integer pageSize, //int experienceOption,
-//                                         String candidateAddress,
-//                                         String techStack) {
-//        List<FindCVResponse> responseList = new ArrayList<>();
-//        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
-//        Pageable pageable = PageRequest.of(pageReq, pageSize);
-//
-//        Page<IFindCVResponse> cvList = cvService.findCVForRecruiter(pageable, //experienceOption,
-//                candidateAddress, techStack);
-//        if(cvList.hasContent()) {
-//            for (IFindCVResponse iFindCVResponse : cvList) {
-//                FindCVResponse response = new FindCVResponse();
-//                Optional<CV> cv = cvService.findCvById(iFindCVResponse.getCvId());
-//                Candidate candidate = candidateService.getCandidateById(cv.get().getCandidateId());
-//                response.setCandidateName(candidate.getFullName());
-//
-//                List<WorkExperience> workExperiences = workExperienceService.
-//                        getListWorkExperienceByCvId(iFindCVResponse.getCvId());
-//                List<String> workPositionExperiences = new ArrayList<>();
-//                for (WorkExperience workExperience : workExperiences) {
-//                    workPositionExperiences.add(workExperience.getPosition() + " - " + workExperience.getCompanyName());
-//                }
-//                response.setWorkPositionExperiences(workPositionExperiences);
-//
-//                List<Education> educations = educationService.getListEducationByCvId(iFindCVResponse.getCvId());
-//                List<String> schools = educations.stream().map(Education::getSchool).collect(Collectors.toList());
-//                response.setSchools(schools);
-//
-//                response.setCareerGoal(candidate.getIntroduction());
-//                response.setCandidateAddress(candidate.getAddress());
-////            response.setSumExperienceYear(iFindCVResponse.getSumExperienceYear());
-//                responseList.add(response);
-//            }
-//        }
-//
-//        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-//        Pagination pagination = new Pagination();
-//        responseDataPagination.setData(responseList);
-//        pagination.setCurrentPage(pageNo);
-//        pagination.setPageSize(pageSize);
-//        pagination.setTotalPage(cvList.getTotalPages());
-//        pagination.setTotalRecords(Integer.parseInt(String.valueOf(cvList.getTotalElements())));
-//        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-//        responseDataPagination.setPagination(pagination);
-//        return responseDataPagination;
-//    }
-//
-//    @Override
-//    public ResponseDataPagination findCVTest(Integer pageNo, Integer pageSize, int experienceOption,
-//                                             String candidateAddress,
-//                                             String techStack) {
-//        List<FindCVResponse> responseList = new ArrayList<>();
-//        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
-//        Pageable pageable = PageRequest.of(pageReq, pageSize);
-//
-//        Page<IFindCVResponse> cvList = cvService.findCVTest(pageable, experienceOption,
-//                candidateAddress, techStack);
-//        for (IFindCVResponse iFindCVResponse : cvList) {
-//            FindCVResponse response = new FindCVResponse();
-//            Optional<CV> cv = cvService.findCvById(iFindCVResponse.getCvId());
-//            Candidate candidate = candidateService.getCandidateById(cv.get().getCandidateId());
-//            response.setCandidateName(candidate.getFullName());
-//
-//            List<WorkExperience> workExperiences = workExperienceService.
-//                    getListWorkExperienceByCvId(iFindCVResponse.getCvId());
-//            List<String> workPositionExperiences = new ArrayList<>();
-//            for (WorkExperience workExperience : workExperiences) {
-//                workPositionExperiences.add(workExperience.getPosition() + " - " + workExperience.getCompanyName());
-//            }
-//            response.setWorkPositionExperiences(workPositionExperiences);
-//
-//            List<Education> educations = educationService.getListEducationByCvId(iFindCVResponse.getCvId());
-//            List<String> schools = educations.stream().map(Education::getSchool).collect(Collectors.toList());
-//            response.setSchools(schools);
-//
-//            response.setCareerGoal(candidate.getIntroduction());
-//            response.setCandidateAddress(candidate.getAddress());
-////            response.setSumExperienceYear(iFindCVResponse.getSumExperienceYear());
-//            responseList.add(response);
-//        }
-//
-//        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-//        Pagination pagination = new Pagination();
-//        responseDataPagination.setData(responseList);
-//        pagination.setCurrentPage(pageNo);
-//        pagination.setPageSize(pageSize);
-//        pagination.setTotalPage(cvList.getTotalPages());
-//        pagination.setTotalRecords(Integer.parseInt(String.valueOf(cvList.getTotalElements())));
-//        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-//        responseDataPagination.setPagination(pagination);
-//        return responseDataPagination;
-//    }
-
     @Override
     public void uploadBanner(long recruiterId, UploadBannerRequest request) {
         if (recruiterService.getRecruiterById(recruiterId) == null) {
@@ -551,6 +459,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         for (FindCVResponse cv: findCVResponseList){
             Candidate candidate = candidateService.getCandidateById(cv.getCandidateId());
             Users users = userService.getUserById(candidate.getUserId());
+            List <String> techstack = majorService.getMajorNameByCVId(cv.getId());
             String name = candidate.getFullName();
             if(name != null){
                 cv.setFullName(name);
@@ -559,7 +468,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             }
             cv.setAvatarUrl(candidate.getAvatarUrl());
             cv.setAddress(candidate.getAddress());
-//            cv.setTechStack();
+            cv.setTechStack(techstack);
         }
 
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();

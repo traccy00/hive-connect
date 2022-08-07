@@ -22,7 +22,7 @@ public class FindCVResponse {
     private long isDeleted;
     private String summary;
     private String totalExperienceYear;
-    private String techStack;
+    private List<String> techStack;
     private String address;
     private String fullName;
     private String avatarUrl;

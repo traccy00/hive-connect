@@ -28,13 +28,6 @@ public interface RecruiterManageService {
 
     CompanyInformationResponse getCompanyInformation(long companyId, long recruiterId);
 
-//    ResponseDataPagination findCV(Integer pageNo, Integer pageSize, //int experienceOption,
-//                                  String candidateAddress,
-//                                  String techStack);
-//
-//    ResponseDataPagination findCVTest(Integer pageNo, Integer pageSize, int experienceOption,
-//                                  String candidateAddress, String techStack);
-
     void uploadBanner(long recruiterId, UploadBannerRequest request);
 
     DetailPurchasedPackageResponse getDetailPurchasedPackage(long recruiterId, long paymentId);
