@@ -707,7 +707,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                 responseObj.setCareerGoal(candidate.getIntroduction());
                 responseObj.setAddress(candidate.getAddress());
 //            responseObj.setExperienceYear();
-
                 responseObj.setApprovalStatus(appliedJob.getApprovalStatus());
                 responseList.add(responseObj);
             }
