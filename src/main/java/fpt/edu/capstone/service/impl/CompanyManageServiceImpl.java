@@ -176,6 +176,7 @@ public class CompanyManageServiceImpl implements CompanyManageService {
             throw new HiveConnectException(ResponseMessageConstants.TAX_CODE_EXISTS);
         }
         Company company = modelMapper.map(request, Company.class);
+        company.setPhone(request.getPhoneNumber());
         company.create();
         companyRepository.save(company);
 
