@@ -35,7 +35,7 @@ public class PackageController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/list-package")
-    public ResponseData getListDetailPackage(@RequestParam(defaultValue = "1") Integer pageNo,
+    public ResponseData getListDetailPackage(@RequestParam(defaultValue = "0") Integer pageNo,
                                              @RequestParam(defaultValue = "10") Integer pageSize,
                                              @RequestParam(value = "name", defaultValue = "") String name ,
                                              @RequestParam(value = "rentalPackageId", defaultValue = "0", required = false) long rentalPackageId,

@@ -75,7 +75,7 @@ public class AuthenticationController {
     @Operation(summary = "Login user")
     public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
-            authenticate(request.getUsername().trim(), request.getPassword().trim());
+            authenticate(request.getUsername().trim(), request.getPassword());
             String username = request.getUsername();
             logger.info("login with username {}", username);
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(request.getPassword())) {
@@ -285,7 +285,7 @@ public class AuthenticationController {
     public ResponseDataUser register(@RequestBody RegisterRequest request) throws Exception {
         try {
             String username = request.getUsername().trim();
-            String password = request.getPassword().trim();
+            String password = request.getPassword();
             String email = request.getEmail().trim();
 
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(password)) {

@@ -18,6 +18,7 @@ import fpt.edu.capstone.repository.*;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -221,7 +222,11 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (user == null) {
             throw new HiveConnectException("Liên hệ admin");
         }
-        user.setPhone(request.getPhone());
+        if(userService.findByPhoneAndIdIsNotIn(request.getPhone(), recruiter.getUserId()) != null){
+            throw new HiveConnectException("Số điện thoại đã được sử dụng");
+        } else {
+            user.setPhone(request.getPhone());
+        }
         userRepository.save(user);
         RecruiterProfileResponse profileResponse = getRecruiterProfile(recruiter.getUserId());
         return profileResponse;
@@ -257,6 +262,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         profileResponse.setGender(recruiter.isGender());
         profileResponse.setPosition(recruiter.getPosition());
         profileResponse.setLinkedinAccount(recruiter.getLinkedinAccount());
+        profileResponse.setVerifiedPhone(user.isVerifiedPhone());
         if (recruiter.getCompanyId() == 0) {
             profileResponse.setJoinedCompany(false);
         } else if (recruiter.getCompanyId() > 0) {

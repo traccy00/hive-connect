@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -139,6 +140,21 @@ public class PaymentController {
 
             ResponseDataPaginationRevenue pagination = paymentService.getRevenue(start, end, pageNo, pageSize);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.TOTAL_REVENUE, pagination);
+        } catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    //TODO
+    @GetMapping("/export-revenue")
+    public ResponseData exportRevenue(@RequestParam(value = "startDate") String startDate,
+                                      @RequestParam(value = "endDate") String endDate){
+        try {
+            List<String> headers = Arrays
+                    .asList("NGÀY", "NHÀ TUYỂN DỤNG", "DỊCH VỤ MUA", "THÀNH TIỀN");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus());
         } catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);

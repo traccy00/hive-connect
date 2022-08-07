@@ -130,22 +130,24 @@ public class CandidateController {
         try {
             Optional<Candidate> candidate = candidateService.findCandidateByUserId(cvBaseInformationRequest.getUserId());
             Optional<Users> users = Optional.ofNullable(userService.getUserById(cvBaseInformationRequest.getUserId()));
+
+            CVBaseInformationRequest response = new CVBaseInformationRequest();
             if(candidate.isPresent() && users.isPresent()) {
-
                 candidateService.updateCVInformation(cvBaseInformationRequest);
-                userService.updatePhoneNumber(cvBaseInformationRequest.getPhoneNumber(), cvBaseInformationRequest.getUserId());
-                //update phone verify
-                if(!users.get().getPhone().equals(cvBaseInformationRequest.getPhoneNumber())) {
-                    if(userService.findByPhoneNumber(cvBaseInformationRequest.getPhoneNumber()).isPresent()){
-                        return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Số điện thoại đã được sử dụng");
-                    }
-                    userService.updateIsVerifyPhone(false, users.get().getId());
+                if(userService.findByPhoneAndIdIsNotIn(cvBaseInformationRequest.getPhoneNumber(), cvBaseInformationRequest.getUserId()) != null){
+                    return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Số điện thoại đã được sử dụng");
+                } else {
+                    userService.updatePhoneNumber(cvBaseInformationRequest.getPhoneNumber(), cvBaseInformationRequest.getUserId());
+                }
 
+                if(users.get().isVerifiedPhone()){
+                    if(!cvBaseInformationRequest.getPhoneNumber().equals(userService.findByPhoneNumber(users.get().getPhone()))){
+                        return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Số điện thoại đã được xác minh! Không thể thay đổi");
+                    }
                 }
                 Users usersNew = userService.getUserById(cvBaseInformationRequest.getUserId());
                 Candidate candidateNewInfor = candidateService.findCandidateByUserId(cvBaseInformationRequest.getUserId()).get();
 
-                CVBaseInformationRequest response = new CVBaseInformationRequest();
                 response.setAddress(candidateNewInfor.getAddress());
                 response.setName(candidateNewInfor.getFullName());
                 response.setCountry(candidateNewInfor.getCountry());
@@ -154,13 +156,9 @@ public class CandidateController {
                 response.setUserId(candidateNewInfor.getUserId());
                 response.setPhoneNumber(usersNew.getPhone());
                 response.setGender(candidateNewInfor.isGender());
-
-
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
-                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, response);
             }
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST,
-                    cvBaseInformationRequest.getUserId());
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_SUCCESSFULLY, response);
+
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }

@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class RecruiterProfileResponse {
@@ -25,4 +22,5 @@ public class RecruiterProfileResponse {
     private String linkedinAccount;
     private boolean joinedCompany;
     private boolean approvedBusinessLicense;
+    private boolean isVerifiedPhone;
 }

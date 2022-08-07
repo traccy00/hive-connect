@@ -37,4 +37,7 @@ public class WorkExperience {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "is_working")
+    private boolean isWorking;
 }

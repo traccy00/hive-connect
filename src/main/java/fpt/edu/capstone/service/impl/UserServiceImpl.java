@@ -273,6 +273,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Users findByPhoneAndIdIsNotIn(String phone, long id) {
+        return userRepository.findByPhoneAndIdIsNotIn(phone,id);
+    }
+
+    @Override
     public void updatePassword(Users user, ResetPasswordRequest request) {
 //        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        String encodedPassword = passwordEncoder.encode(newPassword);

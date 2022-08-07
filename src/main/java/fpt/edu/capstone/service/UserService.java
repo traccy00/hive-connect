@@ -52,4 +52,6 @@ public interface UserService {
     void resetPassword(ResetPasswordRequest request);
 
     void updateIsVerifyPhone(boolean isVerifyPhone, long userId);
+
+    Users findByPhoneAndIdIsNotIn(String phone, long id);
 }
