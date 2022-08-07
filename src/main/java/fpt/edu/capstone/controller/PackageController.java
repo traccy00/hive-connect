@@ -3,6 +3,7 @@ package fpt.edu.capstone.controller;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.detail_package.CreateOpenCvPackageRequest;
 import fpt.edu.capstone.dto.detail_package.DetailPackageRequest;
+import fpt.edu.capstone.dto.detail_package.DetailPackageResponse;
 import fpt.edu.capstone.dto.rental_package.RentalPackageRequest;
 import fpt.edu.capstone.entity.DetailPackage;
 import fpt.edu.capstone.entity.RentalPackage;
@@ -51,10 +52,11 @@ public class PackageController {
         }
     }
 
-    @GetMapping("/package/{id}")
-    public ResponseData getDetailPackage(@PathVariable(value = "id") long id){
+    @GetMapping("/package")
+    public ResponseData getDetailPackage(@RequestParam(value = "groupPackageId") long groupPackageId,
+                                         @RequestParam(value = "packageId") long packageId){
         try {
-            DetailPackage dp =  detailPackageService.findById(id);
+            DetailPackageResponse dp =  detailPackageService.getDetailPackageInfor(groupPackageId, packageId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS,dp);
         }catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);

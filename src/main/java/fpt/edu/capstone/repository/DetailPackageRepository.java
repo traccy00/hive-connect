@@ -22,4 +22,6 @@ public interface DetailPackageRepository extends JpaRepository<DetailPackage, Lo
 
     @Query(value = "select dp.detailName from DetailPackage dp where dp.id =:id")
     String findDetailNameById (@Param("id") long id);
+
+    DetailPackage findByRentalPackageIdAndId(long rentalPackageId, long id);
 }

@@ -31,4 +31,6 @@ public interface BannerRepository extends JpaRepository<Banner, Long> {
             "and (b.isDeleted =:isDeleted or :isDeleted is null)")
     Page<Banner> getBannerByFilter(Pageable pageable, @Param("name") String title,  @Param("rentalId") long rentalId,
                                    @Param("isDeleted") boolean isDeleted);
+
+    Banner findByRentalPackageIdAndId(long rentalPackageId, long id);
 }

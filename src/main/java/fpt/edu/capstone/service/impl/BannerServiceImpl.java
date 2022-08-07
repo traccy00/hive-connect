@@ -138,4 +138,9 @@ public class BannerServiceImpl implements BannerService {
     public Page<Banner> getListFilter(Pageable pageable, String name, long rentalId, boolean isDeleted) {
         return bannerRepository.getBannerByFilter(pageable, name, rentalId, isDeleted);
     }
+
+    @Override
+    public Banner findByRentalPackageIdAndId(long rentalPackageId, long id) {
+        return bannerRepository.findByRentalPackageIdAndId(rentalPackageId, id);
+    }
 }
