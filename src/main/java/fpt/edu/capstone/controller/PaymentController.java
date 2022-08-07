@@ -117,7 +117,7 @@ public class PaymentController {
         try {
             List<PaymentResponse> payment = paymentService.findRecruiterPurchasedPackage(recruiterId);
             if (payment.isEmpty()){
-                throw new HiveConnectException("Recruiter chưa mua gói dịch vụ nào.");
+                throw new HiveConnectException("Nhà tuyển dụng chưa mua gói dịch vụ nào.");
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS,payment);
         } catch (Exception e){

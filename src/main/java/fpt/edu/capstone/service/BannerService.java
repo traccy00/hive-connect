@@ -3,7 +3,6 @@ package fpt.edu.capstone.service;
 import fpt.edu.capstone.dto.banner.ConfigBannerRequest;
 import fpt.edu.capstone.dto.banner.UpdateBannerRequest;
 import fpt.edu.capstone.entity.Banner;
-import fpt.edu.capstone.entity.DetailPackage;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface BannerService {
     List<Banner> getAllBanner();
@@ -34,4 +32,7 @@ public interface BannerService {
 
     Page<Banner> getListFilter(Pageable pageable, @Param("name") String name,
                                       @Param("rentalId") long rentalId, @Param("status") boolean isDeleted);
+
+    Banner findByRentalPackageIdAndId(long rentalPackageId, long id);
+
 }

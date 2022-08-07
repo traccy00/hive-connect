@@ -2,6 +2,7 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.detail_package.CreateOpenCvPackageRequest;
+import fpt.edu.capstone.dto.detail_package.DetailPackageResponse;
 import fpt.edu.capstone.dto.rental_package.RentalPackageResponse;
 import fpt.edu.capstone.entity.Banner;
 import fpt.edu.capstone.entity.DetailPackage;
@@ -139,5 +140,15 @@ public class DetailPackageServiceImpl implements DetailPackageService {
         }
         detailPackage.get().setDeleted(true);
         detailPackageRepository.save(detailPackage.get());
+    }
+
+    @Override
+    public DetailPackageResponse getDetailPackageInfor(long groupPackageId, long packageId) {
+        DetailPackageResponse response = new DetailPackageResponse();
+        DetailPackage normalPackage = detailPackageRepository.findByRentalPackageIdAndId(groupPackageId, packageId);
+        Banner bannerPackage = bannerService.findByRentalPackageIdAndId(groupPackageId, packageId);
+        response.setNormalPackage(normalPackage);
+        response.setBannerPackage(bannerPackage);
+        return response;
     }
 }
