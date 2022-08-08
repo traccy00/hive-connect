@@ -227,6 +227,12 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         } else {
             user.setPhone(request.getPhone());
         }
+        Users users =  userService.findById(recruiter.getUserId());
+        if(users.isVerifiedPhone()){
+            if(!request.getPhone().equals(userService.findByPhoneNumber(users.getPhone()))){
+                throw new HiveConnectException("Số điện thoại đã được xác minh! Không thể thay đổi");
+            }
+        }
         userRepository.save(user);
         RecruiterProfileResponse profileResponse = getRecruiterProfile(recruiter.getUserId());
         return profileResponse;

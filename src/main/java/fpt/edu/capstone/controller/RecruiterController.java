@@ -236,4 +236,16 @@ public class RecruiterController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+    @GetMapping("/total-view-cv/{id}")
+    public ResponseData getTotalViewCV(@PathVariable long id){
+        try {
+            Integer total = recruiterService.getTotalViewCV(id);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, total);
+        } catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
 }

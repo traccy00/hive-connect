@@ -50,4 +50,6 @@ public interface RecruiterService {
     void updateTotalCvView(long total, long recruiterId);
 
     void insertGoogleRecruiter(GooglePojo googlePojo, Users user);
+
+    Integer getTotalViewCV(long recId);
 }

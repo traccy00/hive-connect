@@ -211,4 +211,9 @@ public class RecruiterServiceImpl implements RecruiterService {
         recruiter.setTotalCvView(-1);
         recruiterRepository.save(recruiter);
     }
+
+    @Override
+    public Integer getTotalViewCV(long recId) {
+        return recruiterRepository.getTotalViewCV(recId);
+    }
 }

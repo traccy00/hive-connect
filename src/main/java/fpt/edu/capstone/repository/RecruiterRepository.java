@@ -71,4 +71,7 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
     @Transactional
     @Query(value = "UPDATE recruiter SET total_cv_view = ?1 WHERE id = ?2", nativeQuery = true)
     void updateTotalCvView(long total, long recruiterId);
+
+    @Query(value = "select r.totalCvView from Recruiter r where r.id =:recId")
+    Integer getTotalViewCV(@Param("recId") long recId);
 }
