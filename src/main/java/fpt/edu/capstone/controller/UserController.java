@@ -29,7 +29,7 @@ public class UserController {
             Users user = userService.getUserById(userId);
             user.setAvatar(request.getAvatar());
             userService.saveUser(user);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS, user);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_SUCCESSFULLY, user);
 
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -43,5 +43,17 @@ public class UserController {
                                               @RequestParam(defaultValue = "10") Integer pageSize,
                                               @RequestParam long userId) {
         return notificationService.getAllNotificationByUserId(pageNo, pageSize, userId);
+    }
+
+    @GetMapping("/user-infor/{id}")
+    public ResponseData getUserInfor(@PathVariable long id){
+        try {
+            Users users =  userService.getUserById(id);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.GET_LIST_SUCCESS, users);
+        } catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
     }
 }
