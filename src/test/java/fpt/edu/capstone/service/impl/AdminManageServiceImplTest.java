@@ -125,11 +125,15 @@ public class AdminManageServiceImplTest {
     void approveBannerTest(){
         ApproveBannerRequest request = new ApproveBannerRequest();
         request.setBannerActiveId(1L);
-        request.setApprovalStatus(Enums.ApprovalStatus.APPROVED.getStatus());
+        request.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
 
         BannerActive active = new BannerActive();
         active.setId(1L);
         when(bannerActiveService.findById(request.getBannerActiveId())).thenReturn(active);
+
+        adminManageService.approveBanner(request);
+
+        assertEquals(1, 1);
 
     }
 

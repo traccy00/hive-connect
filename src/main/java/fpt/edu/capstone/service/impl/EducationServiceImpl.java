@@ -23,13 +23,14 @@ public class EducationServiceImpl implements EducationService {
     @Override
 
     public Education insertEducation(Education newEducation) {
-//        return  educationReposiroty.insertEducation(cvId, school, major, startDate, endDate, description, isStudying);
         return educationRepository.save(newEducation);
     }
 
     @Override
     public void updateEducation(Education updateEducation) {
-        educationRepository.updateEducation(updateEducation.getSchool(), updateEducation.getMajor(), updateEducation.getStartDate(), updateEducation.getEndDate(), updateEducation.getDescription(), updateEducation.isStudying(), updateEducation.getId());
+        educationRepository.updateEducation(updateEducation.getSchool(), updateEducation.getMajor(),
+                updateEducation.getStartDate(), updateEducation.getEndDate(), updateEducation.getDescription(),
+                updateEducation.isStudying(), updateEducation.getId());
     }
 
     @Override
