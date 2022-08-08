@@ -28,19 +28,12 @@ public class UserServiceImpl implements UserService {
 
     private final RoleService roleService;
 
-    private final LoginService loginService;
-
     private final PasswordEncoder passwordEncoder;
 
     private final EmailService emailService;
 
     @Override
     public Users getUserById(long id) {
-//        Optional<Users> optionalUser = userRepository.findById(id);
-//        if (!optionalUser.isPresent()) {
-//            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
-//        }
-//        return optionalUser.get();
         return userRepository.getUserById(id);
     }
 
@@ -61,12 +54,6 @@ public class UserServiceImpl implements UserService {
         if (!optionalRole.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.ROLE_DOES_NOT_EXISTS);
         }
-        //check exist email username
-//        Optional <Users> checkExisted = userRepository.checkExistedUserByUsernameOrEmail(request.getUsername(),request.getEmail());
-//        if(checkExisted.isPresent()){
-//            throw new HiveConnectException("Username or email is already existed!");
-//        }
-
         Optional<Users> userExistByUserName = userRepository.findByUsername(request.getUsername());
         if (userExistByUserName.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.USERNAME_EXISTS);
