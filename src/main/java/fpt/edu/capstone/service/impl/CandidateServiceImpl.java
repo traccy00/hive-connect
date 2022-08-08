@@ -73,11 +73,6 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public void updateAvatarUrl(String avatarId, long id) {
-        candidateRepository.updateAvatarUrl(avatarId, id);
-    }
-
-    @Override
     public Page<CandidateManageResponse> searchCandidatesForAdmin(Pageable pageable, String username, String email) {
         return candidateRepository.searchCandidateForAdmin(pageable, username, email);
     }

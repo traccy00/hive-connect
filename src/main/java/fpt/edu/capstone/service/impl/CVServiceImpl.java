@@ -44,31 +44,6 @@ public class CVServiceImpl implements CVService {
     }
 
     @Override
-    public Page<IFindCVResponse> findCVForRecruiter(Pageable pageable, //int experienceOption,
-                                                    String candidateAddress,
-                                                    String techStack) {
-        //1 năm kinh nghiệm
-        int experienceYearSearch1 = 1;
-        //3 năm kinh nghiệm
-        int experienceYearSearch2 = 3;
-//        return cvRepository.findCvForRecruiter(pageable, experienceOption, experienceYearSearch1, experienceYearSearch2,
-//                candidateAddress, techStack);
-        return cvRepository.findCvForRecruiter(pageable, candidateAddress, techStack);
-    }
-
-    @Override
-    public Page<IFindCVResponse> findCVTest(Pageable pageable, int experienceOption,
-                                                    String candidateAddress,
-                                                    String techStack) {
-        //1 năm kinh nghiệm
-        int experienceYearSearch1 = 1;
-        //3 năm kinh nghiệm
-        int experienceYearSearch2 = 3;
-        return cvRepository.findCvTest(pageable, experienceOption, experienceYearSearch1, experienceYearSearch2,
-                candidateAddress, techStack);
-    }
-
-    @Override
     public void save(CV cv) {
         cvRepository.save(cv);
     }

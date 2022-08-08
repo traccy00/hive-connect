@@ -135,11 +135,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAvatarUrl(String avatarId, long id) {
-        userRepository.updateAvatarUrl(avatarId, id);
-    }
-
-    @Override
     public List<Users> findAll() {
         return userRepository.findAll();
     }

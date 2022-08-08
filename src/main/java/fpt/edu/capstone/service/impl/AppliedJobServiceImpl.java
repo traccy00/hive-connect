@@ -28,11 +28,6 @@ public class AppliedJobServiceImpl implements AppliedJobService {
     private final AppliedJobRepository appliedJobRepository;
 
     @Override
-    public boolean existsAppliedJob(long candidateId, long jobId) {
-        return appliedJobRepository.existsByCandidateIdAndJobId(candidateId, jobId);
-    }
-
-    @Override
     public AppliedJob getAppliedJobPendingApproval(long jobId, long candidateId) {
         String approvalStatus = Enums.ApprovalStatus.PENDING.getStatus();
         boolean isApplied = true;

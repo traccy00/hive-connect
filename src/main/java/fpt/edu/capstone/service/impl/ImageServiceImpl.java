@@ -51,14 +51,6 @@ public class ImageServiceImpl implements ImageService {
         return imageRepository.save(image);
     }
 
-    public Optional<Image> getFile(long id) {
-        return imageRepository.findById(id);
-    }
-
-    public List<Image> getAllFiles() {
-        return imageRepository.findAll();
-    }
-
     public Optional<Image> findAvatarByCompanyId(long companyId) {
         return imageRepository.findAvatarByCompanyId(companyId);
     }

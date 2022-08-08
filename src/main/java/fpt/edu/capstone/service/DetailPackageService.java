@@ -12,13 +12,7 @@ public interface DetailPackageService {
 
     DetailPackage findById(long id);
 
-    Optional<DetailPackage> findByName(String name);
-
-    void saveDetailPackage(DetailPackage detailPackage);
-
     void updateDetailPackage(DetailPackage detailPackage);
-
-    String findNameById(long id);
 
     void createNormalPackage(CreatePackageRequest request);
 

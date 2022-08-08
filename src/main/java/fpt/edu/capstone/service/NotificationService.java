@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 
 public interface NotificationService {
-
-
     Notification insertNotification(Notification notification);
 
     ResponseDataPagination getAllNotificationByUserId(Integer pageNo, Integer pageSize, long userId);

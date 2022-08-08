@@ -29,8 +29,6 @@ public interface RecruiterService {
 
     List<AppliedJobByRecruiterResponse> getListAppliedByForRecruiter(long recruiterId);
 
-    void updateRecruiterAvatar(String img, long id);
-
     Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, String username, String email);
 
     void updateCompany(long companyId, long id);

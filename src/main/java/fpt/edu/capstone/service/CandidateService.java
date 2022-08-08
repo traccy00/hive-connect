@@ -32,8 +32,6 @@ public interface CandidateService  {
 
     void updateIsNeedJob(boolean isNeedJob, long id);
 
-    void updateAvatarUrl(String avatarId, long id);
-
     Page<CandidateManageResponse> searchCandidatesForAdmin(Pageable pageable, String username, String email);
 
     void save(Candidate candidate);

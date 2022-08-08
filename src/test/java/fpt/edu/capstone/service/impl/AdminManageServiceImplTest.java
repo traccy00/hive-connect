@@ -3,16 +3,18 @@ package fpt.edu.capstone.service.impl;
 import static org.mockito.Mockito.when;
 
 import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
+import fpt.edu.capstone.dto.banner.ApproveBannerRequest;
+import fpt.edu.capstone.dto.banner.UpdateBannerRequest;
 import fpt.edu.capstone.dto.job.ReportJobRequest;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.Recruiter;
-import fpt.edu.capstone.entity.Report;
-import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.dto.job.ReportedJobResponse;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.repository.ReportedRepository;
+import fpt.edu.capstone.service.BannerActiveService;
 import fpt.edu.capstone.service.JobService;
 import fpt.edu.capstone.service.RecruiterService;
 
 import fpt.edu.capstone.service.UserService;
+import fpt.edu.capstone.utils.Enums;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -41,10 +43,10 @@ public class AdminManageServiceImplTest {
     JobService jobService;
 
     @Mock
-    ModelMapper modelMapper;
+    ReportedRepository reportedRepository;
 
     @Mock
-    ReportedRepository reportedRepository;
+    BannerActiveService bannerActiveService;
 
     @Test
     void searchLicenseApprovalForAdminTest(){
@@ -65,13 +67,13 @@ public class AdminManageServiceImplTest {
 
     @Test
     void reportJobTest() {
-        ReportJobRequest reportJobRequest = new ReportJobRequest();
-        reportJobRequest.setFullName("Lê Thị Tiểu Mai");
-        reportJobRequest.setJobId(1L);
-        reportJobRequest.setPhone("0379700425");
-        reportJobRequest.setUserAddress("Hà Nội");
-        reportJobRequest.setUserEmail("mai@gmail.com");
-        reportJobRequest.setReportReason("Bài viết không đúng sự thật.");
+        ReportJobRequest request = new ReportJobRequest();
+        request.setFullName("Lê Thị Tiểu Mai");
+        request.setJobId(1L);
+        request.setPhone("0379700425");
+        request.setUserAddress("Hà Nội");
+        request.setUserEmail("mai@gmail.com");
+        request.setReportReason("Bài viết không đúng sự thật.");
 
         Users user = new Users();
         user.setId(1L);
@@ -81,7 +83,7 @@ public class AdminManageServiceImplTest {
         job.setId(1L);
         when(jobService.getJobById(1L)).thenReturn(job);
 
-        Report report = adminManageService.reportJob(reportJobRequest, 1L);
+        Report report = adminManageService.reportJob(request, 1L);
 
         Recruiter recruiter = new Recruiter();
         when(recruiterService.getRecruiterById(1L)).thenReturn(recruiter);
@@ -89,5 +91,41 @@ public class AdminManageServiceImplTest {
         assertEquals(reportedRepository.findById(1L), report);
     }
 
+    @Test
+    void searchReportedJobTest(){
+
+    }
+
+    @Test
+    void approveBannerTest(){
+        ApproveBannerRequest request = new ApproveBannerRequest();
+        request.setBannerActiveId(1L);
+        request.setApprovalStatus(Enums.ApprovalStatus.APPROVED.getStatus());
+
+        BannerActive active = new BannerActive();
+        active.setId(1L);
+        when(bannerActiveService.findById(request.getBannerActiveId())).thenReturn(active);
+
+    }
+
+    @Test
+    void getBannerOfRecruiterForAdminTest(){
+
+    }
+
+    @Test
+    void searchUsersForAdminTest(){
+
+    }
+
+    @Test
+    void searchReportedUsersTest(){
+
+    }
+
+    @Test
+    void approveReportedJobTest(){
+
+    }
 
 }

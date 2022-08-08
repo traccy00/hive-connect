@@ -99,24 +99,9 @@ public class DetailPackageServiceImpl implements DetailPackageService {
     }
 
     @Override
-    public Optional<DetailPackage> findByName(String name) {
-        return detailPackageRepository.findByDetailName(name);
-    }
-
-    @Override
-    public void saveDetailPackage(DetailPackage detailPackage) {
-        detailPackageRepository.save(detailPackage);
-    }
-
-    @Override
     public void updateDetailPackage(DetailPackage detailPackage) {
         findById(detailPackage.getId());
         detailPackageRepository.saveAndFlush(detailPackage);
-    }
-
-    @Override
-    public String findNameById(long id) {
-        return detailPackageRepository.findDetailNameById(id);
     }
 
     @Override

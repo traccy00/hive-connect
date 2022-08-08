@@ -12,7 +12,6 @@ public interface ReportedService {
 
     Page<ReportedUserResponse> searchReportedUsers(Pageable pageable, String username, String personReportName,
                                                    List<Long> userId, List<Long> personReportId);
-    void updateReportedStatus(String status, long id);
 
     Page<ReportedJobResponse> searchReportedJob(Pageable pageable, LocalDateTime createdAtFrom, LocalDateTime createAtTo,
                                                 LocalDateTime updatedAtFrom, LocalDateTime updatedAtTo, String jobName);

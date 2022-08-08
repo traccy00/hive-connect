@@ -18,15 +18,7 @@ public interface CompanyService {
 
     List <Company> getAllCompany();
 
-    Company insertCompany(Company newCompany);
-
-    Optional<Company> getCompanyByName(String companyName);
-
-    Optional<Company> getCompanyByTaxCode(String taxCode);
-
     Optional<Company> findById(long companyId);
-
-    void updateCompanyAvatarUrl(String avatarId, long companyId);
 
     Page<Company> searchCompany(Pageable pageable, String companyName);
 

@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,16 +37,6 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    public Banner insertBanner(Banner banner) {
-        return bannerRepository.save(banner);
-    }
-
-    @Override
-    public void updateBanner(Banner newBanner) {
-        bannerRepository.updateBanner(newBanner.getRentalPackageId(), newBanner.getTitle(), newBanner.getDescription(), newBanner.getImage(), newBanner.isSpotlight(), newBanner.isHomepageBannerA(), newBanner.isHomePageBannerB(), newBanner.isHomePageBannerC(), newBanner.isJobBannerA(), newBanner.isJobBannerB(), newBanner.isJobBannerC(), newBanner.isDeleted(), LocalDateTime.now(), newBanner.getPrice(), newBanner.getDiscount(), newBanner.getId());
-    }
-
-    @Override
     public void deleteBanner(long bannerId) {
         Optional<Banner> banner = bannerRepository.findById(bannerId);
         if(!banner.isPresent()) {
@@ -63,11 +52,6 @@ public class BannerServiceImpl implements BannerService {
             throw new HiveConnectException(ResponseMessageConstants.DETAIL_PACKAGE_DOES_NOT_EXIST);
         }
         return bannerRepository.findById(bannerId).get();
-    }
-
-    @Override
-    public List<Banner> searchByFiler(boolean screen, LocalDateTime startDate, LocalDateTime endDate) {
-        return bannerRepository.searchWithfilter(screen, startDate, endDate);
     }
 
     @Override

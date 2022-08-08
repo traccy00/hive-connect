@@ -38,11 +38,6 @@ public class FollowServiceImpl implements FollowService {
     private JobHashTagService jobHashTagService;
 
     @Override
-    public Optional<List<Follow>> getListFollowedJobByFollowerId(long followerId) {
-        return followRepository.getListFollowedJobByFollowerId(followerId);
-    }
-
-    @Override
     public void unFollow(long followerId, long followedId, long type) {
         followRepository.unFollow(followerId, followedId, type);
     }

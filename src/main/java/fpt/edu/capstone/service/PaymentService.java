@@ -17,8 +17,6 @@ public interface PaymentService {
     List <Payment> getListPaymentFilter(long recruiterId,long rentalPackageId,
                                         long bannerId,String transactionCode,String orderType);
 
-    List<Payment> getListPaymentOrderByDate();
-
     List<PaymentResponse> findRecruiterPurchasedPackage(long recruiterId);
 
     ResponseDataPaginationRevenue getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize);

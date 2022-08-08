@@ -35,11 +35,6 @@ public class ReportedServiceImpl implements ReportedService {
     }
 
     @Override
-    public void updateReportedStatus(String status, long id) {
-        reportedRepository.updateReportedStatus(status, id);
-    }
-
-    @Override
     public Page<ReportedJobResponse> searchReportedJob(Pageable pageable, LocalDateTime createdAtFrom, LocalDateTime createAtTo, LocalDateTime updatedAtFrom,
                                                        LocalDateTime updatedAtTo, String jobName) {
         return reportedRepository.searchReportedJob(pageable, jobName);

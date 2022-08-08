@@ -327,9 +327,4 @@ public class PaymentServiceImpl implements PaymentService {
     public List<Long> getListJobIdInPayment() {
         return paymentRepository.getListJobIdInPayment();
     }
-
-    @Override
-    public List<Payment> getListPaymentOrderByDate() {
-        return paymentRepository.getListPaymentOrderByDate();
-    }
 }

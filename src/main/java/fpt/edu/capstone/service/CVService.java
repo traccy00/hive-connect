@@ -23,14 +23,6 @@ public interface CVService {
 
     Optional<CV> findByIdAndCandidateId(long id, long candidateId);
 
-    Page<IFindCVResponse> findCVForRecruiter(Pageable pageable, //int experienceOption,
-                                             String candidateAddress,
-                                             String techStack);
-
-    Page<IFindCVResponse> findCVTest(Pageable pageable, int experienceOption,
-                                             String candidateAddress,
-                                             String techStack);
-
     void save(CV cv);
 
     Page<CV> findCVFilter(Pageable pageable, String experience, String candidateAddress, String techStack);

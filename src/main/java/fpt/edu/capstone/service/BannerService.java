@@ -14,15 +14,9 @@ import java.util.List;
 public interface BannerService {
     List<Banner> getAllBanner();
 
-    void updateBanner(Banner newBanner);
-
-    Banner insertBanner(Banner banner);
-
     void deleteBanner(long bannerId);
 
     Banner findById(long bannerId);
-
-    List<Banner> searchByFiler(boolean screen, LocalDateTime startDate, LocalDateTime endDate);
 
     Banner insertBanner(ConfigBannerRequest request);
 

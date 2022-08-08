@@ -25,8 +25,6 @@ public interface UserService {
 
     Optional<Users> findByIdOp(long id);
 
-    void updateAvatarUrl(String avatarId, long id);
-
     List<Users> findAll();
 
     Optional<Users> findByPhoneNumber(String phone);

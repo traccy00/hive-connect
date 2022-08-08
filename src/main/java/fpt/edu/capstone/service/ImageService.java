@@ -16,15 +16,7 @@ import java.util.Optional;
 public interface ImageService {
     boolean isValidFile(MultipartFile file, String type);
 
-    Image saveCompanyAvatar(MultipartFile file, String type, long companyId) throws IOException;
-
-    Optional<Image> getFile(long id);
-
-    List<Image> getAllFiles();
-
     Optional<Image> findAvatarByCompanyId(long companyId);
-
-    void updateAvatar(String id, MultipartFile file) throws IOException;
 
     Optional<Image> finById(long id);
 
