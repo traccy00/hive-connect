@@ -65,9 +65,9 @@ public class PaymentServiceImpl implements PaymentService {
         String jobId = String.valueOf(paymentDTO.getJobId());
         String description = paymentDTO.getDescription();
         String orderType = paymentDTO.getOrderType();
-        String  p =  "recruiterId "+ recruiterId + " jobId "+ jobId + " detailPackageId "+detailPackageId +
-                " bannerId "+bannerId + " amount " + String.valueOf(amount)+ " bankCode "+paymentDTO.getBankCode() +
-                " description "+description+ " orderType "+ orderType;
+        String p = "recruiterId " + recruiterId + " jobId " + jobId + " detailPackageId " + detailPackageId +
+                " bannerId " + bannerId + " amount " + String.valueOf(amount) + " bankCode " + paymentDTO.getBankCode() +
+                " description " + description + " orderType " + orderType;
 
         Map<String, String> vnpParams = new HashMap<>();
         vnpParams.put("vnp_Version", PaymentConfig.VERSION_VNPAY);
@@ -124,8 +124,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<Payment> getListPaymentFilter(long recruiterId, long rentalPackageId,
                                               long bannerId, String transactionCode, String orderType) {
-        List <Payment> paymentList = paymentRepository.
-                getListPaymentFilter(recruiterId,rentalPackageId,bannerId,transactionCode,orderType);
+        List<Payment> paymentList = paymentRepository.
+                getListPaymentFilter(recruiterId, rentalPackageId, bannerId, transactionCode, orderType);
         return paymentList;
     }
 
@@ -136,17 +136,17 @@ public class PaymentServiceImpl implements PaymentService {
         if (payments == null) {
             throw new HiveConnectException(ResponseMessageConstants.NO_PURCHASED_PACKAGE);
         }
-        List <PaymentResponse> responseList = new ArrayList<>();
-        for (Payment payment : payments){
+        List<PaymentResponse> responseList = new ArrayList<>();
+        for (Payment payment : payments) {
             PaymentResponse response = new PaymentResponse();
             response.setPaymentId(payment.getId());
             response.setRecruiterId(payment.getRecruiterId());
             response.setDetailPackageId(payment.getDetailPackageId());
-            if(payment.getDetailPackageId() > 0) {
+            if (payment.getDetailPackageId() > 0) {
                 DetailPackage normalPP = detailPackageService.findById(payment.getDetailPackageId());
                 response.setDetailPackageName(normalPP.getDetailName());
             } else {
-                if(payment.getBannerId() > 0) {
+                if (payment.getBannerId() > 0) {
                     Banner banner = bannerService.findById(payment.getBannerId());
                     response.setDetailPackageName(banner.getTitle());
                 }
@@ -168,12 +168,12 @@ public class PaymentServiceImpl implements PaymentService {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
         Page<Payment> payments = paymentRepository.getRevenueInMonth(start, end, pageable);
-        List <Payment> totalRevenue = payments.getContent();
+        List<Payment> totalRevenue = payments.getContent();
         List<RevenueResponse> revenueResponseList = totalRevenue.stream().
                 map(payment -> modelMapper.map(payment, RevenueResponse.class)).collect(Collectors.toList());
         long total = 0;
-        for (RevenueResponse response: revenueResponseList){
-            if(response.getBannerId() == 0){
+        for (RevenueResponse response : revenueResponseList) {
+            if (response.getBannerId() == 0) {
                 String rentalPackageName = rentalPackageService.getRentalPackageName(response.getDetailPackageId());
                 response.setRentalPackageName(rentalPackageName);
             } else {
@@ -206,21 +206,21 @@ public class PaymentServiceImpl implements PaymentService {
         for (int i = 0; i < ss.length; i = i + 2) {
             map.put(ss[i], ss[i + 1]);
         }
-        map.forEach((key,value)->{
-            if(key.equals("recruiterId")) paymentDTO.setRecruiterId(Long.parseLong(value));
-            if(key.equals("detailPackageId")) paymentDTO.setDetailPackageId(Long.parseLong(value));
-            if(key.equals("bannerId")) paymentDTO.setBannerId(Long.parseLong(value));
-            if(key.equals("amount")) paymentDTO.setAmount(Integer.parseInt(value));
-            if(key.equals("description")) paymentDTO.setDescription(value);
-            if(key.equals("orderType")) paymentDTO.setOrderType(value);
-            if(key.equals("bankCode")) paymentDTO.setBankCode(value);
-            if(key.equals("jobId")) paymentDTO.setJobId(Long.parseLong(value));
+        map.forEach((key, value) -> {
+            if (key.equals("recruiterId")) paymentDTO.setRecruiterId(Long.parseLong(value));
+            if (key.equals("detailPackageId")) paymentDTO.setDetailPackageId(Long.parseLong(value));
+            if (key.equals("bannerId")) paymentDTO.setBannerId(Long.parseLong(value));
+            if (key.equals("amount")) paymentDTO.setAmount(Integer.parseInt(value));
+            if (key.equals("description")) paymentDTO.setDescription(value);
+            if (key.equals("orderType")) paymentDTO.setOrderType(value);
+            if (key.equals("bankCode")) paymentDTO.setBankCode(value);
+            if (key.equals("jobId")) paymentDTO.setJobId(Long.parseLong(value));
         });
         LocalDateTime now = LocalDateTime.now();
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
         Recruiter recruiter = recruiterService.getRecruiterById(payment.getRecruiterId());
-        if (recruiter == null){
-            throw new HiveConnectException("Nhà tuyển dụng có id = "+ recruiter.getId()+ "không tồn tại");
+        if (recruiter == null) {
+            throw new HiveConnectException("Nhà tuyển dụng có id = " + recruiter.getId() + "không tồn tại");
         }
         //TODO: CHƯA XỬ LÍ XONG CHECK GÓI ĐÃ MUA TRƯỚC ĐÓ CÒN HẠN HAY KHÔNG
 //        if(!payment.isExpiredStatus()){
@@ -234,70 +234,69 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setExpiredDate(now.plusDays(14));
         payment.create();
 
-        if(vnpResponseCode.equals("00")){
+        if (vnpResponseCode.equals("00")) {
+            if ((payment.getBannerId() == 0 && payment.getDetailPackageId() == 0) || (payment.getBannerId() > 0 && payment.getDetailPackageId() > 0)) {
+                throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
+            }
             System.out.println("Thanh toán thành công");
             paymentRepository.save(payment);
-
-            DetailPackage detailPackage = detailPackageService.findById(payment.getDetailPackageId());
-
-            //Kích hoạt số lượng cv mà recruiter được xem full thông tin
-            if(detailPackage.getRentalPackageId() == 1){
-                Integer totalCv = paymentRepository.countByTotalCvView(payment.getRecruiterId());
-                recruiterService.updateTotalCvView(totalCv, payment.getRecruiterId());
+            //Kích hoạt gói dịch vụ chính / gói xem hồ sơ ứng viên
+            if (payment.getDetailPackageId() > 0) {
+                DetailPackage detailPackage = detailPackageService.findById(payment.getDetailPackageId());
+                //Kích hoạt số lượng cv mà recruiter được xem full thông tin
+                if (detailPackage.getRentalPackageId() == 1) {
+                    Integer totalCv = paymentRepository.countByTotalCvView(payment.getRecruiterId());
+                    recruiterService.updateTotalCvView(totalCv, payment.getRecruiterId());
+                }
+                if (detailPackage.getRentalPackageId() == 2) {
+                    //Kích hoạt tính năng gói package đó cho Job tương ứng
+                    Job job = jobService.getJobById(payment.getJobId());
+                    job.setPopularJob(true);
+                    job.setUrgentJob(true);
+                    job.setNewJob(true);
+                    job.update();
+                    jobService.saveJob(job);
+                }
             }
-
-//            //Kích hoạt tính năng gói package đó cho Job tương ứng
-//            Job job = jobService.getJobById(payment.getJobId());
-//            if(job == null){
-//                throw new HiveConnectException("Công việc có id = "+ job.getId()+ "không tồn tại");
-//            }
-//            if(detailPackage.getRentalPackageId() == 2){
-//                job.setPopularJob(true);
-//                job.setUrgentJob(true);
-//                job.setNewJob(true);
-////                jobService.saveJob(job);
-//            }
         }
-
-
-        if(vnpResponseCode.equals("07")){
+        if (vnpResponseCode.equals("07")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_07);
         }
-        if(vnpResponseCode.equals("09")){
+        if (vnpResponseCode.equals("09")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_09);
         }
-        if(vnpResponseCode.equals("10")){
+        if (vnpResponseCode.equals("10")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_10);
         }
-        if(vnpResponseCode.equals("11")){
+        if (vnpResponseCode.equals("11")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_11);
         }
-        if(vnpResponseCode.equals("12")){
+        if (vnpResponseCode.equals("12")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_12);
         }
-        if(vnpResponseCode.equals("13")){
+        if (vnpResponseCode.equals("13")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_13);
         }
-        if(vnpResponseCode.equals("24")){
+        if (vnpResponseCode.equals("24")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_24);
         }
-        if(vnpResponseCode.equals("51")){
+        if (vnpResponseCode.equals("51")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_51);
         }
-        if(vnpResponseCode.equals("65")){
+        if (vnpResponseCode.equals("65")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_65);
         }
-        if(vnpResponseCode.equals("79")){
+        if (vnpResponseCode.equals("79")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_79);
         }
-        if(vnpResponseCode.equals("99")){
+        if (vnpResponseCode.equals("99")) {
             throw new HiveConnectException(ResponseMessageConstants.VNP_RESPONSE_CODE_99);
         }
     }
 
     @Override
     public Payment findById(long id) {
-        if(!paymentRepository.findById(id).isPresent()) {
+        if (!paymentRepository.findById(id).isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.PAYMENT_DOES_NOT_EXIST);
         }
         return paymentRepository.findById(id).get();

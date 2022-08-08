@@ -65,7 +65,7 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     @Query(value = "Update public.users set is_verified_phone = ?1 where id = ?2", nativeQuery = true)
     void updateIsVerifyPhone(boolean isVerifyPhone, long userId);
 
-    @Query("select u from Users u where u.phone =:phone and u.id not in (:id)")
+    @Query(value = "select * from users u where u.phone =:phone and u.id not in (:id) limit 1", nativeQuery = true)
     Users findByPhoneAndIdIsNotIn(@Param("phone") String phone, long id);
 
 }
