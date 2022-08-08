@@ -37,8 +37,6 @@ public class JobController {
 
     private final CandidateManageService candidateManageService;
 
-    private final AdminManageService adminManageService;
-
     private final NotificationService notificationService;
 
     private final FollowService followService;
@@ -46,6 +44,8 @@ public class JobController {
     private final CandidateService candidateService;
 
     private final RecruiterService recruiterService;
+
+    private final ReportedService reportedService;
 
     @PostMapping("/create-job")
     public ResponseData createJob(@RequestBody @Valid CreateJobRequest request) {
@@ -64,11 +64,11 @@ public class JobController {
 
     //TODO: GET ALL DATA HOMEPAGE
     @GetMapping("/all-job-data-homepage")
-    public ResponseData getAllDataHomepage(){
+    public ResponseData getAllDataHomepage() {
         try {
             HomePageData data = jobService.getDataHomePage();
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),data);
-        }catch (Exception e){
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), data);
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -128,10 +128,10 @@ public class JobController {
             jobService.updateJob(request);
             //Add notification
             Optional<List<Follow>> followsOP = followService.getAllFollowerOfAJob(request.getJobId());
-            if(followsOP.isPresent()) { //Neu co nguoi theo doi moi add notification
+            if (followsOP.isPresent()) { //Neu co nguoi theo doi moi add notification
                 List<Follow> follows = followsOP.get();
-                String content = "Công việc"+ request.getJobName() +"đã có sự thay đổi, Ấn để xem";
-                for(Follow f : follows) {
+                String content = "Công việc" + request.getJobName() + "đã có sự thay đổi, Ấn để xem";
+                for (Follow f : follows) {
                     Optional<Candidate> c = candidateService.findById(f.getFollowerId());
                     Notification notification = new Notification(0, c.get().getUserId(), 6, LocalDateTime.now(), content, false, false);
                     notificationService.insertNotification(notification);
@@ -164,21 +164,15 @@ public class JobController {
     @PostMapping("/apply-job")
     public ResponseData applyJob(@RequestBody AppliedJobRequest request) {
         try {
-
             candidateManageService.appliedJob(request);
-
-
             //Add Notification
             Job j = jobService.getJobById(request.getJobId());
             Recruiter r = recruiterService.getRecruiterById(j.getRecruiterId());
-            Notification notification = new Notification(0, r.getUserId(), 1, LocalDateTime.now(), j.getJobName()+ " " + "vừa nhận được lượt ứng tuyển mới", false, false);
+            Notification notification = new Notification(0, r.getUserId(), 1, LocalDateTime.now(), j.getJobName() + " " + "vừa nhận được lượt ứng tuyển mới", false, false);
             notificationService.insertNotification(notification);
 
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
                     new ObjectMapper().writeValueAsString(request));
-
-
-
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
@@ -331,7 +325,7 @@ public class JobController {
             //Add Notification
             String appr = approvalJobRequest.getApprovalStatus().equals("Approved") ? " chấp thuận" : " từ chối";
             Job j = jobService.getJobById(approvalJobRequest.getJobId());
-            String content = "Đơn ứng tuyển của bạn vào " + j.getJobName() + " vừa được" +appr;
+            String content = "Đơn ứng tuyển của bạn vào " + j.getJobName() + " vừa được" + appr;
             Candidate c = candidateService.getCandidateById(approvalJobRequest.getCandidateId());
             Notification notification = new Notification(0, c.getUserId(), 2, LocalDateTime.now(), content, false, false);
             notificationService.insertNotification(notification);
@@ -392,7 +386,7 @@ public class JobController {
     public ResponseData reportJob(@PathVariable("userId") long userId,
                                   @RequestBody ReportJobRequest request) {
         try {
-            Report report = adminManageService.reportJob(request, userId);
+            Report report = reportedService.reportJob(request, userId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, report);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

@@ -1,7 +1,9 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.admin.user.ReportedUserResponse;
+import fpt.edu.capstone.dto.job.ReportJobRequest;
 import fpt.edu.capstone.dto.job.ReportedJobResponse;
+import fpt.edu.capstone.entity.Report;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,4 +17,7 @@ public interface ReportedService {
 
     Page<ReportedJobResponse> searchReportedJob(Pageable pageable, LocalDateTime createdAtFrom, LocalDateTime createAtTo,
                                                 LocalDateTime updatedAtFrom, LocalDateTime updatedAtTo, String jobName);
+
+    Report reportJob(ReportJobRequest request, long userId);
+
 }

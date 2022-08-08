@@ -13,6 +13,7 @@ import fpt.edu.capstone.service.JobService;
 import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.service.ReportedService;
 import fpt.edu.capstone.service.UserService;
+import fpt.edu.capstone.utils.Enums;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,14 @@ public class ReportedServiceImpl implements ReportedService {
 
     private final ReportedRepository reportedRepository;
 
+    private final UserService userService;
+
+    private final JobService jobService;
+
+    private final ModelMapper modelMapper;
+
+    private final RecruiterService recruiterService;
+
     @Override
     public Page<ReportedUserResponse> searchReportedUsers(Pageable pageable, String username, String personReportName,
                                                           List<Long> userId, List<Long> personReportId) {
@@ -38,5 +47,36 @@ public class ReportedServiceImpl implements ReportedService {
     public Page<ReportedJobResponse> searchReportedJob(Pageable pageable, LocalDateTime createdAtFrom, LocalDateTime createAtTo, LocalDateTime updatedAtFrom,
                                                        LocalDateTime updatedAtTo, String jobName) {
         return reportedRepository.searchReportedJob(pageable, jobName);
+    }
+
+    @Override
+    public Report reportJob(ReportJobRequest request, long userId) {
+        if (userService.getUserById(userId) == null) {
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        }
+        if (jobService.getJobById(request.getJobId()) == null) {
+            throw new HiveConnectException("Tin tuyển dụng không tồn tại");
+        }
+        if ((request.getFullName() == null || request.getFullName().trim().isEmpty())
+                || (request.getPhone() == null || request.getPhone().trim().isEmpty())
+                || (request.getUserAddress() == null || request.getUserAddress().trim().isEmpty())
+                || (request.getUserEmail() == null || request.getUserEmail().trim().isEmpty())
+                || (request.getReportReason() == null || request.getReportReason().trim().isEmpty())) {
+            throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
+        }
+        Report report = modelMapper.map(request, Report.class);
+        Job job = jobService.getJobById(request.getJobId());
+        Recruiter recruiter = recruiterService.getRecruiterById(job.getRecruiterId());
+        report.setPersonReportId(userId);
+        report.setReportedUserId(recruiter.getUserId());
+        report.create();
+        report.setApprovalReportedStatus(Enums.ApprovalStatus.PENDING.getStatus());
+        report.setUpdatedAt(null);
+        report.setReportType("1");
+        reportedRepository.save(report);
+        if (!reportedRepository.findById(report.getId()).isPresent()) {
+            throw new HiveConnectException("Báo cáo thất bại.");
+        }
+        return report;
     }
 }

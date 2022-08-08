@@ -65,31 +65,56 @@ public class AdminManageServiceImplTest {
 //        assertEquals(123L,responseList.get(0).getRequestUserId());
     }
 
-    @Test
-    void reportJobTest() {
-        ReportJobRequest request = new ReportJobRequest();
-        request.setFullName("Lê Thị Tiểu Mai");
-        request.setJobId(1L);
-        request.setPhone("0379700425");
-        request.setUserAddress("Hà Nội");
-        request.setUserEmail("mai@gmail.com");
-        request.setReportReason("Bài viết không đúng sự thật.");
-
-        Users user = new Users();
-        user.setId(1L);
-        when(userService.getUserById(1L)).thenReturn(user);
-
-        Job job = new Job();
-        job.setId(1L);
-        when(jobService.getJobById(1L)).thenReturn(job);
-
-        Report report = adminManageService.reportJob(request, 1L);
-
-        Recruiter recruiter = new Recruiter();
-        when(recruiterService.getRecruiterById(1L)).thenReturn(recruiter);
-
-        assertEquals(reportedRepository.findById(1L), report);
-    }
+//    @Test
+//    void reportJobTest() {
+//        ReportJobRequest request = new ReportJobRequest();
+//        request.setFullName("Lê Thị Tiểu Mai");
+//        request.setJobId(1L);
+//        request.setPhone("0379700425");
+//        request.setUserAddress("Hà Nội");
+//        request.setUserEmail("mai@gmail.com");
+//        request.setReportReason("Bài viết không đúng sự thật.");
+//
+//        Users user = new Users();
+//        user.setId(1L);
+//        when(userService.getUserById(1L)).thenReturn(user);
+//
+//        Job job = new Job();
+//        job.setId(1L);
+//        when(jobService.getJobById(1L)).thenReturn(job);
+//
+//        Report report = jobService.reportJob(request, 1L);
+//
+//        Recruiter recruiter = new Recruiter();
+//        when(recruiterService.getRecruiterById(1L)).thenReturn(recruiter);
+//
+//        assertEquals(reportedRepository.findById(1L), report);
+//    }
+//    @Test
+//    void reportJobTest() {
+//        ReportJobRequest reportJobRequest = new ReportJobRequest();
+//        reportJobRequest.setFullName("Lê Thị Tiểu Mai");
+//        reportJobRequest.setJobId(1L);
+//        reportJobRequest.setPhone("0379700425");
+//        reportJobRequest.setUserAddress("Hà Nội");
+//        reportJobRequest.setUserEmail("mai@gmail.com");
+//        reportJobRequest.setReportReason("Bài viết không đúng sự thật.");
+//
+//        Users user = new Users();
+//        user.setId(1L);
+//        when(userService.getUserById(1L)).thenReturn(user);
+//
+//        Job job = new Job();
+//        job.setId(1L);
+//        when(jobService.getJobById(1L)).thenReturn(job);
+//
+//        Report report = adminManageService.reportJob(reportJobRequest, 1L);
+//
+//        Recruiter recruiter = new Recruiter();
+//        when(recruiterService.getRecruiterById(1L)).thenReturn(recruiter);
+//
+//        assertEquals(reportedRepository.findById(1L), report);
+//    }
 
     @Test
     void searchReportedJobTest(){
