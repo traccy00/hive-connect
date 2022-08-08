@@ -13,8 +13,6 @@ public interface AdminManageService {
     List<LicenseApprovalResponse> searchLicenseApprovalForAdmin(String businessApprovalStatus,
                                                                 String additionalApprovalStatus);
 
-    Report reportJob(ReportJobRequest request, long userId);
-
     ResponseDataPagination searchReportedJob(Integer pageNo, Integer pageSize, LocalDateTime createdAtFrom,
                                              LocalDateTime createAtTo, LocalDateTime updatedAtFrom,
                                              LocalDateTime updatedAtTo, String jobName);
