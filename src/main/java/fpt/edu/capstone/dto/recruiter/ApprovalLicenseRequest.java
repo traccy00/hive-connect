@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ApprovalLicenseRequest {
-    long recruiterId;
+    long userId;
     String type;
     String approvalStatus;
 }
