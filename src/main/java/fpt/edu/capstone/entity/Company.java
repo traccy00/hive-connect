@@ -43,7 +43,7 @@ public class Company extends BaseEntity {
     private String address;
     //mandatory
     @Column(name = "taxcode")
-    @Length(min = 10)
+    @Length(min = 10, max = 13)
     private String taxCode;
 
     @Column(name = "is_deleted")

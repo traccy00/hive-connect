@@ -99,6 +99,8 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     private final MajorService majorService;
 
+    private final WorkExperienceRepository workExperienceRepository;
+
     @Override
     public CommonRecruiterInformationResponse getCommonInforOfRecruiter(long recruiterId) {
         CommonRecruiterInformationResponse response = new CommonRecruiterInformationResponse();
@@ -246,7 +248,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         RecruiterProfileResponse profileResponse = new RecruiterProfileResponse();
-        Recruiter recruiter = recruiterRepository.getRecruiterByUserId(userId);
+        Recruiter recruiter = recruiterService.getRecruiterByUserId(userId);
         if (recruiter == null) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
@@ -706,7 +708,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                         throw new HiveConnectException("Liên hệ admin");
                     }
                 }
-                List<WorkExperience> workExperiencesOfCv = workExperienceService.getListWorkExperienceByCvId(cv.getId());
+                List<WorkExperience> workExperiencesOfCv = workExperienceRepository.getListWorkExperienceByCvId(cv.getId());
                 if (!workExperiencesOfCv.isEmpty()) {
                     List<String> experienceDesc = workExperiencesOfCv.stream().map(WorkExperience::getPosition).collect(Collectors.toList());
                     responseObj.setExperienceDesc(experienceDesc);

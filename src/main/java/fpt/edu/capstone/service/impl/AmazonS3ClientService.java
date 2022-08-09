@@ -59,15 +59,15 @@ public class AmazonS3ClientService {
         }
 
         AWSCredentials credentials = new BasicAWSCredentials(
-                "AKIAUL6TQRSBHSELAXGH",
-                "kiDX9cpEw/dKpnm6TQsO/SMLrA/MJ9DJnoFo7FmM"
+                "AKIAXMAOZRCCFMZHVLUM",
+                "tOxI5PsbNCq9EMAnzEEPUeBH8cydy9KECRGCIYqT"
         );
         AmazonS3 s3client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(Regions.AP_SOUTHEAST_1)
                 .build();
-        String bucketName = "hive-connect";
+        String bucketName = "hive-connect-social";
         List<Bucket> buckets = s3client.listBuckets();
         for (Bucket bucket : buckets) {
             System.out.println(bucket.getName());
