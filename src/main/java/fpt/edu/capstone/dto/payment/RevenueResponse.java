@@ -25,4 +25,5 @@ public class RevenueResponse {
     private String local;
     private LocalDateTime expiredDate;
     private boolean expiredStatus;
+    private LocalDateTime createdAt;
 }
