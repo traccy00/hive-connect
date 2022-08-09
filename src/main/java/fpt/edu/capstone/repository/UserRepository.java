@@ -68,4 +68,5 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     @Query(value = "select * from users u where u.phone =:phone and u.id not in (:id) limit 1", nativeQuery = true)
     Users findByPhoneAndIdIsNotIn(@Param("phone") String phone, long id);
 
+    Users findByUsernameAndEmail(String userName, String email);
 }
