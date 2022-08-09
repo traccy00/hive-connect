@@ -147,6 +147,7 @@ public class AdminManageServiceImpl implements AdminManageService {
                 response.setBuyDate(payment.getCreatedAt());
                 response.setApprovalDate(bannerActive.getApprovalDate());
                 response.setApprovalStatus(bannerActive.getApprovalStatus());
+                response.setBannerImageUrl(bannerActive.getImageUrl());
                 responseList.add(response);
             }
         }

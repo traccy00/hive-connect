@@ -108,7 +108,7 @@ public class DetailPackageServiceImpl implements DetailPackageService {
         if(existedPackage.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.PACKAGE_NAME_EXISTS);
         }
-        if(detailPackage.getPrice() < 0) {
+        if(detailPackage.getPrice() <= 0) {
             throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
         }
         if(detailPackage.getDiscount() < 0) {
@@ -144,7 +144,7 @@ public class DetailPackageServiceImpl implements DetailPackageService {
         if(existedPackage.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.PACKAGE_NAME_EXISTS);
         }
-        if(request.getPrice() < 0) {
+        if(request.getPrice() <= 0) {
             throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
         }
         if(request.getDiscount() < 0) {

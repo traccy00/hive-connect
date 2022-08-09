@@ -159,7 +159,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (countApplyCandidateEachJob != null && !countApplyCandidateEachJob.isEmpty()) {
             long totalApply = 0L;
             long numberRecruits = 0L;
-            for(CountCandidateApplyPercentageResponse countResponse : countApplyCandidateEachJob) {
+            for (CountCandidateApplyPercentageResponse countResponse : countApplyCandidateEachJob) {
                 totalApply += countResponse.getTotalApplied();
                 numberRecruits += countResponse.getNumberRecruits();
             }
@@ -357,37 +357,37 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         }
         //xem gói mà nhà tuyển dụng mua có những tính năng nào
         Banner banner = bannerService.findById(payment.getBannerId());
-        if (banner.isSpotlight()) {
+        if (banner.isSpotlight() && request.getSpotLightImage() != null) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.SPOTLIGHT.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.SPOTLIGHT.getStatus(), request.getSpotLightImage());
         }
-        if (banner.isHomepageBannerA()) {
+        if (banner.isHomepageBannerA() && request.getHomepageBannerAImage() != null) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.HOME_BANNER_A.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.HOME_BANNER_A.getStatus(), request.getHomepageBannerAImage());
         }
-        if (banner.isHomePageBannerB()) {
+        if (banner.isHomePageBannerB() && request.getHomepageBannerBImage() != null) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.HOME_BANNER_B.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.HOME_BANNER_B.getStatus(), request.getHomepageBannerBImage());
         }
-        if (banner.isHomePageBannerC()) {
+        if (banner.isHomePageBannerC() && request.getHomepageBannerCImage() != null) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.HOME_BANNER_C.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.HOME_BANNER_C.getStatus(), request.getHomepageBannerCImage());
         }
-        if (banner.isJobBannerA()) {
+        if (banner.isJobBannerA() && request.getJobBannerAImage() != null) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.JOB_BANNER_A.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.JOB_BANNER_A.getStatus(), request.getJobBannerAImage());
         }
-        if (banner.isJobBannerB()) {
+        if (banner.isJobBannerB() && request.getJobBannerBImage() != null) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.JOB_BANNER_B.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.JOB_BANNER_B.getStatus(), request.getJobBannerBImage());
         }
-        if (banner.isJobBannerC()) {
+        if (banner.isJobBannerC() && request.getJobBannerCImage() != null) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.JOB_BANNER_C.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.JOB_BANNER_C.getStatus(), request.getJobBannerCImage());
@@ -416,7 +416,8 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             //can not change banner image if admin approved
             return;
         } else if (bannerActive != null
-                && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
+                && (bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())
+                || bannerActive.getApprovalStatus() == null)) {
             bannerActive.setImageUrl(item);
             bannerActive.update();
             bannerActiveRepository.save(bannerActive);

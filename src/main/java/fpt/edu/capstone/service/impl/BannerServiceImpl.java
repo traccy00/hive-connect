@@ -96,7 +96,7 @@ public class BannerServiceImpl implements BannerService {
         if(!detailBannerPackage.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.DETAIL_PACKAGE_DOES_NOT_EXIST);
         }
-        if(request.getPrice() < 0) {
+        if(request.getPrice() <= 0) {
             throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
         }
         if(request.getDiscount() < 0) {
@@ -117,6 +117,20 @@ public class BannerServiceImpl implements BannerService {
         if(bannersByTitle != null && !bannersByTitle.isEmpty()) {
             throw new HiveConnectException(ResponseMessageConstants.BANNER_TITLE_HAVE_ALREADY_EXISTED);
         }
+        detailBannerPackage.get().setRentalPackageId(request.getRentalPackageId());
+        detailBannerPackage.get().setPrice(request.getPrice());
+        detailBannerPackage.get().setDiscount(request.getDiscount());
+        detailBannerPackage.get().setTimeExpired(request.getTimeExpired());
+        detailBannerPackage.get().setTitle(request.getTitle());
+        detailBannerPackage.get().setDescription(request.getDescription());
+        detailBannerPackage.get().setImage(request.getImage());
+        detailBannerPackage.get().setSpotlight(request.isSpotlight());
+        detailBannerPackage.get().setHomepageBannerA(request.isHomepageBannerA());
+        detailBannerPackage.get().setHomePageBannerB(request.isHomePageBannerB());
+        detailBannerPackage.get().setHomePageBannerC(request.isHomePageBannerC());
+        detailBannerPackage.get().setJobBannerA(request.isJobBannerA());
+        detailBannerPackage.get().setJobBannerB(request.isJobBannerB());
+        detailBannerPackage.get().setJobBannerC(request.isJobBannerC());
         bannerRepository.save(detailBannerPackage.get());
     }
 

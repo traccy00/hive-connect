@@ -45,6 +45,8 @@ public class JobServiceImpl implements JobService {
 
     private final ImageService imageService;
 
+    private final JobHashTagService jobHashTagService;
+
     @Override
     public void createJob(CreateJobRequest request) {
         long companyId = request.getCompanyId();
@@ -242,14 +244,45 @@ public class JobServiceImpl implements JobService {
         int pageReq = 0 >= 1 ? 0 - 1 : 0;
         Pageable pageable = PageRequest.of(pageReq, 10);
         String flag = Enums.Flag.Posted.getStatus();
-        data.setFulltimeJob(jobRepository.getListJobByWorkForm(pageable, "FULLTIME", flag).getContent());
-        data.setParttimeJob(jobRepository.getListJobByWorkForm(pageable, "PARTTIME", flag).getContent());
-        data.setRemoteJob(jobRepository.getListJobByWorkForm(pageable, "REMOTE", flag).getContent());
-        data.setPopularJob(jobRepository.getPopularJob(pageable, true, 0, flag).getContent());
-        data.setNewJob(jobRepository.getNewestJob(pageable, true, 0, flag).getContent());
-        data.setUrgentJob(jobRepository.getUrgentJob(pageable, true, 0, flag).getContent());
-        data.setJobByFields(jobRepository.getListJobByFieldId(pageable, 1, flag).getContent());
+        Page<Job> fullTimeList = jobRepository.getListJobByWorkForm(pageable, "FULLTIME", flag);
+        Page<Job> partTimeList = jobRepository.getListJobByWorkForm(pageable, "PARTTIME", flag);
+        Page<Job> remoteList = jobRepository.getListJobByWorkForm(pageable, "REMOTE", flag);
+        Page<Job> popularList = jobRepository.getPopularJob(pageable, true, 0, flag);
+        Page<Job> newestList = jobRepository.getNewestJob(pageable, true, 0, flag);
+        Page<Job> urgentList = jobRepository.getUrgentJob(pageable, true, 0, flag);
+        Page<Job> jobByFields = jobRepository.getListJobByFieldId(pageable, 1, flag);
+        data.setFulltimeJob(displayJobInHomePage(fullTimeList));
+        data.setParttimeJob(displayJobInHomePage(partTimeList));
+        data.setRemoteJob(displayJobInHomePage(remoteList));
+        data.setPopularJob(displayJobInHomePage(popularList));
+        data.setNewJob(displayJobInHomePage(newestList));
+        data.setUrgentJob(displayJobInHomePage(urgentList));
+        data.setJobByFields(displayJobInHomePage(jobByFields));
         return data;
+    }
+
+    public List<JobHomePageResponse> displayJobInHomePage(Page<Job> jobs) {
+        List<JobHomePageResponse> responseList = new ArrayList<>();
+        if (jobs.hasContent()) {
+            for (Job job : jobs) {
+                JobHomePageResponse jobResponse = modelMapper.map(job, JobHomePageResponse.class);
+                List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
+                if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
+                    List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
+                    jobResponse.setListHashtag(hashTagNameList);
+                }
+                Company company = companyService.getCompanyById(job.getCompanyId());
+                if (company != null) {
+                    jobResponse.setCompanyName(company.getName());
+                }
+                Image image = imageService.getImageCompany(company.getId(), true);
+                if(image != null) {
+                    jobResponse.setCompanyAvatar(image.getUrl());
+                }
+                responseList.add(jobResponse);
+            }
+        }
+        return responseList;
     }
 
     @Override
