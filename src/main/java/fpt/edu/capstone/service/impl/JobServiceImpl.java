@@ -59,6 +59,15 @@ public class JobServiceImpl implements JobService {
         if (!fieldsService.existById(fieldId)) {
             throw new HiveConnectException("Lĩnh vực kinh doanh không tồn tại.");
         }
+//        if ((request.getJobName() == null || request.getJobName().trim().isEmpty())
+//                || (request.getWorkPlace() == null || request.getWorkPlace().trim().isEmpty())
+//                || (request.getJobDescription() == null || request.getJobDescription().trim().isEmpty())
+//                || (request.getJobRequirement() == null || request.getJobRequirement().trim().isEmpty())
+//                || (request.getBenefit() == null || request.getBenefit().trim().isEmpty())) {
+//        }
+        if(request.getFromSalary() < 0 || request.getToSalary() < 0 || (request.getFromSalary() > request.getToSalary())) {
+            throw new HiveConnectException(ResponseMessageConstants.SALARY_INVALID);
+        }
         Object CreateJobRequest = request;
         Job job = modelMapper.map(CreateJobRequest, Job.class);
         job.create();
@@ -78,7 +87,7 @@ public class JobServiceImpl implements JobService {
                 JobResponse jr = modelMapper.map(j, JobResponse.class);
                 jr.setJobId(j.getId());
                 Company company = companyService.getCompanyById(j.getCompanyId());
-                if(company != null) {
+                if (company != null) {
                     jr.setCompanyName(company.getName());
                 }
                 jr.setCompanyName(company.getName());
@@ -105,7 +114,7 @@ public class JobServiceImpl implements JobService {
         if (job == null) {
             throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
-        if(job.getFlag().equals(Enums.Flag.Posted.getStatus())) {
+        if (job.getFlag().equals(Enums.Flag.Posted.getStatus())) {
             return;
         }
         Object UpdateJobRequest = request;
@@ -123,7 +132,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public void deleteJob(long jobId) {
         Job job = jobRepository.getById(jobId);
-        if(job == null){
+        if (job == null) {
             throw new HiveConnectException("Công việc không tồn tại");
         }
         jobRepository.deleteJob(jobId);
@@ -215,7 +224,7 @@ public class JobServiceImpl implements JobService {
 //        Job detailJob = jobRepository.getById(detailJobId);
         List<Job> jobs = jobRepository.getSameJobsOtherCompanies(detailJobId);
         List<JobResponse> responseList = new ArrayList<>();
-        for(Job job : jobs) {
+        for (Job job : jobs) {
             JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
             jobResponse.setJobId(job.getId());
             Company company = companyService.getCompanyById(job.getCompanyId());
@@ -233,12 +242,12 @@ public class JobServiceImpl implements JobService {
         int pageReq = 0 >= 1 ? 0 - 1 : 0;
         Pageable pageable = PageRequest.of(pageReq, 10);
         String flag = Enums.Flag.Posted.getStatus();
-        data.setFulltimeJob(jobRepository.getListJobByWorkForm(pageable,"FULLTIME", flag).getContent());
-        data.setParttimeJob(jobRepository.getListJobByWorkForm(pageable,"PARTTIME", flag).getContent());
-        data.setRemoteJob(jobRepository.getListJobByWorkForm(pageable,"REMOTE", flag).getContent());
+        data.setFulltimeJob(jobRepository.getListJobByWorkForm(pageable, "FULLTIME", flag).getContent());
+        data.setParttimeJob(jobRepository.getListJobByWorkForm(pageable, "PARTTIME", flag).getContent());
+        data.setRemoteJob(jobRepository.getListJobByWorkForm(pageable, "REMOTE", flag).getContent());
         data.setPopularJob(jobRepository.getPopularJob(pageable, true, 0, flag).getContent());
-        data.setNewJob(jobRepository.getNewestJob(pageable,true,0,flag).getContent());
-        data.setUrgentJob(jobRepository.getUrgentJob(pageable,true,0,flag).getContent());
+        data.setNewJob(jobRepository.getNewestJob(pageable, true, 0, flag).getContent());
+        data.setUrgentJob(jobRepository.getUrgentJob(pageable, true, 0, flag).getContent());
         data.setJobByFields(jobRepository.getListJobByFieldId(pageable, 1, flag).getContent());
         return data;
     }
@@ -258,9 +267,9 @@ public class JobServiceImpl implements JobService {
         Pageable pageable = PageRequest.of(pageReq, pageSize);
         String flag = Enums.Flag.Posted.getStatus();
         Page<Job> listByCareer = jobRepository.getListJobByFieldId(pageable, id, flag);
-        List <DetailJobResponse> response = listByCareer.stream().
+        List<DetailJobResponse> response = listByCareer.stream().
                 map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
-        for (DetailJobResponse res: response) {
+        for (DetailJobResponse res : response) {
             Company company = companyService.getCompanyById(res.getCompanyId());
             Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
             Fields fields = fieldsService.getById(res.getFieldId());
@@ -269,7 +278,7 @@ public class JobServiceImpl implements JobService {
             res.setFieldName(fields.getFieldName());
             res.setRecruiterName(recruiter.getFullName());
             Image image = imageService.getImageCompany(company.getId(), true);
-            if(image != null) {
+            if (image != null) {
                 res.setAvatar(image.getUrl());
             }
         }

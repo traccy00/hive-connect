@@ -56,7 +56,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public Banner insertBanner(ConfigBannerRequest request) {
-        if(request.getPrice() < 0) {
+        if(request.getPrice() <= 0) {
             throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
         }
         if(request.getDiscount() < 0) {
@@ -95,6 +95,27 @@ public class BannerServiceImpl implements BannerService {
         Optional<Banner> detailBannerPackage = bannerRepository.findById(request.getBannerId());
         if(!detailBannerPackage.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.DETAIL_PACKAGE_DOES_NOT_EXIST);
+        }
+        if(request.getPrice() < 0) {
+            throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
+        }
+        if(request.getDiscount() < 0) {
+            throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
+        }
+        if(request.getDiscount() > request.getPrice()) {
+            throw new HiveConnectException(ResponseMessageConstants.DISCOUNT_PRICE_INVALID);
+        }
+        if(request.isSpotlight() == false
+                && request.isHomepageBannerA() == false && request.isHomePageBannerB() == false && request.isHomePageBannerC() == false
+                && request.isJobBannerA() == false && request.isJobBannerB() == false && request.isJobBannerC() == false) {
+            throw new HiveConnectException(ResponseMessageConstants.BANNER_POSITION_INVALID);
+        }
+        if(!rentalPackageService.findById(request.getRentalPackageId()).isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.RENTAL_PACKAGE_DOES_NOT_EXIST);
+        }
+        List<Banner> bannersByTitle = bannerRepository.checkExistBannerByTitle(request.getTitle(), request.getBannerId());
+        if(bannersByTitle != null && !bannersByTitle.isEmpty()) {
+            throw new HiveConnectException(ResponseMessageConstants.BANNER_TITLE_HAVE_ALREADY_EXISTED);
         }
         bannerRepository.save(detailBannerPackage.get());
     }

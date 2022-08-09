@@ -26,4 +26,8 @@ public interface DetailPackageRepository extends JpaRepository<DetailPackage, Lo
 
     DetailPackage findByRentalPackageIdAndId(long rentalPackageId, long id);
 
+    @Query(value = "select * from detail_package dp where lower(dp.detail_name) = lower(:detailName) " +
+            "and dp.id not in (:id)", nativeQuery = true)
+    Optional<DetailPackage> checkExistByDetailName(@Param("detailName") String detailName, @Param("id") long id);
+
 }

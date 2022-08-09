@@ -100,6 +100,32 @@ public class DetailPackageServiceImpl implements DetailPackageService {
 
     @Override
     public void updateDetailPackage(DetailPackage detailPackage) {
+        if(detailPackage.getDetailName() == null || detailPackage.getDetailName().trim().isEmpty()) {
+            throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
+        }
+        Optional<DetailPackage> existedPackage = detailPackageRepository
+                .checkExistByDetailName(detailPackage.getDetailName(), detailPackage.getId());
+        if(existedPackage.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.PACKAGE_NAME_EXISTS);
+        }
+        if(detailPackage.getPrice() < 0) {
+            throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
+        }
+        if(detailPackage.getDiscount() < 0) {
+            throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
+        }
+        if(detailPackage.getDiscount() > detailPackage.getPrice()) {
+            throw new HiveConnectException(ResponseMessageConstants.DISCOUNT_PRICE_INVALID);
+        }
+        if(detailPackage.getRentalPackageId() == 1) {
+            if(detailPackage.getMaxCvView() <= 0) {
+                throw new HiveConnectException(ResponseMessageConstants.MAX_CV_VIEW_INVALID);
+            }
+        } else if(detailPackage.getRentalPackageId() == 2) {
+            if(!detailPackage.isRelatedJob() && !detailPackage.isSuggestJob()) {
+                throw new HiveConnectException(ResponseMessageConstants.PAYMENT_PACKAGE_BENEFIT_INVALID);
+            }
+        }
         findById(detailPackage.getId());
         detailPackageRepository.saveAndFlush(detailPackage);
     }
