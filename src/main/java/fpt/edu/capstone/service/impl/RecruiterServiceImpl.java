@@ -162,7 +162,7 @@ public class RecruiterServiceImpl implements RecruiterService {
 //        if (!recruiter.isPresent()) {
 //            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
 //        }
-        Recruiter recruiter = recruiterRepository.getRecruiterByUserId(request.getRecruiterId());
+        Recruiter recruiter = recruiterRepository.getRecruiterByUserId(request.getUserId());
         if (recruiter == null) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
