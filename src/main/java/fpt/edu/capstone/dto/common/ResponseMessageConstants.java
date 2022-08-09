@@ -63,6 +63,7 @@ public interface ResponseMessageConstants {
     String CREATE_JOB_FAILED = "Tạo tin tuyển dụng thất bại.";
     String UPDATE_JOB_SUCCESS = "Cập nhật tin tuyển dụng thành công.";
     String UPDATE_JOB_FAILED = "Cập nhật tin tuyển dụng thất bại.";
+    String SALARY_INVALID = "Mức lương không hợp lệ.";
 
     //PAYMENT
     String PAYMENT_SUCCESS = "Thanh toán thành công";
@@ -70,6 +71,7 @@ public interface ResponseMessageConstants {
     String CHANGE_JOB_PAYMENT_ACTIVE_SUCCESS = "Thay đổi kích hoạt công việc thành công";
     String PAYMENT_PACKAGE_BENEFIT_INVALID = "Lợi ích của gói dịch vụ không hợp lệ.";
     String PACKAGE_NAME_EXISTS = "Tên gói đã được sử dụng";
+    String MAX_CV_VIEW_INVALID = "Số lượng CV được xem không hợp lệ.";
 
     //AMAZON
 //    String AMAZON_SAVE_URL = "https://hive-connect-images.s3.us-west-1.amazonaws.com/hiveconnect/";

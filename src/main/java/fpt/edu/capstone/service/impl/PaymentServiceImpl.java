@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
         String randomTransactionCode = PaymentConfig.getRandomNumber(8);
         payment.setTransactionCode(randomTransactionCode);
-        int amount = paymentDTO.getAmount();
+        int amount = paymentDTO.getAmount() * 100;
 
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -210,7 +210,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (key.equals("recruiterId")) paymentDTO.setRecruiterId(Long.parseLong(value));
             if (key.equals("detailPackageId")) paymentDTO.setDetailPackageId(Long.parseLong(value));
             if (key.equals("bannerId")) paymentDTO.setBannerId(Long.parseLong(value));
-            if (key.equals("amount")) paymentDTO.setAmount(Integer.parseInt(value));
+            if (key.equals("amount")) paymentDTO.setAmount(Integer.parseInt(value) / 100);
             if (key.equals("description")) paymentDTO.setDescription(value);
             if (key.equals("orderType")) paymentDTO.setOrderType(value);
             if (key.equals("bankCode")) paymentDTO.setBankCode(value);

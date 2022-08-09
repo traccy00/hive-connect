@@ -33,4 +33,7 @@ public interface BannerRepository extends JpaRepository<Banner, Long> {
                                    @Param("isDeleted") boolean isDeleted);
 
     Banner findByRentalPackageIdAndId(long rentalPackageId, long id);
+
+    @Query(value = "select * from banner b where lower(b.title) = lower(:title) and b.id not in (:id)", nativeQuery = true)
+    List<Banner> checkExistBannerByTitle(@Param("title") String title,@Param("id") long id);
 }

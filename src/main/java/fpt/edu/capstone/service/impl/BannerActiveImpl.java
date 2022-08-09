@@ -6,6 +6,7 @@ import fpt.edu.capstone.entity.BannerActive;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.BannerActiveRepository;
 import fpt.edu.capstone.service.BannerActiveService;
+import fpt.edu.capstone.utils.Enums;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,8 @@ public class BannerActiveImpl implements BannerActiveService {
 
     @Override
     public List<BannerActive> getBannersByPosition(String displayPosition) {
-        return bannerActiveRepository.getBannerByPosition(displayPosition);
+        String approvalStatus = Enums.ApprovalStatus.APPROVED.getStatus();
+        return bannerActiveRepository.getBannerByPosition(displayPosition, approvalStatus);
     }
 
     @Override
