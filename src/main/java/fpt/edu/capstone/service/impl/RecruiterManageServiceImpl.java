@@ -108,25 +108,42 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (!optionalRecruiter.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
+        String message = "";
         int step = 0;
         int totalStep = 3;
         Users user = userRepository.getById(optionalRecruiter.get().getUserId());
         if (user == null) {
-            throw new HiveConnectException("Liên hệ admin");
+            throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
         }
-        //verify step 1
+        //verify step 1: email
         if (user.isVerifiedEmail()) {
             step++;
         }
-        //verify step 2
+        //verify step 2: company
+        if (optionalRecruiter.get().getCompanyId() > 0) {
+            step++;
+        }
+        //verify step 3: phone number
         if (user.isVerifiedPhone()) {
             step++;
         }
-        //verify step 3
+        //verify step 4: business license
         if (optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null
                 && optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
             step++;
         }
+        if (step == 0) {
+            message = "Tài khoản của bạn chưa thực hiện xác thực email. Vui lòng xác thực email để có thể đăng tin tuyển dụng.";
+        } else if (step == 1) {
+            message = "Tài khoản của bạn chưa thực hiện xác thực thông tin công ty. Vui lòng xác thực công ty tại trang Tài khoản > Thông tin công ty để có thể đăng tin tuyển dụng.";
+        } else if (step == 2) {
+            message = "Tài khoản của bạn chưa thực hiện xác thực số điện thoại. Vui lòng xác thực số điện thoại tại trang Tài khoản > Thông tin tài khoản để có thể đăng tin tuyển dụng.";
+        } else if (step == 3) {
+            message = "Tài khoản của bạn chưa thực hiện xác thực giấy phép kinh doanh. Vui lòng xác thực giấy phép tại trang Tài khoản > Thông tin công ty để có thể đăng tin tuyển dụng.";
+        } else if (step == 4) {
+            message = "Tài khoản của bạn đã xác thực thành công. Đăng tin tuyển dụng ngay thôi.";
+        }
+        response.setMessage(message);
         response.setRecruiterFullName(optionalRecruiter.get().getFullName());
         response.setVerifyStep(step + " / " + totalStep);
 
@@ -137,11 +154,15 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         }
         response.setTotalCreatedJob(totalCreatedJob);
 
-        CountCandidateApplyPercentageResponse countApplyCandidate = appliedJobService.countApplyPercentage(recruiterId);
+        List<CountCandidateApplyPercentageResponse> countApplyCandidateEachJob = appliedJobService.countApplyPercentage(recruiterId);
         String result = "0";
-        if (countApplyCandidate != null) {
-            long totalApply = countApplyCandidate.getTotalApplied();
-            long numberRecruits = countApplyCandidate.getNumberRecruits();
+        if (countApplyCandidateEachJob != null && !countApplyCandidateEachJob.isEmpty()) {
+            long totalApply = 0L;
+            long numberRecruits = 0L;
+            for(CountCandidateApplyPercentageResponse countResponse : countApplyCandidateEachJob) {
+                totalApply += countResponse.getTotalApplied();
+                numberRecruits += countResponse.getNumberRecruits();
+            }
             double applyPercentage = (double) totalApply / numberRecruits;
             DecimalFormat formatter = new DecimalFormat("##.##"); //
             formatter.setRoundingMode(RoundingMode.DOWN); // Towards zero
@@ -205,8 +226,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         }
         if ((request.getFullName() == null || request.getFullName().trim().isEmpty())
                 || (request.getPhone() == null || request.getPhone().trim().isEmpty())
-                || (request.getPosition() == null || request.getPosition().trim().isEmpty())
-                || (request.getLinkedinAccount() == null || request.getLinkedinAccount().trim().isEmpty())) {
+                || (request.getPosition() == null || request.getPosition().trim().isEmpty())) {
             throw new HiveConnectException("Vui lòng nhập thông tin bắt buộc.");
         }
         if (request.getAvatarUrl() != null && request.getAvatarUrl().trim().isEmpty()) {
@@ -224,14 +244,14 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (user == null) {
             throw new HiveConnectException("Liên hệ admin");
         }
-        if(userService.findByPhoneAndIdIsNotIn(request.getPhone(), recruiter.getUserId()) != null){
+        if (userService.findByPhoneAndIdIsNotIn(request.getPhone(), recruiter.getUserId()) != null) {
             throw new HiveConnectException("Số điện thoại đã được sử dụng");
         } else {
             user.setPhone(request.getPhone());
         }
-        Users users =  userService.findById(recruiter.getUserId());
-        if(users.isVerifiedPhone()){
-            if(!request.getPhone().equals(userService.findByPhoneNumber(users.getPhone()))){
+        Users users = userService.findById(recruiter.getUserId());
+        if (users.isVerifiedPhone()) {
+            if (!request.getPhone().equals(userService.findByPhoneNumber(users.getPhone()))) {
                 throw new HiveConnectException("Số điện thoại đã được xác minh! Không thể thay đổi");
             }
         }
@@ -462,16 +482,16 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     public ResponseDataPagination findCVFilter(Integer pageNo, Integer pageSize, String experience, String candidateAddress, String techStack) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<CV> cvPage  = cvService.findCVFilter(pageable,experience,candidateAddress,techStack);
+        Page<CV> cvPage = cvService.findCVFilter(pageable, experience, candidateAddress, techStack);
 
-        List <FindCVResponse> findCVResponseList = cvPage.stream().
+        List<FindCVResponse> findCVResponseList = cvPage.stream().
                 map(cv -> modelMapper.map(cv, FindCVResponse.class)).collect(Collectors.toList());
-        for (FindCVResponse cv: findCVResponseList){
+        for (FindCVResponse cv : findCVResponseList) {
             Candidate candidate = candidateService.getCandidateById(cv.getCandidateId());
             Users users = userService.getUserById(candidate.getUserId());
-            List <String> techstack = majorService.getMajorNameByCVId(cv.getId());
+            List<String> techstack = majorService.getMajorNameByCVId(cv.getId());
             String name = candidate.getFullName();
-            if(name != null){
+            if (name != null) {
                 cv.setFullName(name);
             } else {
                 cv.setFullName(users.getUsername());
@@ -574,16 +594,16 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     public ViewCVWithPayResponse getCvWithPay(long recruiterId, long cvId) {
         ViewCVWithPayResponse viewCVWithPayResponse = new ViewCVWithPayResponse();
         Optional<Recruiter> r = recruiterService.findById(recruiterId);
-        if(!r.isPresent()) {
+        if (!r.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.RECRUITER_DOES_NOT_EXIST);
         }
         Recruiter recruiter = r.get();
         Optional<CV> cv = cvService.findCvById(cvId);
-        if(!cv.isPresent()) {
+        if (!cv.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.CV_NOT_EXIST);
         }
         Optional<Candidate> c = candidateService.findById(cv.get().getCandidateId());
-        if(!c.isPresent()) {
+        if (!c.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.CANDIDATE_DOES_NOT_EXIST);
         }
         CVProfileResponse cvProfileResponse = new CVProfileResponse();
@@ -603,7 +623,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         cvProfileResponse.setWorkExperiences(workExperiences);
 
 
-
         Candidate candidate = c.get();
         cvProfileResponse.setCandidateId(candidate.getId());
         cvProfileResponse.setGender(candidate.isGender());
@@ -618,19 +637,20 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
         Optional<Users> u = userService.findByIdOp(candidate.getUserId());
         Users users = u.get();
-        String phoneNumber = users.getPhone();;
+        String phoneNumber = users.getPhone();
+        ;
         String email = users.getEmail();
         String message = "";
 
-        Optional<ProfileViewer> profileViewer = profileViewerService.getByCvIdAndViewerIdOptional(cv.get().getId (), recruiter.getId());
-        if(profileViewer.isPresent()) {
+        Optional<ProfileViewer> profileViewer = profileViewerService.getByCvIdAndViewerIdOptional(cv.get().getId(), recruiter.getId());
+        if (profileViewer.isPresent()) {
             cvProfileResponse.setEmail(email);
             cvProfileResponse.setPhoneNumber(phoneNumber);
             message = "Đọc toàn bộ thông tin";
         } else if (recruiter.getTotalCvView() > 0) {
             cvProfileResponse.setEmail(email);
             cvProfileResponse.setPhoneNumber(phoneNumber);
-            recruiterService.updateTotalCvView(recruiter.getTotalCvView()-1, recruiter.getId());
+            recruiterService.updateTotalCvView(recruiter.getTotalCvView() - 1, recruiter.getId());
             //Tieu mai them : insert profileviewed
             //Tieu mai them
             ViewCvResponse viewCvResponse = new ViewCvResponse();
@@ -638,12 +658,12 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             viewCvResponse.setCvId(cvId);
             viewCvResponse.setViewerId(recruiterId);
             insertWhoViewCv(viewCvResponse);
-            message =  "Đọc toàn bộ thông tin";
-        } else if (recruiter.getTotalCvView() == 0 ) {
+            message = "Đọc toàn bộ thông tin";
+        } else if (recruiter.getTotalCvView() == 0) {
             cvProfileResponse.setEmail("*****@gmail.com");
             cvProfileResponse.setPhoneNumber("**********");
             message = "Bạn đã hết lượt xem thông tin liên hệ của ứng viên CV";
-        }else {
+        } else {
             cvProfileResponse.setEmail("*****@gmail.com");
             cvProfileResponse.setPhoneNumber("**********");
             message = "Bạn hãy mua gói để xem thông tin liên hệ của ứng viên";

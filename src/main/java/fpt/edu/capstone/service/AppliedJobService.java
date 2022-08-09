@@ -20,7 +20,7 @@ public interface AppliedJobService {
 
     Page<AppliedJob> searchAppliedJobsOfCandidate(Pageable pageable, long candidateId, String approvalStatus);
 
-    CountCandidateApplyPercentageResponse countApplyPercentage(long recruiterId);
+    List<CountCandidateApplyPercentageResponse> countApplyPercentage(long recruiterId);
 
     int countAppliedCVOfJob(long jobId);
 
