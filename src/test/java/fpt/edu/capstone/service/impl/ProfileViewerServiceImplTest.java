@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.entity.ProfileViewer;
 import fpt.edu.capstone.repository.ProfileViewerRepository;
 import org.junit.jupiter.api.Test;
@@ -73,6 +74,6 @@ public class ProfileViewerServiceImplTest {
         Mockito.when(profileViewerRepository.
                 getByCvIdAndViewerIdOptional(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong())).thenReturn(Optional.of(viewer));
         Optional <ProfileViewer> optional = profileViewerService.getByCvIdAndViewerIdOptional(viewer.getCvId(), viewer.getViewerId());
-        assertEquals(1L, optional.get().getId());
+        assertEquals(1, optional.get().getId());
     }
 }
