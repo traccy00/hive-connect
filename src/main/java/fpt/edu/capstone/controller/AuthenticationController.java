@@ -207,7 +207,12 @@ public class AuthenticationController {
                 userService.saveUser(user);
                 //lấy token
                 logger.info("login with username {}", username);
+                Users emailExistsButUseForAnotherAccount = userRepository.findByUsernameAndEmail(username, email);
+                if(emailExistsButUseForAnotherAccount == null) {
+                    throw new HiveConnectException(ResponseMessageConstants.EMAIL_EXISTS);
+                }
                 final UserDetails userDetails = securityUserService.loadUserByUsername(username);
+
                 String token = jwtTokenUtil.generateToken(userDetails);
                 //trả data cho FE
                 UserInforResponse response = new UserInforResponse();
