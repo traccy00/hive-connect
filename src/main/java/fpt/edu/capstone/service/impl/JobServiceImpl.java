@@ -135,9 +135,11 @@ public class JobServiceImpl implements JobService {
     public void deleteJob(long jobId) {
         Job job = jobRepository.getById(jobId);
         if (job == null) {
-            throw new HiveConnectException("Công việc không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
-        jobRepository.deleteJob(jobId);
+        job.setIsDeleted(1);
+        jobRepository.save(job);
+//        jobRepository.deleteJob(jobId);
     }
 
     @Override
