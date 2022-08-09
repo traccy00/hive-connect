@@ -28,7 +28,7 @@ public class RequestJoinCompanyServiceImpl implements RequestJoinCompanyService 
         //Mai: cần check xem recruiter này đã tạo request nào chưa, trạng thái request như thế nào
         Optional<Company> company = companyService.findById(requestJoinCompany.getCompanyId());
         if(!company.isPresent()) {
-            throw new HiveConnectException("Can not find this company to send request");
+            throw new HiveConnectException("Không tìm thấy công ty này để gửi yêu cầu.");
         }
         requestJoinCompany.setStatus("Pending");
         requestJoinCompany.setApproverId(company.get().getCreatorId());
