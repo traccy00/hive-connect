@@ -10,4 +10,5 @@ public class CommonRecruiterInformationResponse {
     private String verifyStep;
     private long totalCreatedJob;
     private String candidateApplyPercentage;
+    private String message;
 }

@@ -28,7 +28,7 @@ public class SecurityUserServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Users> optionUser = userRepository.findByUsername(username);
         if (!optionUser.isPresent()) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+            throw new UsernameNotFoundException("Không tìn thấy người dùng với tên đăng nhập: " + username);
         }
         Users user = optionUser.get();
         Role role = roleService.getRoleById(user.getRoleId());
