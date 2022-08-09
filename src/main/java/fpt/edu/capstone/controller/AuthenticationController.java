@@ -75,6 +75,10 @@ public class AuthenticationController {
     @Operation(summary = "Login user")
     public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
+            Users users = userService.findUserByUserName(request.getUsername()).get();
+            if(users.isGoogle()){
+                throw new HiveConnectException(ResponseMessageConstants.LOGIN_FAILED);
+            }
             authenticate(request.getUsername().trim(), request.getPassword());
             String username = request.getUsername();
             logger.info("login with username {}", username);

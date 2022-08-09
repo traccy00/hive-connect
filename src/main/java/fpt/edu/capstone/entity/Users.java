@@ -61,4 +61,7 @@ public class Users extends BaseEntity {
 
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
+
+    @Column(name = "is_google")
+    private boolean isGoogle;
 }
