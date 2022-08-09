@@ -110,7 +110,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         }
         String message = "";
         int step = 0;
-        int totalStep = 3;
+        int totalStep = 4;
         Users user = userRepository.getById(optionalRecruiter.get().getUserId());
         if (user == null) {
             throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
