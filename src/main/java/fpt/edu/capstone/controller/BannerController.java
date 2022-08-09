@@ -71,7 +71,7 @@ public class BannerController {
 
     @PutMapping("/update-banner-package")
     @Operation(summary = "Admin module - Update banner package on Manage Banner screen")
-    public ResponseData updateBanner(UpdateBannerRequest request) {
+    public ResponseData updateBanner(@RequestBody UpdateBannerRequest request) {
         try {
             bannerService.updateBanner(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
