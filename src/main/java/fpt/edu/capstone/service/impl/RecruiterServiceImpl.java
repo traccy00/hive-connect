@@ -158,33 +158,37 @@ public class RecruiterServiceImpl implements RecruiterService {
 
     @Override
     public Recruiter approveLicense(ApprovalLicenseRequest request) {
-        Optional<Recruiter> optionalRecruiter = recruiterRepository.findById(request.getRecruiterId());
-        if (!optionalRecruiter.isPresent()) {
+//        Optional<Recruiter> recruiter = recruiterRepository.findById(request.getRecruiterId());
+//        if (!recruiter.isPresent()) {
+//            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+//        }
+        Recruiter recruiter = recruiterRepository.getRecruiterByUserId(request.getRecruiterId());
+        if (recruiter == null) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         //accept , reject
         if (request.getType().equals("1")) {
             if (request.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
-                optionalRecruiter.get().setBusinessLicenseApprovalStatus(Enums.ApprovalStatus.APPROVED.getStatus());
+                recruiter.setBusinessLicenseApprovalStatus(Enums.ApprovalStatus.APPROVED.getStatus());
             } else if (request.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT.getStatus())) {
-                optionalRecruiter.get().setBusinessLicenseApprovalStatus(Enums.ApprovalStatus.REJECT.getStatus());
+                recruiter.setBusinessLicenseApprovalStatus(Enums.ApprovalStatus.REJECT.getStatus());
             } else {
-                throw new HiveConnectException("Trạng thái approve không đúng, liên hệ admin");
+                throw new HiveConnectException(ResponseMessageConstants.APPROVAL_STATUS_INVALID);
             }
-            optionalRecruiter.get().update();
-            recruiterRepository.save(optionalRecruiter.get());
+            recruiter.update();
+            recruiterRepository.save(recruiter);
         } else if (request.getType().equals("2")) {
             if (request.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
-                optionalRecruiter.get().setAdditionalLicenseApprovalStatus(Enums.ApprovalStatus.APPROVED.getStatus());
+                recruiter.setAdditionalLicenseApprovalStatus(Enums.ApprovalStatus.APPROVED.getStatus());
             } else if (request.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT.getStatus())) {
-                optionalRecruiter.get().setAdditionalLicenseApprovalStatus(Enums.ApprovalStatus.REJECT.getStatus());
+                recruiter.setAdditionalLicenseApprovalStatus(Enums.ApprovalStatus.REJECT.getStatus());
             } else {
-                throw new HiveConnectException("Trạng thái approve không đúng, liên hệ admin");
+                throw new HiveConnectException(ResponseMessageConstants.APPROVAL_STATUS_INVALID);
             }
-            optionalRecruiter.get().update();
-            recruiterRepository.save(optionalRecruiter.get());
+            recruiter.update();
+            recruiterRepository.save(recruiter);
         }
-        return optionalRecruiter.get();
+        return recruiter;
     }
 
     @Override

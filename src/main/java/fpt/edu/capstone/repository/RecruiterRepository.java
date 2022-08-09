@@ -60,8 +60,8 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
     Page<Recruiter> getRecruiterByCompanyId(long companyId, Pageable pageable);
 
     @Query(value = "select * from recruiter r where (business_license_approval_status is not null " +
-            "or additional_license_approval_status is not null) and business_license_approval_status like concat('%',?1,'%') " +
-            "and additional_license_approval_status like concat('%',?2,'%') ", nativeQuery = true)
+            "or additional_license_approval_status is not null) and (business_license_approval_status like concat('%',?1,'%') or business_license_approval_status is null) " +
+            "and (additional_license_approval_status like concat('%',?2,'%') or additional_license_approval_status is null) order by updated_at desc", nativeQuery = true)
     List<Recruiter> searchLicenseApprovalForAdmin(String businessApprovalStatus, String additionalApprovalStatus);
 
     @Query(value = "select * from recruiter r  where r.id = ?", nativeQuery = true)
