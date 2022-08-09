@@ -424,7 +424,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             BannerActive newBannerActive = new BannerActive();
             newBannerActive.setImageUrl(item);
             newBannerActive.setPaymentId(payment.getId());
-            bannerActive.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+            newBannerActive.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
             newBannerActive.setDisplayPosition(bannerDisplayPosition);
             newBannerActive.create();
             bannerActiveRepository.save(newBannerActive);
