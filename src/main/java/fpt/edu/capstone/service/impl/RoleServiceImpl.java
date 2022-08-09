@@ -41,9 +41,9 @@ public class RoleServiceImpl implements RoleService {
         role.setName(request.getRoleName());
         role.setDescription(request.getDescription());
         roleRepository.save(role);
-        if(!roleRepository.findById(role.getId()).isPresent()) {
-            throw new HiveConnectException(ResponseMessageConstants.CREATE_FAIL);
-        }
+//        if(!roleRepository.findById(role.getId()).isPresent()) {
+//            throw new HiveConnectException(ResponseMessageConstants.CREATE_FAIL);
+//        }
         return role;
     }
 

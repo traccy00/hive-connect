@@ -9,7 +9,6 @@ import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.AmazonS3ClientService;
 import fpt.edu.capstone.service.impl.ImageServiceImpl;
-import fpt.edu.capstone.service.impl.UserImageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
@@ -32,8 +31,6 @@ public class FileController {
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     private final UserService userService;
-
-    private final UserImageService userImageService;
 
     private final CompanyService companyService;
 
