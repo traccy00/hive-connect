@@ -109,7 +109,7 @@ public interface CVRepository extends JpaRepository<CV, Long> {
                                              @Param("candidateAddress") String candidateAddress,
                                              @Param("techStack") String techStack);
 
-    @Query(value = "select c from CV c " +
+    @Query(value = "select distinct c from CV c " +
             "join Candidate ca on c.candidateId  = ca.id " +
             "left join MajorLevel ml on c.id  = ml.cvId " +
             "left join Major m on m.id = ml.majorId " +
