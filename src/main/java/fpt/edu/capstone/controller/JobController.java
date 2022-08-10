@@ -209,7 +209,7 @@ public class JobController {
 
     @GetMapping("/popular-job")
     public ResponseData getPopularJob(@RequestParam(defaultValue = "0") Integer pageNo,
-                                      @RequestParam(defaultValue = "10") Integer pageSize) {
+                                      @RequestParam(defaultValue = "4") Integer pageSize) {
         // get list lấy ra công việc phỏ biến
         try {
             ResponseDataPagination pagination = candidateJobService.getPopularJob(pageNo, pageSize);

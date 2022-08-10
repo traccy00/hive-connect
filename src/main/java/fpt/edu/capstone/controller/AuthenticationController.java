@@ -75,8 +75,11 @@ public class AuthenticationController {
     @Operation(summary = "Login user")
     public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
-            Users users = userService.findUserByUserName(request.getUsername()).get();
-            if(users.isGoogle()){
+            Optional<Users> users = userService.findUserByUserName(request.getUsername());
+            if (!users.isPresent()) {
+                throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+            }
+            if (users.get().isGoogle()) {
                 throw new HiveConnectException(ResponseMessageConstants.LOGIN_FAILED);
             }
             authenticate(request.getUsername().trim(), request.getPassword());
@@ -117,7 +120,7 @@ public class AuthenticationController {
                 if (recruiter.get().getCompanyId() == 0) {
                     response.setJoinedCompany(false);
                     Optional<RequestJoinCompany> requestJoinCompany = requestJoinCompanyService.findById(recruiter.get().getId());
-                    if(requestJoinCompany.isPresent()) {
+                    if (requestJoinCompany.isPresent()) {
                         response.setCreatedOrRequestedJoinCompany(true);
                     } else {
                         response.setCreatedOrRequestedJoinCompany(false);
@@ -142,7 +145,7 @@ public class AuthenticationController {
                 response.setAdmin(admin.get());
             }
 
-            if(!user.isVerifiedEmail()) {
+            if (!user.isVerifiedEmail()) {
                 response.setVerifiedEmail(false);
             } else {
                 response.setVerifiedEmail(true);
@@ -212,7 +215,7 @@ public class AuthenticationController {
                 //lấy token
                 logger.info("login with username {}", username);
                 Users emailExistsButUseForAnotherAccount = userRepository.findByUsernameAndEmail(username, email);
-                if(emailExistsButUseForAnotherAccount == null) {
+                if (emailExistsButUseForAnotherAccount == null) {
                     throw new HiveConnectException(ResponseMessageConstants.EMAIL_EXISTS);
                 }
                 final UserDetails userDetails = securityUserService.loadUserByUsername(username);
@@ -247,7 +250,7 @@ public class AuthenticationController {
                     }
                     response.setRecruiter(recruiter.get());
                 }
-                if(!user.isVerifiedEmail()) {
+                if (!user.isVerifiedEmail()) {
                     response.setVerifiedEmail(false);
                 } else {
                     response.setVerifiedEmail(true);
