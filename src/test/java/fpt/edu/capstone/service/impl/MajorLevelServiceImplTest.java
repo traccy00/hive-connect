@@ -2,7 +2,6 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.entity.MajorLevel;
 import fpt.edu.capstone.repository.MajorLevelRepository;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;

@@ -1,14 +1,12 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.login.LoginGoogleRequest;
 import fpt.edu.capstone.dto.register.*;
 import fpt.edu.capstone.entity.Role;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.UserRepository;
 import fpt.edu.capstone.service.EmailService;
-import fpt.edu.capstone.service.LoginService;
 import fpt.edu.capstone.service.RoleService;
 import fpt.edu.capstone.service.UserService;
 import lombok.AllArgsConstructor;
