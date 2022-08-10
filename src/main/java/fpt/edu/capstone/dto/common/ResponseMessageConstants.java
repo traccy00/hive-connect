@@ -18,6 +18,7 @@ public interface ResponseMessageConstants {
     String DELETE_SUCCESSFULLY = "Xóa thành công";
     String RECRUITER_DOES_NOT_EXIST = "Không tìm thấy người tuyển dụng này";
     String CANDIDATE_DOES_NOT_EXIST = "Không tìm thấy ứng viên này";
+    String CHOOSE_UPLOAD_FILE = "Vui lòng chọn tệp tải lên";
 
     // LOGIN
     String LOGIN_ACCESS_DENIED = "Đăng nhập bị từ chối.";
@@ -80,7 +81,7 @@ public interface ResponseMessageConstants {
     String UPLOAD_IMAGE_EXCEPTION = "MSG_UPLOAD_IMAGE_EXCEPTION";
     String REQUEST_EXCEPTION = "MSG_REQUEST_EXCEPTION";
     String UPLOAD_IMG_EXCEPTION = "MSG_UPLOAD_IMG_EXCEPTION";
-    String MAX_IMAGE_SIZE = "MSG_MAX_IMAGE_SIZE_5MB";
+    String MAX_IMAGE_SIZE = "Tệp tải lên có dung lượng vượt quá 5MB";
     String UPLOAD_IMAGE_WRONG_TYPE = "Tệp tải lên không đúng định dạng";
     String UPLOAD_IMAGE_OVER_SIZE = "Hình ảnh tải lên bị quá dung lượng cho phép";
     String UPDATE_SUCCESSFULLY = "Cập nhật thành công";

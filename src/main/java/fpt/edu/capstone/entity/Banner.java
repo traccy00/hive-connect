@@ -47,10 +47,10 @@ public class Banner extends BaseEntity {
     private boolean homepageBannerA;
 
     @Column(name = "homepage_banner_b")
-    private boolean homePageBannerB;
+    private boolean homepageBannerB;
 
     @Column(name = "homepage_banner_c")
-    private boolean homePageBannerC;
+    private boolean homepageBannerC;
 
     @Column(name = "job_banner_a")
     private boolean jobBannerA;

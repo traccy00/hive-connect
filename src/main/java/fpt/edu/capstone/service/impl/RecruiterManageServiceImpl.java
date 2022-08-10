@@ -222,12 +222,11 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         if (request == null) {
-            throw new HiveConnectException("Không có dữ liệu thay đổi, không thể cập nhật");
+            return null;
         }
         if ((request.getFullName() == null || request.getFullName().trim().isEmpty())
-                || (request.getPhone() == null || request.getPhone().trim().isEmpty())
                 || (request.getPosition() == null || request.getPosition().trim().isEmpty())) {
-            throw new HiveConnectException("Vui lòng nhập thông tin bắt buộc.");
+            throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
         }
         if (request.getAvatarUrl() != null && request.getAvatarUrl().trim().isEmpty()) {
             recruiter.setAvatarUrl(request.getAvatarUrl());
@@ -367,12 +366,12 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                     Enums.BannerPosition.HOME_BANNER_A.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.HOME_BANNER_A.getStatus(), request.getHomepageBannerAImage());
         }
-        if (banner.isHomePageBannerB() && request.getHomepageBannerBImage() != null) {
+        if (banner.isHomepageBannerB() && request.getHomepageBannerBImage() != null) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.HOME_BANNER_B.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.HOME_BANNER_B.getStatus(), request.getHomepageBannerBImage());
         }
-        if (banner.isHomePageBannerC() && request.getHomepageBannerCImage() != null) {
+        if (banner.isHomepageBannerC() && request.getHomepageBannerCImage() != null) {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.HOME_BANNER_C.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.HOME_BANNER_C.getStatus(), request.getHomepageBannerCImage());

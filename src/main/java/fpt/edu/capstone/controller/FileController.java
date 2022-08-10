@@ -4,6 +4,7 @@ import fpt.edu.capstone.dto.UploadFileRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.CandidateService;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.UserService;
@@ -199,7 +200,12 @@ public class FileController {
     //cần validate đuôi file
     @PostMapping("/upload-file")
     public ResponseData uploadImages(@ModelAttribute UploadFileRequest request) {
+        if(request.getFile().getSize() > 5242880) {
+            logger.info("uploadImage > " + 5242880);
+            throw new HiveConnectException(ResponseMessageConstants.MAX_IMAGE_SIZE);
+        }
         try {
+
             String fileUrl = amazonS3ClientService.uploadFile(request, request.getFile());
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, fileUrl);
         } catch (Exception e) {

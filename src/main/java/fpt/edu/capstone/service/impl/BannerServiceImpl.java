@@ -126,8 +126,8 @@ public class BannerServiceImpl implements BannerService {
         detailBannerPackage.get().setImage(request.getImage());
         detailBannerPackage.get().setSpotlight(request.isSpotlight());
         detailBannerPackage.get().setHomepageBannerA(request.isHomepageBannerA());
-        detailBannerPackage.get().setHomePageBannerB(request.isHomePageBannerB());
-        detailBannerPackage.get().setHomePageBannerC(request.isHomePageBannerC());
+        detailBannerPackage.get().setHomepageBannerB(request.isHomePageBannerB());
+        detailBannerPackage.get().setHomepageBannerC(request.isHomePageBannerC());
         detailBannerPackage.get().setJobBannerA(request.isJobBannerA());
         detailBannerPackage.get().setJobBannerB(request.isJobBannerB());
         detailBannerPackage.get().setJobBannerC(request.isJobBannerC());

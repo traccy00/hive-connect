@@ -40,21 +40,23 @@ public class AmazonS3ClientService {
         put(Enums.FileUploadType.Image, Arrays.asList(IMAGE_TYPES));
         put(Enums.FileUploadType.CV, Arrays.asList(CV_TYPES));
     }};
-    private int MAX_FILE_SIZE = 5242880;
+    private long MAX_FILE_SIZE = 5242880;
 
     public String uploadFileAmazonS3(UploadFileRequest request, MultipartFile multipartFile) throws Exception {
+        if(request.getFile() == null) {
+            throw new HiveConnectException(ResponseMessageConstants.CHOOSE_UPLOAD_FILE);
+        }
         String fileType = multipartFile.getContentType().split("/")[1];
         String fileName = UUID.randomUUID().toString().toUpperCase() + "." + fileType;
 
         logger.info("file-type request:" + fileType);
-//        if (!TYPE_VALIDATORS.get(Enums.FileUploadType.parse(request.getTypeUpload())).contains(multipartFile.getContentType())) {
-//            logger.info("uploadAvatar - Wrong type");
-//            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_WRONG_TYPE);
-//        }
-
-        logger.info("file-size request:" + multipartFile.getSize());
-        if (multipartFile.getSize() > MAX_FILE_SIZE) {
-            logger.info("uploadAvatar - MAX_FILE_SIZE");
+        if (!TYPE_VALIDATORS.get(Enums.FileUploadType.parse(request.getTypeUpload())).contains(multipartFile.getContentType())) {
+            logger.info("uploadImage - Wrong type");
+            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_WRONG_TYPE);
+        }
+        logger.info("file-size request:" + request.getFile().getSize());
+        if (request.getFile().getSize() > MAX_FILE_SIZE) {
+            logger.info("uploadImage - MAX_FILE_SIZE");
             throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_OVER_SIZE);
         }
 
