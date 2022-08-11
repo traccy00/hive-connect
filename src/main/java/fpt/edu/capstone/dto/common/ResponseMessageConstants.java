@@ -10,7 +10,7 @@ public interface ResponseMessageConstants {
     String DATA_IS_NULL_OR_EMPTY = "Không có dữ liệu.";
     String REQUEST_NOT_EXIST = "Không tìm thấy người dùng hoặc yêu cầu không tồn tại.";
     String CREATE_FAIL = "Tạo thất bại";
-    String CREATE_SUCCESSFULLY = "Tạo thất bại";
+    String CREATE_SUCCESSFULLY = "Tạo thành công.";
     String ROLE_NAME_EXISTS = "Loại người dùng này đã tồn tại";
     String PLEASE_TRY_TO_CONTACT_ADMIN = "Có lỗi xảy ra, vui lòng liên hệ quản trị hệ thống.";
     String APPROVAL_STATUS_INVALID = "Trạng thái duyệt không hợp lệ.";
@@ -50,6 +50,8 @@ public interface ResponseMessageConstants {
     String USER_DOES_NOT_EXIST = "Người dùng không tồn tại";
     String USER_IS_INACTIVE = "Tài khoản người dùng không hoạt động";
     String USER_IS_DELETED = "Người dùng đã bị xóa";
+    String PHONE_NUMBER_IN_USE = "Số điện thoại đã được sử dụng.";
+    String PHONE_NUMBER_VERIFIED = "Số điện thoại đã được xác minh! Không thể thay đổi";
 
     // COMMON
     String UPDATE_FAILED = "Cập nhật thất bại.";
@@ -65,6 +67,7 @@ public interface ResponseMessageConstants {
     String UPDATE_JOB_SUCCESS = "Cập nhật tin tuyển dụng thành công.";
     String UPDATE_JOB_FAILED = "Cập nhật tin tuyển dụng thất bại.";
     String SALARY_INVALID = "Mức lương không hợp lệ.";
+    String REPORT_JOB_FAIL = "Báo cáo tin tuyển dụng thất bại.";
 
     //PAYMENT
     String PAYMENT_SUCCESS = "Thanh toán thành công";
