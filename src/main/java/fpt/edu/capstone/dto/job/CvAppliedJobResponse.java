@@ -18,5 +18,6 @@ public class CvAppliedJobResponse {
 //    private String experienceYear;
     private String approvalStatus;
     private String cvUrl;
+    private long cvId;
 }
 

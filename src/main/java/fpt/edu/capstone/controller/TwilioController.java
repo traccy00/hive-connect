@@ -2,7 +2,7 @@ package fpt.edu.capstone.controller;
 
 import com.twilio.Twilio;
 import com.twilio.rest.verify.v2.service.Verification;
-import fpt.edu.capstone.common.Twilio.TwilioProperties;
+import fpt.edu.capstone.common.twilio.TwilioProperties;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.service.UserService;
