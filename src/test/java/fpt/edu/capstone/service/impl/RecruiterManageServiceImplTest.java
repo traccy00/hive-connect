@@ -1134,7 +1134,14 @@ public class RecruiterManageServiceImplTest {
         final DetailPurchasedPackageResponse result = recruiterManageServiceImplUnderTest.getDetailPurchasedPackage(0L,
                 0L);
     }
-
+    private ProfileViewer profileViewer(){
+        ProfileViewer viewer = new ProfileViewer();
+        viewer.setId(0L);
+        viewer.setCvId(0L);
+        viewer.setViewerId(0L);
+        viewer.setCandidateId(0L);
+        return viewer;
+    }
     @Test
     public void testGetCvWithPay() {
         final Optional<Recruiter> recruiter = Optional.of(recruiter());
@@ -1158,11 +1165,7 @@ public class RecruiterManageServiceImplTest {
         final Optional<Users> optional = Optional.of(users());
         when(mockUserService.findByIdOp(0L)).thenReturn(optional);
 
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
 
@@ -1250,11 +1253,7 @@ public class RecruiterManageServiceImplTest {
         final Optional<Users> optional = Optional.of(users());
         when(mockUserService.findByIdOp(0L)).thenReturn(optional);
 
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
 
@@ -1315,11 +1314,7 @@ public class RecruiterManageServiceImplTest {
         final Optional<Users> optional = Optional.of(users());
         when(mockUserService.findByIdOp(0L)).thenReturn(optional);
 
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
 
@@ -1378,11 +1373,7 @@ public class RecruiterManageServiceImplTest {
         final Optional<Users> optional = Optional.of(users());
         when(mockUserService.findByIdOp(0L)).thenReturn(optional);
         
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
         
@@ -1441,11 +1432,7 @@ public class RecruiterManageServiceImplTest {
         when(mockWorkExperienceService.getListWorkExperienceByCvId(0L)).thenReturn(workExperiences);
         final Optional<Users> optional = Optional.of(users());
         when(mockUserService.findByIdOp(0L)).thenReturn(optional);
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
         final Optional<CV> cv1 = Optional.of(cv());
@@ -1496,11 +1483,7 @@ public class RecruiterManageServiceImplTest {
         final Optional<Users> optional = Optional.of(users());
         when(mockUserService.findByIdOp(0L)).thenReturn(optional);
 
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
 
@@ -1556,11 +1539,7 @@ public class RecruiterManageServiceImplTest {
         final Optional<Users> optional = Optional.of(users());
         when(mockUserService.findByIdOp(0L)).thenReturn(optional);
         
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
         
@@ -1617,11 +1596,7 @@ public class RecruiterManageServiceImplTest {
         when(mockWorkExperienceService.getListWorkExperienceByCvId(0L)).thenReturn(workExperiences);
 
         when(mockUserService.findByIdOp(0L)).thenReturn(Optional.empty());
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional);
 
@@ -1684,11 +1659,7 @@ public class RecruiterManageServiceImplTest {
         final Recruiter recruiter1 =   recruiter();
         when(mockRecruiterService.getRecruiterById(0L)).thenReturn(recruiter1);
 
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         when(mockProfileViewerService.getByCvIdAndViewerId(0L, 0L)).thenReturn(viewer);
 
         final ProfileViewer viewer1 = new ProfileViewer();
@@ -1727,11 +1698,7 @@ public class RecruiterManageServiceImplTest {
         final Optional<Users> optional = Optional.of(users());
         when(mockUserService.findByIdOp(0L)).thenReturn(optional);
 
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
         when(mockCvService.findByIdAndCandidateId(0L, 0L)).thenReturn(Optional.empty());
@@ -1772,11 +1739,7 @@ public class RecruiterManageServiceImplTest {
         final Optional<Users> optional = Optional.of(users());
         when(mockUserService.findByIdOp(0L)).thenReturn(optional);
 
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
 
@@ -1818,11 +1781,7 @@ public class RecruiterManageServiceImplTest {
 
         final Optional<Users> optional = Optional.of(users());
         when(mockUserService.findByIdOp(0L)).thenReturn(optional);
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
         when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
 
@@ -1856,11 +1815,7 @@ public class RecruiterManageServiceImplTest {
         
         final Recruiter recruiter =   recruiter();
         when(mockRecruiterService.getRecruiterById(0L)).thenReturn(recruiter);
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         when(mockProfileViewerService.getByCvIdAndViewerId(0L, 0L)).thenReturn(viewer);
         final ProfileViewer viewer1 = new ProfileViewer();
         viewer1.setId(0L);
@@ -1912,11 +1867,7 @@ public class RecruiterManageServiceImplTest {
         when(mockRecruiterService.getRecruiterById(0L)).thenReturn(recruiter);
 
         when(mockProfileViewerService.getByCvIdAndViewerId(0L, 0L)).thenReturn(null);
-        final ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        final ProfileViewer viewer = profileViewer();
         when(mockProfileViewerRepository.save(any(ProfileViewer.class))).thenReturn(viewer);
 
         recruiterManageServiceImplUnderTest.insertWhoViewCv(response);

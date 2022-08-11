@@ -1,0 +1,99 @@
+package fpt.edu.capstone.service.impl;
+
+import fpt.edu.capstone.entity.ProfileViewer;
+import fpt.edu.capstone.repository.ProfileViewerRepository;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
+public class ProfileViewerServiceImplTest {
+
+    @Mock
+    private ProfileViewerRepository mockProfileViewerRepository;
+
+    private ProfileViewerServiceImpl profileViewerServiceImplUnderTest;
+
+    @Before
+    public void setUp() {
+        profileViewerServiceImplUnderTest = new ProfileViewerServiceImpl(mockProfileViewerRepository);
+    }
+    private ProfileViewer profileViewer(){
+        ProfileViewer viewer = new ProfileViewer();
+        viewer.setId(0L);
+        viewer.setCvId(0L);
+        viewer.setViewerId(0L);
+        viewer.setCandidateId(0L);
+        return viewer;
+    }
+    @Test
+    public void testGetProfileViewerOfCv() {
+        final ProfileViewer viewer = profileViewer();
+        final Page<ProfileViewer> viewerPage = new PageImpl<>(Arrays.asList(viewer));
+        when(mockProfileViewerRepository.getAllByCvId(any(Pageable.class), eq(0L))).thenReturn(viewerPage);
+        final Page<ProfileViewer> result = profileViewerServiceImplUnderTest.getProfileViewerOfCv(PageRequest.of(0, 1),
+                0L);
+    }
+
+    @Test
+    public void testGetProfileViewerOfCv_ProfileViewerRepositoryReturnsNoItems() {
+        when(mockProfileViewerRepository.getAllByCvId(any(Pageable.class), eq(0L)))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        final Page<ProfileViewer> result = profileViewerServiceImplUnderTest.getProfileViewerOfCv(PageRequest.of(0, 1),
+                0L);
+    }
+
+    @Test
+    public void testGetByCvIdAndViewerId() {
+        final ProfileViewer viewer = profileViewer();
+        when(mockProfileViewerRepository.getByCvIdAndViewerId(0L, 0L)).thenReturn(viewer);
+        final ProfileViewer result = profileViewerServiceImplUnderTest.getByCvIdAndViewerId(0L, 0L);
+    }
+
+    @Test
+    public void testFindAll() {
+        final ProfileViewer viewer = profileViewer();
+        final Page<ProfileViewer> viewerPage = new PageImpl<>(Arrays.asList(viewer));
+        when(mockProfileViewerRepository.findAll(PageRequest.of(0, 1))).thenReturn(viewerPage);
+        final List<ProfileViewer> result = profileViewerServiceImplUnderTest.findAll(PageRequest.of(0, 1));
+    }
+
+    @Test
+    public void testFindAll_ProfileViewerRepositoryReturnsNoItems() {
+        when(mockProfileViewerRepository.findAll(PageRequest.of(0, 1)))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        final List<ProfileViewer> result = profileViewerServiceImplUnderTest.findAll(PageRequest.of(0, 1));
+        assertThat(result).isEqualTo(Collections.emptyList());
+    }
+
+    @Test
+    public void testGetByCvIdAndViewerIdOptional() {
+        final ProfileViewer viewer = profileViewer();
+        final Optional<ProfileViewer> optional = Optional.of(viewer);
+        when(mockProfileViewerRepository.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional);
+        final Optional<ProfileViewer> result = profileViewerServiceImplUnderTest.getByCvIdAndViewerIdOptional(0L, 0L);
+    }
+
+    @Test
+    public void testGetByCvIdAndViewerIdOptional_ProfileViewerRepositoryReturnsAbsent() {
+        when(mockProfileViewerRepository.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(Optional.empty());
+        final Optional<ProfileViewer> result = profileViewerServiceImplUnderTest.getByCvIdAndViewerIdOptional(0L, 0L);
+        assertThat(result).isEmpty();
+    }
+}
