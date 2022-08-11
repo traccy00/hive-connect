@@ -200,10 +200,14 @@ public class FileController {
     //cần validate đuôi file
     @PostMapping("/upload-file")
     public ResponseData uploadImages(@ModelAttribute UploadFileRequest request) {
-        if(request.getFile().getSize() > 5242880) {
-            logger.info("uploadImage > " + 5242880);
-            throw new HiveConnectException(ResponseMessageConstants.MAX_IMAGE_SIZE);
-        }
+//        if(request.getFile().getSize() > 5242880) {
+//            logger.info("uploadImage > " + 5242880);
+//            throw new HiveConnectException(ResponseMessageConstants.MAX_IMAGE_SIZE);
+//        }
+//        float fileSizeInMB = request.getFile().getSize() / 1_000_000;
+//        if (fileSizeInMB > 5.0f){
+//            throw new RuntimeException("File must  be <= 5mb");
+//        }
         try {
 
             String fileUrl = amazonS3ClientService.uploadFile(request, request.getFile());

@@ -55,14 +55,22 @@ public class ReportedServiceImpl implements ReportedService {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         if (jobService.getJobById(request.getJobId()) == null) {
-            throw new HiveConnectException("Tin tuyển dụng không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
-        if ((request.getFullName() == null || request.getFullName().trim().isEmpty())
-                || (request.getPhone() == null || request.getPhone().trim().isEmpty())
-                || (request.getUserAddress() == null || request.getUserAddress().trim().isEmpty())
-                || (request.getUserEmail() == null || request.getUserEmail().trim().isEmpty())
-                || (request.getReportReason() == null || request.getReportReason().trim().isEmpty())) {
-            throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
+        if (request.getFullName() == null || request.getFullName().trim().isEmpty()) {
+            throw new HiveConnectException("Vui lòng điền họ tên của bạn.");
+        }
+        if (request.getPhone() == null || request.getPhone().trim().isEmpty()) {
+            throw new HiveConnectException("Vui lòng điền họ tên của bạn.");
+        }
+        if (request.getUserAddress() == null || request.getUserAddress().trim().isEmpty()) {
+            throw new HiveConnectException("Vui lòng điền địa chỉ của bạn.");
+        }
+        if (request.getUserEmail() == null || request.getUserEmail().trim().isEmpty()) {
+            throw new HiveConnectException("Vui lòng nhập email.");
+        }
+        if (request.getReportReason() == null || request.getReportReason().trim().isEmpty()) {
+            throw new HiveConnectException("Vui lòng nhập lí do báo cáo.");
         }
         Report report = modelMapper.map(request, Report.class);
         Job job = jobService.getJobById(request.getJobId());
@@ -75,7 +83,7 @@ public class ReportedServiceImpl implements ReportedService {
         report.setReportType("1");
         reportedRepository.save(report);
         if (!reportedRepository.findById(report.getId()).isPresent()) {
-            throw new HiveConnectException("Báo cáo thất bại.");
+            throw new HiveConnectException(ResponseMessageConstants.REPORT_JOB_FAIL);
         }
         return report;
     }

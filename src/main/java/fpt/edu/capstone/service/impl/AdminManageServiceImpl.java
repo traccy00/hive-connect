@@ -25,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +112,8 @@ public class AdminManageServiceImpl implements AdminManageService {
                 throw new HiveConnectException(ResponseMessageConstants.APPROVAL_STATUS_INVALID);
             }
             bannerActive.setApprovalStatus(request.getApprovalStatus());
+            bannerActive.update();
+            bannerActive.setApprovalDate(LocalDateTime.now());
             bannerActiveRepository.save(bannerActive);
         } else {
             throw new HiveConnectException(ResponseMessageConstants.APPROVAL_WAS_PROCESSED);
@@ -148,6 +151,7 @@ public class AdminManageServiceImpl implements AdminManageService {
                 response.setApprovalDate(bannerActive.getApprovalDate());
                 response.setApprovalStatus(bannerActive.getApprovalStatus());
                 response.setBannerImageUrl(bannerActive.getImageUrl());
+                response.setUpdatedAt(bannerActive.getUpdatedAt());
                 responseList.add(response);
             }
         }
