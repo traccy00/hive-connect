@@ -225,6 +225,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             return null;
         }
         if ((request.getFullName() == null || request.getFullName().trim().isEmpty())
+                || (request.getPhone() == null || request.getPhone().trim().isEmpty())
                 || (request.getPosition() == null || request.getPosition().trim().isEmpty())) {
             throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
         }
@@ -241,17 +242,16 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         Users user = userRepository.getUserById(recruiter.getUserId());
         //recruiter tồn tại nhưng user không tồn tại (database lỗi)
         if (user == null) {
-            throw new HiveConnectException("Liên hệ admin");
+            throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
         }
         if (userService.findByPhoneAndIdIsNotIn(request.getPhone(), recruiter.getUserId()) != null) {
-            throw new HiveConnectException("Số điện thoại đã được sử dụng");
+            throw new HiveConnectException(ResponseMessageConstants.PHONE_NUMBER_IN_USE);
         } else {
-            user.setPhone(request.getPhone());
-        }
-        Users users = userService.findById(recruiter.getUserId());
-        if (users.isVerifiedPhone()) {
-            if (!request.getPhone().equals(userService.findByPhoneNumber(users.getPhone()))) {
-                throw new HiveConnectException("Số điện thoại đã được xác minh! Không thể thay đổi");
+            if(!request.getPhone().equals(user.getPhone())) {
+                if(user.isVerifiedPhone()) {
+                    throw new HiveConnectException(ResponseMessageConstants.PHONE_NUMBER_VERIFIED);
+                }
+                user.setPhone(request.getPhone());
             }
         }
         userRepository.save(user);

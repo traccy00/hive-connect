@@ -24,4 +24,5 @@ public class BannerForApprovalResponse {
     private LocalDateTime approvalDate;
     private String approvalStatus;
     private String bannerImageUrl;
+    private LocalDateTime updatedAt;
 }
