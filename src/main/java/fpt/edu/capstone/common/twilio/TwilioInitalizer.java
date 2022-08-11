@@ -1,4 +1,4 @@
-package fpt.edu.capstone.common.Twilio;
+package fpt.edu.capstone.common.twilio;
 
 
 import com.twilio.Twilio;

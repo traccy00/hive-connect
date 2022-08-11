@@ -1,4 +1,4 @@
-package fpt.edu.capstone.common.Twilio;
+package fpt.edu.capstone.common.twilio;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
