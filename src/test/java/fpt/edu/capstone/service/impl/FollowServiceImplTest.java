@@ -47,6 +47,10 @@ public class FollowServiceImplTest {
 
     private FollowServiceImpl followServiceImplUnderTest;
 
+    private Image imageEntity = new Image(0L, "name", "url", 0L,
+            0, false, false, 0L, "contentType", "content".getBytes(),
+            0L, 0L, false);
+
     private Job job(){
         Job job = new Job();
         job.setId(0L);
@@ -162,8 +166,7 @@ public class FollowServiceImplTest {
         when(mockJobHashTagService.getHashTagOfJob(0L)).thenReturn(hashtagList);
         final Company company = company();
         when(mockCompanyService.getCompanyById(0L)).thenReturn(company);
-        final Image image = new Image(0L, "name", "url", 0L, 0, false, false, 0L, "contentType", "content".getBytes(),
-                0L, 0L, false);
+        final Image image = imageEntity;
         when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 10, 0L);
     }
@@ -180,8 +183,7 @@ public class FollowServiceImplTest {
         when(mockJobHashTagService.getHashTagOfJob(0L)).thenReturn(hashtagList);
         final Company company = company();
         when(mockCompanyService.getCompanyById(0L)).thenReturn(company);
-        final Image image = new Image(0L, "name", "url", 0L, 0, false, false, 0L, "contentType", "content".getBytes(),
-                0L, 0L, false);
+        final Image image = imageEntity;
         when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 10, 0L);
     }
@@ -197,8 +199,7 @@ public class FollowServiceImplTest {
         when(mockJobHashTagService.getHashTagOfJob(0L)).thenReturn(null);
         final Company company = company();
         when(mockCompanyService.getCompanyById(0L)).thenReturn(company);
-        final Image image = new Image(0L, "name", "url", 0L, 0, false, false, 0L, "contentType", "content".getBytes(),
-                0L, 0L, false);
+        final Image image = imageEntity;
         when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 10, 0L);
     }
@@ -214,8 +215,7 @@ public class FollowServiceImplTest {
         when(mockJobHashTagService.getHashTagOfJob(0L)).thenReturn(Collections.emptyList());
         final Company company = company();
         when(mockCompanyService.getCompanyById(0L)).thenReturn(company);
-        final Image image = new Image(0L, "name", "url", 0L, 0, false, false, 0L, "contentType", "content".getBytes(),
-                0L, 0L, false);
+        final Image image = imageEntity;
         when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 10, 0L);
     }
@@ -231,8 +231,7 @@ public class FollowServiceImplTest {
         final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(0L, 0L, 0L, "hashTagName", "status"));
         when(mockJobHashTagService.getHashTagOfJob(0L)).thenReturn(hashtagList);
         when(mockCompanyService.getCompanyById(0L)).thenReturn(null);
-        final Image image = new Image(0L, "name", "url", 0L, 0, false, false, 0L, "contentType", "content".getBytes(),
-                0L, 0L, false);
+        final Image image = imageEntity;
         when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 10, 0L);
     }

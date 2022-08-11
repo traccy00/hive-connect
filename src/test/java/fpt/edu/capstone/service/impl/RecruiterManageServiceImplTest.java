@@ -1025,7 +1025,7 @@ public class RecruiterManageServiceImplTest {
         final Job job =job();
         when(mockJobService.getJobById(0L)).thenReturn(job);
         final JobDetailPurchasedResponse jobDetailPurchasedResponse = new JobDetailPurchasedResponse(0L, "companyName",
-                "jobName", "workPlace", "workForm", LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                "jobName", "workPlace", "workForm", LocalDateTime.of(2022, 1, 1, 0, 0, 0),
              LocalDateTime.now(), 0L, 0L, 0L, "rank", "experience", false, "jobDescription",
                 "jobRequirement", "benefit", "fieldName", false, false, false, 0L, "weekday", "country", "flag");
         when(mockModelMapper.map(any(Object.class), eq(JobDetailPurchasedResponse.class)))
@@ -1057,7 +1057,7 @@ public class RecruiterManageServiceImplTest {
         when(mockJobService.getJobById(0L)).thenReturn(job);
         
         final JobDetailPurchasedResponse jobDetailPurchasedResponse = new JobDetailPurchasedResponse(0L, "companyName",
-                "jobName", "workPlace", "workForm", LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                "jobName", "workPlace", "workForm", LocalDateTime.of(2022, 1, 1, 0, 0, 0),
                 LocalDateTime.now(), 0L, 0L, 0L, "rank", "experience", false, "jobDescription",
                 "jobRequirement", "benefit", "fieldName", false, false, false, 0L, "weekday", "country", "flag");
         when(mockModelMapper.map(any(Object.class), eq(JobDetailPurchasedResponse.class)))
@@ -1512,8 +1512,8 @@ public class RecruiterManageServiceImplTest {
         verify(mockRecruiterService).updateTotalCvView(0L, 0L);
         verify(mockProfileViewerRepository).save(any(ProfileViewer.class));
     }
-    private Education education = new Education(0L, 0L, "school", "major", LocalDateTime.of(2020, 1, 1, 0, 0, 0),
-                        LocalDateTime.of(2020, 1, 1, 0, 0, 0), false, "description");
+    private Education education = new Education(0L, 0L, "school", "major", LocalDateTime.of(2022, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2022, 1, 1, 0, 0, 0), false, "description");
     @Test
     public void testGetCvWithPay_WorkExperienceServiceReturnsNoItems() {
         final Optional<Recruiter> recruiter = Optional.of(recruiter());
@@ -1566,12 +1566,12 @@ public class RecruiterManageServiceImplTest {
         verify(mockRecruiterService).updateTotalCvView(0L, 0L);
         verify(mockProfileViewerRepository).save(any(ProfileViewer.class));
     }
-    private Certificate certificate = new Certificate(0L, "certificateName", "certificateUrl", 0L, 0L);
+    private Certificate certificate =new Certificate(0L, "certificateName", "certificateUrl", 0L, 0L);
     private Language language = new Language(0L, "language", "level", 0L);
     private MajorLevel majorLevel = new MajorLevel(0L, 0L, 0L, 0L, "level", false);
     private OtherSkill otherSkill = new OtherSkill(0L, "skillName", 0L, "level");
-    private WorkExperience workExperience = new WorkExperience(0L, 0L, "companyName", "position", LocalDateTime.of(2020, 1, 1, 0, 0, 0),
-            LocalDateTime.of(2020, 1, 1, 0, 0, 0), "description", false);
+    private WorkExperience workExperience = new WorkExperience(0L, 0L, "companyName", "position", LocalDateTime.of(2022, 1, 1, 0, 0, 0),
+            LocalDateTime.now(), "description", false);
     @Test 
     public void testGetCvWithPay_UserServiceReturnsAbsent() {
         final Optional<Recruiter> recruiter = Optional.of(recruiter());
