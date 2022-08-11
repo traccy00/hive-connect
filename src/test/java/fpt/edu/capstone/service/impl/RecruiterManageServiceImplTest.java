@@ -182,6 +182,12 @@ public class RecruiterManageServiceImplTest {
         return cv;
     }
 
+    private DetailPackage detailPackage(){
+        DetailPackage detailPackage = new DetailPackage(0L, 0L, "detailName", 0L,
+                0L, "timeExpired", "description", false, false, false, 0);
+        return detailPackage;
+    }
+
     private Candidate candidate(){
         Candidate candidate = new Candidate();
         candidate.setId(0L);
@@ -951,8 +957,7 @@ public class RecruiterManageServiceImplTest {
         when(mockPaymentService.findById(0L)).thenReturn(payment);
         final Banner banner = banner();
         when(mockBannerService.findById(0L)).thenReturn(banner);
-        final DetailPackage detailPackage = new DetailPackage(0L, 0L, "detailName", 0L, 0L, "timeExpired",
-                "description", false, false, false, 0);
+        final DetailPackage detailPackage = detailPackage();
         when(mockDetailPackageService.findById(0L)).thenReturn(detailPackage);
 
         final Optional<RentalPackage> optional = Optional.of(rentalPackage());
@@ -985,8 +990,7 @@ public class RecruiterManageServiceImplTest {
         when(mockPaymentService.findById(0L)).thenReturn(payment);
         final Banner banner =banner();
         when(mockBannerService.findById(0L)).thenReturn(banner);
-        final DetailPackage detailPackage = new DetailPackage(0L, 0L, "detailName", 0L, 0L, "timeExpired",
-                "description", false, false, false, 0);
+        final DetailPackage detailPackage = detailPackage();
         when(mockDetailPackageService.findById(0L)).thenReturn(detailPackage);
 
         when(mockRentalPackageService.findById(0L)).thenReturn(Optional.empty());
@@ -1011,8 +1015,7 @@ public class RecruiterManageServiceImplTest {
         // Configure BannerService.findById(...).
         final Banner banner = banner();
         when(mockBannerService.findById(0L)).thenReturn(banner);
-        final DetailPackage detailPackage = new DetailPackage(0L, 0L, "detailName", 0L, 0L, "timeExpired",
-                "description", false, false, false, 0);
+        final DetailPackage detailPackage = detailPackage();
         when(mockDetailPackageService.findById(0L)).thenReturn(detailPackage);
 
         final Optional<RentalPackage> optional = Optional.of(rentalPackage());
@@ -1044,8 +1047,7 @@ public class RecruiterManageServiceImplTest {
         
         final Banner banner = banner();
         when(mockBannerService.findById(0L)).thenReturn(banner);
-        final DetailPackage detailPackage = new DetailPackage(0L, 0L, "detailName", 0L, 0L, "timeExpired",
-                "description", false, false, false, 0);
+        final DetailPackage detailPackage = detailPackage();
         when(mockDetailPackageService.findById(0L)).thenReturn(detailPackage);
         final Optional<RentalPackage> optional = Optional.of(rentalPackage());
         when(mockRentalPackageService.findById(0L)).thenReturn(optional);
@@ -1076,8 +1078,7 @@ public class RecruiterManageServiceImplTest {
         when(mockPaymentService.findById(0L)).thenReturn(payment);
         final Banner banner = banner();
         when(mockBannerService.findById(0L)).thenReturn(banner);
-        final DetailPackage detailPackage = new DetailPackage(0L, 0L, "detailName", 0L, 0L, "timeExpired",
-                "description", false, false, false, 0);
+        final DetailPackage detailPackage = detailPackage();
         when(mockDetailPackageService.findById(0L)).thenReturn(detailPackage);
         final Optional<RentalPackage> optional = Optional.of(rentalPackage());
         when(mockRentalPackageService.findById(0L)).thenReturn(optional);
@@ -1108,8 +1109,7 @@ public class RecruiterManageServiceImplTest {
         when(mockPaymentService.findById(0L)).thenReturn(payment);
         final Banner banner = banner();
         when(mockBannerService.findById(0L)).thenReturn(banner);
-        final DetailPackage detailPackage = new DetailPackage(0L, 0L, "detailName", 0L, 0L, "timeExpired",
-                "description", false, false, false, 0);
+        final DetailPackage detailPackage = detailPackage();
         when(mockDetailPackageService.findById(0L)).thenReturn(detailPackage);
         final Optional<RentalPackage> optional = Optional.of(rentalPackage());
         when(mockRentalPackageService.findById(0L)).thenReturn(optional);
