@@ -16,4 +16,5 @@ public class ProfileViewerResponse {
     private long companyId;
     private String companyName;
     private LocalDateTime viewDate;
+    private String companyAvatar;
 }

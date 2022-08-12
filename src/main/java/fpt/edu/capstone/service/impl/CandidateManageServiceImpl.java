@@ -231,6 +231,10 @@ public class CandidateManageServiceImpl implements CandidateManageService {
                     response.setCompanyName(company.getName());
                 }
                 response.setViewDate(viewer.getCreatedAt());
+                Image image = imageService.getImageCompany(company.getId(), true);
+                if(image != null) {
+                    response.setCompanyAvatar(image.getUrl());
+                }
                 responseList.add(response);
             }
 //            responseList = profileViewerService.findAll(PageRequest.of(pageReq, pageSize, Sort.by(Sort.Direction.DESC, "id")));

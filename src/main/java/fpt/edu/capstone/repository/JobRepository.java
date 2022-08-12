@@ -23,10 +23,10 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             "and (lower(j.workForm) like lower(concat('%', :workForm ,'%')) or :workForm is null or :workForm ='')" +
             "and (lower(j.workPlace) like lower(concat('%', :workPlace ,'%')) or :workPlace is null or :workPlace ='') " +
             "and j.isDeleted = 0")
-    Page<Job> searchListJobFilter(Pageable pageable, @Param("fieldId") long fieldId,@Param("countryId") long countryId, @Param("jobName") String jobName,
-                                            @Param("fromSalary") long fromSalary, @Param("toSalary") long toSalary,
-                                            @Param("rank") String rank, @Param("workForm") String workForm,
-                                            @Param("workPlace") String workPlace);
+    Page<Job> searchListJobFilter(Pageable pageable, @Param("fieldId") long fieldId, @Param("countryId") long countryId, @Param("jobName") String jobName,
+                                  @Param("fromSalary") long fromSalary, @Param("toSalary") long toSalary,
+                                  @Param("rank") String rank, @Param("workForm") String workForm,
+                                  @Param("workPlace") String workPlace);
 
     @Modifying
     @Query("update Job j set j.isDeleted = 1 where j.id =:jobId")
@@ -34,8 +34,8 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     boolean existsById(long id);
 
-        @Query(value = "select * from Job where work_form like upper(concat('%', :workForm ,'%')) and flag =:flag order by random()", nativeQuery = true)
-    Page<Job> getListJobByWorkForm(Pageable pageable, @Param("workForm") String workForm,@Param("flag") String flag);
+    @Query(value = "select * from Job where work_form like upper(concat('%', :workForm ,'%')) and flag =:flag order by random()", nativeQuery = true)
+    Page<Job> getListJobByWorkForm(Pageable pageable, @Param("workForm") String workForm, @Param("flag") String flag);
 
     @Query(value = "select * from job where is_new_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
     Page<Job> getNewestJob(Pageable pageable, boolean isNewJob, int isDeleted, String flag);
