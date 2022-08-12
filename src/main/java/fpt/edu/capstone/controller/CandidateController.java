@@ -242,7 +242,7 @@ public class CandidateController {
         } catch (Exception e) {
                 String msg = LogUtils.printLogStackTrace(e);
                 logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
 
