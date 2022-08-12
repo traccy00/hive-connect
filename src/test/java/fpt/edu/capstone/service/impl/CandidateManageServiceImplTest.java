@@ -83,11 +83,11 @@ public class CandidateManageServiceImplTest {
     }
     @Before
     public void setUp() throws Exception {
-        candidateManageServiceImplUnderTest = new CandidateManageServiceImpl(mockModelMapper, mockAppliedJobService,
-                mockCandidateService, mockJobService, mockCompanyService, mockJobHashTagService, mockCvService,
-                mockWorkExperienceService, mockMajorLevelService, mockOtherSkillService, mockLanguageService,
-                mockCertificateService, mockEducationService, mockProfileViewerService, mockAppliedJobRepository,
-                mockImageService, mockCvRepository, mockEducationRepository);
+//        candidateManageServiceImplUnderTest = new CandidateManageServiceImpl(mockModelMapper, mockAppliedJobService,
+//                mockCandidateService, mockJobService, mockCompanyService, mockJobHashTagService, mockCvService,
+//                mockWorkExperienceService, mockMajorLevelService, mockOtherSkillService, mockLanguageService,
+//                mockCertificateService, mockEducationService, mockProfileViewerService, mockAppliedJobRepository,
+//                mockImageService, mockCvRepository, mockEducationRepository);
     }
 
     private AppliedJob appliedJob(){

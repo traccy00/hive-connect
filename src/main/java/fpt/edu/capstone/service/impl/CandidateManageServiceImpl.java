@@ -3,6 +3,7 @@ package fpt.edu.capstone.service.impl;
 import fpt.edu.capstone.dto.CV.CVRequest;
 import fpt.edu.capstone.dto.CV.CVResponse;
 import fpt.edu.capstone.dto.candidate.AppliedJobCandidateResponse;
+import fpt.edu.capstone.dto.candidate.ProfileViewerResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.AppliedJobRequest;
 import fpt.edu.capstone.dto.job.JobResponse;
@@ -24,8 +25,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,6 +70,8 @@ public class CandidateManageServiceImpl implements CandidateManageService {
     private final CVRepository cvRepository;
 
     private final EducationRepository educationRepository;
+
+    private final RecruiterService recruiterService;
 
     @Override
     public ResponseDataPagination searchAppliedJobsOfCandidate(Integer pageNo, Integer pageSize, long candidateId, String approvalStatus) {
@@ -202,17 +207,33 @@ public class CandidateManageServiceImpl implements CandidateManageService {
 
     @Override
     public ResponseDataPagination getProfileViewer(Integer pageNo, Integer pageSize, long cvId, long candidateId) {
-        List<ProfileViewer> responseList = new ArrayList<>();
+        List<ProfileViewerResponse> responseList = new ArrayList<>();
         Candidate candidate = candidateService.getCandidateById(candidateId);
         if (candidate == null) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        }
+        Optional<CV> cv = cvService.findByIdAndCandidateId(cvId, candidateId);
+        if(!cv.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.CV_NOT_EXIST);
         }
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
         Page<ProfileViewer> profileViewersOfCv = profileViewerService.getProfileViewerOfCv(pageable, cvId);
         if (profileViewersOfCv.hasContent()) {
-            responseList = profileViewerService.findAll(PageRequest.of(pageReq, pageSize, Sort.by(Sort.Direction.DESC, "id")));
+            for(ProfileViewer viewer : profileViewersOfCv) {
+                ProfileViewerResponse response = new ProfileViewerResponse();
+                Recruiter recruiter = recruiterService.getRecruiterById(viewer.getViewerId());
+                response.setViewerName(recruiter.getFullName());
+                response.setCompanyId(recruiter.getCompanyId());
+                Company company = companyService.getCompanyById(recruiter.getCompanyId());
+                if(company != null) {
+                    response.setCompanyName(company.getName());
+                }
+                response.setViewDate(viewer.getCreatedAt());
+                responseList.add(response);
+            }
+//            responseList = profileViewerService.findAll(PageRequest.of(pageReq, pageSize, Sort.by(Sort.Direction.DESC, "id")));
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
