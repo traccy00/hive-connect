@@ -213,7 +213,7 @@ public class CandidateManageServiceImpl implements CandidateManageService {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         Optional<CV> cv = cvService.findByIdAndCandidateId(cvId, candidateId);
-        if(!cv.isPresent()) {
+        if (!cv.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.CV_NOT_EXIST);
         }
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
@@ -221,19 +221,21 @@ public class CandidateManageServiceImpl implements CandidateManageService {
 
         Page<ProfileViewer> profileViewersOfCv = profileViewerService.getProfileViewerOfCv(pageable, cvId);
         if (profileViewersOfCv.hasContent()) {
-            for(ProfileViewer viewer : profileViewersOfCv) {
+            for (ProfileViewer viewer : profileViewersOfCv) {
                 ProfileViewerResponse response = new ProfileViewerResponse();
                 Recruiter recruiter = recruiterService.getRecruiterById(viewer.getViewerId());
-                response.setViewerName(recruiter.getFullName());
-                response.setCompanyId(recruiter.getCompanyId());
-                Company company = companyService.getCompanyById(recruiter.getCompanyId());
-                if(company != null) {
-                    response.setCompanyName(company.getName());
-                }
-                response.setViewDate(viewer.getCreatedAt());
-                Image image = imageService.getImageCompany(company.getId(), true);
-                if(image != null) {
-                    response.setCompanyAvatar(image.getUrl());
+                if (recruiter != null) {
+                    response.setViewerName(recruiter.getFullName());
+                    response.setCompanyId(recruiter.getCompanyId());
+                    Company company = companyService.getCompanyById(recruiter.getCompanyId());
+                    if (company != null) {
+                        response.setCompanyName(company.getName());
+                    }
+                    response.setViewDate(viewer.getCreatedAt());
+                    Image image = imageService.getImageCompany(company.getId(), true);
+                    if (image != null) {
+                        response.setCompanyAvatar(image.getUrl());
+                    }
                 }
                 responseList.add(response);
             }
@@ -284,7 +286,7 @@ public class CandidateManageServiceImpl implements CandidateManageService {
                     AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
                     appliedJob.setApplied(true);
                     appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-                    if(request.getCvUrl() != null) {
+                    if (request.getCvUrl() != null) {
                         appliedJob.setCvUploadUrl(request.getCvUrl());
                         appliedJob.setUploadCv(true);
                     }
@@ -305,7 +307,7 @@ public class CandidateManageServiceImpl implements CandidateManageService {
             AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
             appliedJob.setApplied(true);
             appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-            if(request.getCvUrl() != null) {
+            if (request.getCvUrl() != null) {
                 appliedJob.setCvUploadUrl(request.getCvUrl());
                 appliedJob.setUploadCv(true);
             }

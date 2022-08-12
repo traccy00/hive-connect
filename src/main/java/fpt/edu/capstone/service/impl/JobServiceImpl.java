@@ -298,32 +298,68 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public ResponseDataPagination getJobByFieldId(Integer pageNo, Integer pageSize, long id) {
+//        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+//        Pageable pageable = PageRequest.of(pageReq, pageSize);
+//        String flag = Enums.Flag.Posted.getStatus();
+//        Page<Job> listByCareer = jobRepository.getListJobByFieldId(pageable, id, flag);
+//        List<DetailJobResponse> response = listByCareer.stream().
+//                map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
+//        for (DetailJobResponse res : response) {
+//            Company company = companyService.getCompanyById(res.getCompanyId());
+//            Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
+//            Fields fields = fieldsService.getById(res.getFieldId());
+//
+//            res.setCompanyName(company.getName());
+//            res.setFieldName(fields.getFieldName());
+//            res.setRecruiterName(recruiter.getFullName());
+//            Image image = imageService.getImageCompany(company.getId(), true);
+//            if (image != null) {
+//                res.setAvatar(image.getUrl());
+//            }
+//        }
+//        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+//        Pagination pagination = new Pagination();
+//        responseDataPagination.setData(response);
+//        pagination.setCurrentPage(pageNo);
+//        pagination.setPageSize(pageSize);
+//        pagination.setTotalPage(listByCareer.getTotalPages());
+//        pagination.setTotalRecords(Integer.parseInt(String.valueOf(listByCareer.getTotalElements())));
+//        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+//        responseDataPagination.setPagination(pagination);
+//        return responseDataPagination;
+        List<JobResponse> responseList = new ArrayList<>();
+
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
         String flag = Enums.Flag.Posted.getStatus();
-        Page<Job> listByCareer = jobRepository.getListJobByFieldId(pageable, id, flag);
-        List<DetailJobResponse> response = listByCareer.stream().
-                map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
-        for (DetailJobResponse res : response) {
-            Company company = companyService.getCompanyById(res.getCompanyId());
-            Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
-            Fields fields = fieldsService.getById(res.getFieldId());
-
-            res.setCompanyName(company.getName());
-            res.setFieldName(fields.getFieldName());
-            res.setRecruiterName(recruiter.getFullName());
-            Image image = imageService.getImageCompany(company.getId(), true);
-            if (image != null) {
-                res.setAvatar(image.getUrl());
+        Page<Job> jobs = jobRepository.getListJobByFieldId(pageable, id, flag);
+        if (jobs.hasContent()) {
+            for (Job job : jobs) {
+                JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
+                jobResponse.setJobId(job.getId());
+                List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
+                if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
+                    List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
+                    jobResponse.setListHashtag(hashTagNameList);
+                }
+                Company company = companyService.getCompanyById(job.getCompanyId());
+                if (company != null) {
+                    jobResponse.setCompanyName(company.getName());
+                }
+                Image image = imageService.getImageCompany(company.getId(), true);
+                if(image != null) {
+                    jobResponse.setCompanyAvatar(image.getUrl());
+                }
+                responseList.add(jobResponse);
             }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
-        responseDataPagination.setData(response);
+        responseDataPagination.setData(responseList);
         pagination.setCurrentPage(pageNo);
         pagination.setPageSize(pageSize);
-        pagination.setTotalPage(listByCareer.getTotalPages());
-        pagination.setTotalRecords(Integer.parseInt(String.valueOf(listByCareer.getTotalElements())));
+        pagination.setTotalPage(jobs.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
