@@ -338,7 +338,7 @@ public class JobServiceImpl implements JobService {
         List<MajorLevel> majorLevel = majorLevelService.getListMajorLevelByCvId(cv.getId()); // lấy ra major của candidate để filter
         List<JobResponse> responses = new ArrayList<>();
         for (MajorLevel ml : majorLevel) {
-            String majorName = majorService.getNameByMajorId(ml.getMajorId()).toLowerCase();
+            String majorName = majorService.getNameByMajorId(ml.getMajorId()).toLowerCase().trim(); //C#
             List<Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
             for (Job j : jobList) {
                 JobResponse jr = modelMapper.map(j, JobResponse.class);
