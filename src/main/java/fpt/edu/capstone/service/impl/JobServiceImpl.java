@@ -342,6 +342,7 @@ public class JobServiceImpl implements JobService {
             List<Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
             for (Job j : jobList) {
                 JobResponse jr = modelMapper.map(j, JobResponse.class);
+                jr.setJobId(j.getId());
                 responses.add(jr);
             }
         }
