@@ -58,4 +58,8 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
     @Query(value = "select * from candidate c where c.id = ?", nativeQuery = true)
     Candidate getCandidateById(long id);
+
+    @Query(value = "INSERT INTO public.candidate (user_id, gender, birth_date, search_history, country, full_name, address, social_link, avatar_url, wishlist_job_id_list, tap_history_id_list, is_need_job, experience_level, introduction) " +
+            "VALUES(?1, true, null, null, null, ?2, null, null, null, null, null, true, 0, null)", nativeQuery = true)
+    void insertCandidateForRegister(long userId, String fullName);
 }

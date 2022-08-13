@@ -725,12 +725,17 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                 if (cv == null) {
                     if (!appliedJob.isUploadCv()) {
                         //Profile không tồn tại mà cũng không upload CV
-                        throw new HiveConnectException("Liên hệ admin");
+                        throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
                     }
                 }
                 List<WorkExperience> workExperiencesOfCv = workExperienceRepository.getListWorkExperienceByCvId(cv.getId());
                 if (!workExperiencesOfCv.isEmpty()) {
-                    List<String> experienceDesc = workExperiencesOfCv.stream().map(WorkExperience::getPosition).collect(Collectors.toList());
+                    List<String> experienceDesc = new ArrayList<>();
+                    for(WorkExperience workExperience : workExperiencesOfCv) {
+                        String workEx = workExperience.getCompanyName() + " - " + workExperience.getPosition();
+                        experienceDesc.add(workEx);
+                    }
+//                    List<String> experienceDesc = workExperiencesOfCv.stream().map(WorkExperience::getPosition).collect(Collectors.toList());
                     responseObj.setExperienceDesc(experienceDesc);
                 }
                 List<Education> educations = educationRepository.getListEducationByCvId(cv.getId());

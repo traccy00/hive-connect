@@ -94,4 +94,12 @@ public class CandidateServiceImpl implements CandidateService {
         }
     }
 
+    @Override
+    public void insertCandidateForRegister(long userId, String fullName) {
+        Candidate candidate = new Candidate();
+        candidate.setUserId(userId);
+        candidate.setFullName(fullName);
+        candidate.setExperienceLevel(0);
+        candidateRepository.save(candidate);
+    }
 }

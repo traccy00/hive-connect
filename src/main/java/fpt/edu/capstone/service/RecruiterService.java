@@ -50,4 +50,6 @@ public interface RecruiterService {
     void insertGoogleRecruiter(GooglePojo googlePojo, Users user);
 
     Integer getTotalViewCV(long recId);
+
+    Recruiter insertRecruiterForRegister(long userId, String fullName);
 }

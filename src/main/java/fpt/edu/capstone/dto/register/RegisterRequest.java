@@ -30,4 +30,6 @@ public class RegisterRequest {
 
     @NotBlank
     private long roleId;
+
+    private String fullName;
 }

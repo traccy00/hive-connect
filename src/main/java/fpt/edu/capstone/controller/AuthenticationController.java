@@ -299,6 +299,7 @@ public class AuthenticationController {
             String username = request.getUsername().trim();
             String password = request.getPassword();
             String email = request.getEmail().trim();
+            String fullName = request.getFullName().trim();
 
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(password)) {
                 return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
@@ -307,7 +308,7 @@ public class AuthenticationController {
             userService.registerUser(request);
             Users user = userService.getByUserName(username);
             if (user.getRoleId() == 3) {
-                candidateService.insertCandidate(user.getId());
+                candidateService.insertCandidateForRegister(user.getId(), fullName);
             }
             if (user.getRoleId() == 2) {
                 recruiterService.insertRecruiter(user.getId());

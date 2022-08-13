@@ -37,4 +37,7 @@ public interface CandidateService  {
     void save(Candidate candidate);
 
     void insertGoogleCandidate(GooglePojo googlePojo, Users user);
+
+    void insertCandidateForRegister( long userId, String fullName);
+
 }

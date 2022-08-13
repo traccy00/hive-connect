@@ -215,4 +215,15 @@ public class RecruiterServiceImpl implements RecruiterService {
     public Integer getTotalViewCV(long recId) {
         return recruiterRepository.getTotalViewCV(recId);
     }
+
+    @Override
+    public Recruiter insertRecruiterForRegister(long userId, String fullName) {
+        Recruiter recruiter = new Recruiter();
+        recruiter.setUserId(userId);
+        LocalDateTime nowDate = LocalDateTime.now();
+        recruiter.setCreatedAt(nowDate);
+        recruiter.setTotalCvView(-1);
+        recruiter.setFullName(fullName);
+        return recruiterRepository.save(recruiter);
+    }
 }
