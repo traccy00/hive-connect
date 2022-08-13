@@ -3,6 +3,7 @@ package fpt.edu.capstone.service;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
 import fpt.edu.capstone.dto.payment.PaymentResponse;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
+import fpt.edu.capstone.dto.payment.RevenueResponse;
 import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import fpt.edu.capstone.utils.ResponseDataPaginationRevenue;
@@ -20,6 +21,8 @@ public interface PaymentService {
     List<PaymentResponse> findRecruiterPurchasedPackage(long recruiterId);
 
     ResponseDataPaginationRevenue getRevenue(LocalDateTime start, LocalDateTime end, Integer pageNo, Integer pageSize);
+
+    List <RevenueResponse> getRevenueExporter(LocalDateTime start, LocalDateTime end);
 
     void savePayment(String vnpResponseCode, String vnpOrderInfo);
 

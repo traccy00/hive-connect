@@ -198,6 +198,26 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    public List<RevenueResponse> getRevenueExporter(LocalDateTime start, LocalDateTime end) {
+        List<Payment> totalRevenue = paymentRepository.getRevenueInMonthExporter(start, end);
+        List<RevenueResponse> revenueResponseList = totalRevenue.stream().
+                map(payment -> modelMapper.map(payment, RevenueResponse.class)).collect(Collectors.toList());
+        long total = 0;
+        for (RevenueResponse response : revenueResponseList) {
+            if (response.getBannerId() == 0) {
+                String rentalPackageName = rentalPackageService.getRentalPackageName(response.getDetailPackageId());
+                response.setRentalPackageName(rentalPackageName);
+            } else {
+                response.setRentalPackageName("Banner quảng cáo");
+            }
+            Recruiter recruiter = recruiterService.getRecruiterById(response.getRecruiterId());
+            response.setRecruiterName(recruiter.getFullName());
+            total += response.getAmount();
+        }
+        return revenueResponseList;
+    }
+
+    @Override
     public void savePayment(String vnpResponseCode, String vnpOrderInfo) {
         PaymentDTO paymentDTO = new PaymentDTO();
 

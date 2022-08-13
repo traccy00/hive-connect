@@ -2,10 +2,7 @@ package fpt.edu.capstone.controller;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.JobResponse;
-import fpt.edu.capstone.dto.payment.JobActivePaymentDTO;
-import fpt.edu.capstone.dto.payment.PaymentDTO;
-import fpt.edu.capstone.dto.payment.PaymentResponse;
-import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
+import fpt.edu.capstone.dto.payment.*;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.entity.Job;
@@ -23,11 +20,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -147,13 +148,26 @@ public class PaymentController {
         }
     }
 
-    //TODO
     @GetMapping("/export-revenue")
     public ResponseData exportRevenue(@RequestParam(value = "startDate") String startDate,
-                                      @RequestParam(value = "endDate") String endDate){
+                                      @RequestParam(value = "endDate") String endDate,
+                                      HttpServletResponse response){
         try {
-            List<String> headers = Arrays
-                    .asList("NGÀY", "NHÀ TUYỂN DỤNG", "DỊCH VỤ MUA", "THÀNH TIỀN");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime start = LocalDate.parse(startDate, formatter).atStartOfDay();
+            LocalDateTime end = LocalDate.parse(endDate, formatter).atStartOfDay();
+
+            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+            String currentDateTime = dateFormatter.format(new Date());
+            String headerKey = "Content-Disposition";
+            String headerValue = "attachment; filename=revenue" + currentDateTime + ".xlsx";
+            response.setHeader(headerKey, headerValue);
+
+            List <RevenueResponse> responseList = paymentService.getRevenueExporter(start, end);
+
+            ExcelExporter excelExporter = new ExcelExporter(responseList);
+            excelExporter.export(response);
+
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus());
         } catch (Exception e){
             String msg = LogUtils.printLogStackTrace(e);
