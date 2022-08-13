@@ -78,11 +78,10 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long fieldId, long countryId, String jobName,
-                                                      long fromSalary, long toSalary, String rank, String workForm, String workPlace) {
+    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long fieldId, long countryId, String jobName) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<Job> jobs = jobRepository.searchListJobFilter(pageable, fieldId, countryId, jobName, fromSalary, toSalary, rank, workForm, workPlace);
+        Page<Job> jobs = jobRepository.searchListJobFilter(pageable, fieldId, countryId, jobName);
         List<JobResponse> jobResponse = new ArrayList<>();
         if (jobs.hasContent()) {
             for (Job j : jobs.getContent()) {

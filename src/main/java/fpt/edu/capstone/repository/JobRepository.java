@@ -14,19 +14,17 @@ import java.util.Optional;
 
 public interface JobRepository extends JpaRepository<Job, Long> {
 
-    @Query(value = "select j from Job j where j.fieldId =:fieldId or 0 =:fieldId " +
-            "and j.countryId =:countryId or 0 =:countryId " +
-            "and (lower(j.jobName) like lower(concat('%', :jobName ,'%')) or :jobName is null or :jobName ='')" +
-            "and j.fromSalary =:fromSalary or 0 =:fromSalary " +
-            "and j.toSalary =:toSalary or 0 =:toSalary " +
-            "and (lower(j.rank) like lower(concat('%', :rank ,'%')) or :rank is null or :rank ='')" +
-            "and (lower(j.workForm) like lower(concat('%', :workForm ,'%')) or :workForm is null or :workForm ='')" +
-            "and (lower(j.workPlace) like lower(concat('%', :workPlace ,'%')) or :workPlace is null or :workPlace ='') " +
-            "and j.isDeleted = 0")
-    Page<Job> searchListJobFilter(Pageable pageable, @Param("fieldId") long fieldId, @Param("countryId") long countryId, @Param("jobName") String jobName,
-                                  @Param("fromSalary") long fromSalary, @Param("toSalary") long toSalary,
-                                  @Param("rank") String rank, @Param("workForm") String workForm,
-                                  @Param("workPlace") String workPlace);
+    @Query(value = "select j from Job j " +
+            "join Company c on c.id = j.companyId " +
+            "where (j.fieldId  =:fieldId or 0 =:fieldId) " +
+            "and (j.countryId  =:countryId or 0 =:countryId) " +
+            "and ((lower(j.jobName) like lower(concat('%', :jobName ,'%')) or :jobName is null or :jobName ='') " +
+            "or (lower(j.rank) like lower(concat('%', :jobName ,'%')) or :jobName is null or :jobName ='') " +
+            "or (lower(c.name) like lower(concat('%', :jobName ,'%')) or :jobName is null or :jobName ='') " +
+            "or (lower(j.workForm) like lower(concat('%', :jobName ,'%')) or :jobName is null or :jobName ='') " +
+            "or (lower(j.workPlace) like lower(concat('%', :jobName ,'%')) or :jobName is null or :jobName ='')) " +
+            "and j.isDeleted  = 0")
+    Page<Job> searchListJobFilter(Pageable pageable, @Param("fieldId") long fieldId, @Param("countryId") long countryId, @Param("jobName") String jobName);
 
     @Modifying
     @Query("update Job j set j.isDeleted = 1 where j.id =:jobId")
