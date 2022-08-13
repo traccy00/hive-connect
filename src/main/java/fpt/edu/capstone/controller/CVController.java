@@ -129,6 +129,7 @@ public class CVController {
             if (!cv.isPresent()) {
                 return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.CV_NOT_EXIST);
             }
+            newWorkExperience.setWorking(false);
             WorkExperience workExperience = workExperienceService.insertWorkExperience(newWorkExperience);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CREATE_SUCCESSFULLY,
                     workExperience);
