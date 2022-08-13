@@ -75,7 +75,7 @@ public class AuthenticationController {
     @Operation(summary = "Login user")
     public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
-            Optional<Users> users = userService.findUserByUserName(request.getUsername());
+            Optional<Users> users = userService.findUsersByUsernameOrEmail(request.getUsername());
             if (!users.isPresent()) {
                 throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
             }
@@ -92,9 +92,9 @@ public class AuthenticationController {
 
             final UserDetails userDetails = securityUserService.loadUserByUsername(username);
 
-            Optional<Users> optionalUser = userService.findUserByUserName(username);
+            Optional<Users> optionalUser = userService.findUsersByUsernameOrEmail(username);
             if (!optionalUser.isPresent()) {
-                throw new HiveConnectException("Username: " + username + "not found");
+                throw new HiveConnectException("Tên đăng nhập: " + username + "không tìm thấy.");
             }
             Users user = optionalUser.get();
             String token = jwtTokenUtil.generateToken(userDetails);

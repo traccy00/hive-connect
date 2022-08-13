@@ -69,4 +69,7 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     Users findByPhoneAndIdIsNotIn(@Param("phone") String phone, long id);
 
     Users findByUsernameAndEmail(String userName, String email);
+
+    @Query("select s from Users s where s.username =:username or s.email =:username")
+    Optional <Users> findUsersByUsernameOrEmail(@Param("username") String username);
 }

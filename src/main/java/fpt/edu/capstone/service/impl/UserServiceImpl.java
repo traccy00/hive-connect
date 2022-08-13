@@ -258,6 +258,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<Users> findUsersByUsernameOrEmail(String username) {
+        return userRepository.findUsersByUsernameOrEmail(username);
+    }
+
+    @Override
     public void updatePassword(Users user, ResetPasswordRequest request) {
 //        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        String encodedPassword = passwordEncoder.encode(newPassword);

@@ -26,7 +26,7 @@ public class SecurityUserServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Users> optionUser = userRepository.findByUsername(username);
+        Optional<Users> optionUser = userRepository.findUsersByUsernameOrEmail(username);
         if (!optionUser.isPresent()) {
             throw new UsernameNotFoundException("Không tìn thấy người dùng với tên đăng nhập: " + username);
         }
