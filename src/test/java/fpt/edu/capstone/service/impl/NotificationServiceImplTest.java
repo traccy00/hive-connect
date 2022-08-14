@@ -30,7 +30,7 @@ public class NotificationServiceImplTest {
     private NotificationServiceImpl notificationServiceImplUnderTest;
 
     private Notification notificationA = new Notification(0L, 0L, 0L,
-            LocalDateTime.now(), "content", false, false);
+            LocalDateTime.now(), "content", false, false, 0L);
     @Test
     public void testInsertNotification() {
         final Notification notification = notificationA;

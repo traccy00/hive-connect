@@ -38,5 +38,9 @@ public class Notification {
     @Column(name = "is_delete")
     private boolean isDelete;
 
+    @Column(name = "target_id")
+    private long targetId;
+
+
 
 }

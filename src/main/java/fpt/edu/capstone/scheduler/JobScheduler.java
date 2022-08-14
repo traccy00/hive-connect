@@ -47,9 +47,9 @@ public class JobScheduler {
                 Optional<Job> j = jobService.findById(payment.getJobId());
                 if(j.isPresent()) {
                     Optional<Recruiter> r = recruiterService.findById(payment.getRecruiterId());
-                    if(r.isPresent()) {
+                    if(r.isPresent() && !notificationService.findNotificationByReceiveIdAndTargetId(r.get().getUserId(), payment.getId(), 4).isPresent()) {
                         String content = "Gói nâng cấp bạn đã mua cho công việc " + j.get().getJobName() + " đã hết hạn";
-                        Notification notification = new Notification(0, r.get().getUserId(), 4, LocalDateTime.now(), content, false, false);
+                        Notification notification = new Notification(0, r.get().getUserId(), 4, LocalDateTime.now(), content, false, false, payment.getId());
                         notificationService.insertNotification(notification);
                     }
                 }
