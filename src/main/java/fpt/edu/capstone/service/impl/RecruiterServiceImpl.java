@@ -69,6 +69,8 @@ public class RecruiterServiceImpl implements RecruiterService {
         LocalDateTime nowDate = LocalDateTime.now();
         recruiter.setCreatedAt(nowDate);
         recruiter.setTotalCvView(-1);
+        recruiter.setBusinessLicenseApprovalStatus("");
+        recruiter.setAdditionalLicenseApprovalStatus("");
         return recruiterRepository.save(recruiter);
     }
 
