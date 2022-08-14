@@ -23,4 +23,5 @@ public class RecruiterProfileResponse {
     private boolean joinedCompany;
     private boolean approvedBusinessLicense;
     private boolean isVerifiedPhone;
+    private int totalCvView;
 }

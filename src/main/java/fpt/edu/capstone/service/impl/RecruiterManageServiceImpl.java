@@ -16,10 +16,7 @@ import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.*;
 import fpt.edu.capstone.service.*;
-import fpt.edu.capstone.utils.Enums;
-import fpt.edu.capstone.utils.Pagination;
-import fpt.edu.capstone.utils.ResponseData;
-import fpt.edu.capstone.utils.ResponseDataPagination;
+import fpt.edu.capstone.utils.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -275,6 +272,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         profileResponse.setUserName(user.getUsername());
         profileResponse.setEmail(user.getEmail());
         profileResponse.setPhone(user.getPhone());
+        profileResponse.setTotalCvView(recruiter.getTotalCvView());
 
         profileResponse.setAvatarUrl(recruiter.getAvatarUrl());
 
@@ -444,26 +442,28 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         Page<Job> jobsListOfRecruiter = jobService.getJobOfRecruiter(pageable, recruiterId);
         if (jobsListOfRecruiter.hasContent()) {
             for (Job job : jobsListOfRecruiter) {
-                JobForRecruiterResponse response = new JobForRecruiterResponse();
-                response.setJobId(job.getId());
-                response.setJobName(job.getJobName());
-                Company company = companyService.getCompanyById(job.getCompanyId());
-                if (company == null) {
-                    //company không tồn tại mà đã tạo được job
-                    throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
-                }
-                response.setCompanyName(company.getName());
-                response.setWorkPlace(job.getWorkPlace());
-                response.setFromSalary(job.getFromSalary());
-                response.setToSalary(job.getToSalary());
+                if(!LocalDateTimeUtils.checkExpireTime(job.getEndDate())){
+                    JobForRecruiterResponse response = new JobForRecruiterResponse();
+                    response.setJobId(job.getId());
+                    response.setJobName(job.getJobName());
+                    Company company = companyService.getCompanyById(job.getCompanyId());
+                    if (company == null) {
+                        //company không tồn tại mà đã tạo được job
+                        throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
+                    }
+                    response.setCompanyName(company.getName());
+                    response.setWorkPlace(job.getWorkPlace());
+                    response.setFromSalary(job.getFromSalary());
+                    response.setToSalary(job.getToSalary());
 
-                int applyCount = appliedJobService.countAppliedCVOfJob(job.getId());
-                response.setApplyCount(applyCount);
+                    int applyCount = appliedJobService.countAppliedCVOfJob(job.getId());
+                    response.setApplyCount(applyCount);
 //                response.getViewCount();
-                response.setStartDate(job.getStartDate());
-                response.setEndDate(job.getEndDate());
-                response.setFlag(job.getFlag());
-                responseList.add(response);
+                    response.setStartDate(job.getStartDate());
+                    response.setEndDate(job.getEndDate());
+                    response.setFlag(job.getFlag());
+                    responseList.add(response);
+                }
             }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();

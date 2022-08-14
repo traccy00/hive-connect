@@ -213,6 +213,11 @@ public class AuthenticationController {
             if (userRepository.findByEmail(request.getEmail()).isPresent()) {
                 //tìm user theo email google trả về
                 Users user = userService.findByEmail(request.getEmail());
+                if (user != null) {
+                    if(user.isLocked()){
+                        throw new HiveConnectException(ResponseMessageConstants.USER_HAS_BEEN_LOCKED);
+                    }
+                }
                 //thực hiện login bình thường
                 user.setLastLoginTime(LocalDateTime.now());
                 user.setPassword(passwordEncoder.encode("1"));
