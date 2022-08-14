@@ -76,6 +76,11 @@ public class AuthenticationController {
     public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
             Optional<Users> users = userService.findUsersByUsernameOrEmail(request.getUsername());
+            if (users.isPresent()) {
+                if(users.get().isLocked()){
+                    throw new HiveConnectException(ResponseMessageConstants.USER_HAS_BEEN_LOCKED);
+                }
+            }
             if (!users.isPresent()) {
                 throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
             }

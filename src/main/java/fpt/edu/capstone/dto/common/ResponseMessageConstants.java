@@ -52,6 +52,7 @@ public interface ResponseMessageConstants {
     String USER_IS_DELETED = "Người dùng đã bị xóa";
     String PHONE_NUMBER_IN_USE = "Số điện thoại đã được sử dụng.";
     String PHONE_NUMBER_VERIFIED = "Số điện thoại đã được xác minh! Không thể thay đổi";
+    String USER_HAS_BEEN_LOCKED = "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ admin.";
 
     // COMMON
     String UPDATE_FAILED = "Cập nhật thất bại.";
