@@ -128,7 +128,7 @@ public class JobController {
                 String content = "Công việc" + request.getJobName() + "đã có sự thay đổi, Ấn để xem";
                 for (Follow f : follows) {
                     Optional<Candidate> c = candidateService.findById(f.getFollowerId());
-                    Notification notification = new Notification(0, c.get().getUserId(), 6, LocalDateTime.now(), content, false, false);
+                    Notification notification = new Notification(0, c.get().getUserId(), 6, LocalDateTime.now(), content, false, false, f.getFollowerId());
                     notificationService.insertNotification(notification);
                 }
             }
@@ -163,7 +163,7 @@ public class JobController {
             //Add Notification
             Job j = jobService.getJobById(request.getJobId());
             Recruiter r = recruiterService.getRecruiterById(j.getRecruiterId());
-            Notification notification = new Notification(0, r.getUserId(), 1, LocalDateTime.now(), j.getJobName() + " " + "vừa nhận được lượt ứng tuyển mới", false, false);
+            Notification notification = new Notification(0, r.getUserId(), 1, LocalDateTime.now(), j.getJobName() + " " + "vừa nhận được lượt ứng tuyển mới", false, false, j.getId());
             notificationService.insertNotification(notification);
 
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
@@ -322,7 +322,7 @@ public class JobController {
             Job j = jobService.getJobById(approvalJobRequest.getJobId());
             String content = "Đơn ứng tuyển của bạn vào " + j.getJobName() + " vừa được" + appr;
             Candidate c = candidateService.getCandidateById(approvalJobRequest.getCandidateId());
-            Notification notification = new Notification(0, c.getUserId(), 2, LocalDateTime.now(), content, false, false);
+            Notification notification = new Notification(0, c.getUserId(), 2, LocalDateTime.now(), content, false, false, j.getId());
             notificationService.insertNotification(notification);
 
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);

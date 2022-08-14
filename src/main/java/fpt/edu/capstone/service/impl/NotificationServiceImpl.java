@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
@@ -42,4 +44,20 @@ public class NotificationServiceImpl implements NotificationService {
         return responseDataPagination;
 
     }
+
+    @Override
+    public Optional<Notification> findNotificationByReceiveIdAndTargetId(long receiverId, long targetId, long type) {
+        return notificationRepository.findNotificationByReceiveIdAndTargetId(receiverId, targetId, type);
+    }
+
+    @Override
+    public void updateIsSeen(long notificationId) {
+        notificationRepository.updateIsSenn(true, notificationId);
+    }
+
+    @Override
+    public Optional<Notification> findById(long notificationId) {
+        return notificationRepository.findById(notificationId);
+    }
+
 }

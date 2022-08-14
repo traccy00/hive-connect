@@ -154,7 +154,7 @@ public class RecruiterController {
             Optional<Company> company = companyService.findById(newRequestJoinCompany.getCompanyId());
             String content = "Yêu cầu vào công ty "+ company.get().getName() +" vừa được" + appr;
             Recruiter r = recruiterService.getRecruiterById(newRequestJoinCompany.getSenderId());
-            Notification notification = new Notification(0, r.getUserId(), 3, LocalDateTime.now(), content, false, false);
+            Notification notification = new Notification(0, r.getUserId(), 3, LocalDateTime.now(), content, false, false, company.get().getId());
             notificationService.insertNotification(notification);
 
 
