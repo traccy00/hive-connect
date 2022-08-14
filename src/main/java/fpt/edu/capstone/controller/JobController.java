@@ -80,10 +80,13 @@ public class JobController {
                                             @RequestParam(defaultValue = "10") Integer pageSize,
                                             @RequestParam(defaultValue = "0", value = "fieldId", required = false) long fieldId,
                                             @RequestParam(defaultValue = "0", value = "countryId", required = false) long countryId,
-                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "jobName", required = false) String jobName) {
+                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "jobName", required = false) String jobName,
+                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "workForm", required = false) String workForm,
+                                            @RequestParam(defaultValue = StringUtils.EMPTY, value = "workPlace", required = false) String workPlace) {
+
         //jobName meaning common search : jobName, rank, companyName, workPlace, workForm
         try {
-            ResponseDataPagination pagination = jobService.searchListJobFilter(pageNo, pageSize, fieldId, countryId, jobName);
+            ResponseDataPagination pagination = jobService.searchListJobFilter(pageNo, pageSize, fieldId, countryId, jobName, workForm, workPlace);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

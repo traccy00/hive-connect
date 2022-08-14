@@ -8,6 +8,7 @@ import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.JobRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.LocalDateTimeUtils;
 import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
@@ -78,21 +79,23 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long fieldId, long countryId, String jobName) {
+    public ResponseDataPagination searchListJobFilter(Integer pageNo, Integer pageSize, long fieldId, long countryId, String jobName, String workForm, String workPlace) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<Job> jobs = jobRepository.searchListJobFilter(pageable, fieldId, countryId, jobName);
+        Page<Job> jobs = jobRepository.searchListJobFilter(pageable, fieldId, countryId, jobName, workForm, workPlace);
         List<JobResponse> jobResponse = new ArrayList<>();
         if (jobs.hasContent()) {
             for (Job j : jobs.getContent()) {
-                JobResponse jr = modelMapper.map(j, JobResponse.class);
-                jr.setJobId(j.getId());
-                Company company = companyService.getCompanyById(j.getCompanyId());
-                if (company != null) {
+                if (!LocalDateTimeUtils.checkExpireTime(j.getEndDate())) {
+                    JobResponse jr = modelMapper.map(j, JobResponse.class);
+                    jr.setJobId(j.getId());
+                    Company company = companyService.getCompanyById(j.getCompanyId());
+                    if (company != null) {
+                        jr.setCompanyName(company.getName());
+                    }
                     jr.setCompanyName(company.getName());
+                    jobResponse.add(jr);
                 }
-                jr.setCompanyName(company.getName());
-                jobResponse.add(jr);
             }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
@@ -101,7 +104,7 @@ public class JobServiceImpl implements JobService {
         pagination.setCurrentPage(pageNo);
         pagination.setPageSize(pageSize);
         pagination.setTotalPage(jobs.getTotalPages());
-        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
+        pagination.setTotalRecords(jobResponse.size());
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
 
@@ -224,17 +227,18 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobResponse> getSameJobsOtherCompanies(long detailJobId) {
-//        Job detailJob = jobRepository.getById(detailJobId);
         List<Job> jobs = jobRepository.getSameJobsOtherCompanies(detailJobId);
         List<JobResponse> responseList = new ArrayList<>();
         for (Job job : jobs) {
-            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
-            jobResponse.setJobId(job.getId());
-            Company company = companyService.getCompanyById(job.getCompanyId());
-            if (company != null) {
-                jobResponse.setCompanyName(company.getName());
+            if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
+                JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
+                jobResponse.setJobId(job.getId());
+                Company company = companyService.getCompanyById(job.getCompanyId());
+                if (company != null) {
+                    jobResponse.setCompanyName(company.getName());
+                }
+                responseList.add(jobResponse);
             }
-            responseList.add(jobResponse);
         }
         return responseList;
     }
@@ -334,22 +338,24 @@ public class JobServiceImpl implements JobService {
         Page<Job> jobs = jobRepository.getListJobByFieldId(pageable, id, flag);
         if (jobs.hasContent()) {
             for (Job job : jobs) {
-                JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
-                jobResponse.setJobId(job.getId());
-                List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
-                if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
-                    List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
-                    jobResponse.setListHashtag(hashTagNameList);
+                if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
+                    JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
+                    jobResponse.setJobId(job.getId());
+                    List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
+                    if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
+                        List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
+                        jobResponse.setListHashtag(hashTagNameList);
+                    }
+                    Company company = companyService.getCompanyById(job.getCompanyId());
+                    if (company != null) {
+                        jobResponse.setCompanyName(company.getName());
+                    }
+                    Image image = imageService.getImageCompany(company.getId(), true);
+                    if (image != null) {
+                        jobResponse.setCompanyAvatar(image.getUrl());
+                    }
+                    responseList.add(jobResponse);
                 }
-                Company company = companyService.getCompanyById(job.getCompanyId());
-                if (company != null) {
-                    jobResponse.setCompanyName(company.getName());
-                }
-                Image image = imageService.getImageCompany(company.getId(), true);
-                if(image != null) {
-                    jobResponse.setCompanyAvatar(image.getUrl());
-                }
-                responseList.add(jobResponse);
             }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
@@ -376,9 +382,11 @@ public class JobServiceImpl implements JobService {
             String majorName = majorService.getNameByMajorId(ml.getMajorId()).toLowerCase().trim(); //C#
             List<Job> jobList = jobRepository.getListSuggestJobByCv(majorName);
             for (Job j : jobList) {
-                JobResponse jr = modelMapper.map(j, JobResponse.class);
-                jr.setJobId(j.getId());
-                responses.add(jr);
+                if (!LocalDateTimeUtils.checkExpireTime(j.getEndDate())) {
+                    JobResponse jr = modelMapper.map(j, JobResponse.class);
+                    jr.setJobId(j.getId());
+                    responses.add(jr);
+                }
             }
         }
         return responses;

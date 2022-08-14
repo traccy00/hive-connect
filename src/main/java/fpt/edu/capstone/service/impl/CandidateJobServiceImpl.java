@@ -10,6 +10,7 @@ import fpt.edu.capstone.repository.FollowRepository;
 import fpt.edu.capstone.repository.JobRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
+import fpt.edu.capstone.utils.LocalDateTimeUtils;
 import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         Page<Job> jobs = jobService.getNewestJobList(pageable);
         if (jobs.hasContent()) {
             for (Job job : jobs) {
+                if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                 JobResponse jobResponse = new JobResponse();
 //            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
 //            responseList.add(jobResponse);
@@ -93,11 +95,12 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setUrgentJob(job.isUrgentJob());
 
                 Image image = imageService.getImageCompany(company.getId(), true);
-                if(image != null) {
+                if (image != null) {
                     jobResponse.setCompanyAvatar(image.getUrl());
                 }
                 responseList.add(jobResponse);
             }
+        }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
@@ -105,7 +108,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         pagination.setCurrentPage(pageNo);
         pagination.setPageSize(pageSize);
         pagination.setTotalPage(jobs.getTotalPages());
-        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
+        pagination.setTotalRecords(responseList.size());
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
@@ -121,9 +124,8 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         Page<Job> jobs = jobService.getUrgentJobList(pageable);
         if (jobs.hasContent()) {
             for (Job job : jobs) {
+                if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                 JobResponse jobResponse = new JobResponse();
-//            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
-//            responseList.add(jobResponse);
                 jobResponse.setJobId(job.getId());
                 jobResponse.setCompanyId(job.getCompanyId());
                 jobResponse.setRecruiterId(job.getRecruiterId());
@@ -156,10 +158,11 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setUrgentJob(job.isUrgentJob());
 
                 Image image = imageService.getImageCompany(company.getId(), true);
-                if(image != null) {
+                if (image != null) {
                     jobResponse.setCompanyAvatar(image.getUrl());
                 }
                 responseList.add(jobResponse);
+            }
             }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
@@ -168,7 +171,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         pagination.setCurrentPage(pageNo);
         pagination.setPageSize(pageSize);
         pagination.setTotalPage(jobs.getTotalPages());
-        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
+        pagination.setTotalRecords(responseList.size());
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
@@ -185,22 +188,24 @@ public class CandidateJobServiceImpl implements CandidateJobService {
 
         if (jobs.hasContent()) {
             for (Job job : jobs) {
-                JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
-                jobResponse.setJobId(job.getId());
-                List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
-                if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
-                    List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
-                    jobResponse.setListHashtag(hashTagNameList);
+                if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
+                    JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
+                    jobResponse.setJobId(job.getId());
+                    List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
+                    if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
+                        List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
+                        jobResponse.setListHashtag(hashTagNameList);
+                    }
+                    Company company = companyService.getCompanyById(job.getCompanyId());
+                    if (company != null) {
+                        jobResponse.setCompanyName(company.getName());
+                    }
+                    Image image = imageService.getImageCompany(company.getId(), true);
+                    if (image != null) {
+                        jobResponse.setCompanyAvatar(image.getUrl());
+                    }
+                    responseList.add(jobResponse);
                 }
-                Company company = companyService.getCompanyById(job.getCompanyId());
-                if (company != null) {
-                    jobResponse.setCompanyName(company.getName());
-                }
-                Image image = imageService.getImageCompany(company.getId(), true);
-                if(image != null) {
-                    jobResponse.setCompanyAvatar(image.getUrl());
-                }
-                responseList.add(jobResponse);
             }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
@@ -209,7 +214,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         pagination.setCurrentPage(pageNo);
         pagination.setPageSize(pageSize);
         pagination.setTotalPage(jobs.getTotalPages());
-        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
+        pagination.setTotalRecords(responseList.size());
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
@@ -226,8 +231,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         if (jobs.hasContent()) {
             for (Job job : jobs) {
                 JobResponse jobResponse = new JobResponse();
-//            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
-//            responseList.add(jobResponse);
+                if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                 jobResponse.setJobId(job.getId());
                 jobResponse.setCompanyId(job.getCompanyId());
                 jobResponse.setRecruiterId(job.getRecruiterId());
@@ -260,11 +264,12 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setUrgentJob(job.isUrgentJob());
 
                 Image image = imageService.getImageCompany(company.getId(), true);
-                if(image != null) {
+                if (image != null) {
                     jobResponse.setCompanyAvatar(image.getUrl());
                 }
                 responseList.add(jobResponse);
             }
+        }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
@@ -272,7 +277,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         pagination.setCurrentPage(pageNo);
         pagination.setPageSize(pageSize);
         pagination.setTotalPage(jobs.getTotalPages());
-        pagination.setTotalRecords(Integer.parseInt(String.valueOf(jobs.getTotalElements())));
+        pagination.setTotalRecords(responseList.size());
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
         return responseDataPagination;
