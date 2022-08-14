@@ -13,7 +13,8 @@ import java.util.List;
 @Repository
 public interface BannerActiveRepository extends JpaRepository<BannerActive, Long> {
 
-    @Query(value = "select * from banner_active ba where ba.display_position = ?1 and approval_status = ?2", nativeQuery = true)
+    @Query(value = "select * from banner_active ba join payment p on p.id = ba.payment_id  " +
+            "where ba.display_position = ?1 and approval_status = ?2 and p.expired_status = false", nativeQuery = true)
     List<BannerActive> getBannerByPosition(String displayPosition, String approvalStatus);
 
     List<BannerActive> getAllByPaymentId(long paymentId);
