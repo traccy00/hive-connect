@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService {
         user.setRoleId(request.getRoleId());
         user.setVerifiedEmail(false);
         user.setVerifiedPhone(false);
+        user.setGoogle(true);
         user.create();
         userRepository.save(user);
     }

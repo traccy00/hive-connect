@@ -321,7 +321,7 @@ public class AuthenticationController {
                 candidateService.insertCandidateForRegister(user.getId(), fullName);
             }
             if (user.getRoleId() == 2) {
-                recruiterService.insertRecruiter(user.getId());
+                recruiterService.insertRecruiterForRegister(user.getId(), fullName);
             }
             if (user.getRoleId() == 1) {
                 adminService.insertAdmin(user.getId());
