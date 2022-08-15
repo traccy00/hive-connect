@@ -121,7 +121,7 @@ public class RecruiterManageServiceImplTest {
     }
     private Recruiter recruiter(){
         Recruiter recruiter = new Recruiter();
-        recruiter.setId(0L);
+        recruiter.setId(1L);
         recruiter.setCompanyId(0L);
         recruiter.setCompanyName("companyName");
         recruiter.setFullName("fullName");
@@ -129,7 +129,6 @@ public class RecruiterManageServiceImplTest {
         recruiter.setGender(false);
         recruiter.setPosition("HR");
         recruiter.setLinkedinAccount("linkedinAccount");
-        recruiter.setBusinessLicense("businessLicense");
         recruiter.setAdditionalLicense("additionalLicense");
         recruiter.setBusinessLicenseUrl("businessLicenseUrl");
         recruiter.setAdditionalLicenseUrl("additionalLicenseUrl");
@@ -144,7 +143,7 @@ public class RecruiterManageServiceImplTest {
 
     private Job job(){
         Job job = new Job();
-        job.setId(0L);
+        job.setId(1L);
         job.setCompanyId(0L);
         job.setJobName("jobName");
         job.setWorkPlace("workPlace");
@@ -174,7 +173,7 @@ public class RecruiterManageServiceImplTest {
 
     private CV cv(){
         CV cv = new CV();
-        cv.setId(0L);
+        cv.setId(1L);
         cv.setCandidateId(0L);
         cv.setIsDeleted(0);
         cv.setSummary("");
@@ -183,14 +182,14 @@ public class RecruiterManageServiceImplTest {
     }
 
     private DetailPackage detailPackage(){
-        DetailPackage detailPackage = new DetailPackage(0L, 0L, "detailName", 0L,
+        DetailPackage detailPackage = new DetailPackage(1L, 1L, "detailName", 0L,
                 0L, "timeExpired", "description", false, false, false, 0);
         return detailPackage;
     }
 
     private Candidate candidate(){
         Candidate candidate = new Candidate();
-        candidate.setId(0L);
+        candidate.setId(1L);
         candidate.setUserId(0L);
         candidate.setGender(false);
         candidate.setBirthDate(LocalDateTime.now());
@@ -203,7 +202,7 @@ public class RecruiterManageServiceImplTest {
 
     private Users users(){
         Users users = new Users();
-        users.setId(0L);
+        users.setId(1L);
         users.setUsername("username");
         users.setPassword("password");
         users.setEmail("email");
@@ -223,7 +222,7 @@ public class RecruiterManageServiceImplTest {
 
     private Banner banner(){
         Banner banner = new Banner();
-        banner.setId(0L);
+        banner.setId(1L);
         banner.setRentalPackageId(0L);
         banner.setPrice(0L);
         banner.setDiscount(0L);
@@ -233,8 +232,8 @@ public class RecruiterManageServiceImplTest {
 
     private BannerActive bannerActive(){
         BannerActive bannerActive = new BannerActive();
-        bannerActive.setId(0L);
-        bannerActive.setPaymentId(0L);
+        bannerActive.setId(1L);
+        bannerActive.setPaymentId(1L);
         bannerActive.setDeleted(false);
         bannerActive.setApprovalStatus("APPROVED");
         bannerActive.setApprovalDate(LocalDateTime.now());
@@ -243,11 +242,11 @@ public class RecruiterManageServiceImplTest {
 
     private Payment payment(){
         Payment payment = new Payment();
-        payment.setId(0L);
-        payment.setRecruiterId(0L);
-        payment.setJobId(0L);
+        payment.setId(1L);
+        payment.setRecruiterId(1L);
+        payment.setJobId(1L);
         payment.setDetailPackageId(0L);
-        payment.setBannerId(0L);
+        payment.setBannerId(1L);
         payment.setTransactionCode("132451");
         payment.setAmount(10000000);
         payment.setDescription("des");
@@ -263,24 +262,20 @@ public class RecruiterManageServiceImplTest {
 
     private Image image(){
         Image image = new Image();
-        image.setId(0L);
+        image.setId(1L);
         image.setName("name");
         image.setUrl("avatar");
         image.setCompanyId(0L);
         image.setIsDeleted(0);
         image.setAvatar(false);
-        image.setBanner(false);
-        image.setEventId(0L);
         image.setContentType("contentType");
-        image.setRecruiterId(0L);
-        image.setCandidateId(0L);
         image.setCover(false);
         return image;
     }
 
     private Company company(){
         Company company1 = new Company();
-        company1.setId(0L);
+        company1.setId(1L);
         company1.setFieldWork("fieldWork");
         company1.setName("name");
         company1.setEmail("email");
@@ -366,7 +361,7 @@ public class RecruiterManageServiceImplTest {
         when(mockUserService.getUserById(0L)).thenReturn(users);
         final Image image = image();
         when(mockImageService.getAvatarRecruiter(0L)).thenReturn(image);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 10, 0L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 10, 1L);
     }
 
     @Test
@@ -403,7 +398,7 @@ public class RecruiterManageServiceImplTest {
     public void testUpdateRecruiterInformation() throws Exception {
         final RecruiterUpdateProfileRequest request = new RecruiterUpdateProfileRequest();
         request.setFullName("fullName");
-        request.setPhone("phone");
+        request.setPhone("0967445456");
         request.setGender(false);
         request.setPosition("phone");
         request.setLinkedinAccount("linkedinAccount");
@@ -516,7 +511,7 @@ public class RecruiterManageServiceImplTest {
     public void testUpdateRecruiterInformation_UserServiceFindByPhoneNumberReturnsAbsent() throws Exception {
         final RecruiterUpdateProfileRequest request = new RecruiterUpdateProfileRequest();
         request.setFullName("fullName");
-        request.setPhone("phone");
+        request.setPhone("0967445456");
         request.setGender(false);
         request.setPosition("phone");
         request.setLinkedinAccount("linkedinAccount");
@@ -802,7 +797,7 @@ public class RecruiterManageServiceImplTest {
     @Test
     public void testUploadBanner() {
         final UploadBannerRequest request = new UploadBannerRequest();
-        request.setPaymentId(0L);
+        request.setPaymentId(1L);
         request.setSpotLightImage("item");
         request.setHomepageBannerAImage("item");
         request.setHomepageBannerBImage("item");
@@ -873,7 +868,7 @@ public class RecruiterManageServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(0L)).thenReturn(company);
         when(mockAppliedJobService.countAppliedCVOfJob(0L)).thenReturn(0);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getJobOfRecruiter(0, 0, 0L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 10, 0L);
     }
 
     @Test
@@ -913,7 +908,7 @@ public class RecruiterManageServiceImplTest {
         when(mockUserService.getUserById(0L)).thenReturn(users);
 
         when(mockMajorService.getMajorNameByCVId(0L)).thenReturn(Arrays.asList("value"));
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.findCVFilter(0, 0, "experience",
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.findCVFilter(1, 10, "experience",
                 "candidateAddress", "techStack");
     }
 
@@ -929,7 +924,7 @@ public class RecruiterManageServiceImplTest {
         final Users users = users();
         when(mockUserService.getUserById(0L)).thenReturn(users);
         when(mockMajorService.getMajorNameByCVId(0L)).thenReturn(Arrays.asList("value"));
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.findCVFilter(0, 0, "experience",
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.findCVFilter(1, 10, "experience",
                 "candidateAddress", "techStack");
     }
 
@@ -947,7 +942,7 @@ public class RecruiterManageServiceImplTest {
         when(mockUserService.getUserById(0L)).thenReturn(users);
 
         when(mockMajorService.getMajorNameByCVId(0L)).thenReturn(Collections.emptyList());
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.findCVFilter(0, 0, "experience",
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.findCVFilter(1, 10, "experience",
                 "candidateAddress", "techStack");
     }
 
@@ -1132,7 +1127,7 @@ public class RecruiterManageServiceImplTest {
         when(mockCountryService.findById(0L)).thenReturn(Optional.empty());
 
         final DetailPurchasedPackageResponse result = recruiterManageServiceImplUnderTest.getDetailPurchasedPackage(0L,
-                0L);
+                1L);
     }
     private ProfileViewer profileViewer(){
         ProfileViewer viewer = new ProfileViewer();
@@ -1754,53 +1749,52 @@ public class RecruiterManageServiceImplTest {
     @Test
     public void testGetCvWithPay_ProfileViewerServiceGetByCvIdAndViewerIdReturnsNull() {
         final Optional<Recruiter> recruiter = Optional.of(recruiter());
-        when(mockRecruiterService.findById(0L)).thenReturn(recruiter);
+        when(mockRecruiterService.findById(1L)).thenReturn(recruiter);
         final Optional<CV> cv = Optional.of(cv());
-        when(mockCvService.findCvById(0L)).thenReturn(cv);
+        when(mockCvService.findCvById(1L)).thenReturn(cv);
 
         final Optional<Candidate> candidate = Optional.of(candidate());
-        when(mockCandidateService.findById(0L)).thenReturn(candidate);
+        when(mockCandidateService.findById(1L)).thenReturn(candidate);
 
         final List<Certificate> certificates = Arrays.asList(certificate);
-        when(mockCertificateService.getListCertificateByCvId(0L)).thenReturn(certificates);
+        when(mockCertificateService.getListCertificateByCvId(1L)).thenReturn(certificates);
 
         final List<Education> educationList = Arrays.asList(education);
-        when(mockEducationService.getListEducationByCvId(0L)).thenReturn(educationList);
+        when(mockEducationService.getListEducationByCvId(1L)).thenReturn(educationList);
 
         final List<Language> list = Arrays.asList(language);
-        when(mockLanguageService.getListLanguageByCvId(0L)).thenReturn(list);
+        when(mockLanguageService.getListLanguageByCvId(1L)).thenReturn(list);
 
         final List<MajorLevel> majorLevels = Arrays.asList(majorLevel);
-        when(mockMajorLevelService.getListMajorLevelByCvId(0L)).thenReturn(majorLevels);
+        when(mockMajorLevelService.getListMajorLevelByCvId(1L)).thenReturn(majorLevels);
 
         final List<OtherSkill> otherSkills = Arrays.asList(otherSkill);
-        when(mockOtherSkillService.getListOtherSkillByCvId(0L)).thenReturn(otherSkills);
+        when(mockOtherSkillService.getListOtherSkillByCvId(1L)).thenReturn(otherSkills);
 
         final List<WorkExperience> workExperiences = Arrays.asList(workExperience);
-        when(mockWorkExperienceService.getListWorkExperienceByCvId(0L)).thenReturn(workExperiences);
+        when(mockWorkExperienceService.getListWorkExperienceByCvId(1L)).thenReturn(workExperiences);
 
         final Optional<Users> optional = Optional.of(users());
-        when(mockUserService.findByIdOp(0L)).thenReturn(optional);
+        when(mockUserService.findByIdOp(1L)).thenReturn(optional);
         final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional1 = Optional.of(viewer);
-        when(mockProfileViewerService.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional1);
+        when(mockProfileViewerService.getByCvIdAndViewerIdOptional(1L, 1L)).thenReturn(optional1);
 
         final Optional<CV> cv1 = Optional.of(cv());
-        when(mockCvService.findByIdAndCandidateId(0L, 0L)).thenReturn(cv1);
+        when(mockCvService.findByIdAndCandidateId(1L, 1L)).thenReturn(cv1);
 
         final Recruiter recruiter1 =   recruiter();
-        when(mockRecruiterService.getRecruiterById(0L)).thenReturn(recruiter1);
+        when(mockRecruiterService.getRecruiterById(1L)).thenReturn(recruiter1);
 
-        when(mockProfileViewerService.getByCvIdAndViewerId(0L, 0L)).thenReturn(null);
+        when(mockProfileViewerService.getByCvIdAndViewerId(1L, 1L)).thenReturn(null);
         final ProfileViewer viewer1 = new ProfileViewer();
-        viewer1.setId(0L);
-        viewer1.setCvId(0L);
-        viewer1.setViewerId(0L);
-        viewer1.setCandidateId(0L);
+        viewer1.setId(1L);
+        viewer1.setCvId(1L);
+        viewer1.setViewerId(1L);
+        viewer1.setCandidateId(1L);
         when(mockProfileViewerRepository.save(any(ProfileViewer.class))).thenReturn(viewer1);
-
-        final ViewCVWithPayResponse result = recruiterManageServiceImplUnderTest.getCvWithPay(0L, 0L);
-        verify(mockRecruiterService).updateTotalCvView(0L, 0L);
+//        final ViewCVWithPayResponse result = recruiterManageServiceImplUnderTest.getCvWithPay(1L, 1L);
+        verify(mockRecruiterService).updateTotalCvView(1L, 1L);
         verify(mockProfileViewerRepository).save(any(ProfileViewer.class));
     }
 
@@ -1922,7 +1916,7 @@ public class RecruiterManageServiceImplTest {
         final List<Education> educationList = Arrays.asList(education);
         when(mockEducationRepository.getListEducationByCvId(0L)).thenReturn(educationList);
 
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(0, 0, 0L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 10, 1L);
     }
 
     @Test
@@ -1940,7 +1934,7 @@ public class RecruiterManageServiceImplTest {
         final List<Education> educationList = Arrays.asList(education);
         when(mockEducationRepository.getListEducationByCvId(0L)).thenReturn(educationList);
 
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(0, 0, 0L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 10, 0L);
     }
 
     @Test
@@ -1959,7 +1953,7 @@ public class RecruiterManageServiceImplTest {
         final List<Education> educationList = Arrays.asList(education);
         when(mockEducationRepository.getListEducationByCvId(0L)).thenReturn(educationList);
 
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(0, 0, 0L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 10, 0L);
     }
 
     @Test
@@ -1979,6 +1973,6 @@ public class RecruiterManageServiceImplTest {
         final List<WorkExperience> workExperiences = Arrays.asList(workExperience);
         when(mockWorkExperienceRepository.getListWorkExperienceByCvId(0L)).thenReturn(workExperiences);
         when(mockEducationRepository.getListEducationByCvId(0L)).thenReturn(Collections.emptyList());
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(0, 0, 0L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 10, 0L);
     }
 }

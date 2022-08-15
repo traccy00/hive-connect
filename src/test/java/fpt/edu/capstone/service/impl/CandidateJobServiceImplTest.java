@@ -91,8 +91,7 @@ public class CandidateJobServiceImplTest {
     }
 
     private Image imageEntity = new Image(0L, "name", "url", 0L,
-            0, false, false, 0L, "contentType", "content".getBytes(),
-            0L, 0L, false);
+            0, false, "contentType", "content".getBytes(), false);
     @Test
     public void testGetNewestJob() {
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));

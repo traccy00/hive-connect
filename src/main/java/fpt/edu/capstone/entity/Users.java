@@ -1,10 +1,7 @@
 package fpt.edu.capstone.entity;
 
 import fpt.edu.capstone.utils.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -17,6 +14,7 @@ import java.time.LocalDateTime;
 @Where(clause = "is_deleted=0")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Users extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

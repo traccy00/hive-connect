@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -35,21 +36,20 @@ public class ImageServiceImplTest {
         imageServiceImplUnderTest = new ImageServiceImpl(mockImageRepository);
     }
     private Image imageEntity = new Image(0L, "name", "url", 0L,
-            0, false, false, 0L, "contentType", "content".getBytes(),
-                0L, 0L, false);
+            0, false, "contentType", "content".getBytes(), false);
     @Test
     public void testIsValidFile() {
-        final MultipartFile file = null;
-        final boolean result = imageServiceImplUnderTest.isValidFile(file, "png");
+        final MultipartFile file = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
+        final boolean result = imageServiceImplUnderTest.isValidFile(file, "jpg");
         assertThat(result).isFalse();
     }
 
     @Test
     public void testSaveCompanyAvatar() throws Exception {
-        final MultipartFile file = null;
+        final MultipartFile file = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
         final Image image = imageEntity;
         when(mockImageRepository.save(any(Image.class))).thenReturn(image);
-        final Image result = imageServiceImplUnderTest.saveCompanyAvatar(file, "type", 0L);
+        final Image result = imageServiceImplUnderTest.saveCompanyAvatar(file, "IMG", 0L);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class ImageServiceImplTest {
         final MultipartFile file = null;
         final Image image = imageEntity;
         when(mockImageRepository.save(any(Image.class))).thenReturn(image);
-        assertThatThrownBy(() -> imageServiceImplUnderTest.saveCompanyAvatar(file, "type", 0L))
+        assertThatThrownBy(() -> imageServiceImplUnderTest.saveCompanyAvatar(file, "jpg", 0L))
                 .isInstanceOf(IOException.class);
     }
 
@@ -77,7 +77,7 @@ public class ImageServiceImplTest {
 
     @Test
     public void testUpdateAvatar() throws Exception {
-        final MultipartFile file = null;
+        final MultipartFile file = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
         imageServiceImplUnderTest.updateAvatar("id", file);
         verify(mockImageRepository).updateCompanyAvatar(any(byte[].class), eq(true), eq("id"));
     }

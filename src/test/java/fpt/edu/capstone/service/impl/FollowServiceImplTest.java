@@ -18,12 +18,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -48,8 +47,7 @@ public class FollowServiceImplTest {
     private FollowServiceImpl followServiceImplUnderTest;
 
     private Image imageEntity = new Image(0L, "name", "url", 0L,
-            0, false, false, 0L, "contentType", "content".getBytes(),
-            0L, 0L, false);
+            0, false, "contentType", "content".getBytes(), false);
 
     private Job job(){
         Job job = new Job();

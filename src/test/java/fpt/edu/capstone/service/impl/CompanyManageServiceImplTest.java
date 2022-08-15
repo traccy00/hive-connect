@@ -95,7 +95,6 @@ public class CompanyManageServiceImplTest {
         recruiter.setGender(false);
         recruiter.setPosition("HR");
         recruiter.setLinkedinAccount("linkedinAccount");
-        recruiter.setBusinessLicense("businessLicense");
         recruiter.setAdditionalLicense("additionalLicense");
         recruiter.setBusinessLicenseUrl("businessLicenseUrl");
         recruiter.setAdditionalLicenseUrl("additionalLicenseUrl");
@@ -145,8 +144,8 @@ public class CompanyManageServiceImplTest {
 
     private Image image(){
         Image image =  new Image(0L, "name", "url", 0L,
-                0, false, false, 0L, "contentType", ("" +
-                "content").getBytes(), 0L, 0L, false);
+                0, false, "contentType", ("" +
+                "content").getBytes(), false);
         return image;
     }
     @Test

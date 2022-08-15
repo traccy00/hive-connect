@@ -1,518 +1,492 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.dto.register.*;
+import fpt.edu.capstone.dto.register.ChangePasswordRequest;
+import fpt.edu.capstone.dto.register.RegisterGoogleRequest;
+import fpt.edu.capstone.dto.register.RegisterRequest;
+import fpt.edu.capstone.dto.register.ResetPasswordRequest;
 import fpt.edu.capstone.entity.Role;
 import fpt.edu.capstone.entity.Users;
-import fpt.edu.capstone.entity.WorkExperience;
-import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.UserRepository;
-import fpt.edu.capstone.service.EmailService;
-import fpt.edu.capstone.service.RoleService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.mail.MessagingException;
-import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest {
 
     @Mock
-    private UserRepository mockUserRepository;
-    @Mock
-    private RoleService mockRoleService;
-    @Mock
-    private PasswordEncoder mockPasswordEncoder;
-    @Mock
-    private EmailService mockEmailService;
+    UserRepository userRepository;
 
-    private UserServiceImpl userServiceImplUnderTest;
+    @InjectMocks
+    UserServiceImpl userService;
 
-    @Before
-    public void setUp() {
-        userServiceImplUnderTest = new UserServiceImpl(mockUserRepository, mockRoleService, mockPasswordEncoder,
-                mockEmailService);
+    @Mock
+    RoleServiceImpl roleService;
+
+    @Mock
+    PasswordEncoder passwordEncoder;
+
+    @Mock
+    EmailServiceImpl emailService;
+
+    @BeforeEach
+    public void init() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    private Users users(){
+    @Test
+    public void findUserByUserNameNull(){
+        Optional<Users> opUser = Optional.empty();
+        when(userRepository.findByUsernameAndIsDeleted("userName", 0)).thenReturn(opUser);
+        assertEquals(false, userService.findUserByUserName("userName").isPresent());
+    }
+
+    @Test
+    public void finUserByUserNameNotNull(){
+        Users user = new Users();
+        user.setUsername("userName");
+        Optional<Users> opUser = Optional.of(user);
+        when(userRepository.findByUsernameAndIsDeleted("userName", 0)).thenReturn(opUser);
+        assertEquals(opUser, userService.findUserByUserName("userName"));
+
+    }
+
+    @Test
+    public void saveUserFail(){
+        Users user = new Users();
+        when(userRepository.save(user)).thenReturn(null);
+        assertEquals(null, userService.saveUser(user));
+    }
+
+    @Test
+    public void saveUserSuccess(){
+        Users user = new Users();
+        when(userRepository.save(user)).thenReturn(user);
+        assertEquals(user, userService.saveUser(user));
+    }
+
+    @Test
+    public void getByUserNameIsNull(){
+        when(userRepository.getByUsername("userName")).thenReturn(null);
+        assertEquals(null, userService.getByUserName("userName"));
+    }
+
+    @Test
+    public void getByUserNameIsNotNull(){
+        Users user = new Users();
+        when(userRepository.getByUsername("userName")).thenReturn(user);
+        assertEquals(user, userService.getByUserName("userName"));
+    }
+
+    @Test
+    public void getByUserNameIsCheckValueFalse(){
+        Users user = new Users();
+        Users user1 = new Users();
+
+        when(userRepository.getByUsername("userName")).thenReturn(user1);
+
+        assertNotEquals(user, userService.getByUserName("userName"));
+    }
+
+    @Test
+    public void getByUserNameIsCheckValueTrue(){
+        Users user = new Users();
+
+        when(userRepository.getByUsername("userName")).thenReturn(user);
+
+        assertEquals(user, userService.getByUserName("userName"));
+    }
+
+    @Test
+    public void getUserByIdIsNull(){
+        when(userRepository.getUserById(1L)).thenReturn(null);
+        assertEquals(null, userService.getUserById(1L));
+    }
+
+    @Test
+    public void getUserByIdIsNotNull(){
+        Users user = new Users();
+        when(userRepository.getUserById(1L)).thenReturn(user);
+        assertEquals(user, userService.getUserById(1L));
+    }
+
+    @Test
+    public void getUserByIdIsCheckValueFalse(){
+        Users user = new Users();
+        Users user1 = new Users();
+
+        when(userRepository.getUserById(1L)).thenReturn(user1);
+
+        assertNotEquals(user, userService.getUserById(1L));
+    }
+
+    @Test
+    public void getUserByIdIsCheckValueTrue(){
+        Users user = new Users();
+
+        when(userRepository.getUserById(1L)).thenReturn(user);
+
+        assertEquals(user, userService.getUserById(1L));
+    }
+
+    @Test
+    public void registerUserRequestNull(){
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.registerUser(null);
+        });
+        assertEquals(null, exception.getMessage());
+    }
+
+    @Test
+    public void registerUserRequestNotNullAndNotFindRoleById(){
+        RegisterRequest request = new RegisterRequest();
+        request.setRoleId(1L);
+
+        Optional<Role> optionalRole = Optional.empty();
+
+        when(roleService.findRoleById(request.getRoleId())).thenReturn(optionalRole);
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.registerUser(request);
+        });
+
+        assertEquals("Loại vai trò người dùng không tồn tại trong hệ thống", exception.getMessage());
+    }
+
+    @Test
+    public void registerUserRequestNotNullAndFindRoleByIdAndFindByUsername(){
+        RegisterRequest request = new RegisterRequest();
+        request.setRoleId(1L);
+        request.setUsername("userName");
+
+        Optional<Role> optionalRole = Optional.of(new Role());
+        Optional<Users> optionalUsers = Optional.of(new Users());
+
+        when(roleService.findRoleById(request.getRoleId())).thenReturn(optionalRole);
+        when(userRepository.findByUsername(request.getUsername())).thenReturn(optionalUsers);
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.registerUser(request);
+        });
+
+        assertEquals("Tên đăng nhập đã được sử dụng.", exception.getMessage());
+    }
+
+    @Test
+    public void registerUserRequestNotNullAndFindRoleByIdAndNotFindByUsernameFindByEmail(){
+        RegisterRequest request = new RegisterRequest();
+        request.setRoleId(1L);
+        request.setUsername("userName");
+        request.setEmail("email");
+
+        Optional<Role> optionalRole = Optional.of(new Role());
+        Optional<Users> optionalUsers = Optional.of(new Users());
+
+
+        when(roleService.findRoleById(request.getRoleId())).thenReturn(optionalRole);
+        when(userRepository.findByUsername(request.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(optionalUsers);
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.registerUser(request);
+        });
+
+        assertEquals("Email đã được sử dụng.", exception.getMessage());
+    }
+
+    @Test
+    public void registerUserRequestNotNullAndFindRoleByIdAndNotFindByUsernameNotFindByEmailPassFail(){
+        RegisterRequest request = new RegisterRequest();
+        request.setRoleId(1L);
+        request.setUsername("userName");
+        request.setEmail("email");
+        request.setPassword("pass");
+        request.setConfirmPassword("pass1");
+
+        Optional<Role> optionalRole = Optional.of(new Role());
+        Optional<Users> optionalUsers = Optional.of(new Users());
+
+
+        when(roleService.findRoleById(request.getRoleId())).thenReturn(optionalRole);
+        when(userRepository.findByUsername(request.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
+
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.registerUser(request);
+        });
+
+        assertEquals("Xác nhận mật khẩu không đúng.", exception.getMessage());
+    }
+
+    @Test
+    public void registerUserRequestNotNullAndFindRoleByIdAndNotFindByUsernameNotFindByEmailPassSuccess(){
+        RegisterRequest request = new RegisterRequest();
+        request.setRoleId(1L);
+        request.setUsername("userName");
+        request.setEmail("email");
+        request.setPassword("pass");
+        request.setConfirmPassword("pass");
+
+        Optional<Role> optionalRole = Optional.of(new Role());
+        Optional<Users> optionalUsers = Optional.of(new Users());
+
+
+        when(roleService.findRoleById(request.getRoleId())).thenReturn(optionalRole);
+        when(userRepository.findByUsername(request.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(request.getPassword())).thenReturn(request.getPassword());
+        assertDoesNotThrow(() -> {
+            userService.registerUser(request);
+        }, "No exception is throws");
+    }
+
+    @Test
+    public void findByEmailNull(){
+        when(userRepository.findByEmail("email")).thenReturn(Optional.empty());
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.findByEmail("email");
+        });
+        assertEquals("Người dùng không tồn tại", exception.getMessage());
+    }
+
+    @Test
+    public void findByEmailNotNull(){
+        Optional<Users> optionalUsers = Optional.of(new Users());
+        when(userRepository.findByEmail("email")).thenReturn(optionalUsers);
+        assertEquals(optionalUsers.get(), userService.findByEmail("email"));
+    }
+
+    @Test
+    public void registerGoogleUserRequedNull(){
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.registerGoogleUser(null);
+        });
+        assertEquals(null, exception.getMessage());
+    }
+
+    @Test
+    public void registerGoogleUserRequedNotNullFinRoleByIdNull(){
+        RegisterGoogleRequest request = new RegisterGoogleRequest();
+        request.setEmail("email@email");
+        request.setRoleId(1L);
+        when(roleService.findRoleById(1L)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.registerGoogleUser(request);
+        });
+        assertEquals("Loại vai trò người dùng không tồn tại trong hệ thống", exception.getMessage());
+    }
+
+    @Test
+    public void registerGoogleUserRequedNotNullFinRoleByIdNotNullFindByUsernameNotNull(){
+        RegisterGoogleRequest request = new RegisterGoogleRequest();
+        request.setEmail("email@email");
+        request.setRoleId(1L);
+        when(roleService.findRoleById(1L)).thenReturn(Optional.of(new Role()));
+        when(userRepository.findByUsername("email")).thenReturn(Optional.of(new Users()));
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.registerGoogleUser(request);
+        });
+        assertEquals("Tên đăng nhập đã được sử dụng.", exception.getMessage());
+    }
+
+    @Test
+    public void registerGoogleUserRequedNotNullFinRoleByIdNotNullFindByUsernameNullFindByEmailNotNull(){
+        RegisterGoogleRequest request = new RegisterGoogleRequest();
+        request.setEmail("email@email");
+        request.setRoleId(1L);
+        when(roleService.findRoleById(1L)).thenReturn(Optional.of(new Role()));
+        when(userRepository.findByUsername("email")).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(new Users()));
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.registerGoogleUser(request);
+        });
+        assertEquals("Email đã được sử dụng.", exception.getMessage());
+    }
+
+    @Test
+    public void registerGoogleUserRequedNotNullFinRoleByIdNotNullFindByUsernameNullFindByEmailNull(){
+        RegisterGoogleRequest request = new RegisterGoogleRequest();
+        request.setEmail("email@email");
+        request.setRoleId(1L);
+
+        when(roleService.findRoleById(1L)).thenReturn(Optional.of(new Role()));
+        when(userRepository.findByUsername("email")).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode("1")).thenReturn("1");
+
+        assertDoesNotThrow(() -> {
+            userService.registerGoogleUser(request);
+        }, "No exception is throws");
+
+    }
+    @Test
+    public void changePasswordFindUserByUserNameNull(){
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.changePassword(null, null);
+        });
+        assertEquals("Tên người dùng không tìm thấy.", exception.getMessage());
+    }
+
+    @Test
+    public void changePasswordFindUserByUserNameNotNullRequestNull(){
+        when(userService.findUserByUserName("userName")).thenReturn(Optional.of(new Users()));
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.changePassword("userName", null);
+        });
+        assertEquals(null, exception.getMessage());
+    }
+
+    @Test
+    public void changePasswordFindUserByUserNameNotNullRequestGetOldPasswordNull(){
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        when(userService.findUserByUserName("userName")).thenReturn(Optional.of(new Users()));
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.changePassword("userName", request);
+        });
+        assertEquals(null, exception.getMessage());
+    }
+
+    @Test
+    public void changePasswordFindUserByUserNameNotNullRequestGetOldPasswordNotNullGetNewPasswordNull(){
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        request.setOldPassword("oldPass");
+        when(userService.findUserByUserName("userName")).thenReturn(Optional.of(new Users()));
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.changePassword("userName", request);
+        });
+        assertEquals(null, exception.getMessage());
+    }
+
+    @Test
+    public void changePasswordFindUserByUserNameNotNullRequestGetOldPasswordNotNullGetNewPasswordNotNullGetConfirmPasswordNull(){
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        request.setOldPassword("oldPass");
+        request.setNewPassword("newPass");
+        when(userService.findUserByUserName("userName")).thenReturn(Optional.of(new Users()));
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.changePassword("userName", request);
+        });
+        assertEquals(null, exception.getMessage());
+    }
+
+    @Test
+    public void changePasswordFindUserByUserNameNotNullRequestGetOldPasswordGetNewPasswordGetConfirmPasswordNotNullCheckOlbPassFail(){
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        request.setOldPassword("oldPass");
+        request.setNewPassword("newPass");
+        request.setConfirmPassword("confirmPass");
+        when(userService.findUserByUserName("userName")).thenReturn(Optional.of(Users.builder().password("pass").build()));
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.changePassword("userName", request);
+        });
+        assertEquals("Mật khẩu cũ không đúng.", exception.getMessage());
+    }
+
+    @Test
+    public void changePasswordFindUserByUserNameNotNullRequestGetOldPasswordGetNewPasswordGetConfirmPasswordNotNullCheckOlbPassSuccessCheckNewPassFail(){
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        request.setOldPassword("oldPass");
+        request.setNewPassword("newPass");
+        request.setConfirmPassword("confirmPass");
         Users users = new Users();
-        users.setId(0L);
-        users.setUsername("username");
-        users.setPassword("password");
-        users.setEmail("email");
-        users.setPhone("0967445450");
-        users.setRoleId(0L);
-        users.setIsDeleted(0);
-        users.setLastLoginTime(LocalDateTime.now());
-        users.setVerifiedEmail(false);
-        users.setVerifiedPhone(false);
-        users.setActive(true);
-        users.setLocked(false);
-        users.setAvatar("avatar");
-        users.setResetPasswordToken("setResetPasswordToken");
-        users.setGoogle(false);
-        return users;
-    }
-
-    private RegisterRequest registerRequest(){
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setUsername("username");
-        registerRequest.setPassword("password");
-        registerRequest.setConfirmPassword("password");
-        registerRequest.setEmail("email");
-        registerRequest.setPhone("0967445450");
-        registerRequest.setRoleId(0L);
-        return registerRequest;
-    }
-
-    private Role role(){
-        Role role = new Role();
-        role.setId(0L);
-        role.setName("name");
-        role.setDescription("description");
-        return role;
-    }
-
-    private ChangePasswordRequest changePasswordRequest(){
-        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
-        changePasswordRequest.setOldPassword("password");
-        changePasswordRequest.setNewPassword("123");
-        changePasswordRequest.setConfirmPassword("123");
-        return changePasswordRequest;
-    }
-
-    private ResetPasswordRequest resetPasswordRequest(){
-        ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest();
-        resetPasswordRequest.setNewPassword("123");
-        resetPasswordRequest.setConfirmPassword("123");
-        resetPasswordRequest.setResetPasswordToken("resetPasswordToken");
-        return resetPasswordRequest;
+        users.setPassword("oldPass");
+        when(userService.findUserByUserName("userName")).thenReturn(Optional.of(users));
+        when(passwordEncoder.matches("oldPass", "oldPass")).thenReturn(true);
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.changePassword("userName", request);
+        });
+        assertEquals("Xác nhận mật khẩu không đúng.", exception.getMessage());
     }
 
     @Test
-    public void testGetUserById() {
-        final Users users = users();
-        when(mockUserRepository.getUserById(0L)).thenReturn(users);
-        final Users result = userServiceImplUnderTest.getUserById(0L);
+    public void changePasswordFindUserByUserNameNotNullRequestGetOldPasswordGetNewPasswordGetConfirmPasswordNotNullCheckOlbPassSuccessCheckNewPassSuccess(){
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        request.setOldPassword("oldPass");
+        request.setNewPassword("newPass");
+        request.setConfirmPassword("newPass");
+
+        when(userService.findUserByUserName("userName")).thenReturn(Optional.of(Users.builder().password("oldPass").build()));
+        when(passwordEncoder.matches("oldPass", "oldPass")).thenReturn(true);
+        when(passwordEncoder.encode("newPass")).thenReturn("newPass");
+
+        assertDoesNotThrow(() -> {
+            userService.changePassword("userName",request);
+        }, "No exception is throws");
     }
 
     @Test
-    public void testFindUserByUserName() {
-        final Optional<Users> optional = Optional.of(users());
-        when(mockUserRepository.findByUsernameAndIsDeleted("userName", 0)).thenReturn(optional);
-        final Optional<Users> result = userServiceImplUnderTest.findUserByUserName("userName");
+    public void forgotPasswordSuccess(){
+        when(userRepository.findByEmail("email")).thenReturn(Optional.of(Users.builder().email("email").build()));
+        assertDoesNotThrow(() -> {
+            userService.forgotPassword("email");
+        }, "No exception is throws");
     }
 
     @Test
-    public void testFindUserByUserName_UserRepositoryReturnsAbsent() {
-        when(mockUserRepository.findByUsernameAndIsDeleted("userName", 0)).thenReturn(Optional.empty());
-        final Optional<Users> result = userServiceImplUnderTest.findUserByUserName("userName");
-        assertThat(result).isEmpty();
+    public void forgotPasswordFail(){
+        when(userRepository.findByEmail("email")).thenReturn(Optional.empty());
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.forgotPassword("email");
+        });
+        assertEquals("Người dùng không tồn tại", exception.getMessage());
     }
 
     @Test
-    public void testSaveUser() {
-        final Users user = users();
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        final Users result = userServiceImplUnderTest.saveUser(user);
+    public void resetPasswordRequestNull(){
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.resetPassword(null);
+        });
+        assertEquals(null, exception.getMessage());
+    }
+
+    public void resetPasswordRequestGetResetPasswordTokenNull(){
+        ResetPasswordRequest request = new ResetPasswordRequest();
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.resetPassword(request);
+        });
+        assertEquals("Mã token không hợp lệ.", exception.getMessage());
     }
 
     @Test
-    public void testRegisterUser() {
-        final RegisterRequest request = registerRequest();
-        final Optional<Role> optional = Optional.of(role());
-        when(mockRoleService.findRoleById(0L)).thenReturn(optional);
-        final Optional<Users> optional1 = Optional.of(users());
-        when(mockUserRepository.findByUsername("usernamee")).thenReturn(optional1);
-        final Optional<Users> optional2 = Optional.of(users());
-        when(mockUserRepository.findByEmail("emaill")).thenReturn(optional2);
-        when(mockPasswordEncoder.encode("password")).thenReturn("password");
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        userServiceImplUnderTest.registerUser(request);
-        verify(mockUserRepository).save(any(Users.class));
+    public void resetPasswordRequestGetResetPasswordTokenNotNullNotFoundUser(){
+        ResetPasswordRequest request = new ResetPasswordRequest();
+        request.setResetPasswordToken("token");
+        when(userRepository.findByResetPasswordToken("token")).thenReturn(Optional.empty());
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.resetPassword(request);
+        });
+        assertEquals("Không tìm thấy người dùng hoặc yêu cầu không tồn tại.", exception.getMessage());
     }
 
     @Test
-    public void testRegisterUser_RoleServiceReturnsAbsent() {
-        final RegisterRequest request =registerRequest();
-        when(mockRoleService.findRoleById(0L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> userServiceImplUnderTest.registerUser(request))
-                .isInstanceOf(HiveConnectException.class);
+    public void resetPasswordRequestGetResetPasswordTokenNotNullUserAndNewPassWordNull(){
+        ResetPasswordRequest request = new ResetPasswordRequest();
+        request.setResetPasswordToken("token");
+        when(userRepository.findByResetPasswordToken("token")).thenReturn(Optional.of(new Users()));
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.resetPassword(request);
+        });
+        assertEquals("Vui lòng điền vào thông tin bắt buộc.", exception.getMessage());
     }
 
     @Test
-    public void testRegisterUser_UserRepositoryFindByUsernameReturnsAbsent() {
-        final RegisterRequest request = registerRequest();
-        final Optional<Role> optional = Optional.of(role());
-        when(mockRoleService.findRoleById(0L)).thenReturn(optional);
-        when(mockUserRepository.findByUsername("username")).thenReturn(Optional.empty());
-        final Optional<Users> optional1 = Optional.of(users());
-        when(mockUserRepository.findByEmail("eemail")).thenReturn(optional1);
-        when(mockPasswordEncoder.encode("password")).thenReturn("password");
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        userServiceImplUnderTest.registerUser(request);
-        verify(mockUserRepository).save(any(Users.class));
-    }
-
-    @Test
-    public void testRegisterUser_UserRepositoryFindByEmailReturnsAbsent() {
-        final RegisterRequest request = registerRequest();
-        final Optional<Role> optional = Optional.of(role());
-        when(mockRoleService.findRoleById(0L)).thenReturn(optional);
-        final Optional<Users> optional1 = Optional.of(users());
-        when(mockUserRepository.findByUsername("usernamea")).thenReturn(optional1);
-        when(mockUserRepository.findByEmail("email")).thenReturn(Optional.empty());
-        when(mockPasswordEncoder.encode("password")).thenReturn("password");
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        userServiceImplUnderTest.registerUser(request);
-        verify(mockUserRepository).save(any(Users.class));
-    }
-
-    @Test
-    public void testRegisterGoogleUser() {
-        final RegisterGoogleRequest request = new RegisterGoogleRequest();
-        request.setEmail("email");
-        request.setRoleId(0L);
-        final Optional<Role> optional = Optional.of(role());
-        when(mockRoleService.findRoleById(0L)).thenReturn(optional);
-        final Optional<Users> optional1 = Optional.of(users());
-        when(mockUserRepository.findByUsername("username")).thenReturn(optional1);
-        final Optional<Users> optional2 = Optional.of(users());
-        when(mockUserRepository.findByEmail("emailll")).thenReturn(optional2);
-        when(mockPasswordEncoder.encode("1")).thenReturn("password");
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        userServiceImplUnderTest.registerGoogleUser(request);
-        verify(mockUserRepository).save(any(Users.class));
-    }
-
-    @Test
-    public void testRegisterGoogleUser_RoleServiceReturnsAbsent() {
-        final RegisterGoogleRequest request = new RegisterGoogleRequest();
-        request.setEmail("email");
-        request.setRoleId(0L);
-        when(mockRoleService.findRoleById(0L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> userServiceImplUnderTest.registerGoogleUser(request))
-                .isInstanceOf(HiveConnectException.class);
-    }
-
-    @Test
-    public void testRegisterGoogleUser_UserRepositoryFindByUsernameReturnsAbsent() {
-        final RegisterGoogleRequest request = new RegisterGoogleRequest();
-        request.setEmail("email");
-        request.setRoleId(0L);
-        final Optional<Role> optional = Optional.of(role());
-        when(mockRoleService.findRoleById(0L)).thenReturn(optional);
-
-        when(mockUserRepository.findByUsername("username")).thenReturn(Optional.empty());
-        final Optional<Users> optional1 = Optional.of(users());
-        when(mockUserRepository.findByEmail("asemail")).thenReturn(optional1);
-        when(mockPasswordEncoder.encode("1")).thenReturn("password");
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        userServiceImplUnderTest.registerGoogleUser(request);
-        verify(mockUserRepository).save(any(Users.class));
-    }
-
-    @Test
-    public void testRegisterGoogleUser_UserRepositoryFindByEmailReturnsAbsent() {
-        final RegisterGoogleRequest request = new RegisterGoogleRequest();
-        request.setEmail("email");
-        request.setRoleId(0L);
-        final Optional<Role> optional = Optional.of(role());
-        when(mockRoleService.findRoleById(0L)).thenReturn(optional);
-        final Optional<Users> optional1 = Optional.of(users());
-        when(mockUserRepository.findByUsername("username")).thenReturn(optional1);
-        when(mockUserRepository.findByEmail("email")).thenReturn(Optional.empty());
-        when(mockPasswordEncoder.encode("1")).thenReturn("password");
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        userServiceImplUnderTest.registerGoogleUser(request);
-        verify(mockUserRepository).save(any(Users.class));
-    }
-
-    @Test
-    public void testGetByUserName() {
-        final Users users = users();
-        when(mockUserRepository.getByUsername("username")).thenReturn(users);
-        final Users result = userServiceImplUnderTest.getByUserName("username");
-
-    }
-
-    @Test
-    public void testFindById() {
-        final Users users =users();
-        when(mockUserRepository.getUserById(0L)).thenReturn(users);
-        final Users result = userServiceImplUnderTest.findById(0L);
-
-    }
-
-    @Test
-    public void testFindByIdOp() {
-        final Optional<Users> optional = Optional.of(users());
-        when(mockUserRepository.findById(0L)).thenReturn(optional);
-        final Optional<Users> result = userServiceImplUnderTest.findByIdOp(0L);
-
-    }
-    @Test
-    public void testFindByIdOp_UserRepositoryReturnsAbsent() {
-        when(mockUserRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Users> result = userServiceImplUnderTest.findByIdOp(0L);
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    public void testFindAll() {
-        final List<Users> users = Arrays.asList(users());
-        when(mockUserRepository.findAll()).thenReturn(users);
-        final List<Users> result = userServiceImplUnderTest.findAll();
-
-    }
-
-    @Test
-    public void testFindAll_UserRepositoryReturnsNoItems() {
-        when(mockUserRepository.findAll()).thenReturn(Collections.emptyList());
-        final List<Users> result = userServiceImplUnderTest.findAll();
-        assertThat(result).isEqualTo(Collections.emptyList());
-    }
-
-    @Test
-    public void testFindByPhoneNumber() {
-        final Optional<Users> optional = Optional.of(users());
-        when(mockUserRepository.findByPhone("phone")).thenReturn(optional);
-        final Optional<Users> result = userServiceImplUnderTest.findByPhoneNumber("phone");
-
-    }
-
-    @Test
-    public void testFindByPhoneNumber_UserRepositoryReturnsAbsent() {
-        when(mockUserRepository.findByPhone("phone")).thenReturn(Optional.empty());
-        final Optional<Users> result = userServiceImplUnderTest.findByPhoneNumber("phone");
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    public void testCountUser() {
-        when(mockUserRepository.countUserRegisterToday()).thenReturn(Arrays.asList());
-        when(mockUserRepository.countUserRegisterMonthAgo()).thenReturn(Arrays.asList());
-        when(mockUserRepository.countAllUsersRegister()).thenReturn(Arrays.asList());
-        final HashMap<String, List<CountRegisterUserResponse>> result = userServiceImplUnderTest.countUser();
-    }
-
-    @Test
-    public void testCountUser_UserRepositoryCountUserRegisterTodayReturnsNoItems() {
-        when(mockUserRepository.countUserRegisterToday()).thenReturn(Collections.emptyList());
-        when(mockUserRepository.countUserRegisterMonthAgo()).thenReturn(Arrays.asList());
-        when(mockUserRepository.countAllUsersRegister()).thenReturn(Arrays.asList());
-        final HashMap<String, List<CountRegisterUserResponse>> result = userServiceImplUnderTest.countUser();
-    }
-
-    @Test
-    public void testCountUser_UserRepositoryCountUserRegisterMonthAgoReturnsNoItems() {
-        when(mockUserRepository.countUserRegisterToday()).thenReturn(Arrays.asList());
-        when(mockUserRepository.countUserRegisterMonthAgo()).thenReturn(Collections.emptyList());
-        when(mockUserRepository.countAllUsersRegister()).thenReturn(Arrays.asList());
-        final HashMap<String, List<CountRegisterUserResponse>> result = userServiceImplUnderTest.countUser();
-    }
-
-    @Test
-    public void testCountUser_UserRepositoryCountAllUsersRegisterReturnsNoItems() {
-        when(mockUserRepository.countUserRegisterToday()).thenReturn(Arrays.asList());
-        when(mockUserRepository.countUserRegisterMonthAgo()).thenReturn(Arrays.asList());
-        when(mockUserRepository.countAllUsersRegister()).thenReturn(Collections.emptyList());
-        final HashMap<String, List<CountRegisterUserResponse>> result = userServiceImplUnderTest.countUser();
-
-    }
-
-    @Test
-    public void testLockUnlockUser() {
-        final Users users = users();
-        when(mockUserRepository.getById(0L)).thenReturn(users);
-        final Users users1 = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users1);
-        final Users result = userServiceImplUnderTest.lockUnlockUser(0L);
-        verify(mockUserRepository).save(any(Users.class));
-    }
-
-    @Test
-    public void testLockUnlockUser_UserRepositoryGetByIdReturnsNull() {
-        when(mockUserRepository.getById(0L)).thenReturn(null);
-        assertThatThrownBy(() -> userServiceImplUnderTest.lockUnlockUser(0L)).isInstanceOf(HiveConnectException.class);
-    }
-
-    @Test
-    public void testActiveDeactiveUser() {
-        final Users users = users();
-        when(mockUserRepository.getById(0L)).thenReturn(users);
-        final Users users1 = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users1);
-        final Users result = userServiceImplUnderTest.activeDeactiveUser(0L);
-        verify(mockUserRepository).save(any(Users.class));
-    }
-
-    @Test
-    public void testActiveDeactiveUser_UserRepositoryGetByIdReturnsNull() {
-        when(mockUserRepository.getById(0L)).thenReturn(null);
-        assertThatThrownBy(() -> userServiceImplUnderTest.activeDeactiveUser(0L))
-                .isInstanceOf(HiveConnectException.class);
-    }
-
-    @Test
-    public void testUpdatePhoneNumber() {
-        userServiceImplUnderTest.updatePhoneNumber("phoneNumber", 0L);
-        verify(mockUserRepository).updatePhoneNumber("phoneNumber", 0L);
-    }
-
-    @Test
-    public void testChangePassword() {
-        final ChangePasswordRequest request = changePasswordRequest();
-        final Optional<Users> optional = Optional.of(users());
-        when(mockUserRepository.findByUsernameAndIsDeleted("userName", 0)).thenReturn(optional);
-        when(mockPasswordEncoder.matches("rawPassword", "password")).thenReturn(false);
-        when(mockPasswordEncoder.encode("rawPassword")).thenReturn("password");
-        final Users users =users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        userServiceImplUnderTest.changePassword("userName", request);
-
-    }
-
-    @Test
-    public void testChangePassword_UserRepositoryFindByUsernameAndIsDeletedReturnsAbsent() {
-        final ChangePasswordRequest request = changePasswordRequest();
-        when(mockUserRepository.findByUsernameAndIsDeleted("userName", 0)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> userServiceImplUnderTest.changePassword("userName", request))
-                .isInstanceOf(HiveConnectException.class);
-    }
-
-    @Test
-    public void testFindByEmail() {
-        final Optional<Users> optional = Optional.of(users());
-        when(mockUserRepository.findByEmail("email")).thenReturn(optional);
-        final Users result = userServiceImplUnderTest.findByEmail("email");
-
-    }
-
-    @Test
-    public void testFindByEmail_UserRepositoryReturnsAbsent() {
- 
-        when(mockUserRepository.findByEmail("email")).thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> userServiceImplUnderTest.findByEmail("email"))
-                .isInstanceOf(HiveConnectException.class);
-    }
-
-    @Test
-    public void testFindByResetPasswordToken() {
-        final Optional<Users> optional = Optional.of(users());
-        when(mockUserRepository.findByResetPasswordToken("resetPasswordToken")).thenReturn(optional);
-        final Users result = userServiceImplUnderTest.findByResetPasswordToken("resetPasswordToken");
-
-    }
-
-    @Test
-    public void testFindByResetPasswordToken_UserRepositoryReturnsAbsent() {
-        when(mockUserRepository.findByResetPasswordToken("resetPasswordToken")).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> userServiceImplUnderTest.findByResetPasswordToken("resetPasswordToken"))
-                .isInstanceOf(HiveConnectException.class);
-    }
-
-    @Test
-    public void testForgotPassword() throws Exception {
-        final Optional<Users> optional = Optional.of(users());
-        when(mockUserRepository.findByEmail("email")).thenReturn(optional);
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        userServiceImplUnderTest.forgotPassword("email");
-        verify(mockUserRepository).save(any(Users.class));
-        verify(mockEmailService).sendResetPasswordEmail("email", "link");
-    }
-
-    @Test
-    public void testForgotPassword_UserRepositoryFindByEmailReturnsAbsent() {
-        when(mockUserRepository.findByEmail("email")).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> userServiceImplUnderTest.forgotPassword("email")).isInstanceOf(Exception.class);
-    }
-
-    @Test
-    public void testForgotPassword_EmailServiceThrowsMessagingException() throws Exception {
-        final Optional<Users> optional = Optional.of(users());
-        when(mockUserRepository.findByEmail("email")).thenReturn(optional);
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        doThrow(MessagingException.class).when(mockEmailService).sendResetPasswordEmail("email", "link");
-        assertThatThrownBy(() -> userServiceImplUnderTest.forgotPassword("email")).isInstanceOf(Exception.class);
-        verify(mockUserRepository).save(any(Users.class));
-    }
-
-    @Test
-    public void testForgotPassword_EmailServiceThrowsUnsupportedEncodingException() throws Exception {
-        final Optional<Users> optional = Optional.of(users());
-        when(mockUserRepository.findByEmail("email")).thenReturn(optional);
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        doThrow(UnsupportedEncodingException.class).when(mockEmailService).sendResetPasswordEmail("email", "link");
-        assertThatThrownBy(() -> userServiceImplUnderTest.forgotPassword("email")).isInstanceOf(Exception.class);
-        verify(mockUserRepository).save(any(Users.class));
-    }
-
-    @Test
-    public void testResetPassword() {
-        final ResetPasswordRequest request = resetPasswordRequest();
-        final Optional<Users> optional = Optional.of(users());
-        when(mockUserRepository.findByResetPasswordToken("resetPasswordToken")).thenReturn(optional);
-        when(mockPasswordEncoder.encode("rawPassword")).thenReturn("password");
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        userServiceImplUnderTest.resetPassword(request);
-
-    }
-
-    @Test
-    public void testResetPassword_UserRepositoryFindByResetPasswordTokenReturnsAbsent() {
-        final ResetPasswordRequest request = resetPasswordRequest();
-        when(mockUserRepository.findByResetPasswordToken("resetPasswordToken")).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> userServiceImplUnderTest.resetPassword(request))
-                .isInstanceOf(HiveConnectException.class);
-    }
-
-    @Test
-    public void testUpdateIsVerifyPhone() {
-        userServiceImplUnderTest.updateIsVerifyPhone(false, 0L);
-        verify(mockUserRepository).updateIsVerifyPhone(false, 0L);
-    }
-
-    @Test
-    public void testFindByPhoneAndIdIsNotIn() {
-        final Users users = users();
-        when(mockUserRepository.findByPhoneAndIdIsNotIn("phone", 0L)).thenReturn(users);
-        final Users result = userServiceImplUnderTest.findByPhoneAndIdIsNotIn("phone", 0L);
-
-    }
-
-    @Test
-    public void testUpdatePassword() {
-        final Users user = users();
-        final ResetPasswordRequest request = new ResetPasswordRequest("resetPasswordToken", "newPassword",
-                "newPassword");
-        when(mockPasswordEncoder.encode("rawPassword")).thenReturn("password");
-        final Users users = users();
-        when(mockUserRepository.save(any(Users.class))).thenReturn(users);
-        userServiceImplUnderTest.updatePassword(user, request);
-
+    public void resetPasswordSuccess(){
+        ResetPasswordRequest request = new ResetPasswordRequest();
+        request.setResetPasswordToken("token");
+        request.setNewPassword("new");
+        request.setConfirmPassword("new");
+        when(userRepository.findByResetPasswordToken("token")).thenReturn(Optional.of(new Users()));
+        assertDoesNotThrow(() -> {
+            userService.resetPassword(request);
+        }, "No exception is throws");
     }
 }

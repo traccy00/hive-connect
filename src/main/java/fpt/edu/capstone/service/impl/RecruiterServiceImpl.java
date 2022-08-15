@@ -118,7 +118,7 @@ public class RecruiterServiceImpl implements RecruiterService {
         //"1": business license, "2": additional license
         if (businessMultipartFile != null) {
             //check xem license đã từng upload lên chưa, trạng thái như thế nào?
-            if (optionalRecruiter.get().getBusinessLicense() != null && optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null) {
+            if (optionalRecruiter.get().getBusinessLicenseUrl() != null && optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null) {
                 if ((optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())
                         || optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus()))
                         && additionalMultipartFile == null) {
@@ -128,7 +128,6 @@ public class RecruiterServiceImpl implements RecruiterService {
             //upload file to amazon
             String fileName = amazonS3ClientService.uploadFileAmazonS3(null, businessMultipartFile);
             //save to database
-            optionalRecruiter.get().setBusinessLicense(fileName);
             optionalRecruiter.get().setBusinessLicenseUrl(ResponseMessageConstants.AMAZON_SAVE_URL + fileName);
             optionalRecruiter.get().setBusinessLicenseApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
             optionalRecruiter.get().update();

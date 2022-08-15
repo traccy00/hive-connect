@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
@@ -28,8 +29,13 @@ public class EmailServiceImplTest {
     @Test
     public void testSendResetPasswordEmail() throws Exception {
         final MimeMessage mimeMessage = new MimeMessage(Session.getInstance(new Properties()));
+        mimeMessage.setFrom("hive.connect.social@gmail.com");
+        MimeMessageHelper mimeMessageHelper;
+        mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setFrom("hive.connect.social@gmail.com", "Hive Connect Support");
+        mimeMessageHelper.setTo("recipientEmail@gmail.com");
         when(mockJavaMailSender.createMimeMessage()).thenReturn(mimeMessage);
-        emailServiceImplUnderTest.sendResetPasswordEmail("recipientEmail", "link");
+        emailServiceImplUnderTest.sendResetPasswordEmail("recipientEmail@gmail.com", "link");
         verify(mockJavaMailSender).send(any(MimeMessage.class));
     }
 

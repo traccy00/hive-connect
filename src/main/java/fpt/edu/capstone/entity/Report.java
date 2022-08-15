@@ -30,9 +30,6 @@ public class Report extends BaseEntity {
     @Column(name = "person_report_id")
     private long personReportId;
 
-    @Column(name = "post_id")
-    private long postId;
-
     @Column(name = "related_link")
     private String relatedLink;
 

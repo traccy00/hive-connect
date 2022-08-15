@@ -3,6 +3,7 @@ package fpt.edu.capstone.service.impl;
 import fpt.edu.capstone.dto.UploadFileRequest;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,8 +26,8 @@ public class AmazonS3ClientServiceTest {
         request.setFile(null);
         request.setTypeUpload("typeUpload");
 
-        final MultipartFile multipartFile = null;
-        final String result = amazonS3ClientServiceUnderTest.uploadFileAmazonS3(request, multipartFile);
+        final MultipartFile file = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
+        final String result = amazonS3ClientServiceUnderTest.uploadFileAmazonS3(request, file);
         assertThat(result).isEqualTo("result");
     }
 
@@ -51,8 +52,8 @@ public class AmazonS3ClientServiceTest {
         request.setFile(null);
         request.setTypeUpload("typeUpload");
 
-        final MultipartFile multipartFile = null;
-        final String result = amazonS3ClientServiceUnderTest.uploadFile(request, multipartFile);
+        final MultipartFile file = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
+        final String result = amazonS3ClientServiceUnderTest.uploadFile(request, file);
         assertThat(result).isEqualTo("result");
     }
 

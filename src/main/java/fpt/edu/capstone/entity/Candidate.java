@@ -49,12 +49,6 @@ public class Candidate {
     @Column(name = "avatar_url")
     private String avatarUrl;
 
-    @Column(name = "wishlist_job_id_list")
-    private String wishlistJobIdList;
-
-    @Column(name = "tap_history_id_list")
-    private String tapHistoryIdList;
-
     @Column(name = "is_need_job")
     private boolean isNeedJob;
 

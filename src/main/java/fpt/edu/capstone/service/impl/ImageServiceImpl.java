@@ -44,7 +44,6 @@ public class ImageServiceImpl implements ImageService {
         image.setAvatar(true);
         image.setCompanyId(companyId);
         image.setName(StringUtils.cleanPath(file.getOriginalFilename()));
-        image.setBanner(false);
         image.setContentType(file.getContentType());
         image.setData(file.getBytes());
 

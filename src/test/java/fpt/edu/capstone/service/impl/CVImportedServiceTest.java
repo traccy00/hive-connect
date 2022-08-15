@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -40,10 +41,10 @@ public class CVImportedServiceTest {
     }
     @Test
     public void testSave() throws Exception {
-        final MultipartFile file = null;
+        final MultipartFile file = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
         final CVImported cvImported = cvImported();
         when(mockCvImportedRepository.save(any(CVImported.class))).thenReturn(cvImported);
-        final CVImported result = cvImportedServiceUnderTest.save(file, "type", 0L);
+        final CVImported result = cvImportedServiceUnderTest.save(file, "JPG", 0L);
     }
 
     @Test
@@ -51,7 +52,7 @@ public class CVImportedServiceTest {
         final MultipartFile file = null;
         final CVImported cvImported = cvImported();
         when(mockCvImportedRepository.save(any(CVImported.class))).thenReturn(cvImported);
-        assertThatThrownBy(() -> cvImportedServiceUnderTest.save(file, "type", 0L)).isInstanceOf(IOException.class);
+        assertThatThrownBy(() -> cvImportedServiceUnderTest.save(file, "IMG", 0L)).isInstanceOf(IOException.class);
     }
 
     @Test

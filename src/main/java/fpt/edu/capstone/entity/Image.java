@@ -39,24 +39,12 @@ public class Image extends BaseEntity {
     @Column(name = "is_avatar")
     private boolean isAvatar;
 
-    @Column(name = "is_banner")
-    private boolean isBanner;
-
-    @Column(name = "event_id")
-    private long eventId;
-
     @Column(name = "content_type")
     private String contentType;
 
     @Type(type="org.hibernate.type.BinaryType")
     @Column(name = "data")
     private byte[] data;
-
-    @Column(name = "recruiter_id")
-    private long recruiterId;
-
-    @Column(name = "candidate_id")
-    private long candidateId;
 
     @Column(name = "is_cover")
     private boolean isCover;

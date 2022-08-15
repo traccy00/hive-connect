@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -59,14 +60,13 @@ public class RecruiterServiceImplTest {
     private Recruiter recruiter(){
         Recruiter recruiter = new Recruiter();
         recruiter.setId(0L);
-        recruiter.setCompanyId(0L);
+        recruiter.setCompanyId(1L);
         recruiter.setCompanyName("companyName");
         recruiter.setFullName("fullName");
         recruiter.setVerifyAccount(true);
         recruiter.setGender(false);
         recruiter.setPosition("HR");
         recruiter.setLinkedinAccount("linkedinAccount");
-        recruiter.setBusinessLicense("businessLicense");
         recruiter.setAdditionalLicense("additionalLicense");
         recruiter.setBusinessLicenseUrl("businessLicenseUrl");
         recruiter.setAdditionalLicenseUrl("additionalLicenseUrl");
@@ -175,6 +175,13 @@ public class RecruiterServiceImplTest {
     }
 
     @Test
+    public void testInsertRecruiterForRegister() {
+        final Recruiter recruiter = recruiter();
+        when(mockRecruiterRepository.save(any(Recruiter.class))).thenReturn(recruiter);
+        final Recruiter result = recruiterServiceImplUnderTest.insertRecruiterForRegister(0L, "Nam Nguyen");
+    }
+
+    @Test
     public void testGetListAppliedByForRecruiter() {
         when(mockRecruiterRepository.getListAppliedByForRecruiter(0L)).thenReturn(Arrays.asList());
         final List<AppliedJobByRecruiterResponse> result = recruiterServiceImplUnderTest.getListAppliedByForRecruiter(
@@ -198,14 +205,14 @@ public class RecruiterServiceImplTest {
     public void testGetRecruiterByCompanyId() {
         final Page<Recruiter> recruiterPage = new PageImpl<>(Arrays.asList(recruiter()));
         when(mockRecruiterRepository.getRecruiterByCompanyId(eq(0L), any(Pageable.class))).thenReturn(recruiterPage);
-        final Page<Recruiter> result = recruiterServiceImplUnderTest.getRecruiterByCompanyId(0L, 0L, 0L);
+        final Page<Recruiter> result = recruiterServiceImplUnderTest.getRecruiterByCompanyId(1L, 10L, 0L);
     }
 
     @Test
     public void testGetRecruiterByCompanyId_RecruiterRepositoryReturnsNoItems() {
         when(mockRecruiterRepository.getRecruiterByCompanyId(eq(0L), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<Recruiter> result = recruiterServiceImplUnderTest.getRecruiterByCompanyId(0L, 0L, 0L);
+        final Page<Recruiter> result = recruiterServiceImplUnderTest.getRecruiterByCompanyId(1L, 10L, 0L);
     }
 
     @Test
@@ -226,8 +233,8 @@ public class RecruiterServiceImplTest {
 
     @Test
     public void testUploadLicense() throws Exception {
-        final MultipartFile businessMultipartFile = null;
-        final MultipartFile additionalMultipartFile = null;
+        final MultipartFile businessMultipartFile = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
+        final MultipartFile additionalMultipartFile = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
         final Optional<Recruiter> recruiter = Optional.of(recruiter());
         when(mockRecruiterRepository.findById(0L)).thenReturn(recruiter);
         when(mockAmazonS3ClientService.uploadFileAmazonS3(any(UploadFileRequest.class),

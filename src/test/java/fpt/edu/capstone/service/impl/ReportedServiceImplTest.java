@@ -123,7 +123,6 @@ public class ReportedServiceImplTest {
         report.setId(0L);
         report.setReportReason("reportReason");
         report.setPersonReportId(0L);
-        report.setPostId(0L);
         report.setRelatedLink("relatedLink");
         report.setApprovalReportedStatus("approvalReportedStatus");
         report.setFullName("fullName");
@@ -145,7 +144,6 @@ public class ReportedServiceImplTest {
         recruiter.setGender(false);
         recruiter.setPosition("HR");
         recruiter.setLinkedinAccount("linkedinAccount");
-        recruiter.setBusinessLicense("businessLicense");
         recruiter.setAdditionalLicense("additionalLicense");
         recruiter.setBusinessLicenseUrl("businessLicenseUrl");
         recruiter.setAdditionalLicenseUrl("additionalLicenseUrl");

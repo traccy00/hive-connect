@@ -65,6 +65,15 @@ public class BannerServiceImplTest {
                 "image", true, false, false, false, false, false, false);
         return bannerRequest;
     }
+
+    private RentalPackage rentalPackage(){
+        RentalPackage rentalPackage = new RentalPackage();
+        rentalPackage.setId(123L);
+        rentalPackage.setPackageGroup("packageGroup");
+        rentalPackage.setDescription("description");
+        rentalPackage.setStatus(false);
+        return rentalPackage;
+    }
     @Test
     public void testGetAllBanner() {
         final List<Banner> bannerList = Arrays.asList(banner());
@@ -137,8 +146,7 @@ public class BannerServiceImplTest {
     @Test
     public void testInsertBanner_BannerRepositoryGetBannersByTitleReturnsNull() {
         final ConfigBannerRequest request = bannerRequest();
-        final Optional<RentalPackage> optional = Optional.of(
-                new RentalPackage(0L, "packageGroup", "description", false));
+        final Optional<RentalPackage> optional = Optional.of(rentalPackage());
         when(mockRentalPackageService.findById(0L)).thenReturn(optional);
         when(mockBannerRepository.getBannersByTitle("title")).thenReturn(null);
         final Banner banner = banner();

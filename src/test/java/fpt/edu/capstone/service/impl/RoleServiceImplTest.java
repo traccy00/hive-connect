@@ -62,8 +62,7 @@ public class RoleServiceImplTest {
 
     @Test
     public void testCreateRole() {
-        final CreateRoleUserRequest request = new CreateRoleUserRequest("rn", "description");
-        when(mockRoleRepository.getByRoleName("rn")).thenReturn(role());
+        final CreateRoleUserRequest request = new CreateRoleUserRequest("role", "description");
         when(mockRoleRepository.save(any(Role.class))).thenReturn(role());
         final Role result = roleServiceImplUnderTest.createRole(request);
         verify(mockRoleRepository).save(any(Role.class));
