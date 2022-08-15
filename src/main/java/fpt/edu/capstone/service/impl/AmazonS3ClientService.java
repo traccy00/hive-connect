@@ -43,22 +43,22 @@ public class AmazonS3ClientService {
     private long MAX_FILE_SIZE = 5242880;
 
     public String uploadFileAmazonS3(UploadFileRequest request, MultipartFile multipartFile) throws Exception {
-        if(request.getFile() == null) {
+        if(multipartFile == null) {
             throw new HiveConnectException(ResponseMessageConstants.CHOOSE_UPLOAD_FILE);
         }
         String fileType = multipartFile.getContentType().split("/")[1];
         String fileName = UUID.randomUUID().toString().toUpperCase() + "." + fileType;
 
         logger.info("file-type request:" + fileType);
-        if (!TYPE_VALIDATORS.get(Enums.FileUploadType.parse(request.getTypeUpload())).contains(multipartFile.getContentType())) {
-            logger.info("uploadImage - Wrong type");
-            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_WRONG_TYPE);
-        }
-        logger.info("file-size request:" + request.getFile().getSize());
-        if (request.getFile().getSize() > MAX_FILE_SIZE) {
-            logger.info("uploadImage - MAX_FILE_SIZE");
-            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_OVER_SIZE);
-        }
+//        if (!TYPE_VALIDATORS.get(Enums.FileUploadType.parse(request.getTypeUpload())).contains(multipartFile.getContentType())) {
+//            logger.info("uploadImage - Wrong type");
+//            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_WRONG_TYPE);
+//        }
+//        logger.info("file-size request:" + request.getFile().getSize());
+//        if (request.getFile().getSize() > MAX_FILE_SIZE) {
+//            logger.info("uploadImage - MAX_FILE_SIZE");
+//            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_OVER_SIZE);
+//        }
 
         AWSCredentials credentials = new BasicAWSCredentials(
                 "AKIAXMAOZRCCFMZHVLUM",
@@ -76,6 +76,7 @@ public class AmazonS3ClientService {
         }
         File file = convertMultiPartToFile(multipartFile, fileName);
         s3client.putObject(bucketName,"hiveconnect/" + fileName, file);
+        System.out.println("Amazon3=========  "+ fileName);
         return fileName;
     }
 
@@ -85,11 +86,6 @@ public class AmazonS3ClientService {
     }
 
     private File convertMultiPartToFile(MultipartFile file, String fileName) throws IOException {
-//        File convertFile = new File(file.getOriginalFilename());
-//        FileOutputStream fos = new FileOutputStream(convertFile);
-//        fos.write(file.getBytes());
-//        fos.close();
-//        return convertFile;
         File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+fileName);
         file.transferTo(convFile);
         return convFile;

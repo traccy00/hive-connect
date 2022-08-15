@@ -9,6 +9,7 @@ import fpt.edu.capstone.service.CandidateService;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.UserService;
 import fpt.edu.capstone.service.impl.AmazonS3ClientService;
+import fpt.edu.capstone.service.impl.DinaryServiceiImpl;
 import fpt.edu.capstone.service.impl.ImageServiceImpl;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -40,6 +41,8 @@ public class FileController {
     private final AmazonS3ClientService amazonS3ClientService;
 
     private final CandidateService candidateService;
+
+    private final DinaryServiceiImpl dinaryService;
 
 //    @PostMapping("/import-file")
 //    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {
@@ -198,24 +201,33 @@ public class FileController {
 //    }
 
     //cần validate đuôi file
-    @PostMapping("/upload-file")
-    public ResponseData uploadImages(@ModelAttribute UploadFileRequest request) {
-//        if(request.getFile().getSize() > 5242880) {
-//            logger.info("uploadImage > " + 5242880);
-//            throw new HiveConnectException(ResponseMessageConstants.MAX_IMAGE_SIZE);
+//    @PostMapping("/upload-file")
+//    public ResponseData uploadImages(@ModelAttribute UploadFileRequest request) {
+////        if(request.getFile().getSize() > 5242880) {
+////            logger.info("uploadImage > " + 5242880);
+////            throw new HiveConnectException(ResponseMessageConstants.MAX_IMAGE_SIZE);
+////        }
+////        float fileSizeInMB = request.getFile().getSize() / 1_000_000;
+////        if (fileSizeInMB > 5.0f){
+////            throw new RuntimeException("File must  be <= 5mb");
+////        }
+//        try {
+//
+//            String fileUrl = amazonS3ClientService.uploadFile(request, request.getFile());
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, fileUrl);
+//        } catch (Exception e) {
+//            String msg = LogUtils.printLogStackTrace(e);
+//            logger.error(msg);
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
 //        }
-//        float fileSizeInMB = request.getFile().getSize() / 1_000_000;
-//        if (fileSizeInMB > 5.0f){
-//            throw new RuntimeException("File must  be <= 5mb");
-//        }
+//    }
+    @PostMapping("upload-file")
+    public ResponseData uploadToDinary(@RequestParam MultipartFile file){
         try {
-
-            String fileUrl = amazonS3ClientService.uploadFile(request, request.getFile());
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, fileUrl);
-        } catch (Exception e) {
-            String msg = LogUtils.printLogStackTrace(e);
-            logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+            String url = dinaryService.uploadFile(file);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Tải lên tệp thành công", url);
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -244,15 +256,6 @@ public class FileController {
                 candidate.setSocialLink(row.getCell(6).getStringCellValue());
                 candidateService.save(candidate);
             }
-            //NOTE : cập nhật thông tin cá nhân done, còn lại xử lý các phần thông tin thêm
-
-            //Chứng chỉ, giải thưởng
-
-            //Học vấn
-
-            //Ngôn ngữ
-
-            //Kỹ năng chuyên môn
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Tải lên mẫu hồ sơ thành công");
         } catch (Exception e){
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Không thể tải mẫu hồ sơ");

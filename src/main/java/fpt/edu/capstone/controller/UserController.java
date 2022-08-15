@@ -27,7 +27,7 @@ public class UserController {
 
     private final NotificationService notificationService;
 
-    private final DinaryServiceiImpl dinaryServicei;
+
 
     @PostMapping("/update/{userId}")
     @Operation(summary = "update user")
@@ -79,8 +79,5 @@ public class UserController {
         }
     }
 
-    @PostMapping("upload-to-dinary")
-    public void uploadToDinary(@RequestParam MultipartFile file){
-        dinaryServicei.uploadFile(file);
-    }
+
 }
