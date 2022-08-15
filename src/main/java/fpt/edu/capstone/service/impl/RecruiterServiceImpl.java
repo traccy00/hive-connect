@@ -37,6 +37,8 @@ public class RecruiterServiceImpl implements RecruiterService {
 
     private final AmazonS3ClientService amazonS3ClientService;
 
+    private final DinaryServiceiImpl dinaryService;
+
     @Override
     public Recruiter getRecruiterByUserId(long userId) {
         return recruiterRepository.getRecruiterByUserId(userId);
@@ -126,7 +128,8 @@ public class RecruiterServiceImpl implements RecruiterService {
                 }
             }
             //upload file to amazon
-            String fileName = amazonS3ClientService.uploadFileAmazonS3(null, businessMultipartFile);
+//          String fileName = amazonS3ClientService.uploadFileAmazonS3(null, businessMultipartFile);
+            String fileName = dinaryService.uploadFileToDinary(null, businessMultipartFile);
             //save to database
             optionalRecruiter.get().setBusinessLicenseUrl(ResponseMessageConstants.AMAZON_SAVE_URL + fileName);
             optionalRecruiter.get().setBusinessLicenseApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
@@ -141,10 +144,11 @@ public class RecruiterServiceImpl implements RecruiterService {
                 }
             }
             //upload file to amazon
-            String fileName = amazonS3ClientService.uploadFileAmazonS3(null, additionalMultipartFile);
+//            String fileName = amazonS3ClientService.uploadFileAmazonS3(null, additionalMultipartFile);
+            String fileName = dinaryService.uploadFileToDinary(null, additionalMultipartFile);
             //save to database
             optionalRecruiter.get().setAdditionalLicense(fileName);
-            optionalRecruiter.get().setAdditionalLicenseUrl(ResponseMessageConstants.AMAZON_SAVE_URL + fileName);
+            optionalRecruiter.get().setAdditionalLicenseUrl(fileName);
             optionalRecruiter.get().setAdditionalLicenseApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
             optionalRecruiter.get().update();
         }

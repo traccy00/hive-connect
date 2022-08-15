@@ -98,6 +98,7 @@ public class CompanyManageServiceImpl implements CompanyManageService {
         company.setMapUrl(request.getMapUrl());
 
         List<String> uploadImageUrlList = new ArrayList<>();
+
         //update avatar
         if (request.getAvatarUrl() != null && request.getAvatarUrl().trim().isEmpty()) {
             uploadImageUrlList.add(request.getAvatarUrl());

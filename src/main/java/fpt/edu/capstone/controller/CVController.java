@@ -1,7 +1,6 @@
 package fpt.edu.capstone.controller;
 
-import com.amazonaws.services.apigateway.model.Op;
-import com.sendgrid.helpers.mail.objects.Email;
+
 import fpt.edu.capstone.dto.CV.*;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.*;

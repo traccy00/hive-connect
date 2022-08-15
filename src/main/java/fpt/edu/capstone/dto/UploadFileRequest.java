@@ -8,8 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 public class UploadFileRequest {
-    private String type;
-    private String uploadFileName;
+    private String type; //file extension
+    private String uploadFileName; //
     private MultipartFile file;
     private String typeUpload;
 }
