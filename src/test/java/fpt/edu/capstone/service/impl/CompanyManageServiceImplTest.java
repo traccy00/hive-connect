@@ -126,7 +126,7 @@ public class CompanyManageServiceImplTest {
 
     CreateCompanyRequest companyRequest (){
         CreateCompanyRequest request = new CreateCompanyRequest();
-        request.setFieldWork(0L);
+        request.setFieldWork("fieldWork");
         request.setName("nameName");
         request.setEmail("email");
         request.setPhoneNumber("companyPhone");

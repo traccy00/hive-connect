@@ -14,4 +14,6 @@ public interface FieldsService {
     Fields getById(long id);
 
     Optional<Fields> findById(long id);
+
+    Optional<Fields> findByName(String name);
 }

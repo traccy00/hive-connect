@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class CreateCompanyRequest {
     //Lĩnh vực hoạt động
-    private long fieldWork;
+    private String fieldWork;
     private String name;
     private String email;
     private String phoneNumber;

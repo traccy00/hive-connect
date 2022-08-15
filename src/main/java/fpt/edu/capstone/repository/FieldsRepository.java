@@ -16,4 +16,6 @@ public interface FieldsRepository extends JpaRepository<Fields, Long> {
     Fields getById(long id);
 
     Optional<Fields> findById(long id);
+
+    Optional<Fields> findByFieldName(String name);
 }

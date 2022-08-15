@@ -34,4 +34,9 @@ public class FieldsServiceImpl implements FieldsService {
     public Optional<Fields> findById(long id) {
         return fieldsRepository.findById(id);
     }
+
+    @Override
+    public Optional<Fields> findByName(String name) {
+        return fieldsRepository.findByFieldName(name);
+    }
 }

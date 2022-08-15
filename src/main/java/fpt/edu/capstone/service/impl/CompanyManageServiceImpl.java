@@ -160,7 +160,7 @@ public class CompanyManageServiceImpl implements CompanyManageService {
         if (companyRepository.getCompanyByName(request.getName()).isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.COMPANY_NAME_EXISTS);
         }
-        Optional<Fields> field = fieldsService.findById(request.getFieldWork());
+        Optional<Fields> field = fieldsService.findByName(request.getFieldWork());
         if (!field.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.FIELD_WORK_OF_COMPANY_DOES_NOT_EXIST);
         }
