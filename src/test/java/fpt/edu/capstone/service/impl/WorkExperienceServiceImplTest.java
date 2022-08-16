@@ -31,8 +31,8 @@ public class WorkExperienceServiceImplTest {
         workExperience.setCvId(0L);
         workExperience.setCompanyName("companyName");
         workExperience.setPosition("position");
-        workExperience.setStartDate(LocalDateTime.now());
-        workExperience.setEndDate(LocalDateTime.now().plusDays(10));
+        workExperience.setStartDate(LocalDateTime.of(2022,8,16,16,16,16));
+        workExperience.setEndDate(LocalDateTime.of(2022,8,16,16,16,16));
         workExperience.setDescription("description");
         workExperience.setWorking(false);
         return workExperience;
@@ -67,7 +67,7 @@ public class WorkExperienceServiceImplTest {
         final WorkExperience workExperience = workExperience();
         workExperienceServiceImplUnderTest.updateWordExperience(workExperience);
         verify(workExperienceServiceImplUnderTest.workExperienceRepository).updateWordExperience("companyName",
-                "position", LocalDateTime.now(), LocalDateTime.now().plusDays(10), "description", 0L);
+                "position", LocalDateTime.of(2022,8,16,16,16,16), LocalDateTime.of(2022,8,16,16,16,16), "description", 0L);
     }
 
     @Test
