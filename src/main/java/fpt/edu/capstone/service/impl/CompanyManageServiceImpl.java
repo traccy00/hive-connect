@@ -23,7 +23,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,13 +103,13 @@ public class CompanyManageServiceImpl implements CompanyManageService {
 
         //update avatar
         if (request.getAvatarUrl() != null && !request.getAvatarUrl().trim().isEmpty()) {
-            uploadImageUrlList.add(request.getAvatarUrl());
-            imageService.saveImageCompany(true, false, company.getId(), uploadImageUrlList);
+//            uploadImageUrlList.add(request.getAvatarUrl());
+            imageService.saveImageCompany(true, false, company.getId(), Arrays.asList(request.getAvatarUrl()));
         }
         //update cover image
-        if (request.getCoverImageUrl() != null && request.getCoverImageUrl().trim().isEmpty()) {
-            uploadImageUrlList.add(request.getCoverImageUrl());
-            imageService.saveImageCompany(false, true, company.getId(), uploadImageUrlList);
+        if (request.getCoverImageUrl() != null && !request.getCoverImageUrl().trim().isEmpty()) {
+//            uploadImageUrlList.add(request.getCoverImageUrl());
+            imageService.saveImageCompany(false, true, company.getId(), Arrays.asList(request.getCoverImageUrl()));
         }
         //xóa cái nào thì trả id của cái đó
         List<Long> deleteImageIdList = request.getDeleteImageIdList();

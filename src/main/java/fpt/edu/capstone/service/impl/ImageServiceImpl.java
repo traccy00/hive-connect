@@ -104,10 +104,18 @@ public class ImageServiceImpl implements ImageService {
             image.setCompanyId(companyId);
             image.setUrl(url);
             image.setAvatar(isAvatar);
+            image.setCover(isCoverImage);
             if(image.isAvatar()) {
                 Optional<Image> avaOp = imageRepository.getAvatarOfCompanyByCompanyId(companyId, true);
                 if(avaOp.isPresent()) {
                     imageRepository.updateCompanyAvatarUrl(url, true, companyId);
+                    return;
+                }
+            }
+            if(image.isCover()) {
+                Optional<Image> coverOp = imageRepository.getCoverImageOfCompanyByCompanyId(companyId, true);
+                if(coverOp.isPresent()) {
+                    imageRepository.updateCompanyCoverImage(url, true, companyId);
                     return;
                 }
             }
