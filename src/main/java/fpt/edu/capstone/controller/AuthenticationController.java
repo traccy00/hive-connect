@@ -310,10 +310,10 @@ public class AuthenticationController {
             String password = request.getPassword();
             String email = request.getEmail().trim();
             String fullName = request.getFullName().trim();
-            Optional<Users> phoneNumber = userService.findByPhoneNumber(request.getPhone());
-            if(phoneNumber.isPresent()){
-                throw new HiveConnectException(ResponseMessageConstants.PHONE_NUMBER_IN_USE);
-            }
+//            Optional<Users> phoneNumber = userService.findByPhoneNumber(request.getPhone());
+//            if(phoneNumber.isPresent()){
+//                throw new HiveConnectException(ResponseMessageConstants.PHONE_NUMBER_IN_USE);
+//            }
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(password)) {
                 return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
                         ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
