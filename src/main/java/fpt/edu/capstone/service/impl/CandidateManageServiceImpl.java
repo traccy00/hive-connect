@@ -87,13 +87,18 @@ public class CandidateManageServiceImpl implements CandidateManageService {
         if (appliedJobs.hasContent()) {
             for (AppliedJob appliedJob : appliedJobs) {
                 AppliedJobCandidateResponse response = new AppliedJobCandidateResponse();
+                Job job = jobService.getJobById(appliedJob.getJobId());
                 response.setAppliedJobId(appliedJob.getId());
-                response.setJob(jobService.getJobById(appliedJob.getJobId()));
+                response.setJob(job);
                 response.setApprovalStatus(appliedJob.getApprovalStatus());
                 response.setAppliedJobDate(appliedJob.getCreatedAt());
                 if (appliedJob.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
                     response.setApprovalDate(appliedJob.getUpdatedAt());
                 }
+                Image image = imageService.getImageCompany(job.getCompanyId(), true);
+                Company company = companyService.getCompanyById(image.getCompanyId());
+                response.setCompanyAvatar(image.getUrl());
+                response.setCompanyName(company.getName());
                 responseList.add(response);
             }
         }

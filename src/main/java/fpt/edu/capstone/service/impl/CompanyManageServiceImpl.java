@@ -55,7 +55,7 @@ public class CompanyManageServiceImpl implements CompanyManageService {
             TopCompanyResponse response = new TopCompanyResponse();
             Optional<Image> image = imageService.findAvatarByCompanyId(company.getCompanyId());
             if (image.isPresent()) {
-                response.setCompanyAvatar(image.get().getName());
+                response.setCompanyAvatar(image.get().getUrl());
             }
             response.setApplyCvNumber(company.getApplyCvNumber());
             response.setCompanyId(company.getCompanyId());

@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 @Setter
 public class AppliedJobCandidateResponse {
     private long appliedJobId;
+    private String companyAvatar;
+    private String companyName;
     private Job job;
     private String approvalStatus;
     private LocalDateTime appliedJobDate;
