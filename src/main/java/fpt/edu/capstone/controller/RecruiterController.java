@@ -150,9 +150,9 @@ public class RecruiterController {
 
             //Add notification
 
-            String appr = newRequestJoinCompany.getStatus().toLowerCase().equals("deny") ? " chấp thuận" : " đồng ý";
+            String appr = newRequestJoinCompany.getStatus().toLowerCase().equals("deny") ? " đã bị từ chối" : " đã được chấp thuận";
             Optional<Company> company = companyService.findById(newRequestJoinCompany.getCompanyId());
-            String content = "Yêu cầu vào công ty "+ company.get().getName() +" vừa được" + appr;
+            String content = "Yêu cầu vào công ty "+ company.get().getName() + appr;
             Recruiter r = recruiterService.getRecruiterById(newRequestJoinCompany.getSenderId());
             Notification notification = new Notification(0, r.getUserId(), 3, LocalDateTime.now(), content, false, false, company.get().getId());
             notificationService.insertNotification(notification);
