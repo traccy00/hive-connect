@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.dto.CV.FindCVResponse;
 import fpt.edu.capstone.dto.CV.ViewCVWithPayResponse;
 import fpt.edu.capstone.dto.CV.ViewCvResponse;
@@ -748,7 +749,7 @@ public class RecruiterManageServiceImplTest {
         final Company company1 = company();
         final Optional<Company> company = Optional.of(company1);
         when(mockCompanyService.findById(0L)).thenReturn(company);
-        final Image image = image();
+        final Optional<Image> image = Optional.of(image());
         when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         
         final List<Image> images = Arrays.asList(image());
@@ -786,7 +787,7 @@ public class RecruiterManageServiceImplTest {
         final Company company1 = company();
         final Optional<Company> company = Optional.of(company1);
         when(mockCompanyService.findById(0L)).thenReturn(company);
-        final Image image = image();
+        final Optional<Image> image = Optional.of(image());
         when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         when(mockImageService.getCompanyImageList(0L, false, false)).thenReturn(Collections.emptyList());
         when(mockModelMapper.map(any(Object.class), eq(CompanyImageResponse.class)))

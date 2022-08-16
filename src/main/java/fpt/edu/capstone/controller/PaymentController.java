@@ -26,10 +26,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/payment")
@@ -184,10 +181,10 @@ public class PaymentController {
             for (Long id: listJobId) {
                 Job job = jobService.findById(id).get();
                 Company company = companyService.getCompanyById(job.getCompanyId());
-                Image image = imageService.getImageCompany(company.getId(),true);
+                Optional<Image> image = imageService.getImageCompany(company.getId(),true);
                 JobResponse response = modelMapper.map(job, JobResponse.class);
                 response.setCompanyName(company.getName());
-                response.setCompanyAvatar(image.getUrl());
+                response.setCompanyAvatar(image.get().getUrl());
                 list.add(response);
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,list);

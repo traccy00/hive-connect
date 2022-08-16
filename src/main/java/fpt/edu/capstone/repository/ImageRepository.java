@@ -1,5 +1,6 @@
 package fpt.edu.capstone.repository;
 
+import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.entity.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -26,7 +27,7 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     Image getAvatarCandidate(long candidateId);
 
     @Query(value = "select * from image i where i.company_id = ?1 and i.is_avatar = ?2", nativeQuery = true)
-    Image getImageCompany(long companyId, boolean isAvatar);
+    Optional<Image> getImageCompany(long companyId, boolean isAvatar);
 
     @Modifying
     @Query(value = "delete from image i where id in (:deleteImageIdList)", nativeQuery = true)

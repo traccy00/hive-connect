@@ -312,9 +312,9 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         }
         Company tmp = companyOp.get();
         response.setAddress(tmp.getAddress());
-        Image image = imageService.getImageCompany(companyId, true);
-        if (image != null) {
-            response.setAvatar(image.getUrl());
+        Optional<Image> image = imageService.getImageCompany(companyId, true);
+        if (image.isPresent()) {
+            response.setAvatar(image.get().getUrl());
         }
         response.setDescription(tmp.getDescription());
         response.setEmail(tmp.getEmail());

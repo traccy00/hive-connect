@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.repository.ImageRepository;
 import org.junit.Before;
@@ -119,9 +120,9 @@ public class ImageServiceImplTest {
 
     @Test
     public void testGetImageCompany() {
-        final Image image = imageEntity;
+        final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageRepository.getImageCompany(0L, false)).thenReturn(image);
-        final Image result = imageServiceImplUnderTest.getImageCompany(0L, false);
+        final Optional<Image> result = imageServiceImplUnderTest.getImageCompany(0L, false);
     }
 
     @Test
