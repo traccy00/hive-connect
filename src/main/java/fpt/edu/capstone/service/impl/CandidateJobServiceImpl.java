@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.dto.job.ApprovalJobRequest;
 import fpt.edu.capstone.dto.job.JobDetailResponse;
 import fpt.edu.capstone.dto.job.JobResponse;
@@ -94,9 +95,9 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setNewJob(job.isNewJob());
                 jobResponse.setUrgentJob(job.isUrgentJob());
 
-                Image image = imageService.getImageCompany(company.getId(), true);
-                if (image != null) {
-                    jobResponse.setCompanyAvatar(image.getUrl());
+                Optional<Image> image = imageService.getImageCompany(company.getId(), true);
+                if (image.isPresent()) {
+                    jobResponse.setCompanyAvatar(image.get().getUrl());
                 }
                 responseList.add(jobResponse);
             }
@@ -157,9 +158,9 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setNewJob(job.isNewJob());
                 jobResponse.setUrgentJob(job.isUrgentJob());
 
-                Image image = imageService.getImageCompany(company.getId(), true);
-                if (image != null) {
-                    jobResponse.setCompanyAvatar(image.getUrl());
+                Optional<Image> image = imageService.getImageCompany(company.getId(), true);
+                if (image.isPresent()) {
+                    jobResponse.setCompanyAvatar(image.get().getUrl());
                 }
                 responseList.add(jobResponse);
             }
@@ -200,9 +201,9 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                     if (company != null) {
                         jobResponse.setCompanyName(company.getName());
                     }
-                    Image image = imageService.getImageCompany(company.getId(), true);
-                    if (image != null) {
-                        jobResponse.setCompanyAvatar(image.getUrl());
+                    Optional<Image> image = imageService.getImageCompany(company.getId(), true);
+                    if (image.isPresent()) {
+                        jobResponse.setCompanyAvatar(image.get().getUrl());
                     }
                     responseList.add(jobResponse);
                 }
@@ -263,9 +264,9 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setNewJob(job.isNewJob());
                 jobResponse.setUrgentJob(job.isUrgentJob());
 
-                Image image = imageService.getImageCompany(company.getId(), true);
-                if (image != null) {
-                    jobResponse.setCompanyAvatar(image.getUrl());
+                Optional<Image> image = imageService.getImageCompany(company.getId(), true);
+                if (image.isPresent()) {
+                    jobResponse.setCompanyAvatar(image.get().getUrl());
                 }
                 responseList.add(jobResponse);
             }

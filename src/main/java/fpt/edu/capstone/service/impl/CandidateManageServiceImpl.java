@@ -95,9 +95,11 @@ public class CandidateManageServiceImpl implements CandidateManageService {
                 if (appliedJob.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
                     response.setApprovalDate(appliedJob.getUpdatedAt());
                 }
-                Image image = imageService.getImageCompany(job.getCompanyId(), true);
-                Company company = companyService.getCompanyById(image.getCompanyId());
-                response.setCompanyAvatar(image.getUrl());
+                Optional<Image> image = imageService.getImageCompany(job.getCompanyId(), true);
+                Company company = companyService.getCompanyById(job.getCompanyId());
+                if(image.isPresent()) {
+                    response.setCompanyAvatar(image.get().getUrl());
+                }
                 response.setCompanyName(company.getName());
                 responseList.add(response);
             }
@@ -132,8 +134,8 @@ public class CandidateManageServiceImpl implements CandidateManageService {
                 if (company != null) {
                     jobResponse.setCompanyName(company.getName());
                 }
-                Image image = imageService.getImageCompany(companyId, true);
-                jobResponse.setCompanyAvatar(image.getUrl());
+                Optional<Image> image = imageService.getImageCompany(companyId, true);
+                jobResponse.setCompanyAvatar(image.get().getUrl());
                 jobResponse.setJobName(job.getJobName());
                 jobResponse.setJobDescription(job.getJobDescription());
                 jobResponse.setJobRequirement(job.getJobRequirement());
@@ -239,9 +241,9 @@ public class CandidateManageServiceImpl implements CandidateManageService {
                         response.setCompanyName(company.getName());
                     }
                     response.setViewDate(viewer.getCreatedAt());
-                    Image image = imageService.getImageCompany(company.getId(), true);
+                    Optional<Image> image = imageService.getImageCompany(company.getId(), true);
                     if (image != null) {
-                        response.setCompanyAvatar(image.getUrl());
+                        response.setCompanyAvatar(image.get().getUrl());
                     }
                 }
                 responseList.add(response);

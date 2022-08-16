@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
 import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
@@ -95,8 +96,10 @@ public class JobServiceImpl implements JobService {
                         jr.setCompanyName(company.getName());
                     }
                     jr.setCompanyName(company.getName());
-                    Image image = imageService.getImageCompany(company.getId(), true);
-                    jr.setCompanyAvatar(image.getUrl());
+                    Optional<Image> image = imageService.getImageCompany(company.getId(), true);
+                    if(image.isPresent()){
+                        jr.setCompanyAvatar(image.get().getUrl());
+                    }
                     jobResponse.add(jr);
                 }
             }
@@ -235,9 +238,11 @@ public class JobServiceImpl implements JobService {
         for (Job job : jobs) {
             if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                 JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
-                Image image = imageService.getImageCompany(job.getCompanyId(), true);
+                Optional<Image> image = imageService.getImageCompany(job.getCompanyId(), true);
                 jobResponse.setJobId(job.getId());
-                jobResponse.setCompanyAvatar(image.getUrl());
+                if(image.isPresent()){
+                    jobResponse.setCompanyAvatar(image.get().getUrl());
+                }
                 Company company = companyService.getCompanyById(job.getCompanyId());
                 if (company != null) {
                     jobResponse.setCompanyName(company.getName());
@@ -285,9 +290,9 @@ public class JobServiceImpl implements JobService {
                 if (company != null) {
                     jobResponse.setCompanyName(company.getName());
                 }
-                Image image = imageService.getImageCompany(company.getId(), true);
-                if(image != null) {
-                    jobResponse.setCompanyAvatar(image.getUrl());
+                Optional<Image> image = imageService.getImageCompany(job.getCompanyId(), true);
+                if(image.isPresent()) {
+                    jobResponse.setCompanyAvatar(image.get().getUrl());
                 }
                 responseList.add(jobResponse);
             }
@@ -355,9 +360,9 @@ public class JobServiceImpl implements JobService {
                     if (company != null) {
                         jobResponse.setCompanyName(company.getName());
                     }
-                    Image image = imageService.getImageCompany(company.getId(), true);
-                    if (image != null) {
-                        jobResponse.setCompanyAvatar(image.getUrl());
+                    Optional<Image> image = imageService.getImageCompany(job.getCompanyId(), true);
+                    if (image.isPresent()) {
+                        jobResponse.setCompanyAvatar(image.get().getUrl());
                     }
                     responseList.add(jobResponse);
                 }
@@ -389,9 +394,9 @@ public class JobServiceImpl implements JobService {
             for (Job j : jobList) {
                 if (!LocalDateTimeUtils.checkExpireTime(j.getEndDate())) {
                     JobResponse jr = modelMapper.map(j, JobResponse.class);
-                    Image image = imageService.getImageCompany(jr.getCompanyId(), true);
+                    Optional<Image> image = imageService.getImageCompany(jr.getCompanyId(), true);
                     jr.setJobId(j.getId());
-                    jr.setCompanyAvatar(image.getUrl());
+                    jr.setCompanyAvatar(image.get().getUrl());
                     responses.add(jr);
                 }
             }

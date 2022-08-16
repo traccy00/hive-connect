@@ -165,7 +165,7 @@ public class FollowServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(0L)).thenReturn(company);
         final Image image = imageEntity;
-        when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
+//        when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 10, 0L);
     }
 
@@ -182,7 +182,7 @@ public class FollowServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(0L)).thenReturn(company);
         final Image image = imageEntity;
-        when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
+//        when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 10, 0L);
     }
 
@@ -198,7 +198,7 @@ public class FollowServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(0L)).thenReturn(company);
         final Image image = imageEntity;
-        when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
+//        when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 10, 0L);
     }
 
@@ -214,7 +214,7 @@ public class FollowServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(0L)).thenReturn(company);
         final Image image = imageEntity;
-        when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
+//        when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 10, 0L);
     }
 
@@ -230,7 +230,7 @@ public class FollowServiceImplTest {
         when(mockJobHashTagService.getHashTagOfJob(0L)).thenReturn(hashtagList);
         when(mockCompanyService.getCompanyById(0L)).thenReturn(null);
         final Image image = imageEntity;
-        when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
+//        when(mockImageService.getImageCompany(0L, true)).thenReturn(image);
         final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 10, 0L);
     }
 

@@ -85,7 +85,7 @@ public class ImageServiceImpl implements ImageService {
 
     //isAvatar = true -> company avatar, isAvatar = false -> company image
     @Override
-    public Image getImageCompany(long companyId, boolean isAvatar) {
+    public Optional<Image> getImageCompany(long companyId, boolean isAvatar) {
         return imageRepository.getImageCompany(companyId, isAvatar);
     }
 
