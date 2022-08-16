@@ -34,4 +34,12 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     @Query(value = "select * from image i where i.company_id = ?1 and is_avatar = ?2 and is_cover = ?3", nativeQuery = true)
     List<Image> getCompanyImageList(long companyId, boolean isAvatar, boolean isCoverImage);
+
+    @Modifying
+    @Transactional
+    @Query(value = "Update image SET url = ?1 where is_avatar = ?2 and company_id = ?3", nativeQuery = true)
+    void updateCompanyAvatarUrl(String url, boolean isAvatar, long companyId);
+
+    @Query(value = "Select * from image where company_id = ?1 and is_avatar = ?2", nativeQuery = true)
+    Optional<Image> getAvatarOfCompanyByCompanyId(long companyId, boolean isAvatar);
 }

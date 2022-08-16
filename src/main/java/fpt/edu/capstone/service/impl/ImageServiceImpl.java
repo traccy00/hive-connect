@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.repository.ImageRepository;
 import fpt.edu.capstone.service.ImageService;
@@ -102,6 +103,14 @@ public class ImageServiceImpl implements ImageService {
             Image image = new Image();
             image.setCompanyId(companyId);
             image.setUrl(url);
+            image.setAvatar(isAvatar);
+            if(image.isAvatar()) {
+                Optional<Image> avaOp = imageRepository.getAvatarOfCompanyByCompanyId(companyId, true);
+                if(avaOp.isPresent()) {
+                    imageRepository.updateCompanyAvatarUrl(url, true, companyId);
+                    return;
+                }
+            }
             imageRepository.save(image);
         }
     }
