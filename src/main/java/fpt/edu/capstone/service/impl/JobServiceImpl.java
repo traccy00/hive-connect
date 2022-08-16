@@ -384,7 +384,9 @@ public class JobServiceImpl implements JobService {
             for (Job j : jobList) {
                 if (!LocalDateTimeUtils.checkExpireTime(j.getEndDate())) {
                     JobResponse jr = modelMapper.map(j, JobResponse.class);
+                    Image image = imageService.getImageCompany(jr.getCompanyId(), true);
                     jr.setJobId(j.getId());
+                    jr.setCompanyAvatar(image.getUrl());
                     responses.add(jr);
                 }
             }
