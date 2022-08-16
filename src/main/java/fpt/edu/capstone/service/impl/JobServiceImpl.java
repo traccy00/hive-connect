@@ -95,6 +95,8 @@ public class JobServiceImpl implements JobService {
                         jr.setCompanyName(company.getName());
                     }
                     jr.setCompanyName(company.getName());
+                    Image image = imageService.getImageCompany(company.getId(), true);
+                    jr.setCompanyAvatar(image.getUrl());
                     jobResponse.add(jr);
                 }
             }

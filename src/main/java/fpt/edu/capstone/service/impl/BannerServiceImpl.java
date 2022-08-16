@@ -4,9 +4,11 @@ import fpt.edu.capstone.dto.banner.ConfigBannerRequest;
 import fpt.edu.capstone.dto.banner.UpdateBannerRequest;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.Banner;
+import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.BannerRepository;
 import fpt.edu.capstone.service.BannerService;
+import fpt.edu.capstone.service.PaymentService;
 import fpt.edu.capstone.service.RentalPackageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
@@ -30,6 +32,8 @@ public class BannerServiceImpl implements BannerService {
     private final BannerRepository bannerRepository;
 
     private final RentalPackageService rentalPackageService;
+
+//    private final PaymentService paymentService;
 
     @Override
     public List<Banner> getAllBanner() {
@@ -96,6 +100,8 @@ public class BannerServiceImpl implements BannerService {
         if(!detailBannerPackage.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.DETAIL_PACKAGE_DOES_NOT_EXIST);
         }
+//        List<Payment> paymentInUse = paymentService.get
+//        if
         if(request.getPrice() <= 0) {
             throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
         }

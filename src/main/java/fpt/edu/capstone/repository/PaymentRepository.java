@@ -44,4 +44,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     @Query(value = "select distinct p.jobId from Payment p where p.jobId > 0 and p.expiredStatus = false ")
     List <Long> getListJobIdInPayment();
+
+//    @Query(value = "")
+//    List<Payment> findByB
 }
