@@ -127,6 +127,8 @@ public class CandidateManageServiceImpl implements CandidateManageService {
                 if (company != null) {
                     jobResponse.setCompanyName(company.getName());
                 }
+                Image image = imageService.getImageCompany(companyId, true);
+                jobResponse.setCompanyAvatar(image.getUrl());
                 jobResponse.setJobName(job.getJobName());
                 jobResponse.setJobDescription(job.getJobDescription());
                 jobResponse.setJobRequirement(job.getJobRequirement());

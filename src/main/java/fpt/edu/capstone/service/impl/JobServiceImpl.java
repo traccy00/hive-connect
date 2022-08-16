@@ -74,7 +74,8 @@ public class JobServiceImpl implements JobService {
         Object CreateJobRequest = request;
         Job job = modelMapper.map(CreateJobRequest, Job.class);
         job.create();
-        job.setFlag(request.getFlag());
+//        job.setFlag(request.getFlag());
+        job.setFlag(Enums.Flag.Posted.getStatus());
         jobRepository.save(job);
     }
 
@@ -232,7 +233,9 @@ public class JobServiceImpl implements JobService {
         for (Job job : jobs) {
             if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                 JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
+                Image image = imageService.getImageCompany(job.getCompanyId(), true);
                 jobResponse.setJobId(job.getId());
+                jobResponse.setCompanyAvatar(image.getUrl());
                 Company company = companyService.getCompanyById(job.getCompanyId());
                 if (company != null) {
                     jobResponse.setCompanyName(company.getName());
