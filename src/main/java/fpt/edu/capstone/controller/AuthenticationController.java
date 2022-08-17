@@ -1,5 +1,6 @@
 package fpt.edu.capstone.controller;
 
+import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.common.user.GooglePojo;
 import fpt.edu.capstone.common.user.GoogleUtils;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
@@ -75,7 +76,19 @@ public class AuthenticationController {
     @Operation(summary = "Login user")
     public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
         try {
-            Optional<Users> users = userService.findUsersByUsernameOrEmail(request.getUsername());
+            Optional<Users> userByUserName = userService.findUsersByUsernameOrEmail(request.getUsername());
+            Optional<Users> userByEmailGmail = userService.findByEmail(request.getUsername() + "@gmail.com");
+            Optional<Users> userByEmailYopMail = userService.findByEmail(request.getUsername() + "@yopmail.com");
+            Optional<Users> users;
+            if(userByEmailGmail.isPresent()){
+                users = userByEmailGmail;
+            }else if(userByEmailYopMail.isPresent()){
+                users = userByEmailYopMail;
+            }else if(userByUserName.isPresent()){
+                users = userByUserName;
+            }else {
+                throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+            }
             if (users.isPresent()) {
                 if(users.get().isLocked()){
                     throw new HiveConnectException(ResponseMessageConstants.USER_HAS_BEEN_LOCKED);
@@ -212,16 +225,16 @@ public class AuthenticationController {
             //đã có tài khoản Hive Connect với Google account này
             if (userRepository.findByEmail(request.getEmail()).isPresent()) {
                 //tìm user theo email google trả về
-                Users user = userService.findByEmail(request.getEmail());
-                if (user != null) {
-                    if(user.isLocked()){
+                Optional<Users> user = userService.findByEmail(request.getEmail());
+                if (user.isPresent()) {
+                    if(user.get().isLocked()){
                         throw new HiveConnectException(ResponseMessageConstants.USER_HAS_BEEN_LOCKED);
                     }
                 }
                 //thực hiện login bình thường
-                user.setLastLoginTime(LocalDateTime.now());
-                user.setPassword(passwordEncoder.encode("1"));
-                userService.saveUser(user);
+                user.get().setLastLoginTime(LocalDateTime.now());
+                user.get().setPassword(passwordEncoder.encode("1"));
+                userService.saveUser(user.get());
                 //lấy token
                 logger.info("login with username {}", username);
                 Users emailExistsButUseForAnotherAccount = userRepository.findByUsernameAndEmail(username, email);
@@ -233,16 +246,16 @@ public class AuthenticationController {
                 String token = jwtTokenUtil.generateToken(userDetails);
                 //trả data cho FE
                 UserInforResponse response = new UserInforResponse();
-                response.setUser(user);
-                if (user.getRoleId() == 3) {
-                    Optional<Candidate> candidate = candidateService.findCandidateByUserId(user.getId());
+                response.setUser(user.get());
+                if (user.get().getRoleId() == 3) {
+                    Optional<Candidate> candidate = candidateService.findCandidateByUserId(user.get().getId());
                     if (!candidate.isPresent()) {
                         throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
                     }
                     response.setCandidate(candidate.get());
                 }
-                if (user.getRoleId() == 2) {
-                    Optional<Recruiter> recruiter = recruiterService.findRecruiterByUserId(user.getId());
+                if (user.get().getRoleId() == 2) {
+                    Optional<Recruiter> recruiter = recruiterService.findRecruiterByUserId(user.get().getId());
                     if (!recruiter.isPresent()) {
                         throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
                     }
@@ -260,7 +273,7 @@ public class AuthenticationController {
                     }
                     response.setRecruiter(recruiter.get());
                 }
-                if (!user.isVerifiedEmail()) {
+                if (!user.get().isVerifiedEmail()) {
                     response.setVerifiedEmail(false);
                 } else {
                     response.setVerifiedEmail(true);
@@ -306,9 +319,11 @@ public class AuthenticationController {
     @Transactional(rollbackOn = HiveConnectException.class)
     public ResponseDataUser register(@RequestBody RegisterRequest request) throws Exception {
         try {
-            String username = request.getUsername().trim();
+//            String username = request.getUsername().trim();
+
             String password = request.getPassword();
             String email = request.getEmail().trim();
+            String username = email.substring(0,email.indexOf("@"));
             String fullName = request.getFullName().trim();
 //            Optional<Users> phoneNumber = userService.findByPhoneNumber(request.getPhone());
 //            if(phoneNumber.isPresent()){
@@ -318,7 +333,7 @@ public class AuthenticationController {
                 return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
                         ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
             }
-            userService.registerUser(request);
+            userService.registerUser(new RegisterRequest(username, password, request.getConfirmPassword(), email, request.getPhone(), request.getRoleId(), request.getFullName() ));
             Users user = userService.getByUserName(username);
             if (user.getRoleId() == 3) {
                 candidateService.insertCandidateForRegister(user.getId(), fullName);

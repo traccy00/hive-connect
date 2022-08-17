@@ -202,11 +202,11 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Users findByEmail(String email) {
-        if (!userRepository.findByEmail(email).isPresent()) {
-            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
-        }
-        return userRepository.findByEmail(email).get();
+    public Optional<Users> findByEmail(String email) {
+//        if (!userRepository.findByEmail(email).isPresent()) {
+//            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+//        }
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
     public void forgotPassword(String email) throws Exception {
         try {
             //verify user by email
-            Users user = findByEmail(email);
+            Users user = findByEmail(email).get();
             //generate reset token
             String token = RandomString.make(30);
             user.setResetPasswordToken(token);

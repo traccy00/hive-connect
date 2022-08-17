@@ -40,7 +40,7 @@ public interface UserService {
 
     void changePassword(String username, ChangePasswordRequest request);
 
-    Users findByEmail(String email);
+    Optional<Users> findByEmail(String email);
 
     Users findByResetPasswordToken(String resetPasswordToken);
 
