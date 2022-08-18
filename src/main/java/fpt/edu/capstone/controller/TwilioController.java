@@ -27,18 +27,17 @@ public class TwilioController {
     }
 
     @RequestMapping("/")
-    public String homepage(ModelAndView model)
-    {
+    public String homepage(ModelAndView model) {
         return "index";
     }
 
     @Autowired
     private final TwilioProperties twilioProperties;
+
     @PostMapping("/send-otp")
-    public ResponseData sendOtp(@RequestParam("phone") String phone)
-    {
+    public ResponseData sendOtp(@RequestParam("phone") String phone) {
         try {
-            String phoneTwi = "+84"+phone.substring(1);
+            String phoneTwi = "+84" + phone.substring(1);
             Twilio.init(twilioProperties.getAccountSid(), twilioProperties.getAuthToken());
             Verification verification = Verification.creator(
                             twilioProperties.getServiceId(),
@@ -47,7 +46,7 @@ public class TwilioController {
                     .create();
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SEND_OTP_SUCCESS);
 
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
@@ -66,7 +65,7 @@ public class TwilioController {
             if (verificationCheck.getStatus().equalsIgnoreCase("approved")) {
                 //Update verify phone number
                 Users re = userService.findByPhoneNumber(phone).get();
-                if(re != null){
+                if (re != null) {
                     userService.updateIsVerifyPhone(true, re.getId());
                 }
             }
@@ -75,12 +74,4 @@ public class TwilioController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
-
-//    //Create Service
-//     Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-//    Service service = Service.creator("My Verify Service").create();
-//
-//        System.out.println(service.getSid());
-    //https://console.twilio.com/us1/develop/verify/geopermissions?_ga=2.181488608.638496180.1656602983-36211557.1653802440
-
 }

@@ -6,10 +6,7 @@ import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.RequestJoinCompanyRepository;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.RequestJoinCompanyService;
-import fpt.edu.capstone.utils.Enums;
-import fpt.edu.capstone.utils.ResponseData;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

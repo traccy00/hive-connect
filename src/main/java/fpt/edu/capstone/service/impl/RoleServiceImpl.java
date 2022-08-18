@@ -7,7 +7,6 @@ import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.RoleRepository;
 import fpt.edu.capstone.service.RoleService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,9 +40,6 @@ public class RoleServiceImpl implements RoleService {
         role.setName(request.getRoleName());
         role.setDescription(request.getDescription());
         roleRepository.save(role);
-//        if(!roleRepository.findById(role.getId()).isPresent()) {
-//            throw new HiveConnectException(ResponseMessageConstants.CREATE_FAIL);
-//        }
         return role;
     }
 

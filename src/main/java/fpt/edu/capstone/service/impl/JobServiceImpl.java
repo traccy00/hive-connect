@@ -1,6 +1,5 @@
 package fpt.edu.capstone.service.impl;
 
-import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
 import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
@@ -63,19 +62,12 @@ public class JobServiceImpl implements JobService {
         if (!fieldsService.existById(fieldId)) {
             throw new HiveConnectException("Lĩnh vực kinh doanh không tồn tại.");
         }
-//        if ((request.getJobName() == null || request.getJobName().trim().isEmpty())
-//                || (request.getWorkPlace() == null || request.getWorkPlace().trim().isEmpty())
-//                || (request.getJobDescription() == null || request.getJobDescription().trim().isEmpty())
-//                || (request.getJobRequirement() == null || request.getJobRequirement().trim().isEmpty())
-//                || (request.getBenefit() == null || request.getBenefit().trim().isEmpty())) {
-//        }
         if(request.getFromSalary() < 0 || request.getToSalary() < 0 || (request.getFromSalary() > request.getToSalary())) {
             throw new HiveConnectException(ResponseMessageConstants.SALARY_INVALID);
         }
         Object CreateJobRequest = request;
         Job job = modelMapper.map(CreateJobRequest, Job.class);
         job.create();
-//        job.setFlag(request.getFlag());
         job.setFlag(Enums.Flag.Posted.getStatus());
         jobRepository.save(job);
     }
@@ -147,48 +139,12 @@ public class JobServiceImpl implements JobService {
         }
         job.setIsDeleted(1);
         jobRepository.save(job);
-//        jobRepository.deleteJob(jobId);
     }
 
     @Override
     public boolean existsById(long id) {
         return jobRepository.existsById(id);
     }
-
-//    @Override
-//    public ResponseDataPagination getListJobByWorkForm(Integer pageNo, Integer pageSize, String workForm) {
-//        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
-//        Pageable pageable = PageRequest.of(pageReq, pageSize);
-//        Page <Job> listFulltimeJob = jobRepository.getListJobByWorkForm(pageable, workForm);
-//        List <DetailJobResponse> response = listFulltimeJob.stream().
-//                map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
-//        for (DetailJobResponse res: response) {
-//            Company company = companyService.getCompanyById(res.getCompanyId());
-//            Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
-//            Fields fields = fieldsService.getById(res.getFieldId());
-//
-//            res.setCompanyName(company.getName());
-//            res.setFieldName(fields.getFieldName());
-//            res.setRecruiterName(recruiter.getFullName());
-////            res.setAvatar(company.getAvatar());
-//        }
-//        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-//        Pagination pagination = new Pagination();
-//        responseDataPagination.setData(response);
-//        pagination.setCurrentPage(pageNo);
-//        pagination.setPageSize(pageSize);
-//        pagination.setTotalPage(listFulltimeJob.getTotalPages());
-//        pagination.setTotalRecords(Integer.parseInt(String.valueOf(listFulltimeJob.getTotalElements())));
-//        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-//        responseDataPagination.setPagination(pagination);
-//        return responseDataPagination;
-//        List<JobResponse> responseList = new ArrayList<>();
-//        if(listFulltimeJob.hasContent()) {
-//            for(Job job : listFulltimeJob) {
-//                JobResponse response = modelMapper.map(job, JobResponse.class);
-//            }
-//        }
-//    }
 
     @Override
     public Page<Job> getNewestJobList(Pageable pageable) {
@@ -311,35 +267,6 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public ResponseDataPagination getJobByFieldId(Integer pageNo, Integer pageSize, long id) {
-//        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
-//        Pageable pageable = PageRequest.of(pageReq, pageSize);
-//        String flag = Enums.Flag.Posted.getStatus();
-//        Page<Job> listByCareer = jobRepository.getListJobByFieldId(pageable, id, flag);
-//        List<DetailJobResponse> response = listByCareer.stream().
-//                map(job -> modelMapper.map(job, DetailJobResponse.class)).collect(Collectors.toList());
-//        for (DetailJobResponse res : response) {
-//            Company company = companyService.getCompanyById(res.getCompanyId());
-//            Recruiter recruiter = recruiterService.getRecruiterById(res.getRecruiterId());
-//            Fields fields = fieldsService.getById(res.getFieldId());
-//
-//            res.setCompanyName(company.getName());
-//            res.setFieldName(fields.getFieldName());
-//            res.setRecruiterName(recruiter.getFullName());
-//            Image image = imageService.getImageCompany(company.getId(), true);
-//            if (image != null) {
-//                res.setAvatar(image.getUrl());
-//            }
-//        }
-//        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
-//        Pagination pagination = new Pagination();
-//        responseDataPagination.setData(response);
-//        pagination.setCurrentPage(pageNo);
-//        pagination.setPageSize(pageSize);
-//        pagination.setTotalPage(listByCareer.getTotalPages());
-//        pagination.setTotalRecords(Integer.parseInt(String.valueOf(listByCareer.getTotalElements())));
-//        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
-//        responseDataPagination.setPagination(pagination);
-//        return responseDataPagination;
         List<JobResponse> responseList = new ArrayList<>();
 
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;

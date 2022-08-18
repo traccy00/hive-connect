@@ -1,15 +1,8 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.entity.Image;
-import fpt.edu.capstone.repository.ImageRepository;
-import lombok.AllArgsConstructor;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 

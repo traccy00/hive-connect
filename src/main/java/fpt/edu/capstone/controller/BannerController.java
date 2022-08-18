@@ -128,7 +128,7 @@ public class BannerController {
         try {
             recruiterManageService.uploadBanner(recruiterId, request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
-        }catch (Exception e) {
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -143,7 +143,7 @@ public class BannerController {
             DetailPurchasedPackageResponse response = recruiterManageService
                     .getDetailPurchasedPackage(recruiterId, paymentId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, response);
-        }catch (Exception e) {
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -157,7 +157,7 @@ public class BannerController {
         try {
             List<BannerActive> bannerActives = bannerActiveService.getBannersByPosition(displayPosition);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, bannerActives);
-        }catch (Exception e) {
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

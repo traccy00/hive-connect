@@ -194,17 +194,6 @@ public class JobController {
         }
     }
 
-//    @GetMapping("/get-recruiter-posts")
-//    public ResponseData getRecruiterPosts(@RequestParam long recruiterId) {
-//        try {
-//            List<RecruiterPostResponse> responseList = findJobService.getRecruiterPosts(recruiterId);
-//            return null;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
-//        }
-//    }
-
     @GetMapping("/popular-job")
     public ResponseData getPopularJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                       @RequestParam(defaultValue = "4") Integer pageSize) {
@@ -222,8 +211,6 @@ public class JobController {
     @GetMapping("/new-job")
     public ResponseData getListNewJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                       @RequestParam(defaultValue = "10") Integer pageSize) {
-        // get list lấy ra công việc mới nhất
-        //sort by created At
         try {
             ResponseDataPagination pagination = candidateJobService.getNewestJob(pageNo, pageSize);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
@@ -237,7 +224,6 @@ public class JobController {
     @GetMapping("/urgent-job")
     public ResponseData getListUrgentJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                          @RequestParam(defaultValue = "10") Integer pageSize) {
-        // get list lấy ra công việc cần tuyển gấp
         try {
             ResponseDataPagination pagination = candidateJobService.getUrgentJob(pageNo, pageSize);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);

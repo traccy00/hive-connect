@@ -1,6 +1,5 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.dto.CV.IFindCVResponse;
 import fpt.edu.capstone.entity.CV;
 import fpt.edu.capstone.repository.CVRepository;
 import fpt.edu.capstone.service.CVService;

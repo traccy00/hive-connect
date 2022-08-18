@@ -54,11 +54,11 @@ public class CandidateController {
 
     @GetMapping("/all")
     public ResponseData getAllCandidate() {
-        try{
+        try {
             List<Candidate> listAllCandidate = candidateService.getAllCandidate();
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,
                     listAllCandidate);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             logger.error(ex.getMessage());
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
@@ -66,10 +66,10 @@ public class CandidateController {
 
     @GetMapping("/find-by-userid")
     public ResponseData getCandidateById(@RequestParam long userId) {
-        try{
+        try {
             Optional<Candidate> candidate = candidateService.findCandidateByUserId(userId);
             Optional<Users> user = Optional.ofNullable(userService.findById(userId));
-            if(candidate.isPresent() && user.isPresent()){
+            if (candidate.isPresent() && user.isPresent()) {
                 CandidateBaseInformationResponse response = new CandidateBaseInformationResponse();
                 Candidate candidateNN = candidate.get();
                 response.setAddress(candidateNN.getAddress());
@@ -90,18 +90,18 @@ public class CandidateController {
                         response);
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Can not find candidate by this user id", null);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseData updateCandidate(@RequestBody Candidate newCandidate, @PathVariable long id){
+    public ResponseData updateCandidate(@RequestBody Candidate newCandidate, @PathVariable long id) {
         Optional<Candidate> foundedCandidate = candidateService.findById(id);
-        if(!foundedCandidate.isPresent()){
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus() , ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        if (!foundedCandidate.isPresent()) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
-        try{
+        try {
             candidateService.updateCandidate(newCandidate, id);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Sửa thông tin ứng viên thành công", newCandidate);
         } catch (Exception ex) {
@@ -113,18 +113,19 @@ public class CandidateController {
     public ResponseData updateCandidateBaseInformation(@RequestBody Candidate updateCandidate) {
         try {
             Optional<Candidate> candidate = candidateService.findById(updateCandidate.getId());
-            if(candidate.isPresent()) {
-              candidateService.updateCandidateInformation(updateCandidate);
-              return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
-                      ResponseMessageConstants.UPDATE_SUCCESSFULLY, updateCandidate);
+            if (candidate.isPresent()) {
+                candidateService.updateCandidateInformation(updateCandidate);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, updateCandidate);
             }
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST,
                     updateCandidate.getId());
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
 
     }
+
     @PutMapping("/update-cv-base-information")
     public ResponseData updateCvBaseInformation(@RequestBody CVBaseInformationRequest cvBaseInformationRequest) {
         try {
@@ -132,16 +133,16 @@ public class CandidateController {
             Optional<Users> users = Optional.ofNullable(userService.getUserById(cvBaseInformationRequest.getUserId()));
 
             CVBaseInformationRequest response = new CVBaseInformationRequest();
-            if(candidate.isPresent() && users.isPresent()) {
+            if (candidate.isPresent() && users.isPresent()) {
                 candidateService.updateCVInformation(cvBaseInformationRequest);
-                if(userService.findByPhoneAndIdIsNotIn(cvBaseInformationRequest.getPhoneNumber(), cvBaseInformationRequest.getUserId()) != null){
+                if (userService.findByPhoneAndIdIsNotIn(cvBaseInformationRequest.getPhoneNumber(), cvBaseInformationRequest.getUserId()) != null) {
                     return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Số điện thoại đã được sử dụng");
                 } else {
                     userService.updatePhoneNumber(cvBaseInformationRequest.getPhoneNumber(), cvBaseInformationRequest.getUserId());
                 }
 
-                if(users.get().isVerifiedPhone()){
-                    if(!cvBaseInformationRequest.getPhoneNumber().equals(userService.findByPhoneNumber(users.get().getPhone()))){
+                if (users.get().isVerifiedPhone()) {
+                    if (!cvBaseInformationRequest.getPhoneNumber().equals(userService.findByPhoneNumber(users.get().getPhone()))) {
                         return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Số điện thoại đã được xác minh! Không thể thay đổi");
                     }
                 }
@@ -159,7 +160,7 @@ public class CandidateController {
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_SUCCESSFULLY, response);
 
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage(), null);
         }
 
@@ -167,31 +168,31 @@ public class CandidateController {
 
     @PutMapping("/update-is-need-job")
     public ResponseData updateIsNeedJob(@RequestParam long candidateId) {
-            try{
-                Optional<Candidate> candidate = candidateService.findById(candidateId);
-                if(candidate.isPresent()) {
-                    candidateService.updateIsNeedJob(!candidate.get().isNeedJob(), candidate.get().getId());
-                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
-                            ResponseMessageConstants.UPDATE_SUCCESSFULLY, candidate.get().isNeedJob());
-                }
-                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),
-                        ResponseMessageConstants.USER_DOES_NOT_EXIST, candidateId);
-            }catch (Exception ex) {
-                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
+        try {
+            Optional<Candidate> candidate = candidateService.findById(candidateId);
+            if (candidate.isPresent()) {
+                candidateService.updateIsNeedJob(!candidate.get().isNeedJob(), candidate.get().getId());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                        ResponseMessageConstants.UPDATE_SUCCESSFULLY, candidate.get().isNeedJob());
             }
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),
+                    ResponseMessageConstants.USER_DOES_NOT_EXIST, candidateId);
+        } catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
+        }
     }
 
     @PostMapping("upload-cv")
     public ResponseData uploadCV(@RequestParam("file") MultipartFile file, long candidateId) {
-        try{
-                Optional<Candidate> candidate = candidateService.findById(candidateId);
-                if(candidate.isPresent()){ //Check if this user is candidate
-                        CVImported cvImported =  cvImportedService.save(file,"CV",candidateId);
-                        return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, cvImported.getId());
-                }else {
-                    return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST, candidateId);
-                }
-        }catch (Exception ex) {
+        try {
+            Optional<Candidate> candidate = candidateService.findById(candidateId);
+            if (candidate.isPresent()) { //Check if this user is candidate
+                CVImported cvImported = cvImportedService.save(file, "CV", candidateId);
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, cvImported.getId());
+            } else {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST, candidateId);
+            }
+        } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
@@ -218,7 +219,7 @@ public class CandidateController {
         try {
             recruiterManageService.insertWhoViewCv(response);
             ProfileViewer profileViewer = profileViewerService.getByCvIdAndViewerId(response.getCvId(), response.getViewerId());
-            if(profileViewer == null) {
+            if (profileViewer == null) {
                 throw new HiveConnectException("Lưu người xem CV thất bại");
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, profileViewer);
@@ -240,8 +241,8 @@ public class CandidateController {
                     .getProfileViewer(pageNo, pageSize, cvId, candidateId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
-                String msg = LogUtils.printLogStackTrace(e);
-                logger.error(msg);
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
@@ -249,49 +250,49 @@ public class CandidateController {
     @PostMapping("/follow-something")
     @Operation(summary = "Follow job, company, recruiter with type 1,2,3")
     public ResponseData follow(@RequestBody Follow follow) {
-        try{
-            if(followService.isFollowing(follow.getFollowerId(), follow.getFollowedId(), follow.getType())) {
+        try {
+            if (followService.isFollowing(follow.getFollowerId(), follow.getFollowedId(), follow.getType())) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Đã theo dõi.");
             }
-            if(follow.getType() != 1 && follow.getType() != 2 && follow.getType() != 3) {
+            if (follow.getType() != 1 && follow.getType() != 2 && follow.getType() != 3) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Vui lòng nhật đúng loại.");
             }
-            if(!candidateService.findById(follow.getFollowerId()).isPresent()) {
+            if (!candidateService.findById(follow.getFollowerId()).isPresent()) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST, follow.getFollowerId());
             }
-            if(follow.getType() == 1 ) { //job
-                if(!jobService.existsById(follow.getFollowedId())) {
+            if (follow.getType() == 1) { //job
+                if (!jobService.existsById(follow.getFollowedId())) {
                     return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.JOB_DOES_NOT_EXIST, follow.getFollowedId());
                 }
             }
-            if(follow.getType() == 2 ) { //company
-                if(!companyService.existById(follow.getFollowedId())) {
+            if (follow.getType() == 2) { //company
+                if (!companyService.existById(follow.getFollowedId())) {
                     return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.COMPANY_DOES_NOT_EXIST, follow.getFollowedId());
                 }
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful but haven't handled this case", follow.getType());
             }
-            if(follow.getType() == 3 ) { //Recruiter
-                if(!recruiterService.existById(follow.getFollowedId())) {
+            if (follow.getType() == 3) { //Recruiter
+                if (!recruiterService.existById(follow.getFollowedId())) {
                     return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.RECRUITER_DOES_NOT_EXIST, follow.getFollowedId());
                 }
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Successful but haven't handled this case", follow.getType());
             }
             Follow insertedFollow = followService.insertFollow(follow);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Theo dõi thành công.", insertedFollow);
-        }catch (Exception ex) {
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage());
+        } catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
-        @GetMapping("/followed-job")
+    @GetMapping("/followed-job")
     @Operation(summary = "Get list followed job with candidate id")
     public ResponseData getListFollowedJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                            @RequestParam(defaultValue = "10") Integer pageSize,
                                            @RequestParam long candidateId) {
-        try{
+        try {
             ResponseDataPagination pagination = followService.getFollowedJobByCandidateID(pageNo, pageSize, candidateId);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),pagination);
-        }catch (Exception e) {
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), pagination);
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -301,16 +302,16 @@ public class CandidateController {
     @DeleteMapping("/unfollow")
     @Operation(summary = "Unfollow something, must have correct type (1,2,3) ~ (job, company, recruiter")
     public ResponseData unfollow(@RequestParam long followerId, @RequestParam long followedId, @RequestParam long type) {
-        try{
-            if(!followService.isFollowing(followerId, followedId, type)) {
+        try {
+            if (!followService.isFollowing(followerId, followedId, type)) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "You have not followed this");
             }
             followService.unFollow(followerId, followedId, type);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Bỏ theo dõi thành công");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage());
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 
@@ -318,14 +319,14 @@ public class CandidateController {
     @Operation(summary = "Check if a is following b by a id type = 1,2,3 than b = job, company, recruiter")
     public ResponseData isFollowing(@RequestParam long followerId, @RequestParam long followedId, @RequestParam long type) {
         try {
-            if(!followService.isFollowing(followerId, followedId, type)) {
+            if (!followService.isFollowing(followerId, followedId, type)) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Not following", false);
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Is following", true);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
             logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(),ex.getMessage());
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 

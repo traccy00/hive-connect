@@ -2,8 +2,6 @@ package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.entity.Notification;
 import fpt.edu.capstone.utils.ResponseDataPagination;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
@@ -18,5 +16,4 @@ public interface NotificationService {
     void updateIsSeen(long notificationId);
 
     Optional<Notification> findById(long notificationId);
-
 }

@@ -1,18 +1,11 @@
 package fpt.edu.capstone.controller;
 
-import fpt.edu.capstone.dto.UploadFileRequest;
-import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.entity.Users;
-import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.CandidateService;
-import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.UserService;
-import fpt.edu.capstone.service.impl.AmazonS3ClientService;
-import fpt.edu.capstone.service.impl.DinaryServiceiImpl;
-import fpt.edu.capstone.service.impl.ImageServiceImpl;
+import fpt.edu.capstone.service.impl.DinaryServiceImpl;
 import fpt.edu.capstone.utils.Enums;
-import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
 import lombok.AllArgsConstructor;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -34,15 +27,9 @@ public class FileController {
 
     private final UserService userService;
 
-    private final CompanyService companyService;
-
-    private final ImageServiceImpl imageService;
-
-    private final AmazonS3ClientService amazonS3ClientService;
-
     private final CandidateService candidateService;
 
-    private final DinaryServiceiImpl dinaryService;
+    private final DinaryServiceImpl dinaryService;
 
 //    @PostMapping("/import-file")
 //    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {

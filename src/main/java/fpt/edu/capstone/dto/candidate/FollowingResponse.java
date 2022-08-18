@@ -5,8 +5,6 @@ public interface FollowingResponse {
 
     long getType();
 
-//    long getFollowerId();
-
     long getFollowedId();
 
     String getJobName();

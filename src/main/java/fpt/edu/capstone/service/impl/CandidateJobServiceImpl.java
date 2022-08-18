@@ -1,6 +1,5 @@
 package fpt.edu.capstone.service.impl;
 
-import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.dto.job.ApprovalJobRequest;
 import fpt.edu.capstone.dto.job.JobDetailResponse;
 import fpt.edu.capstone.dto.job.JobResponse;
@@ -62,8 +61,6 @@ public class CandidateJobServiceImpl implements CandidateJobService {
             for (Job job : jobs) {
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                 JobResponse jobResponse = new JobResponse();
-//            JobResponse jobResponse = modelMapper.map(job, JobResponse.class);
-//            responseList.add(jobResponse);
                 jobResponse.setJobId(job.getId());
                 jobResponse.setCompanyId(job.getCompanyId());
                 jobResponse.setRecruiterId(job.getRecruiterId());

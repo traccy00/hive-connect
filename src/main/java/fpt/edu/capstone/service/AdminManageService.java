@@ -2,8 +2,6 @@ package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
 import fpt.edu.capstone.dto.banner.ApproveBannerRequest;
-import fpt.edu.capstone.dto.job.ReportJobRequest;
-import fpt.edu.capstone.entity.Report;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 
 import java.time.LocalDateTime;

@@ -1,9 +1,7 @@
 package fpt.edu.capstone.service;
 
-import fpt.edu.capstone.dto.login.LoginGoogleRequest;
 import fpt.edu.capstone.dto.register.*;
 import fpt.edu.capstone.entity.Users;
-import org.springframework.data.repository.query.Param;
 
 import java.util.HashMap;
 import java.util.List;

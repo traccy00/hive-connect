@@ -11,7 +11,7 @@ public interface RequestJoinCompanyService {
 
     Optional<RequestJoinCompany> getSentRequest(long senderId);
 
-    public Optional<List<RequestJoinCompany>> getReceiveRequest(long approverId);
+    Optional<List<RequestJoinCompany>> getReceiveRequest(long approverId);
 
     void approveRequest(String status, long id);
 

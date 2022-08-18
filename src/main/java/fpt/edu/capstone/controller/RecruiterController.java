@@ -82,11 +82,6 @@ public class RecruiterController {
         }
     }
 
-    @GetMapping("/get-detail-cv")
-    public ResponseData detailCv() {
-        return null;
-    }
-
     @GetMapping("get-list-applied-job")
     public ResponseData getListAppliedJob(long recruiterId) {
         try {
@@ -152,11 +147,10 @@ public class RecruiterController {
 
             String appr = newRequestJoinCompany.getStatus().toLowerCase().equals("deny") ? " đã bị từ chối" : " đã được chấp thuận";
             Optional<Company> company = companyService.findById(newRequestJoinCompany.getCompanyId());
-            String content = "Yêu cầu vào công ty "+ company.get().getName() + appr;
+            String content = "Yêu cầu vào công ty " + company.get().getName() + appr;
             Recruiter r = recruiterService.getRecruiterById(newRequestJoinCompany.getSenderId());
             Notification notification = new Notification(0, r.getUserId(), 3, LocalDateTime.now(), content, false, false, company.get().getId());
             notificationService.insertNotification(notification);
-
 
 
             requestJoinCompanyService.approveRequest(newRequestJoinCompany.getStatus(), newRequestJoinCompany.getId());
@@ -171,8 +165,8 @@ public class RecruiterController {
 
     @GetMapping("/get-recruiter-by-company")
     public ResponseData getRecruiterByCompany(@RequestParam(defaultValue = "0") Integer pageNo,
-                                                        @RequestParam(defaultValue = "10") Integer pageSize,
-                                                        @RequestParam("companyId") long companyId) {
+                                              @RequestParam(defaultValue = "10") Integer pageSize,
+                                              @RequestParam("companyId") long companyId) {
         try {
             ResponseDataPagination pagination = recruiterManageService.getRecruitersOfCompany(pageNo, pageSize, companyId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
@@ -193,7 +187,7 @@ public class RecruiterController {
             ResponseDataPagination pagination = recruiterManageService.
                     findCVFilter(pageNo, pageSize, experienceYear, candidateAddress, techStacks);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
-        } catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -238,11 +232,11 @@ public class RecruiterController {
     }
 
     @GetMapping("/total-view-cv/{id}")
-    public ResponseData getTotalViewCV(@PathVariable long id){
+    public ResponseData getTotalViewCV(@PathVariable long id) {
         try {
             Integer total = recruiterService.getTotalViewCV(id);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, total);
-        } catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

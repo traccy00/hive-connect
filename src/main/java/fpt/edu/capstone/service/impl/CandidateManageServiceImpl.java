@@ -15,14 +15,12 @@ import fpt.edu.capstone.repository.EducationRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
-import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -66,10 +64,6 @@ public class CandidateManageServiceImpl implements CandidateManageService {
     private final AppliedJobRepository appliedJobRepository;
 
     private final ImageService imageService;
-
-    private final CVRepository cvRepository;
-
-    private final EducationRepository educationRepository;
 
     private final RecruiterService recruiterService;
 

@@ -2,7 +2,6 @@ package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.dto.company.CompanyResponse;
 import fpt.edu.capstone.dto.recruiter.CountCandidateApplyPercentageResponse;
-import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
 import fpt.edu.capstone.entity.AppliedJob;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

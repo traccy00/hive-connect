@@ -341,7 +341,6 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.common.user.GooglePojo;
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
-import fpt.edu.capstone.dto.UploadFileRequest;
 import fpt.edu.capstone.dto.admin.user.RecruiterManageResponse;
 import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
 import fpt.edu.capstone.entity.Company;
@@ -360,7 +359,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -389,15 +387,15 @@ public class RecruiterServiceImplTest {
     private AmazonS3ClientService mockAmazonS3ClientService;
 
     @Mock
-    private DinaryServiceiImpl dinaryServicei;
+    private DinaryServiceImpl dinaryServicei;
 
     private RecruiterServiceImpl recruiterServiceImplUnderTest;
 
-    @Before
-    public void setUp() {
-        recruiterServiceImplUnderTest = new RecruiterServiceImpl(mockRecruiterRepository, mockCompanyRepository,
-                mockUserRepository, mockAmazonS3ClientService, dinaryServicei);
-    }
+//    @Before
+//    public void setUp() {
+//        recruiterServiceImplUnderTest = new RecruiterServiceImpl(mockRecruiterRepository, mockCompanyRepository,
+//                mockUserRepository, mockAmazonS3ClientService, dinaryServicei);
+//    }
 
     private Recruiter recruiter(){
         Recruiter recruiter = new Recruiter();

@@ -1,6 +1,5 @@
 package fpt.edu.capstone.service.impl;
 
-import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.repository.ImageRepository;
 import fpt.edu.capstone.service.ImageService;
@@ -83,7 +82,6 @@ public class ImageServiceImpl implements ImageService {
         return imageRepository.getAvatarCandidate(candidateId);
     }
 
-    //isAvatar = true -> company avatar, isAvatar = false -> company image
     @Override
     public Optional<Image> getImageCompany(long companyId, boolean isAvatar) {
         return imageRepository.getImageCompany(companyId, isAvatar);

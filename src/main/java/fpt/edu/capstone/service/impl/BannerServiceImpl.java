@@ -33,8 +33,6 @@ public class BannerServiceImpl implements BannerService {
 
     private final RentalPackageService rentalPackageService;
 
-//    private final PaymentService paymentService;
-
     @Override
     public List<Banner> getAllBanner() {
         return bannerRepository.findAll();
@@ -69,9 +67,6 @@ public class BannerServiceImpl implements BannerService {
         if(request.getDiscount() > request.getPrice()) {
             throw new HiveConnectException(ResponseMessageConstants.DISCOUNT_PRICE_INVALID);
         }
-//        if(request.getImage() == null || request.getImage().trim().isEmpty()) {
-//            throw new HiveConnectException(ResponseMessageConstants.BANNER_IMAGE_INVALID);
-//        }
         if(request.isSpotlight() == false
                 && request.isHomepageBannerA() == false && request.isHomePageBannerB() == false && request.isHomePageBannerC() == false
                 && request.isJobBannerA() == false && request.isJobBannerB() == false && request.isJobBannerC() == false) {
@@ -100,8 +95,6 @@ public class BannerServiceImpl implements BannerService {
         if(!detailBannerPackage.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.DETAIL_PACKAGE_DOES_NOT_EXIST);
         }
-//        List<Payment> paymentInUse = paymentService.get
-//        if
         if(request.getPrice() <= 0) {
             throw new HiveConnectException(ResponseMessageConstants.PRICE_EQUAL_GREATER_THAN_ZERO);
         }

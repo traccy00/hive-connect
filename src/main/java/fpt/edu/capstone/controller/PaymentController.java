@@ -43,8 +43,9 @@ public class PaymentController {
     private final ImageService imageService;
 
     private final ModelMapper modelMapper;
+
     @PostMapping("/create-url-payment")
-    public ResponseData createPayment(@RequestBody PaymentDTO paymentDTO)  {
+    public ResponseData createPayment(@RequestBody PaymentDTO paymentDTO) {
         try {
             PaymentResponseDTO dto = paymentService.getPaymentVNPay(paymentDTO);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS, dto);
@@ -57,7 +58,7 @@ public class PaymentController {
 
     @PostMapping("/save-payment-success")
     public ResponseData savePaymentSuccess(@RequestParam("vnp_ResponseCode") String vnpResponseCode,
-                                           @RequestParam("vnp_OrderInfo") String vnpOrderInfo){
+                                           @RequestParam("vnp_OrderInfo") String vnpOrderInfo) {
         try {
             paymentService.savePayment(vnpResponseCode, vnpOrderInfo);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.PAYMENT_SUCCESS);
@@ -70,23 +71,23 @@ public class PaymentController {
 
     @PutMapping("/change-payment-active")
     @Operation(summary = "thay đổi job được gán vào gói dịch vụ còn hạn")
-    public ResponseData changeJobActivePayment(@RequestBody JobActivePaymentDTO request){
+    public ResponseData changeJobActivePayment(@RequestBody JobActivePaymentDTO request) {
         try {
             //Check expired date
             Payment payment = paymentService.findById(request.getId());
-            if(payment == null){
+            if (payment == null) {
                 throw new HiveConnectException("Không tồn tại thanh toán nào cho dịch vụ này.");
             }
             LocalDateTime now = LocalDateTime.now();
             int a = now.compareTo(payment.getExpiredDate());
-            if(a>=0){
+            if (a >= 0) {
                 throw new HiveConnectException("Gói dịch vụ đã hết hạn, Không thể gắn công việc vào gói.");
             }
             payment.setJobId(request.getJobId());
             payment.update();
             paymentService.updatePayment(payment);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.CHANGE_JOB_PAYMENT_ACTIVE_SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -103,7 +104,7 @@ public class PaymentController {
             List<Payment> paymentList = paymentService.
                     getListPaymentFilter(recruiterId, rentalPackageId, bannerId, transactionCode, orderType);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.GET_LIST_SUCCESS, paymentList);
-        } catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -112,14 +113,14 @@ public class PaymentController {
 
     @GetMapping("/purchased-package")
     @Operation(summary = "kiểm tra rec đã mua gói package nào và gói package đó còn trong thời hạn sử dụng ko")
-    public ResponseData recruiterBuyPackage(@RequestParam(value = "recruiterId") long recruiterId){
+    public ResponseData recruiterBuyPackage(@RequestParam(value = "recruiterId") long recruiterId) {
         try {
             List<PaymentResponse> payment = paymentService.findRecruiterPurchasedPackage(recruiterId);
-            if (payment.isEmpty()){
+            if (payment.isEmpty()) {
                 throw new HiveConnectException("Nhà tuyển dụng chưa mua gói dịch vụ nào.");
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS,payment);
-        } catch (Exception e){
+            return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS, payment);
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -130,7 +131,7 @@ public class PaymentController {
     public ResponseData getTotalProfit(@RequestParam(value = "startDate") String startDate,
                                        @RequestParam(value = "endDate") String endDate,
                                        @RequestParam(defaultValue = "0") Integer pageNo,
-                                       @RequestParam(defaultValue = "10") Integer pageSize){
+                                       @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDateTime start = LocalDate.parse(startDate, formatter).atStartOfDay();
@@ -138,7 +139,7 @@ public class PaymentController {
 
             ResponseDataPaginationRevenue pagination = paymentService.getRevenue(start, end, pageNo, pageSize);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.TOTAL_REVENUE, pagination);
-        } catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -148,7 +149,7 @@ public class PaymentController {
     @GetMapping("/export-revenue")
     public ResponseData exportRevenue(@RequestParam(value = "startDate") String startDate,
                                       @RequestParam(value = "endDate") String endDate,
-                                      HttpServletResponse response){
+                                      HttpServletResponse response) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDateTime start = LocalDate.parse(startDate, formatter).atStartOfDay();
@@ -160,13 +161,13 @@ public class PaymentController {
             String headerValue = "attachment; filename=revenue" + currentDateTime + ".xlsx";
             response.setHeader(headerKey, headerValue);
 
-            List <RevenueResponse> responseList = paymentService.getRevenueExporter(start, end);
+            List<RevenueResponse> responseList = paymentService.getRevenueExporter(start, end);
 
             ExcelExporter excelExporter = new ExcelExporter(responseList);
             excelExporter.export(response);
 
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus());
-        } catch (Exception e){
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
@@ -174,21 +175,21 @@ public class PaymentController {
     }
 
     @GetMapping("/suggest-job-with-pay")
-    public ResponseData suggestJobWithPay(){
+    public ResponseData suggestJobWithPay() {
         try {
-            List <Long> listJobId = paymentService.getListJobIdInPayment();
-            List <JobResponse> list = new ArrayList<>();
-            for (Long id: listJobId) {
+            List<Long> listJobId = paymentService.getListJobIdInPayment();
+            List<JobResponse> list = new ArrayList<>();
+            for (Long id : listJobId) {
                 Job job = jobService.findById(id).get();
                 Company company = companyService.getCompanyById(job.getCompanyId());
-                Optional<Image> image = imageService.getImageCompany(company.getId(),true);
+                Optional<Image> image = imageService.getImageCompany(company.getId(), true);
                 JobResponse response = modelMapper.map(job, JobResponse.class);
                 response.setCompanyName(company.getName());
                 response.setCompanyAvatar(image.get().getUrl());
                 list.add(response);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS,list);
-        } catch (Exception e){
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, list);
+        } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());

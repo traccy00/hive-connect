@@ -31,13 +31,7 @@ public class RecruiterServiceImpl implements RecruiterService {
 
     private final RecruiterRepository recruiterRepository;
 
-    private final CompanyRepository companyRepository;
-
-    private final UserRepository userRepository;
-
-    private final AmazonS3ClientService amazonS3ClientService;
-
-    private final DinaryServiceiImpl dinaryService;
+    private final DinaryServiceImpl dinaryService;
 
     @Override
     public Recruiter getRecruiterByUserId(long userId) {
@@ -114,22 +108,16 @@ public class RecruiterServiceImpl implements RecruiterService {
         if (businessMultipartFile == null && additionalMultipartFile == null) {
             throw new HiveConnectException("Không có file nào được upload");
         }
-
         //check xem đã save được vào amazon chưa
-
         //"1": business license, "2": additional license
         if (businessMultipartFile != null) {
             //check xem license đã từng upload lên chưa, trạng thái như thế nào?
             if (optionalRecruiter.get().getBusinessLicenseUrl() != null && optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null) {
                 if ((optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus()))
-//                        || optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus()))
-//                        && additionalMultipartFile == null
                 ) {
                     throw new HiveConnectException("Nhà tuyển dụng đã có giấy phép kinh doanh hoặc giấy phép đang được duyệt, không thể thay đổi");
                 }
             }
-            //upload file to amazon
-//          String fileName = amazonS3ClientService.uploadFileAmazonS3(null, businessMultipartFile);
             String fileName = dinaryService.uploadFileToDinary(null, businessMultipartFile);
             //save to database
             optionalRecruiter.get().setBusinessLicenseUrl(fileName);
@@ -144,8 +132,6 @@ public class RecruiterServiceImpl implements RecruiterService {
                     throw new HiveConnectException("Nhà tuyển dụng đã có giấy phép kinh doanh hoặc giấy phép đang được duyệt, không thể thay đổi");
                 }
             }
-            //upload file to amazon
-//            String fileName = amazonS3ClientService.uploadFileAmazonS3(null, additionalMultipartFile);
             String fileName = dinaryService.uploadFileToDinary(null, additionalMultipartFile);
             //save to database
             optionalRecruiter.get().setAdditionalLicense(fileName);
@@ -164,10 +150,6 @@ public class RecruiterServiceImpl implements RecruiterService {
 
     @Override
     public Recruiter approveLicense(ApprovalLicenseRequest request) {
-//        Optional<Recruiter> recruiter = recruiterRepository.findById(request.getRecruiterId());
-//        if (!recruiter.isPresent()) {
-//            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
-//        }
         Recruiter recruiter = recruiterRepository.getRecruiterByUserId(request.getUserId());
         if (recruiter == null) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);

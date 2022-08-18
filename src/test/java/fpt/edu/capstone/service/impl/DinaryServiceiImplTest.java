@@ -21,11 +21,11 @@ public class DinaryServiceiImplTest {
     @Mock
     private Cloudinary mockCloudinaryConfig;
 
-    private DinaryServiceiImpl dinaryServiceiImplUnderTest;
+    private DinaryServiceImpl dinaryServiceiImplUnderTest;
 
     @Before
     public void setUp() throws Exception {
-        dinaryServiceiImplUnderTest = new DinaryServiceiImpl(mockCloudinaryConfig);
+        dinaryServiceiImplUnderTest = new DinaryServiceImpl(mockCloudinaryConfig);
     }
 
     @Test

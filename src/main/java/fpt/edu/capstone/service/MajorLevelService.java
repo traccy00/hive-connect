@@ -1,6 +1,5 @@
 package fpt.edu.capstone.service;
 
-import fpt.edu.capstone.entity.Major;
 import fpt.edu.capstone.entity.MajorLevel;
 
 import java.util.List;

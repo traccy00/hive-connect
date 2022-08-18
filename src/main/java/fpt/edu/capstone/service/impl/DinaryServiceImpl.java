@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-public class DinaryServiceiImpl {
+public class DinaryServiceImpl {
     private final Cloudinary cloudinaryConfig;
 
-    public DinaryServiceiImpl(Cloudinary cloudinaryConfig) {
+    public DinaryServiceImpl(Cloudinary cloudinaryConfig) {
         this.cloudinaryConfig = cloudinaryConfig;
     }
 
@@ -53,10 +53,6 @@ public class DinaryServiceiImpl {
             File uploadedFile = convertMultiPartToFile(gif);
             Map uploadResult = cloudinaryConfig.uploader().upload(uploadedFile, ObjectUtils.emptyMap());
             boolean isDeleted = uploadedFile.delete();
-//            if (isDeleted){
-//                System.out.println("File successfully deleted" + uploadResult.get("url").toString());
-//            }else
-//                System.out.println("File doesn't exist");
             return  uploadResult.get("url").toString();
         }catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -75,21 +71,11 @@ public class DinaryServiceiImpl {
         if(multipartFile == null) {
             throw new HiveConnectException(ResponseMessageConstants.CHOOSE_UPLOAD_FILE);
         }
-        String fileType = multipartFile.getContentType().split("/")[1];
-
-//        logger.info("file-type request:" + fileType);
-//        if (!TYPE_VALIDATORS.get(Enums.FileUploadType.parse(request.getTypeUpload())).contains(multipartFile.getContentType())) {
-//            logger.info("uploadImage - Wrong type");
-//            throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_WRONG_TYPE);
-//        }
         logger.info("file-size request:" + multipartFile.getSize());
         if (multipartFile.getSize() > MAX_FILE_SIZE) {
             logger.info("uploadImage - MAX_FILE_SIZE");
             throw new HiveConnectException(ResponseMessageConstants.UPLOAD_IMAGE_OVER_SIZE);
         }
-
-//        File file = convertMultiPartToFile(multipartFile);
-//        s3client.putObject(bucketName,"hiveconnect/" + fileName, file);
         String fileName = uploadFile(multipartFile);
         System.out.println("Dinary=========  "+ fileName);
         return fileName;

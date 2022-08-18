@@ -36,7 +36,7 @@ public class AppliedJobServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        appliedJobServiceImplUnderTest = new AppliedJobServiceImpl(mockModelMapper, mockAppliedJobRepository);
+        appliedJobServiceImplUnderTest = new AppliedJobServiceImpl(mockAppliedJobRepository);
     }
 
     @Test

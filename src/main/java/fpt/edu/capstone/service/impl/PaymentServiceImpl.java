@@ -12,7 +12,6 @@ import fpt.edu.capstone.repository.PaymentRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
-import fpt.edu.capstone.utils.ResponseDataPagination;
 import fpt.edu.capstone.utils.ResponseDataPaginationRevenue;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,7 +25,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -242,10 +240,6 @@ public class PaymentServiceImpl implements PaymentService {
         if (recruiter == null) {
             throw new HiveConnectException("Nhà tuyển dụng có id = " + recruiter.getId() + "không tồn tại");
         }
-        //TODO: CHƯA XỬ LÍ XONG CHECK GÓI ĐÃ MUA TRƯỚC ĐÓ CÒN HẠN HAY KHÔNG
-//        if(!payment.isExpiredStatus()){
-//            throw new HiveConnectException("Gói dịch vụ đang trong thời hạn sử dụng. Hãy mua lại sau khi hết hạn.");
-//        }
         payment.setCommand(PaymentConfig.COMMAND);
         payment.setCurrCode(PaymentConfig.CURR_CODE);
         payment.setLocal(PaymentConfig.LOCATE_DEFAULT);

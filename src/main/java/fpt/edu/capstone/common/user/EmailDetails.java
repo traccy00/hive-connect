@@ -1,14 +1,9 @@
 package fpt.edu.capstone.common.user;
 
-// Java Program to Illustrate EmailDetails Class
-
-// Importing required classes
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// Annotations
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

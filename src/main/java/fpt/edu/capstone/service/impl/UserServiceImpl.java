@@ -203,9 +203,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<Users> findByEmail(String email) {
-//        if (!userRepository.findByEmail(email).isPresent()) {
-//            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
-//        }
         return userRepository.findByEmail(email);
     }
 
@@ -265,12 +262,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePassword(Users user, ResetPasswordRequest request) {
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        String encodedPassword = passwordEncoder.encode(newPassword);
-//        user.setPassword(encodedPassword);
-//        user.setResetPasswordToken(null);
-//        userRepository.save(user);
-
         String newPassword = request.getNewPassword().trim();
         String confirmPassword = request.getConfirmPassword().trim();
         if (!StringUtils.equals(newPassword, confirmPassword)) {

@@ -1,6 +1,5 @@
 package fpt.edu.capstone.controller;
 
-import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.common.user.GooglePojo;
 import fpt.edu.capstone.common.user.GoogleUtils;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
@@ -66,8 +65,6 @@ public class AuthenticationController {
 
     private final ConfirmTokenService confirmTokenService;
 
-    private final GoogleUtils googleUtils;
-
     private final UserRepository userRepository;
 
     private final RequestJoinCompanyService requestJoinCompanyService;
@@ -80,17 +77,17 @@ public class AuthenticationController {
             Optional<Users> userByEmailGmail = userService.findByEmail(request.getUsername() + "@gmail.com");
             Optional<Users> userByEmailYopMail = userService.findByEmail(request.getUsername() + "@yopmail.com");
             Optional<Users> users;
-            if(userByEmailGmail.isPresent()){
+            if (userByEmailGmail.isPresent()) {
                 users = userByEmailGmail;
-            }else if(userByEmailYopMail.isPresent()){
+            } else if (userByEmailYopMail.isPresent()) {
                 users = userByEmailYopMail;
-            }else if(userByUserName.isPresent()){
+            } else if (userByUserName.isPresent()) {
                 users = userByUserName;
-            }else {
+            } else {
                 throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
             }
             if (users.isPresent()) {
-                if(users.get().isLocked()){
+                if (users.get().isLocked()) {
                     throw new HiveConnectException(ResponseMessageConstants.USER_HAS_BEEN_LOCKED);
                 }
             }
@@ -227,7 +224,7 @@ public class AuthenticationController {
                 //tìm user theo email google trả về
                 Optional<Users> user = userService.findByEmail(request.getEmail());
                 if (user.isPresent()) {
-                    if(user.get().isLocked()){
+                    if (user.get().isLocked()) {
                         throw new HiveConnectException(ResponseMessageConstants.USER_HAS_BEEN_LOCKED);
                     }
                 }
@@ -319,21 +316,16 @@ public class AuthenticationController {
     @Transactional(rollbackOn = HiveConnectException.class)
     public ResponseDataUser register(@RequestBody RegisterRequest request) throws Exception {
         try {
-//            String username = request.getUsername().trim();
-
             String password = request.getPassword();
             String email = request.getEmail().trim();
-            String username = email.substring(0,email.indexOf("@"));
+            String username = email.substring(0, email.indexOf("@"));
             String fullName = request.getFullName().trim();
-//            Optional<Users> phoneNumber = userService.findByPhoneNumber(request.getPhone());
-//            if(phoneNumber.isPresent()){
-//                throw new HiveConnectException(ResponseMessageConstants.PHONE_NUMBER_IN_USE);
-//            }
             if (StringUtils.containsWhitespace(username) || StringUtils.containsWhitespace(password)) {
                 return new ResponseDataUser(Enums.ResponseStatus.ERROR.getStatus(),
                         ResponseMessageConstants.USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS);
             }
-            userService.registerUser(new RegisterRequest(username, password, request.getConfirmPassword(), email, request.getPhone(), request.getRoleId(), request.getFullName() ));
+            userService.registerUser(new RegisterRequest(username, password, request.getConfirmPassword(), email,
+                    request.getPhone(), request.getRoleId(), request.getFullName()));
             Users user = userService.getByUserName(username);
             if (user.getRoleId() == 3) {
                 candidateService.insertCandidateForRegister(user.getId(), fullName);
@@ -348,8 +340,8 @@ public class AuthenticationController {
 
             //region: Handle verify email
             ConfirmToken confirmToken = new ConfirmToken(user.getId());
-            confirmTokenService.saveConfirmToken(confirmToken); // Generate token and save to DB
-            ConfirmToken cf = confirmTokenService.getByUserId(user.getId()); // Cần lấy ra token để truyền vào url cho verify
+            confirmTokenService.saveConfirmToken(confirmToken);
+            ConfirmToken cf = confirmTokenService.getByUserId(user.getId());
             String mailToken = cf.getConfirmationToken();
             confirmTokenService.verifyEmailUser(email, mailToken);
             //endregion
@@ -378,23 +370,14 @@ public class AuthenticationController {
         }
     }
 
-    /*
-    Expect : line 115 sau khi gọi đến verify email,
-    người dùng cần verify mail xong mới trả lại cho người dùng thông báo đăng kí thành công và jwt token để đăng nhập vào hệ thống
-     */
     @PostMapping("/confirm-account")
     @Operation(summary = "confirm account")
     public ResponseDataUser confirmAccount(@RequestParam("token") String token) {
         try {
-            // Cần lấy ra token để truyền vào url cho verify
             ConfirmToken cf = confirmTokenService.getByConfirmToken(token);
             if (cf == null) {
                 throw new HiveConnectException("Token invalid");
             }
-            //So sánh time expire và time trong db nếu quá hạn thì ko cho sử dụng token
-//            if (LocalDateTime.now().isAfter(cf.getExpiredTime())) {
-//                throw new HiveConnectException("Token has been expired");
-//            }
             String mailToken = cf.getConfirmationToken();
             Users user = userService.getUserById(cf.getUserId());
             if (StringUtils.equals(token, mailToken)) {
@@ -425,39 +408,6 @@ public class AuthenticationController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
-
-    /*
-     * @author Mai
-     */
-    // Sending a simple Email
-//    @PostMapping("/sendMail")
-//    @Operation(summary = "send email")
-//    public ResponseData sendMail(@RequestBody EmailDetails details) {
-//        try {
-//            String status = emailService.sendSimpleMail(details);
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), status);
-//        } catch (Exception e) {
-//            String msg = LogUtils.printLogStackTrace(e);
-//            logger.error(msg);
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Error while Sending Mail!!!");
-//        }
-//    }
-
-    /*
-     * @author Mai
-     */
-    // Sending email with attachment
-//    @PostMapping("/sendMailWithAttachment")
-//    public ResponseData sendMailWithAttachment(@RequestBody EmailDetails details) {
-//        try {
-//            String status = emailService.sendMailWithAttachment(details);
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), status);
-//        } catch (Exception e) {
-//            String msg = LogUtils.printLogStackTrace(e);
-//            logger.error(msg);
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Error while Sending Mail!!");
-//        }
-//    }
 
     @PostMapping("/forgot-password")
     @Operation(summary = "user forgot password, system will send a mail to user's email with reset password token link")

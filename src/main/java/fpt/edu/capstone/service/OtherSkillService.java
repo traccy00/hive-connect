@@ -1,7 +1,5 @@
 package fpt.edu.capstone.service;
 
-
-import fpt.edu.capstone.entity.Language;
 import fpt.edu.capstone.entity.OtherSkill;
 
 import java.util.List;

@@ -109,17 +109,17 @@ public class RecruiterManageServiceImplTest {
 
     private RecruiterManageServiceImpl recruiterManageServiceImplUnderTest;
 
-    @Before
-    public void setUp() {
-        recruiterManageServiceImplUnderTest = new RecruiterManageServiceImpl(mockModelMapper, mockRecruiterRepository,
-                mockUserRepository, mockJobService, mockAppliedJobService, mockRecruiterService, mockUserService,
-                mockImageService, mockCompanyService, mockCvService, mockCandidateService, mockWorkExperienceService,
-                mockEducationService, mockPaymentService, mockBannerService, mockBannerActiveRepository,
-                mockDetailPackageService, mockRentalPackageService, mockBannerActiveService, mockFieldsService,
-                mockCountryService, mockCertificateService, mockLanguageService, mockMajorLevelService,
-                mockOtherSkillService, mockProfileViewerService, mockProfileViewerRepository, mockAppliedJobRepository,
-                mockCvRepository, mockEducationRepository, mockMajorService, mockWorkExperienceRepository);
-    }
+//    @Before
+//    public void setUp() {
+//        recruiterManageServiceImplUnderTest = new RecruiterManageServiceImpl(mockModelMapper, mockRecruiterRepository,
+//                mockUserRepository, mockJobService, mockAppliedJobService, mockRecruiterService, mockUserService,
+//                mockImageService, mockCompanyService, mockCvService, mockCandidateService, mockWorkExperienceService,
+//                mockEducationService, mockPaymentService, mockBannerService, mockBannerActiveRepository,
+//                mockDetailPackageService, mockRentalPackageService, mockBannerActiveService, mockFieldsService,
+//                mockCountryService, mockCertificateService, mockLanguageService, mockMajorLevelService,
+//                mockOtherSkillService, mockProfileViewerService, mockProfileViewerRepository, mockAppliedJobRepository,
+//                mockCvRepository, mockEducationRepository, mockMajorService, mockWorkExperienceRepository);
+//    }
     private Recruiter recruiter(){
         Recruiter recruiter = new Recruiter();
         recruiter.setId(1L);

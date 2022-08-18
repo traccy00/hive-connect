@@ -5,7 +5,6 @@ import fpt.edu.capstone.dto.admin.user.ReportedUserResponse;
 import fpt.edu.capstone.dto.banner.ApproveBannerRequest;
 import fpt.edu.capstone.dto.banner.BannerForApprovalResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.job.ReportJobRequest;
 import fpt.edu.capstone.dto.job.ReportedJobResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -15,9 +14,7 @@ import fpt.edu.capstone.repository.ReportedRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
-import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,7 +22,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +33,6 @@ import java.util.stream.Collectors;
 public class AdminManageServiceImpl implements AdminManageService {
     @Autowired
     private  RecruiterService recruiterService;
-    @Autowired
-    private  ModelMapper modelMapper;
     @Autowired
     private  ReportedRepository reportedRepository;
     @Autowired
@@ -190,7 +184,6 @@ public class AdminManageServiceImpl implements AdminManageService {
         pagination.setTotalRecords(Integer.parseInt(String.valueOf(users.getTotalElements())));
         responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
         responseDataPagination.setPagination(pagination);
-
         return responseDataPagination;
     }
 
@@ -244,17 +237,14 @@ public class AdminManageServiceImpl implements AdminManageService {
             job.setIsDeleted(1);
             job.update();
             jobRepository.save(job);
-//            jobService.updateIsDeleted(1, job.get().getId());
             report.get().setApprovalReportedStatus(approvalStatus);
             report.get().update();
             reportedRepository.save(report.get());
-//            reportedService.updateReportedStatus(approvalStatus, reportId);
             return ResponseMessageConstants.DELETE_SUCCESSFULLY;
         } else if (approvalStatus.equals(Enums.ApprovalStatus.REJECT.getStatus())) {
             report.get().setApprovalReportedStatus(approvalStatus);
             report.get().update();
             reportedRepository.save(report.get());
-//            reportedService.updateReportedStatus(approvalStatus, reportId);
             return ResponseMessageConstants.CANCEL_REPORT_JOB_SUCCESSFULLY;
         }
         return null;

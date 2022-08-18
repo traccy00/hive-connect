@@ -53,6 +53,4 @@ public class BannerActiveImpl implements BannerActiveService {
         }
         return bannerActiveRepository.findById(id).get();
     }
-
-
 }

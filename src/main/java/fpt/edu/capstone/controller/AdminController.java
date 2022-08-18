@@ -30,20 +30,7 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    private final CandidateService candidateService;
-
-    private final BannerService bannerService;
-
-    private final JobService jobService;
-
-    private final ReportedService reportedService;
-
-    private final PaymentService paymentService;
-
     private final RecruiterService recruiterService;
-
-    private static final LocalDateTime minDate = LocalDateTime.MIN;
-    private static final LocalDateTime maxDate = LocalDateTime.MAX;
 
     private final UserService userService;
 
@@ -66,10 +53,10 @@ public class AdminController {
     @GetMapping("/search-users")
     @Operation(summary = "search/get list users account (Recruiter, Candidate, Admin) for Admin App")
     public ResponseData searchUsersForAdmin(@RequestParam(defaultValue = "0") Integer pageNo,
-                                                 @RequestParam(defaultValue = "10") Integer pageSize,
-                                                 @RequestParam(required = false) String username,
-                                                 @RequestParam(required = false) String email,
-                                                 @RequestParam String tab) {
+                                            @RequestParam(defaultValue = "10") Integer pageSize,
+                                            @RequestParam(required = false) String username,
+                                            @RequestParam(required = false) String email,
+                                            @RequestParam String tab) {
         try {
             ResponseDataPagination pagination = adminManageService.searchUsersForAdmin(tab, pageNo, pageSize, username, email);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
@@ -129,7 +116,7 @@ public class AdminController {
                                        @RequestParam(defaultValue = "10") Integer pageSize,
                                        @RequestParam(value = "createdAtFrom", required = false) LocalDateTime createdAtFrom,
                                        @RequestParam(value = "createdAtTo", required = false) LocalDateTime createdAtTo,
-                                       @RequestParam(value = "updatedAtFrom",required = false) LocalDateTime updatedAtFrom,
+                                       @RequestParam(value = "updatedAtFrom", required = false) LocalDateTime updatedAtFrom,
                                        @RequestParam(value = "updatedAtTo", required = false) LocalDateTime updatedAtTo,
                                        @RequestParam(value = "jobName", defaultValue = StringUtils.EMPTY) String jobName) {
         try {

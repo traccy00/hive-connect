@@ -1,7 +1,6 @@
 package fpt.edu.capstone.service;
 
 import fpt.edu.capstone.entity.Certificate;
-import fpt.edu.capstone.swagger.OpenAPIConfig;
 
 import java.util.List;
 import java.util.Optional;

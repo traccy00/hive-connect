@@ -53,12 +53,6 @@ public class CommonController {
         }
     }
 
-    @GetMapping("/get-list-hashtag")
-    public ResponseData getListHashtag(){
-        //lấy ra được ngành nghề hiển thị trong thanh combobox
-        return null;
-    }
-
     @PostMapping("/create-role")
     public ResponseData createRole(@RequestBody CreateRoleUserRequest request) {
         try {

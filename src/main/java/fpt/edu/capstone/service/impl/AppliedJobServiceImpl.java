@@ -1,11 +1,8 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.company.CompanyResponse;
-import fpt.edu.capstone.dto.company.TopCompanyResponse;
 import fpt.edu.capstone.dto.recruiter.CountCandidateApplyPercentageResponse;
-import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
 import fpt.edu.capstone.entity.AppliedJob;
-import fpt.edu.capstone.entity.Image;
 import fpt.edu.capstone.repository.AppliedJobRepository;
 import fpt.edu.capstone.service.AppliedJobService;
 import fpt.edu.capstone.utils.Enums;
@@ -15,15 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class AppliedJobServiceImpl implements AppliedJobService {
-
-    private final ModelMapper modelMapper;
 
     private final AppliedJobRepository appliedJobRepository;
 

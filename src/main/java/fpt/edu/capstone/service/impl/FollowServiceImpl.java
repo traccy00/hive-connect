@@ -1,6 +1,5 @@
 package fpt.edu.capstone.service.impl;
 
-import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.dto.candidate.FollowingResponse;
 import fpt.edu.capstone.dto.job.JobResponse;
 import fpt.edu.capstone.entity.*;
@@ -10,7 +9,6 @@ import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

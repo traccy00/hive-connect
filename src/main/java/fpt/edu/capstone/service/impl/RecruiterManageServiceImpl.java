@@ -88,8 +88,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     private final ProfileViewerRepository profileViewerRepository;
 
-    private final AppliedJobRepository appliedJobRepository;
-
     private final CVRepository cvRepository;
 
     private final EducationRepository educationRepository;
@@ -389,23 +387,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             BannerActive bannerActive = bannerActiveService.findByPaymentIdAndPosition(request.getPaymentId(),
                     Enums.BannerPosition.JOB_BANNER_C.getStatus());
             setupBanner(payment, bannerActive, Enums.BannerPosition.JOB_BANNER_C.getStatus(), request.getJobBannerCImage());
-//            if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
-//                //can not change banner image if admin approved
-//                return;
-//            } else if (bannerActive != null
-//                    && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
-//                bannerActive.setImageUrl(request.getJobBannerCImage());
-//                bannerActive.update();
-//                bannerActiveRepository.save(bannerActive);
-//            } else {
-//                BannerActive newBannerActive = new BannerActive();
-//                newBannerActive.setImageUrl(request.getJobBannerCImage());
-//                newBannerActive.setPaymentId(payment.getId());
-//                bannerActive.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-//                newBannerActive.setDisplayPosition(Enums.BannerPosition.JOB_BANNER_C.getStatus());
-//                newBannerActive.create();
-//                bannerActiveRepository.save(newBannerActive);
-//            }
         }
     }
 
@@ -459,7 +440,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
                     int applyCount = appliedJobService.countAppliedCVOfJob(job.getId());
                     response.setApplyCount(applyCount);
-//                response.getViewCount();
                     response.setStartDate(job.getStartDate());
                     response.setEndDate(job.getEndDate());
                     response.setFlag(job.getFlag());
@@ -738,7 +718,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                         String workEx = workExperience.getCompanyName() + " - " + workExperience.getPosition();
                         experienceDesc.add(workEx);
                     }
-//                    List<String> experienceDesc = workExperiencesOfCv.stream().map(WorkExperience::getPosition).collect(Collectors.toList());
                     responseObj.setExperienceDesc(experienceDesc);
                 }
                 List<Education> educations = educationRepository.getListEducationByCvId(cv.getId());
@@ -748,7 +727,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                 }
                 responseObj.setCareerGoal(candidate.getIntroduction());
                 responseObj.setAddress(candidate.getAddress());
-//            responseObj.setExperienceYear();
                 responseObj.setApprovalStatus(appliedJob.getApprovalStatus());
                 responseObj.setCvId(cv.getId());
                 responseList.add(responseObj);

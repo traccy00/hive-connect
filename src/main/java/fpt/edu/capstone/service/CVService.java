@@ -1,6 +1,5 @@
 package fpt.edu.capstone.service;
 
-import fpt.edu.capstone.dto.CV.IFindCVResponse;
 import fpt.edu.capstone.entity.CV;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,11 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CVService {
-    List<CV> findCvByCandidateId(Long candidateId); //giu
+    List<CV> findCvByCandidateId(Long candidateId);
 
-    CV getCVByCandidateId(long candidateId); //nam
+    CV getCVByCandidateId(long candidateId);
 
-    //giu
     Optional<CV> findCvById(long id);
 
     void updateSummary(long cvId, String newSummary);
