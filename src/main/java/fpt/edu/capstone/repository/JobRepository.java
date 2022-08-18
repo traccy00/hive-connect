@@ -50,9 +50,10 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query(value = "Select * from Job where field_id =:fieldId and is_deleted = 0 and flag =:flag order by random()", nativeQuery = true)
     Page<Job> getListJobByFieldId(Pageable pageable, @Param("fieldId") long fieldId, @Param("flag") String flag);
 
-    @Query(value = "select * from job j where lower(j.job_description) like lower(concat('%', :majorName ,'%')) " +
-            "or (lower(j.job_requirement) like lower(concat('%', :majorName ,'%'))) " +
-            "or (lower(j.job_name) like lower(concat('%', :majorName ,'%')))", nativeQuery = true)
+//    @Query(value = "select * from job j where lower(j.job_description) like lower(concat('%', :majorName ,'%')) " +
+//            "or (lower(j.job_requirement) like lower(concat('%', :majorName ,'%'))) " +
+//            "or (lower(j.job_name) like lower(concat('%', :majorName ,'%')))", nativeQuery = true)
+    @Query(value = "select * from job j where (lower(j.job_name) like lower(concat('%', :majorName ,'%')))", nativeQuery = true)
     List <Job> getListSuggestJobByCv(@Param("majorName") String majorName);
 
     Page<Job> getAllByRecruiterId(Pageable pageable, long recruiterId);
