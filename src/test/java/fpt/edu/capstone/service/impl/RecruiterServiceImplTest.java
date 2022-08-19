@@ -383,19 +383,16 @@ public class RecruiterServiceImplTest {
     private CompanyRepository mockCompanyRepository;
     @Mock
     private UserRepository mockUserRepository;
-    @Mock
-    private AmazonS3ClientService mockAmazonS3ClientService;
 
     @Mock
     private DinaryServiceImpl dinaryServicei;
 
     private RecruiterServiceImpl recruiterServiceImplUnderTest;
 
-//    @Before
-//    public void setUp() {
-//        recruiterServiceImplUnderTest = new RecruiterServiceImpl(mockRecruiterRepository, mockCompanyRepository,
-//                mockUserRepository, mockAmazonS3ClientService, dinaryServicei);
-//    }
+    @Before
+    public void setUp() {
+        recruiterServiceImplUnderTest = new RecruiterServiceImpl(mockRecruiterRepository, dinaryServicei);
+    }
 
     private Recruiter recruiter(){
         Recruiter recruiter = new Recruiter();

@@ -1,11 +1,9 @@
 package fpt.edu.capstone.service.impl;
 
-import fpt.edu.capstone.dto.register.ChangePasswordRequest;
-import fpt.edu.capstone.dto.register.RegisterGoogleRequest;
-import fpt.edu.capstone.dto.register.RegisterRequest;
-import fpt.edu.capstone.dto.register.ResetPasswordRequest;
+import fpt.edu.capstone.dto.register.*;
 import fpt.edu.capstone.entity.Role;
 import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +13,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -33,9 +34,6 @@ public class UserServiceImplTest {
 
     @Mock
     PasswordEncoder passwordEncoder;
-
-    @Mock
-    EmailServiceImpl emailService;
 
     @BeforeEach
     public void init() {
@@ -261,8 +259,8 @@ public class UserServiceImplTest {
     @Test
     public void findByEmailNotNull(){
         Optional<Users> optionalUsers = Optional.of(new Users());
-        when(userRepository.findByEmail("email")).thenReturn(optionalUsers);
-        assertEquals(optionalUsers.get(), userService.findByEmail("email"));
+        when(userRepository.findByEmail("nam@gmail.com")).thenReturn(optionalUsers);
+        assertEquals(optionalUsers.get(), userService.findByEmail("nam@gmail.com"));
     }
 
     @Test
@@ -488,5 +486,172 @@ public class UserServiceImplTest {
         assertDoesNotThrow(() -> {
             userService.resetPassword(request);
         }, "No exception is throws");
+    }
+
+    private Users users(){
+        Users users = new Users();
+        users.setId(0L);
+        users.setUsername("username");
+        users.setPassword("password");
+        users.setEmail("email");
+        users.setPhone("0967445450");
+        users.setRoleId(0L);
+        users.setIsDeleted(0);
+        users.setLastLoginTime(LocalDateTime.of(2022,8,16,16,16,16));
+        users.setVerifiedEmail(false);
+        users.setVerifiedPhone(false);
+        users.setActive(true);
+        users.setLocked(false);
+        users.setAvatar("avatar");
+        users.setResetPasswordToken("setResetPasswordToken");
+        users.setGoogle(false);
+        return users;
+    }
+
+    @Test
+    public void testFindById() throws Exception {
+        final Users users = users();
+        when(userRepository.getUserById(0L)).thenReturn(users);
+        final Users result = userService.findById(0L);
+    }
+
+    @Test
+    public void testFindByIdOp() {
+        final Optional<Users> optional = Optional.of(users());
+        when(userRepository.findById(0L)).thenReturn(optional);
+        final Optional<Users> result = userService.findByIdOp(0L);
+    }
+
+    @Test
+    public void testFindByIdOp_UserRepositoryReturnsAbsent() {
+        when(userRepository.findById(0L)).thenReturn(Optional.empty());
+        final Optional<Users> result = userService.findByIdOp(0L);
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    public void testFindAll() {
+        final List<Users> users = Arrays.asList(users());
+        when(userRepository.findAll()).thenReturn(users);
+        final List<Users> result = userService.findAll();
+    }
+
+    @Test
+    public void testFindAll_UserRepositoryReturnsNoItems() {
+        when(userRepository.findAll()).thenReturn(Collections.emptyList());
+        final List<Users> result = userService.findAll();
+        assertThat(result).isEqualTo(Collections.emptyList());
+    }
+
+    @Test
+    public void testFindByPhoneNumber() {
+        final Optional<Users> optional = Optional.of(users());
+        when(userRepository.findByPhone("0967445450")).thenReturn(optional);
+        final Optional<Users> result = userService.findByPhoneNumber("0967445450");
+    }
+
+    @Test
+    public void testFindByPhoneNumber_UserRepositoryReturnsAbsent() {
+        when(userRepository.findByPhone("0967445450")).thenReturn(Optional.empty());
+        final Optional<Users> result = userService.findByPhoneNumber("phone");
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    public void testCountUser() {
+        when(userRepository.countUserRegisterToday()).thenReturn(Arrays.asList());
+        when(userRepository.countUserRegisterMonthAgo()).thenReturn(Arrays.asList());
+        when(userRepository.countAllUsersRegister()).thenReturn(Arrays.asList());
+        final HashMap<String, List<CountRegisterUserResponse>> result = userService.countUser();
+    }
+
+    @Test
+    public void testCountUser_UserRepositoryCountUserRegisterTodayReturnsNoItems() {
+        when(userRepository.countUserRegisterToday()).thenReturn(Collections.emptyList());
+        when(userRepository.countUserRegisterMonthAgo()).thenReturn(Arrays.asList());
+        when(userRepository.countAllUsersRegister()).thenReturn(Arrays.asList());
+        final HashMap<String, List<CountRegisterUserResponse>> result = userService.countUser();
+    }
+
+    @Test
+    public void testCountUser_UserRepositoryCountUserRegisterMonthAgoReturnsNoItems() {
+        when(userRepository.countUserRegisterToday()).thenReturn(Arrays.asList());
+        when(userRepository.countUserRegisterMonthAgo()).thenReturn(Collections.emptyList());
+        when(userRepository.countAllUsersRegister()).thenReturn(Arrays.asList());
+        final HashMap<String, List<CountRegisterUserResponse>> result = userService.countUser();
+    }
+
+    @Test
+    public void testCountUser_UserRepositoryCountAllUsersRegisterReturnsNoItems() {
+        when(userRepository.countUserRegisterToday()).thenReturn(Arrays.asList());
+        when(userRepository.countUserRegisterMonthAgo()).thenReturn(Arrays.asList());
+        when(userRepository.countAllUsersRegister()).thenReturn(Collections.emptyList());
+        final HashMap<String, List<CountRegisterUserResponse>> result = userService.countUser();
+    }
+
+    @Test
+    public void testLockUnlockUser() {
+        final Users users = users();
+        when(userRepository.getById(0L)).thenReturn(users);
+        final Users users1 = users();
+        when(userRepository.save(any(Users.class))).thenReturn(users1);
+        final Users result = userService.lockUnlockUser(0L);
+        verify(userRepository).save(any(Users.class));
+    }
+
+    @Test
+    public void testLockUnlockUser_UserRepositoryGetByIdReturnsNull() {
+        when(userRepository.getById(0L)).thenReturn(null);
+        assertThatThrownBy(() -> userService.lockUnlockUser(0L)).isInstanceOf(HiveConnectException.class);
+    }
+
+    @Test
+    public void testActiveDeactiveUser() {
+        final Users users = users();
+        when(userRepository.getById(0L)).thenReturn(users);
+        final Users users1 = users();
+        when(userRepository.save(any(Users.class))).thenReturn(users1);
+        final Users result = userService.activeDeactiveUser(0L);
+        verify(userRepository).save(any(Users.class));
+    }
+
+    @Test
+    public void testActiveDeactiveUser_UserRepositoryGetByIdReturnsNull() {
+        when(userRepository.getById(0L)).thenReturn(null);
+        assertThatThrownBy(() -> userService.activeDeactiveUser(0L))
+                .isInstanceOf(HiveConnectException.class);
+    }
+
+    @Test
+    public void testUpdatePhoneNumber() {
+        userService.updatePhoneNumber("0967445450", 0L);
+        verify(userRepository).updatePhoneNumber("0967445450", 0L);
+    }
+    @Test
+    public void testUpdateIsVerifyPhone() {
+        userService.updateIsVerifyPhone(false, 0L);
+
+        verify(userRepository).updateIsVerifyPhone(false, 0L);
+    }
+
+    @Test
+    public void testFindByPhoneAndIdIsNotIn() {
+        final Users users = users();
+        when(userRepository.findByPhoneAndIdIsNotIn("phone", 0L)).thenReturn(users);
+        final Users result = userService.findByPhoneAndIdIsNotIn("phone", 0L);
+    }
+
+    @Test
+    public void testFindUsersByUsernameOrEmail() {
+        final Optional<Users> optional = Optional.of(users());
+        when(userRepository.findUsersByUsernameOrEmail("username")).thenReturn(optional);
+        final Optional<Users> result = userService.findUsersByUsernameOrEmail("username");
+    }
+
+    @Test
+    public void testFindUsersByUsernameOrEmail_UserRepositoryReturnsAbsent() {
+        when(userRepository.findUsersByUsernameOrEmail("username")).thenReturn(Optional.empty());
+        final Optional<Users> result = userService.findUsersByUsernameOrEmail("username");
+        assertThat(result).isEmpty();
     }
 }
