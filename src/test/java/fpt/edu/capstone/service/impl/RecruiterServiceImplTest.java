@@ -213,7 +213,7 @@
 //        when(mockRecruiterRepository.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
 //                eq("email"))).thenReturn(new PageImpl<>(Arrays.asList()));
 //        final Page<RecruiterManageResponse> result = recruiterServiceImplUnderTest.searchRecruitersForAdmin(
-//                PageRequest.of(0, 1), "username", "email");
+//                PageRequest.of(1, 10), "username", "email");
 //    }
 //
 //    @Test
@@ -221,7 +221,7 @@
 //        when(mockRecruiterRepository.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
 //                eq("email"))).thenReturn(new PageImpl<>(Collections.emptyList()));
 //        final Page<RecruiterManageResponse> result = recruiterServiceImplUnderTest.searchRecruitersForAdmin(
-//                PageRequest.of(0, 1), "username", "email");
+//                PageRequest.of(1, 10), "username", "email");
 //    }
 //
 //    @Test
@@ -557,7 +557,7 @@ public class RecruiterServiceImplTest {
         when(mockRecruiterRepository.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
                 eq("email"))).thenReturn(new PageImpl<>(Arrays.asList()));
         final Page<RecruiterManageResponse> result = recruiterServiceImplUnderTest.searchRecruitersForAdmin(
-                PageRequest.of(0, 1), "username", "email");
+                PageRequest.of(1, 10), "username", "email");
     }
 
     @Test
@@ -565,7 +565,7 @@ public class RecruiterServiceImplTest {
         when(mockRecruiterRepository.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
                 eq("email"))).thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<RecruiterManageResponse> result = recruiterServiceImplUnderTest.searchRecruitersForAdmin(
-                PageRequest.of(0, 1), "username", "email");
+                PageRequest.of(1, 10), "username", "email");
     }
 
 //    @Test

@@ -90,7 +90,7 @@ class PaymentServiceImplTest {
 
 	Payment payment(){
 		Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType", "bankCode", "command",
-						"currCode", "local", LocalDateTime.of(2020, 1, 1, 0, 0, 0), false);
+						"currCode", "local", LocalDateTime.of(2021, 10, 1, 0, 0, 0), false);
 		return payment;
 	}
 	
@@ -192,8 +192,8 @@ class PaymentServiceImplTest {
 	public void testGetRevenueExporter() {
 		final List<Payment> paymentList = Arrays.asList(
 				payment());
-		when(paymentRepository.getRevenueInMonthExporter(LocalDateTime.of(2020, 1, 1, 0, 0, 0),
-				LocalDateTime.of(2020, 1, 1, 0, 0, 0))).thenReturn(paymentList);
+		when(paymentRepository.getRevenueInMonthExporter(LocalDateTime.of(2021, 10, 1, 0, 0, 0),
+				LocalDateTime.of(2021, 10, 1, 0, 0, 0))).thenReturn(paymentList);
 		final RevenueResponse response = new RevenueResponse();
 		response.setId(1L);
 		response.setRecruiterId(1L);
@@ -216,13 +216,13 @@ class PaymentServiceImplTest {
 		final Recruiter recruiter = recruiter();
 		when(recruiterService.getRecruiterById(1L)).thenReturn(recruiter);
 		final List<RevenueResponse> result = paymentService.getRevenueExporter(
-				LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+				LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0));
 	}
 
 	@Test
 	public void testGetRevenueExporter_PaymentRepositoryReturnsNoItems() {
-		when(paymentRepository.getRevenueInMonthExporter(LocalDateTime.of(2020, 1, 1, 0, 0, 0),
-				LocalDateTime.of(2020, 1, 1, 0, 0, 0))).thenReturn(Collections.emptyList());
+		when(paymentRepository.getRevenueInMonthExporter(LocalDateTime.of(2021, 10, 1, 0, 0, 0),
+				LocalDateTime.of(2021, 10, 1, 0, 0, 0))).thenReturn(Collections.emptyList());
 		final RevenueResponse response = new RevenueResponse();
 		response.setId(1L);
 		response.setRecruiterId(1L);
@@ -244,7 +244,7 @@ class PaymentServiceImplTest {
 		final Recruiter recruiter = recruiter();
 		when(recruiterService.getRecruiterById(1L)).thenReturn(recruiter);
 		final List<RevenueResponse> result = paymentService.getRevenueExporter(
-				LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+				LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0));
 		assertThat(result).isEqualTo(Collections.emptyList());
 	}
 

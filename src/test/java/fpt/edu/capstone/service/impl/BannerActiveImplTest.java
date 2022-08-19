@@ -40,7 +40,7 @@ public class BannerActiveImplTest {
     
     private BannerActive bannerActive (){
         BannerActive bannerActive = new BannerActive(1L, "imageUrl", 1L, "displayPosition", false,
-                "approvalStatus", LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+                "approvalStatus", LocalDateTime.of(2021, 10, 1, 0, 0, 0));
         return bannerActive;
     }
     @Test
@@ -88,7 +88,7 @@ public class BannerActiveImplTest {
     @Test
     public void testFindByPaymentIdAndPosition() {
         final BannerActive bannerActive = new BannerActive(1L, "imageUrl", 1L, "displayPosition", false,
-                "approvalStatus", LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+                "approvalStatus", LocalDateTime.of(2021, 10, 1, 0, 0, 0));
         when(mockBannerActiveRepository.findByPaymentIdAndDisplayPosition(1L, "position")).thenReturn(bannerActive);
         final BannerActive result = bannerActiveImplUnderTest.findByPaymentIdAndPosition(1L, "position");
     }
@@ -97,14 +97,14 @@ public class BannerActiveImplTest {
     public void testGetAllBannerForApproval() {
         final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(bannerActive()));
         when(mockBannerActiveRepository.getAllBannerForApproval(any(Pageable.class))).thenReturn(bannerActives);
-        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(0, 1));
+        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(1, 10));
     }
 
     @Test
     public void testGetAllBannerForApproval_BannerActiveRepositoryReturnsNoItems() {
         when(mockBannerActiveRepository.getAllBannerForApproval(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(0, 1));
+        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(1, 10));
     }
 
     @Test

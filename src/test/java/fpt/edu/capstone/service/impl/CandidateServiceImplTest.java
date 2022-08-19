@@ -1,14 +1,17 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.common.user.GooglePojo;
+import fpt.edu.capstone.dto.CV.CVRequest;
+import fpt.edu.capstone.dto.CV.CVResponse;
 import fpt.edu.capstone.dto.admin.user.CandidateManageResponse;
 import fpt.edu.capstone.dto.candidate.CVBaseInformationRequest;
-import fpt.edu.capstone.entity.Candidate;
-import fpt.edu.capstone.entity.Users;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.CandidateRepository;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;

@@ -45,7 +45,7 @@ public class AdminServiceImplTest {
 
     private Admin admin(){
         Admin admin = new Admin(1L, 1L, "fullName",
-                new Users(1L, "username", "password", "email", "phone", 1L, 0, LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                new Users(1L, "username", "password", "email", "phone", 1L, 0, LocalDateTime.of(2021, 10, 1, 0, 0, 0),
                         false, false, false, false, "avatar", "resetPasswordToken", false));
         return admin;
     }
@@ -120,7 +120,7 @@ public class AdminServiceImplTest {
     public void testSearchAdmins() {
         when(mockAdminRepository.searchAdmin(any(Pageable.class), eq("username"), eq("email")))
                 .thenReturn(new PageImpl<>(Arrays.asList()));
-        final Page<AdminManageResponse> result = adminServiceImplUnderTest.searchAdmins(PageRequest.of(0, 1),
+        final Page<AdminManageResponse> result = adminServiceImplUnderTest.searchAdmins(PageRequest.of(1, 10),
                 "username", "email");
     }
 
@@ -128,7 +128,7 @@ public class AdminServiceImplTest {
     public void testSearchAdmins_AdminRepositoryReturnsNoItems() {
         when(mockAdminRepository.searchAdmin(any(Pageable.class), eq("username"), eq("email")))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<AdminManageResponse> result = adminServiceImplUnderTest.searchAdmins(PageRequest.of(0, 1),
+        final Page<AdminManageResponse> result = adminServiceImplUnderTest.searchAdmins(PageRequest.of(1, 10),
                 "username", "email");
     }
 }

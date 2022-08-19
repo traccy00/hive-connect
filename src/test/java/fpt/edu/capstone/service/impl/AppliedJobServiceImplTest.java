@@ -58,14 +58,14 @@ public class AppliedJobServiceImplTest {
         final Page<AppliedJob> appliedJobs = new PageImpl<>(
                 Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl")));
         when(mockAppliedJobRepository.getCvAppliedJob(any(Pageable.class), eq(1L), eq(false))).thenReturn(appliedJobs);
-        final Page<AppliedJob> result = appliedJobServiceImplUnderTest.getCvAppliedJob(PageRequest.of(0, 1), 1L, false);
+        final Page<AppliedJob> result = appliedJobServiceImplUnderTest.getCvAppliedJob(PageRequest.of(1, 10), 1L, false);
     }
 
     @Test
     public void testGetCvAppliedJob_AppliedJobRepositoryReturnsNoItems() {
         when(mockAppliedJobRepository.getCvAppliedJob(any(Pageable.class), eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<AppliedJob> result = appliedJobServiceImplUnderTest.getCvAppliedJob(PageRequest.of(0, 1), 1L, false);
+        final Page<AppliedJob> result = appliedJobServiceImplUnderTest.getCvAppliedJob(PageRequest.of(1, 10), 1L, false);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class AppliedJobServiceImplTest {
         when(mockAppliedJobRepository.searchAppliedJobsOfCandidate(any(Pageable.class), eq(1L),
                 eq("approvalStatus"))).thenReturn(appliedJobs);
         final Page<AppliedJob> result = appliedJobServiceImplUnderTest.searchAppliedJobsOfCandidate(
-                PageRequest.of(0, 1), 1L, "approvalStatus");
+                PageRequest.of(1, 10), 1L, "approvalStatus");
     }
 
     @Test
@@ -96,7 +96,7 @@ public class AppliedJobServiceImplTest {
         when(mockAppliedJobRepository.searchAppliedJobsOfCandidate(any(Pageable.class), eq(1L),
                 eq("approvalStatus"))).thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<AppliedJob> result = appliedJobServiceImplUnderTest.searchAppliedJobsOfCandidate(
-                PageRequest.of(0, 1), 1L, "approvalStatus");
+                PageRequest.of(1, 10), 1L, "approvalStatus");
     }
 
     @Test

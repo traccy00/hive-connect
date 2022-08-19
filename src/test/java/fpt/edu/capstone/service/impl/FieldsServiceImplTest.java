@@ -69,4 +69,17 @@ public class FieldsServiceImplTest {
         final Optional<Fields> result = fieldsServiceImplUnderTest.findById(1L);
         assertThat(result).isEmpty();
     }
+    @Test
+    public void testFindByName() {
+        final Optional<Fields> fields = Optional.of(new Fields(0L, "fieldName", "status"));
+        when(mockFieldsRepository.findByFieldName("name")).thenReturn(fields);
+        final Optional<Fields> result = fieldsServiceImplUnderTest.findByName("name");
+    }
+
+    @Test
+    public void testFindByName_FieldsRepositoryReturnsAbsent() {
+        when(mockFieldsRepository.findByFieldName("name")).thenReturn(Optional.empty());
+        final Optional<Fields> result = fieldsServiceImplUnderTest.findByName("name");
+        assertThat(result).isEmpty();
+    }
 }

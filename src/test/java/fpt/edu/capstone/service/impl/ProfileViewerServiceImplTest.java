@@ -47,7 +47,7 @@ public class ProfileViewerServiceImplTest {
         final ProfileViewer viewer = profileViewer();
         final Page<ProfileViewer> viewerPage = new PageImpl<>(Arrays.asList(viewer));
         when(mockProfileViewerRepository.getAllByCvId(any(Pageable.class), eq(1L))).thenReturn(viewerPage);
-        final Page<ProfileViewer> result = profileViewerServiceImplUnderTest.getProfileViewerOfCv(PageRequest.of(0, 1),
+        final Page<ProfileViewer> result = profileViewerServiceImplUnderTest.getProfileViewerOfCv(PageRequest.of(1, 10),
                 1L);
     }
 
@@ -55,7 +55,7 @@ public class ProfileViewerServiceImplTest {
     public void testGetProfileViewerOfCv_ProfileViewerRepositoryReturnsNoItems() {
         when(mockProfileViewerRepository.getAllByCvId(any(Pageable.class), eq(1L)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<ProfileViewer> result = profileViewerServiceImplUnderTest.getProfileViewerOfCv(PageRequest.of(0, 1),
+        final Page<ProfileViewer> result = profileViewerServiceImplUnderTest.getProfileViewerOfCv(PageRequest.of(1, 10),
                 1L);
     }
 
@@ -70,15 +70,15 @@ public class ProfileViewerServiceImplTest {
     public void testFindAll() {
         final ProfileViewer viewer = profileViewer();
         final Page<ProfileViewer> viewerPage = new PageImpl<>(Arrays.asList(viewer));
-        when(mockProfileViewerRepository.findAll(PageRequest.of(0, 1))).thenReturn(viewerPage);
-        final List<ProfileViewer> result = profileViewerServiceImplUnderTest.findAll(PageRequest.of(0, 1));
+        when(mockProfileViewerRepository.findAll(PageRequest.of(1, 10))).thenReturn(viewerPage);
+        final List<ProfileViewer> result = profileViewerServiceImplUnderTest.findAll(PageRequest.of(1, 10));
     }
 
     @Test
     public void testFindAll_ProfileViewerRepositoryReturnsNoItems() {
-        when(mockProfileViewerRepository.findAll(PageRequest.of(0, 1)))
+        when(mockProfileViewerRepository.findAll(PageRequest.of(1, 10)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final List<ProfileViewer> result = profileViewerServiceImplUnderTest.findAll(PageRequest.of(0, 1));
+        final List<ProfileViewer> result = profileViewerServiceImplUnderTest.findAll(PageRequest.of(1, 10));
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 

@@ -357,42 +357,42 @@ public class RecruiterManageServiceImplTest {
     @Test
     public void testGetRecruitersOfCompany() {
         final Page<Recruiter> recruiterPage = new PageImpl<>(Arrays.asList(recruiter()));
-        when(mockRecruiterService.getRecruiterByCompanyId(0, 0, 1L)).thenReturn(recruiterPage);
+        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 10L)).thenReturn(recruiterPage);
         final Users users = users();
         when(mockUserService.getUserById(1L)).thenReturn(users);
         final Image image = image();
         when(mockImageService.getAvatarRecruiter(1L)).thenReturn(image);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 10, 1L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 11, 10L);
     }
 
     @Test
     public void testGetRecruitersOfCompany_RecruiterServiceReturnsNoItems() {
-        when(mockRecruiterService.getRecruiterByCompanyId(0, 0, 1L))
+        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 10L))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Users users = users();
         when(mockUserService.getUserById(1L)).thenReturn(users);
         final Image image = image();
         when(mockImageService.getAvatarRecruiter(1L)).thenReturn(image);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 10, 1L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 11, 10L);
     }
 
     @Test
     public void testGetRecruitersOfCompany_UserServiceReturnsNull() {
         final Page<Recruiter> recruiterPage = new PageImpl<>(Arrays.asList(recruiter()));
-        when(mockRecruiterService.getRecruiterByCompanyId(0, 0, 1L)).thenReturn(recruiterPage);
+        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 10L)).thenReturn(recruiterPage);
         when(mockUserService.getUserById(1L)).thenReturn(null);
-        assertThatThrownBy(() -> recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 10, 1L))
+        assertThatThrownBy(() -> recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 11, 10L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
     @Test
     public void testGetRecruitersOfCompany_ImageServiceImplReturnsNull() {
         final Page<Recruiter> recruiterPage = new PageImpl<>(Arrays.asList(recruiter()));
-        when(mockRecruiterService.getRecruiterByCompanyId(0, 0, 1L)).thenReturn(recruiterPage);
+        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 10L)).thenReturn(recruiterPage);
         final Users users = users();
         when(mockUserService.getUserById(1L)).thenReturn(users);
         when(mockImageService.getAvatarRecruiter(1L)).thenReturn(null);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(0, 0, 1L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(0, 1, 10L);
     }
 
     @Test
@@ -869,7 +869,7 @@ public class RecruiterManageServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         when(mockAppliedJobService.countAppliedCVOfJob(1L)).thenReturn(0);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 10, 1L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 11, 10L);
     }
 
     @Test
@@ -880,7 +880,7 @@ public class RecruiterManageServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         when(mockAppliedJobService.countAppliedCVOfJob(1L)).thenReturn(0);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 10, 1L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 11, 10L);
     }
 
     @Test
@@ -890,7 +890,7 @@ public class RecruiterManageServiceImplTest {
         when(mockJobService.getJobOfRecruiter(any(Pageable.class), eq(1L))).thenReturn(jobs);
         when(mockCompanyService.getCompanyById(1L)).thenReturn(null);
 
-        assertThatThrownBy(() -> recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 10, 1L))
+        assertThatThrownBy(() -> recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 11, 10L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
@@ -1898,14 +1898,14 @@ public class RecruiterManageServiceImplTest {
         final List<Education> educationList = Arrays.asList(education);
         when(mockEducationRepository.getListEducationByCvId(1L)).thenReturn(educationList);
 
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 10, 1L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 11, 10L);
     }
 
     @Test
     public void testGetCvListAppliedJob_JobServiceReturnsAbsent() {
         when(mockJobService.findById(1L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> recruiterManageServiceImplUnderTest.getCvListAppliedJob(0, 0, 1L))
+        assertThatThrownBy(() -> recruiterManageServiceImplUnderTest.getCvListAppliedJob(0, 1, 10L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
@@ -1927,7 +1927,7 @@ public class RecruiterManageServiceImplTest {
         final List<Education> educationList = Arrays.asList(education);
         when(mockEducationRepository.getListEducationByCvId(1L)).thenReturn(educationList);
 
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 10, 1L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 11, 10L);
     }
 
     @Test
@@ -1945,7 +1945,7 @@ public class RecruiterManageServiceImplTest {
         final List<Education> educationList = Arrays.asList(education);
         when(mockEducationRepository.getListEducationByCvId(1L)).thenReturn(educationList);
 
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 10, 1L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 11, 10L);
     }
 
     @Test
@@ -1964,7 +1964,7 @@ public class RecruiterManageServiceImplTest {
         final List<Education> educationList = Arrays.asList(education);
         when(mockEducationRepository.getListEducationByCvId(1L)).thenReturn(educationList);
 
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 10, 1L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 11, 10L);
     }
 
     @Test
@@ -1984,6 +1984,6 @@ public class RecruiterManageServiceImplTest {
         final List<WorkExperience> workExperiences = Arrays.asList(workExperience);
         when(mockWorkExperienceRepository.getListWorkExperienceByCvId(1L)).thenReturn(workExperiences);
         when(mockEducationRepository.getListEducationByCvId(1L)).thenReturn(Collections.emptyList());
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 10, 1L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getCvListAppliedJob(1, 11, 10L);
     }
 }

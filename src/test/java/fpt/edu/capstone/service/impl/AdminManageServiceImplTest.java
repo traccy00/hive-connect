@@ -91,33 +91,33 @@ public class AdminManageServiceImplTest {
 
     @Test
     public void testSearchReportedJob() {
-        when(mockReportedService.searchReportedJob(any(Pageable.class), eq(LocalDateTime.of(2020, 1, 1, 0, 0, 0)),
-                eq(LocalDateTime.of(2020, 1, 1, 0, 0, 0)), eq(LocalDateTime.of(2020, 1, 1, 0, 0, 0)),
-                eq(LocalDateTime.of(2020, 1, 1, 0, 0, 0)), eq("jobName"))).thenReturn(new PageImpl<>(Arrays.asList()));
+        when(mockReportedService.searchReportedJob(any(Pageable.class), eq(LocalDateTime.of(2021, 10, 1, 0, 0, 0)),
+                eq(LocalDateTime.of(2021, 10, 1, 0, 0, 0)), eq(LocalDateTime.of(2021, 10, 1, 0, 0, 0)),
+                eq(LocalDateTime.of(2021, 10, 1, 0, 0, 0)), eq("jobName"))).thenReturn(new PageImpl<>(Arrays.asList()));
         final ResponseDataPagination result = adminManageServiceImplUnderTest.searchReportedJob(1, 10,
-                LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0),
-                LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0), "jobName");
+                LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0),
+                LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), "jobName");
     }
 
     @Test
     public void testSearchReportedJob_ReportedServiceReturnsNoItems() {
-        when(mockReportedService.searchReportedJob(any(Pageable.class), eq(LocalDateTime.of(2020, 1, 1, 0, 0, 0)),
-                eq(LocalDateTime.of(2020, 1, 1, 0, 0, 0)), eq(LocalDateTime.of(2020, 1, 1, 0, 0, 0)),
-                eq(LocalDateTime.of(2020, 1, 1, 0, 0, 0)), eq("jobName")))
+        when(mockReportedService.searchReportedJob(any(Pageable.class), eq(LocalDateTime.of(2021, 10, 1, 0, 0, 0)),
+                eq(LocalDateTime.of(2021, 10, 1, 0, 0, 0)), eq(LocalDateTime.of(2021, 10, 1, 0, 0, 0)),
+                eq(LocalDateTime.of(2021, 10, 1, 0, 0, 0)), eq("jobName")))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final ResponseDataPagination result = adminManageServiceImplUnderTest.searchReportedJob(1, 10,
-                LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0),
-                LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0), "jobName");
+                LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0),
+                LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), "jobName");
     }
 
     @Test
     public void testApproveBanner() {
         final ApproveBannerRequest request = new ApproveBannerRequest(1L, "approvalStatus");
         final BannerActive bannerActive = new BannerActive(1L, "bannerImageUrl", 1L, "displayPosition", false,
-                "approvalStatus", LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+                "approvalStatus", LocalDateTime.of(2021, 10, 1, 0, 0, 0));
         when(mockBannerActiveService.findById(1L)).thenReturn(bannerActive);
         final BannerActive bannerActive1 = new BannerActive(1L, "bannerImageUrl", 1L, "displayPosition", false,
-                "approvalStatus", LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+                "approvalStatus", LocalDateTime.of(2021, 10, 1, 0, 0, 0));
         when(mockBannerActiveRepository.save(any(BannerActive.class))).thenReturn(bannerActive1);
         adminManageServiceImplUnderTest.approveBanner(request);
         verify(mockBannerActiveRepository).save(any(BannerActive.class));
@@ -127,10 +127,10 @@ public class AdminManageServiceImplTest {
     public void testGetBannerOfRecruiterForAdmin() {
         final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(
                 new BannerActive(1L, "bannerImageUrl", 1L, "displayPosition", false, "approvalStatus",
-                        LocalDateTime.of(2020, 1, 1, 0, 0, 0))));
+                        LocalDateTime.of(2021, 10, 1, 0, 0, 0))));
         when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class))).thenReturn(bannerActives);
         final Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType",
-                "bankCode", "command", "currCode", "local", LocalDateTime.of(2020, 1, 1, 0, 0, 0), false);
+                "bankCode", "command", "currCode", "local", LocalDateTime.of(2021, 10, 1, 0, 0, 0), false);
         when(mockPaymentService.findById(1L)).thenReturn(payment);
         final Banner banner = new Banner(1L, 1L, 1L, 1L, "timeExpired", "packageName", "description", "image", false,
                 false, false, false, false, false, false, false);
@@ -142,8 +142,8 @@ public class AdminManageServiceImplTest {
                         "avatarUrl", 0));
         when(mockRecruiterService.findById(1L)).thenReturn(recruiter);
         final Company company1 = new Company();
-        company1.setCreatedAt(LocalDateTime.of(2020, 1, 1, 0, 0, 0));
-        company1.setUpdatedAt(LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+        company1.setCreatedAt(LocalDateTime.of(2021, 10, 1, 0, 0, 0));
+        company1.setUpdatedAt(LocalDateTime.of(2021, 10, 1, 0, 0, 0));
         company1.setId(1L);
         company1.setFieldWork("fieldWork");
         company1.setName("companyName");
@@ -167,7 +167,7 @@ public class AdminManageServiceImplTest {
         when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType",
-                "bankCode", "command", "currCode", "local", LocalDateTime.of(2020, 1, 1, 0, 0, 0), false);
+                "bankCode", "command", "currCode", "local", LocalDateTime.of(2021, 10, 1, 0, 0, 0), false);
         when(mockPaymentService.findById(1L)).thenReturn(payment);
         final Banner banner = new Banner(1L, 1L, 1L, 1L, "timeExpired", "packageName", "description", "image", false,
                 false, false, false, false, false, false, false);
@@ -179,8 +179,8 @@ public class AdminManageServiceImplTest {
                         "avatarUrl", 0));
         when(mockRecruiterService.findById(1L)).thenReturn(recruiter);
         final Company company1 = new Company();
-        company1.setCreatedAt(LocalDateTime.of(2020, 1, 1, 0, 0, 0));
-        company1.setUpdatedAt(LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+        company1.setCreatedAt(LocalDateTime.of(2021, 10, 1, 0, 0, 0));
+        company1.setUpdatedAt(LocalDateTime.of(2021, 10, 1, 0, 0, 0));
         company1.setId(1L);
         company1.setFieldWork("fieldWork");
         company1.setName("companyName");
@@ -203,10 +203,10 @@ public class AdminManageServiceImplTest {
     public void testGetBannerOfRecruiterForAdmin_RecruiterServiceReturnsAbsent() {
         final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(
                 new BannerActive(1L, "bannerImageUrl", 1L, "displayPosition", false, "approvalStatus",
-                        LocalDateTime.of(2020, 1, 1, 0, 0, 0))));
+                        LocalDateTime.of(2021, 10, 1, 0, 0, 0))));
         when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class))).thenReturn(bannerActives);
         final Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType",
-                "bankCode", "command", "currCode", "local", LocalDateTime.of(2020, 1, 1, 0, 0, 0), false);
+                "bankCode", "command", "currCode", "local", LocalDateTime.of(2021, 10, 1, 0, 0, 0), false);
         when(mockPaymentService.findById(1L)).thenReturn(payment);
         final Banner banner = new Banner(1L, 1L, 1L, 1L, "timeExpired", "packageName", "description", "image", false,
                 false, false, false, false, false, false, false);
@@ -220,10 +220,10 @@ public class AdminManageServiceImplTest {
     public void testGetBannerOfRecruiterForAdmin_CompanyServiceReturnsAbsent() {
         final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(
                 new BannerActive(1L, "bannerImageUrl", 1L, "displayPosition", false, "approvalStatus",
-                        LocalDateTime.of(2020, 1, 1, 0, 0, 0))));
+                        LocalDateTime.of(2021, 10, 1, 0, 0, 0))));
         when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class))).thenReturn(bannerActives);
         final Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType",
-                "bankCode", "command", "currCode", "local", LocalDateTime.of(2020, 1, 1, 0, 0, 0), false);
+                "bankCode", "command", "currCode", "local", LocalDateTime.of(2021, 10, 1, 0, 0, 0), false);
         when(mockPaymentService.findById(1L)).thenReturn(payment);
         final Banner banner = new Banner(1L, 1L, 1L, 1L, "timeExpired", "packageName", "description", "image", false,
                 false, false, false, false, false, false, false);
@@ -290,7 +290,7 @@ public class AdminManageServiceImplTest {
     @Test
     public void testSearchReportedUsers() {
         final List<Users> users = Arrays.asList(
-                new Users(1L, "username", "password", "email", "phone", 1L, 0, LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                new Users(1L, "username", "password", "email", "phone", 1L, 0, LocalDateTime.of(2021, 10, 1, 0, 0, 0),
                         false, false, false, false, "avatar", "resetPasswordToken", false));
         when(mockUserService.findAll()).thenReturn(users);
         when(mockReportedService.searchReportedUsers(any(Pageable.class), eq("username"), eq("personReportName"),
@@ -311,7 +311,7 @@ public class AdminManageServiceImplTest {
     @Test
     public void testSearchReportedUsers_ReportedServiceReturnsNoItems() {
         final List<Users> users = Arrays.asList(
-                new Users(1L, "username", "password", "email", "phone", 1L, 0, LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                new Users(1L, "username", "password", "email", "phone", 1L, 0, LocalDateTime.of(2021, 10, 1, 0, 0, 0),
                         false, false, false, false, "avatar", "resetPasswordToken", false));
         when(mockUserService.findAll()).thenReturn(users);
         when(mockReportedService.searchReportedUsers(any(Pageable.class), eq("username"), eq("personReportName"),
@@ -326,12 +326,12 @@ public class AdminManageServiceImplTest {
                 new Report(1L, 1L, "reportReason", 1L,  "relatedLink", "approvalStatus", "fullName", "phone",
                         "userAddress", "userEmail", "reportType", 1L));
         when(mockReportedRepository.findById(1L)).thenReturn(report);
-        final Job job = new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.of(2020, 1, 1, 0, 0, 0),
-                LocalDateTime.of(2020, 1, 1, 0, 0, 0), 1L, 1L, 1L, "rank", "experience", false, "jobDescription",
+        final Job job = new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0),
+                LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L, "rank", "experience", false, "jobDescription",
                 "jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L, "flag");
         when(mockJobService.getJobById(1L)).thenReturn(job);
-        final Job job1 = new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.of(2020, 1, 1, 0, 0, 0),
-                LocalDateTime.of(2020, 1, 1, 0, 0, 0), 1L, 1L, 1L, "rank", "experience", false, "jobDescription",
+        final Job job1 = new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0),
+                LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L, "rank", "experience", false, "jobDescription",
                 "jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L, "flag");
         when(mockJobRepository.save(any(Job.class))).thenReturn(job1);
         final Report report1 = new Report(1L, 1L, "reportReason", 1L,  "relatedLink", "approvalStatus", "fullName",

@@ -47,14 +47,14 @@ public class NotificationServiceImplTest {
         final Page<Notification> notifications = new PageImpl<>(Arrays.asList(notificationA));
         when(mockNotificationRepository.getAllNotificationByUserId(any(Pageable.class), eq(1L)))
                 .thenReturn(notifications);
-        final ResponseDataPagination result = notificationServiceImplUnderTest.getAllNotificationByUserId(1, 10, 1L);
+        final ResponseDataPagination result = notificationServiceImplUnderTest.getAllNotificationByUserId(1, 11, 10L);
     }
 
     @Test
     public void testGetAllNotificationByUserId_NotificationRepositoryReturnsNoItems() {
         when(mockNotificationRepository.getAllNotificationByUserId(any(Pageable.class), eq(1L)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final ResponseDataPagination result = notificationServiceImplUnderTest.getAllNotificationByUserId(1, 10, 1L);
+        final ResponseDataPagination result = notificationServiceImplUnderTest.getAllNotificationByUserId(1, 11, 10L);
     }
 
     @Test
