@@ -490,12 +490,12 @@ public class UserServiceImplTest {
 
     private Users users(){
         Users users = new Users();
-        users.setId(0L);
+        users.setId(1L);
         users.setUsername("username");
         users.setPassword("password");
         users.setEmail("email");
         users.setPhone("0967445450");
-        users.setRoleId(0L);
+        users.setRoleId(1L);
         users.setIsDeleted(0);
         users.setLastLoginTime(LocalDateTime.of(2022,8,16,16,16,16));
         users.setVerifiedEmail(false);
@@ -511,21 +511,21 @@ public class UserServiceImplTest {
     @Test
     public void testFindById() throws Exception {
         final Users users = users();
-        when(userRepository.getUserById(0L)).thenReturn(users);
-        final Users result = userService.findById(0L);
+        when(userRepository.getUserById(1L)).thenReturn(users);
+        final Users result = userService.findById(1L);
     }
 
     @Test
     public void testFindByIdOp() {
         final Optional<Users> optional = Optional.of(users());
-        when(userRepository.findById(0L)).thenReturn(optional);
-        final Optional<Users> result = userService.findByIdOp(0L);
+        when(userRepository.findById(1L)).thenReturn(optional);
+        final Optional<Users> result = userService.findByIdOp(1L);
     }
 
     @Test
     public void testFindByIdOp_UserRepositoryReturnsAbsent() {
-        when(userRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Users> result = userService.findByIdOp(0L);
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Users> result = userService.findByIdOp(1L);
         assertThat(result).isEmpty();
     }
 
@@ -592,53 +592,53 @@ public class UserServiceImplTest {
     @Test
     public void testLockUnlockUser() {
         final Users users = users();
-        when(userRepository.getById(0L)).thenReturn(users);
+        when(userRepository.getById(1L)).thenReturn(users);
         final Users users1 = users();
         when(userRepository.save(any(Users.class))).thenReturn(users1);
-        final Users result = userService.lockUnlockUser(0L);
+        final Users result = userService.lockUnlockUser(1L);
         verify(userRepository).save(any(Users.class));
     }
 
     @Test
     public void testLockUnlockUser_UserRepositoryGetByIdReturnsNull() {
-        when(userRepository.getById(0L)).thenReturn(null);
-        assertThatThrownBy(() -> userService.lockUnlockUser(0L)).isInstanceOf(HiveConnectException.class);
+        when(userRepository.getById(1L)).thenReturn(null);
+        assertThatThrownBy(() -> userService.lockUnlockUser(1L)).isInstanceOf(HiveConnectException.class);
     }
 
     @Test
     public void testActiveDeactiveUser() {
         final Users users = users();
-        when(userRepository.getById(0L)).thenReturn(users);
+        when(userRepository.getById(1L)).thenReturn(users);
         final Users users1 = users();
         when(userRepository.save(any(Users.class))).thenReturn(users1);
-        final Users result = userService.activeDeactiveUser(0L);
+        final Users result = userService.activeDeactiveUser(1L);
         verify(userRepository).save(any(Users.class));
     }
 
     @Test
     public void testActiveDeactiveUser_UserRepositoryGetByIdReturnsNull() {
-        when(userRepository.getById(0L)).thenReturn(null);
-        assertThatThrownBy(() -> userService.activeDeactiveUser(0L))
+        when(userRepository.getById(1L)).thenReturn(null);
+        assertThatThrownBy(() -> userService.activeDeactiveUser(1L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
     @Test
     public void testUpdatePhoneNumber() {
-        userService.updatePhoneNumber("0967445450", 0L);
-        verify(userRepository).updatePhoneNumber("0967445450", 0L);
+        userService.updatePhoneNumber("0967445450", 1L);
+        verify(userRepository).updatePhoneNumber("0967445450", 1L);
     }
     @Test
     public void testUpdateIsVerifyPhone() {
-        userService.updateIsVerifyPhone(false, 0L);
+        userService.updateIsVerifyPhone(false, 1L);
 
-        verify(userRepository).updateIsVerifyPhone(false, 0L);
+        verify(userRepository).updateIsVerifyPhone(false, 1L);
     }
 
     @Test
     public void testFindByPhoneAndIdIsNotIn() {
         final Users users = users();
-        when(userRepository.findByPhoneAndIdIsNotIn("phone", 0L)).thenReturn(users);
-        final Users result = userService.findByPhoneAndIdIsNotIn("phone", 0L);
+        when(userRepository.findByPhoneAndIdIsNotIn("phone", 1L)).thenReturn(users);
+        final Users result = userService.findByPhoneAndIdIsNotIn("phone", 1L);
     }
 
     @Test

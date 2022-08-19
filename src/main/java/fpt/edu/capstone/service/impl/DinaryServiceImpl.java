@@ -31,7 +31,7 @@ public class DinaryServiceImpl {
         this.cloudinaryConfig = cloudinaryConfig;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(AmazonS3ClientService.class);
+    private static final Logger logger = LoggerFactory.getLogger(DinaryServiceImpl.class);
 
     private  static final String[] IMAGE_TYPES = new String[]{"image/jpg","image/jpeg","image/png","image/bmp"};
     private static final String[] CV_TYPES = new String[]{

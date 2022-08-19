@@ -49,19 +49,19 @@ public class BannerServiceImplTest {
                 mockRentalPackageService);
     }
     private Banner banner(){
-        Banner banner = new Banner(0L, 123L, 12345678L, 0L, "timeExpired", "title", "description", "image", false, false, false, false,
+        Banner banner = new Banner(1L, 123L, 12345678L, 1L, "timeExpired", "title", "description", "image", false, false, false, false,
                 false, false, false, false);
         return banner;
     }
 
     private UpdateBannerRequest request(){
-        UpdateBannerRequest request = new UpdateBannerRequest(0L, 123L, 12345678L, 0L, "timeExpired", "title",
+        UpdateBannerRequest request = new UpdateBannerRequest(1L, 123L, 12345678L, 1L, "timeExpired", "title",
                 "description", "image", true, true, false, false, false, false, false);
         return request;
     }
     
     private ConfigBannerRequest bannerRequest(){
-        ConfigBannerRequest bannerRequest = new ConfigBannerRequest(123L, 12345678L, 0L, "timeExpired", "title", "description",
+        ConfigBannerRequest bannerRequest = new ConfigBannerRequest(123L, 12345678L, 1L, "timeExpired", "title", "description",
                 "image", true, false, false, false, false, false, false);
         return bannerRequest;
     }
@@ -91,38 +91,38 @@ public class BannerServiceImplTest {
     @Test
     public void testDeleteBanner() {
         final Optional<Banner> banner = Optional.of(banner());
-        when(mockBannerRepository.findById(0L)).thenReturn(banner);
+        when(mockBannerRepository.findById(1L)).thenReturn(banner);
         final Banner banner1 = banner();
         when(mockBannerRepository.save(any(Banner.class))).thenReturn(banner1);
-        bannerServiceImplUnderTest.deleteBanner(0L);
+        bannerServiceImplUnderTest.deleteBanner(1L);
         verify(mockBannerRepository).save(any(Banner.class));
     }
 
     @Test
     public void testDeleteBanner_BannerRepositoryFindByIdReturnsAbsent() {
-        when(mockBannerRepository.findById(0L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> bannerServiceImplUnderTest.deleteBanner(0L)).isInstanceOf(HiveConnectException.class);
+        when(mockBannerRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> bannerServiceImplUnderTest.deleteBanner(1L)).isInstanceOf(HiveConnectException.class);
     }
 
     @Test
     public void testFindById() throws Exception {
         final Optional<Banner> banner = Optional.of(banner());
-        when(mockBannerRepository.findById(0L)).thenReturn(banner);
-        final Banner result = bannerServiceImplUnderTest.findById(0L);
+        when(mockBannerRepository.findById(1L)).thenReturn(banner);
+        final Banner result = bannerServiceImplUnderTest.findById(1L);
     }
 
     @Test
     public void testFindById_BannerRepositoryReturnsAbsent() {
-        when(mockBannerRepository.findById(0L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> bannerServiceImplUnderTest.findById(0L)).isInstanceOf(HiveConnectException.class);
+        when(mockBannerRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> bannerServiceImplUnderTest.findById(1L)).isInstanceOf(HiveConnectException.class);
     }
 
     @Test
     public void testInsertBanner() {
         final ConfigBannerRequest request = bannerRequest();
         final Optional<RentalPackage> optional = Optional.of(
-                new RentalPackage(0L, "packageGroup", "description", false));
-        when(mockRentalPackageService.findById(0L)).thenReturn(optional);
+                new RentalPackage(1L, "packageGroup", "description", false));
+        when(mockRentalPackageService.findById(1L)).thenReturn(optional);
         final List<Banner> bannerList = Arrays.asList(banner());
         when(mockBannerRepository.getBannersByTitle("title")).thenReturn(bannerList);
         final Banner banner = banner();
@@ -130,7 +130,7 @@ public class BannerServiceImplTest {
         final Banner banner1 = banner();
         when(mockBannerRepository.save(any(Banner.class))).thenReturn(banner1);
         final Optional<Banner> banner2 = Optional.of(banner());
-        when(mockBannerRepository.findById(0L)).thenReturn(banner2);
+        when(mockBannerRepository.findById(1L)).thenReturn(banner2);
         final Banner result = bannerServiceImplUnderTest.insertBanner(request);
         verify(mockBannerRepository).save(any(Banner.class));
     }
@@ -138,7 +138,7 @@ public class BannerServiceImplTest {
     @Test
     public void testInsertBanner_RentalPackageServiceReturnsAbsent() {
         final ConfigBannerRequest request = bannerRequest();
-        when(mockRentalPackageService.findById(0L)).thenReturn(Optional.empty());
+        when(mockRentalPackageService.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> bannerServiceImplUnderTest.insertBanner(request))
                 .isInstanceOf(HiveConnectException.class);
     }
@@ -147,14 +147,14 @@ public class BannerServiceImplTest {
     public void testInsertBanner_BannerRepositoryGetBannersByTitleReturnsNull() {
         final ConfigBannerRequest request = bannerRequest();
         final Optional<RentalPackage> optional = Optional.of(rentalPackage());
-        when(mockRentalPackageService.findById(0L)).thenReturn(optional);
+        when(mockRentalPackageService.findById(1L)).thenReturn(optional);
         when(mockBannerRepository.getBannersByTitle("title")).thenReturn(null);
         final Banner banner = banner();
         when(mockModelMapper.map(any(Object.class), eq(Banner.class))).thenReturn(banner);
         final Banner banner1 = banner();
         when(mockBannerRepository.save(any(Banner.class))).thenReturn(banner1);
         final Optional<Banner> banner2 = Optional.of(banner());
-        when(mockBannerRepository.findById(0L)).thenReturn(banner2);
+        when(mockBannerRepository.findById(1L)).thenReturn(banner2);
         final Banner result = bannerServiceImplUnderTest.insertBanner(request);
         verify(mockBannerRepository).save(any(Banner.class));
     }
@@ -163,15 +163,15 @@ public class BannerServiceImplTest {
     public void testInsertBanner_BannerRepositoryGetBannersByTitleReturnsNoItems() {
         final ConfigBannerRequest request = bannerRequest();
         final Optional<RentalPackage> optional = Optional.of(
-                new RentalPackage(0L, "packageGroup", "description", false));
-        when(mockRentalPackageService.findById(0L)).thenReturn(optional);
+                new RentalPackage(1L, "packageGroup", "description", false));
+        when(mockRentalPackageService.findById(1L)).thenReturn(optional);
         when(mockBannerRepository.getBannersByTitle("title")).thenReturn(Collections.emptyList());
         final Banner banner = banner();
         when(mockModelMapper.map(any(Object.class), eq(Banner.class))).thenReturn(banner);
         final Banner banner1 = banner();
         when(mockBannerRepository.save(any(Banner.class))).thenReturn(banner1);
         final Optional<Banner> banner2 = Optional.of(banner());
-        when(mockBannerRepository.findById(0L)).thenReturn(banner2);
+        when(mockBannerRepository.findById(1L)).thenReturn(banner2);
         final Banner result = bannerServiceImplUnderTest.insertBanner(request);
         verify(mockBannerRepository).save(any(Banner.class));
     }
@@ -180,15 +180,15 @@ public class BannerServiceImplTest {
     public void testInsertBanner_BannerRepositoryFindByIdReturnsAbsent() {
         final ConfigBannerRequest request = bannerRequest();
         final Optional<RentalPackage> optional = Optional.of(
-                new RentalPackage(0L, "packageGroup", "description", false));
-        when(mockRentalPackageService.findById(0L)).thenReturn(optional);
+                new RentalPackage(1L, "packageGroup", "description", false));
+        when(mockRentalPackageService.findById(1L)).thenReturn(optional);
         final List<Banner> bannerList = Arrays.asList(banner());
         when(mockBannerRepository.getBannersByTitle("title")).thenReturn(bannerList);
         final Banner banner = banner();
         when(mockModelMapper.map(any(Object.class), eq(Banner.class))).thenReturn(banner);
         final Banner banner1 = banner();
         when(mockBannerRepository.save(any(Banner.class))).thenReturn(banner1);
-        when(mockBannerRepository.findById(0L)).thenReturn(Optional.empty());
+        when(mockBannerRepository.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> bannerServiceImplUnderTest.insertBanner(request))
                 .isInstanceOf(HiveConnectException.class);
         verify(mockBannerRepository).save(any(Banner.class));
@@ -198,12 +198,12 @@ public class BannerServiceImplTest {
     public void testUpdateBanner() {
         final UpdateBannerRequest request = request();
         final Optional<Banner> banner = Optional.of(banner());
-        when(mockBannerRepository.findById(0L)).thenReturn(banner);
+        when(mockBannerRepository.findById(1L)).thenReturn(banner);
         final Optional<RentalPackage> optional = Optional.of(
-                new RentalPackage(0L, "packageGroup", "description", false));
-        when(mockRentalPackageService.findById(0L)).thenReturn(optional);
+                new RentalPackage(1L, "packageGroup", "description", false));
+        when(mockRentalPackageService.findById(1L)).thenReturn(optional);
         final List<Banner> bannerList = Arrays.asList(banner());
-        when(mockBannerRepository.checkExistBannerByTitle("title", 0L)).thenReturn(bannerList);
+        when(mockBannerRepository.checkExistBannerByTitle("title", 1L)).thenReturn(bannerList);
         final Banner banner1 = banner();
         when(mockBannerRepository.save(any(Banner.class))).thenReturn(banner1);
         bannerServiceImplUnderTest.updateBanner(request);
@@ -213,7 +213,7 @@ public class BannerServiceImplTest {
     @Test
     public void testUpdateBanner_BannerRepositoryFindByIdReturnsAbsent() {
         final UpdateBannerRequest request = request();
-        when(mockBannerRepository.findById(0L)).thenReturn(Optional.empty());
+        when(mockBannerRepository.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> bannerServiceImplUnderTest.updateBanner(request))
                 .isInstanceOf(HiveConnectException.class);
     }
@@ -222,8 +222,8 @@ public class BannerServiceImplTest {
     public void testUpdateBanner_RentalPackageServiceReturnsAbsent() {
         final UpdateBannerRequest request = request();
         final Optional<Banner> banner = Optional.of(banner());
-        when(mockBannerRepository.findById(0L)).thenReturn(banner);
-        when(mockRentalPackageService.findById(0L)).thenReturn(Optional.empty());
+        when(mockBannerRepository.findById(1L)).thenReturn(banner);
+        when(mockRentalPackageService.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> bannerServiceImplUnderTest.updateBanner(request))
                 .isInstanceOf(HiveConnectException.class);
     }
@@ -232,11 +232,11 @@ public class BannerServiceImplTest {
     public void testUpdateBanner_BannerRepositoryCheckExistBannerByTitleReturnsNull() {
         final UpdateBannerRequest request = request();
         final Optional<Banner> banner = Optional.of(banner());
-        when(mockBannerRepository.findById(0L)).thenReturn(banner);
+        when(mockBannerRepository.findById(1L)).thenReturn(banner);
         final Optional<RentalPackage> optional = Optional.of(
-                new RentalPackage(0L, "packageGroup", "description", false));
-        when(mockRentalPackageService.findById(0L)).thenReturn(optional);
-        when(mockBannerRepository.checkExistBannerByTitle("title", 0L)).thenReturn(null);
+                new RentalPackage(1L, "packageGroup", "description", false));
+        when(mockRentalPackageService.findById(1L)).thenReturn(optional);
+        when(mockBannerRepository.checkExistBannerByTitle("title", 1L)).thenReturn(null);
         final Banner banner1 = banner();
         when(mockBannerRepository.save(any(Banner.class))).thenReturn(banner1);
         bannerServiceImplUnderTest.updateBanner(request);
@@ -247,11 +247,11 @@ public class BannerServiceImplTest {
     public void testUpdateBanner_BannerRepositoryCheckExistBannerByTitleReturnsNoItems() {
         final UpdateBannerRequest request = request();
         final Optional<Banner> banner = Optional.of(banner());
-        when(mockBannerRepository.findById(0L)).thenReturn(banner);
+        when(mockBannerRepository.findById(1L)).thenReturn(banner);
         final Optional<RentalPackage> optional = Optional.of(
-                new RentalPackage(0L, "packageGroup", "description", false));
-        when(mockRentalPackageService.findById(0L)).thenReturn(optional);
-        when(mockBannerRepository.checkExistBannerByTitle("title", 0L)).thenReturn(Collections.emptyList());
+                new RentalPackage(1L, "packageGroup", "description", false));
+        when(mockRentalPackageService.findById(1L)).thenReturn(optional);
+        when(mockBannerRepository.checkExistBannerByTitle("title", 1L)).thenReturn(Collections.emptyList());
         final Banner banner1 = banner();
         when(mockBannerRepository.save(any(Banner.class))).thenReturn(banner1);
         bannerServiceImplUnderTest.updateBanner(request);
@@ -276,22 +276,22 @@ public class BannerServiceImplTest {
     @Test
     public void testGetListFilter() {
         final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"), eq(0L), eq(false)))
+        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
                 .thenReturn(bannerPage);
-        final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(0, 1), "name", 0L, false);
+        final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(0, 1), "name", 1L, false);
     }
 
     @Test
     public void testGetListFilter_BannerRepositoryReturnsNoItems() {
-        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"), eq(0L), eq(false)))
+        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(0, 1), "name", 0L, false);
+        final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(0, 1), "name", 1L, false);
     }
 
     @Test
     public void testFindByRentalPackageIdAndId() {
         final Banner banner = banner();
-        when(mockBannerRepository.findByRentalPackageIdAndId(0L, 0L)).thenReturn(banner);
-        final Banner result = bannerServiceImplUnderTest.findByRentalPackageIdAndId(0L, 0L);
+        when(mockBannerRepository.findByRentalPackageIdAndId(1L, 1L)).thenReturn(banner);
+        final Banner result = bannerServiceImplUnderTest.findByRentalPackageIdAndId(1L, 1L);
     }
 }

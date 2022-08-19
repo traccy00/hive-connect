@@ -27,8 +27,8 @@ public class WorkExperienceServiceImplTest {
 
     private WorkExperience workExperience(){
         WorkExperience workExperience = new WorkExperience();
-        workExperience.setId(0L);
-        workExperience.setCvId(0L);
+        workExperience.setId(1L);
+        workExperience.setCvId(1L);
         workExperience.setCompanyName("companyName");
         workExperience.setPosition("position");
         workExperience.setStartDate(LocalDateTime.of(2022,8,16,16,16,16));
@@ -40,16 +40,16 @@ public class WorkExperienceServiceImplTest {
     @Test
     public void testGetListWorkExperienceByCvId() {
         final List<WorkExperience> workExperiences = Arrays.asList(workExperience());
-        when(workExperienceServiceImplUnderTest.workExperienceRepository.getListWorkExperienceByCvId(0L))
+        when(workExperienceServiceImplUnderTest.workExperienceRepository.getListWorkExperienceByCvId(1L))
                 .thenReturn(workExperiences);
-        final List<WorkExperience> result = workExperienceServiceImplUnderTest.getListWorkExperienceByCvId(0L);
+        final List<WorkExperience> result = workExperienceServiceImplUnderTest.getListWorkExperienceByCvId(1L);
     }
 
     @Test
     public void testGetListWorkExperienceByCvId_WorkExperienceRepositoryReturnsNoItems() {
-        when(workExperienceServiceImplUnderTest.workExperienceRepository.getListWorkExperienceByCvId(0L))
+        when(workExperienceServiceImplUnderTest.workExperienceRepository.getListWorkExperienceByCvId(1L))
                 .thenReturn(Collections.emptyList());
-        final List<WorkExperience> result = workExperienceServiceImplUnderTest.getListWorkExperienceByCvId(0L);
+        final List<WorkExperience> result = workExperienceServiceImplUnderTest.getListWorkExperienceByCvId(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
@@ -67,7 +67,7 @@ public class WorkExperienceServiceImplTest {
         final WorkExperience workExperience = workExperience();
         workExperienceServiceImplUnderTest.updateWordExperience(workExperience);
         verify(workExperienceServiceImplUnderTest.workExperienceRepository).updateWordExperience("companyName",
-                "position", LocalDateTime.of(2022,8,16,16,16,16), LocalDateTime.of(2022,8,16,16,16,16), "description", 0L);
+                "position", LocalDateTime.of(2022,8,16,16,16,16), LocalDateTime.of(2022,8,16,16,16,16), "description", 1L);
     }
 
     @Test
@@ -80,14 +80,14 @@ public class WorkExperienceServiceImplTest {
     @Test
     public void testGetWorkExperienceById() {
         final Optional<WorkExperience> optional = Optional.of(workExperience());
-        when(workExperienceServiceImplUnderTest.workExperienceRepository.findById(0L)).thenReturn(optional);
-        final Optional<WorkExperience> result = workExperienceServiceImplUnderTest.getWorkExperienceById(0L);
+        when(workExperienceServiceImplUnderTest.workExperienceRepository.findById(1L)).thenReturn(optional);
+        final Optional<WorkExperience> result = workExperienceServiceImplUnderTest.getWorkExperienceById(1L);
     }
 
     @Test
     public void testGetWorkExperienceById_WorkExperienceRepositoryReturnsAbsent() {
-        when(workExperienceServiceImplUnderTest.workExperienceRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<WorkExperience> result = workExperienceServiceImplUnderTest.getWorkExperienceById(0L);
+        when(workExperienceServiceImplUnderTest.workExperienceRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<WorkExperience> result = workExperienceServiceImplUnderTest.getWorkExperienceById(1L);
         assertThat(result).isEmpty();
     }
 }

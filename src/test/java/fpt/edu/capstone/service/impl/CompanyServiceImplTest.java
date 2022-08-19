@@ -36,7 +36,7 @@ public class CompanyServiceImplTest {
     }
     private Company company(){
         Company company = new Company();
-        company.setId(0L);
+        company.setId(1L);
         company.setFieldWork("fieldWork");
         company.setName("name");
         company.setEmail("companyEmail");
@@ -48,21 +48,21 @@ public class CompanyServiceImplTest {
         company.setTaxCode("taxCode");
         company.setIsDeleted(0);
         company.setMapUrl("mapUrl");
-        company.setCreatorId(0L);
+        company.setCreatorId(1L);
         company.setLocked(false);
         return company;
     }
     @Test
     public void testGetCompanyById() {
         final Company company = company();
-        when(mockCompanyRepository.getCompanyById(0L)).thenReturn(company);
-        final Company result = companyServiceImplUnderTest.getCompanyById(0L);
+        when(mockCompanyRepository.getCompanyById(1L)).thenReturn(company);
+        final Company result = companyServiceImplUnderTest.getCompanyById(1L);
     }
 
     @Test
     public void testExistById() {
-        when(mockCompanyRepository.existsById(0L)).thenReturn(false);
-        final boolean result = companyServiceImplUnderTest.existById(0L);
+        when(mockCompanyRepository.existsById(1L)).thenReturn(false);
+        final boolean result = companyServiceImplUnderTest.existById(1L);
         assertThat(result).isFalse();
     }
 
@@ -85,14 +85,14 @@ public class CompanyServiceImplTest {
     public void testFindById() {
         final Company company1 = company();
         final Optional<Company> company = Optional.of(company1);
-        when(mockCompanyRepository.findById(0L)).thenReturn(company);
-        final Optional<Company> result = companyServiceImplUnderTest.findById(0L);
+        when(mockCompanyRepository.findById(1L)).thenReturn(company);
+        final Optional<Company> result = companyServiceImplUnderTest.findById(1L);
     }
 
     @Test
     public void testFindById_CompanyRepositoryReturnsAbsent() {
-        when(mockCompanyRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Company> result = companyServiceImplUnderTest.findById(0L);
+        when(mockCompanyRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Company> result = companyServiceImplUnderTest.findById(1L);
         assertThat(result).isEmpty();
     }
 

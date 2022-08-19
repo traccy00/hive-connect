@@ -37,8 +37,8 @@ public class CandidateServiceImplTest {
     }
     private Candidate candidate(){
         Candidate candidate = new Candidate();
-        candidate.setId(0L);
-        candidate.setUserId(0L);
+        candidate.setId(1L);
+        candidate.setUserId(1L);
         candidate.setGender(false);
         candidate.setBirthDate(LocalDateTime.now());
         candidate.setSearchHistory("");
@@ -70,55 +70,55 @@ public class CandidateServiceImplTest {
 
     @Test
     public void testInsertCandidate() {
-        candidateServiceImplUnderTest.insertCandidate(0L);
-        verify(candidateServiceImplUnderTest.candidateRepository).insertCandidate(0L);
+        candidateServiceImplUnderTest.insertCandidate(1L);
+        verify(candidateServiceImplUnderTest.candidateRepository).insertCandidate(1L);
     }
 
     @Test
     public void testUpdateCandidate() {
         final Candidate newCandidate = candidate();
-        candidateServiceImplUnderTest.updateCandidate(newCandidate, 0L);
+        candidateServiceImplUnderTest.updateCandidate(newCandidate, 1L);
     }
 
     @Test
     public void testFindById() throws Exception {
         final Optional<Candidate> candidate = Optional.of(candidate());
-        when(candidateServiceImplUnderTest.candidateRepository.findById(0L)).thenReturn(candidate);
-        final Optional<Candidate> result = candidateServiceImplUnderTest.findById(0L);
+        when(candidateServiceImplUnderTest.candidateRepository.findById(1L)).thenReturn(candidate);
+        final Optional<Candidate> result = candidateServiceImplUnderTest.findById(1L);
     }
 
     @Test
     public void testFindById_CandidateRepositoryReturnsAbsent() {
-        when(candidateServiceImplUnderTest.candidateRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Candidate> result = candidateServiceImplUnderTest.findById(0L);
+        when(candidateServiceImplUnderTest.candidateRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Candidate> result = candidateServiceImplUnderTest.findById(1L);
         assertThat(result).isEmpty();
     }
 
     @Test
     public void testExistsById() {
-        when(candidateServiceImplUnderTest.candidateRepository.existsById(0L)).thenReturn(false);
-        final boolean result = candidateServiceImplUnderTest.existsById(0L);
+        when(candidateServiceImplUnderTest.candidateRepository.existsById(1L)).thenReturn(false);
+        final boolean result = candidateServiceImplUnderTest.existsById(1L);
         assertThat(result).isFalse();
     }
 
     @Test
     public void testGetCandidateById() {
         final Candidate candidate = candidate();
-        when(candidateServiceImplUnderTest.candidateRepository.getCandidateById(0L)).thenReturn(candidate);
-        final Candidate result = candidateServiceImplUnderTest.getCandidateById(0L);
+        when(candidateServiceImplUnderTest.candidateRepository.getCandidateById(1L)).thenReturn(candidate);
+        final Candidate result = candidateServiceImplUnderTest.getCandidateById(1L);
     }
 
     @Test
     public void testFindCandidateByUserId() {
         final Optional<Candidate> candidate = Optional.of(candidate());
-        when(candidateServiceImplUnderTest.candidateRepository.findCandidateByUserId(0L)).thenReturn(candidate);
-        final Optional<Candidate> result = candidateServiceImplUnderTest.findCandidateByUserId(0L);
+        when(candidateServiceImplUnderTest.candidateRepository.findCandidateByUserId(1L)).thenReturn(candidate);
+        final Optional<Candidate> result = candidateServiceImplUnderTest.findCandidateByUserId(1L);
     }
 
     @Test
     public void testFindCandidateByUserId_CandidateRepositoryReturnsAbsent() {
-        when(candidateServiceImplUnderTest.candidateRepository.findCandidateByUserId(0L)).thenReturn(Optional.empty());
-        final Optional<Candidate> result = candidateServiceImplUnderTest.findCandidateByUserId(0L);
+        when(candidateServiceImplUnderTest.candidateRepository.findCandidateByUserId(1L)).thenReturn(Optional.empty());
+        final Optional<Candidate> result = candidateServiceImplUnderTest.findCandidateByUserId(1L);
         assertThat(result).isEmpty();
     }
 
@@ -128,22 +128,22 @@ public class CandidateServiceImplTest {
         candidateServiceImplUnderTest.updateCandidateInformation(updatedCandidate);
         verify(candidateServiceImplUnderTest.candidateRepository).updateCandidateInformation(false,
                 LocalDateTime.now(), "country", "fullName", "address", "socialLink",
-                "introduction", 0L);
+                "introduction", 1L);
     }
 
     @Test
     public void testUpdateCVInformation() {
-        final CVBaseInformationRequest cvBaseInformationRequest = new CVBaseInformationRequest(0L, "name",
+        final CVBaseInformationRequest cvBaseInformationRequest = new CVBaseInformationRequest(1L, "name",
                 "phoneNumber", false, LocalDateTime.now(), "country", "address", "socialLink");
         candidateServiceImplUnderTest.updateCVInformation(cvBaseInformationRequest);
         verify(candidateServiceImplUnderTest.candidateRepository).updateCVInformation(false,
-                LocalDateTime.now(), "country", "name", "address", "socialLink", 0L);
+                LocalDateTime.now(), "country", "name", "address", "socialLink", 1L);
     }
 
     @Test
     public void testUpdateIsNeedJob() {
-        candidateServiceImplUnderTest.updateIsNeedJob(false, 0L);
-        verify(candidateServiceImplUnderTest.candidateRepository).updateIsNeedJob(false, 0L);
+        candidateServiceImplUnderTest.updateIsNeedJob(false, 1L);
+        verify(candidateServiceImplUnderTest.candidateRepository).updateIsNeedJob(false, 1L);
     }
 
     @Test
@@ -173,12 +173,12 @@ public class CandidateServiceImplTest {
     }
     private Users users(){
         Users users = new Users();
-        users.setId(0L);
+        users.setId(1L);
         users.setUsername("username");
         users.setPassword("password");
         users.setEmail("email");
         users.setPhone("0967445450");
-        users.setRoleId(0L);
+        users.setRoleId(1L);
         users.setIsDeleted(0);
         users.setLastLoginTime(LocalDateTime.now());
         users.setVerifiedEmail(false);
@@ -202,7 +202,7 @@ public class CandidateServiceImplTest {
         final Candidate candidate = candidate();
         when(candidateServiceImplUnderTest.candidateRepository.save(any(Candidate.class))).thenReturn(candidate);
         final Optional<Candidate> candidate1 = Optional.of(candidate());
-        when(candidateServiceImplUnderTest.candidateRepository.findById(0L)).thenReturn(candidate1);
+        when(candidateServiceImplUnderTest.candidateRepository.findById(1L)).thenReturn(candidate1);
 
         candidateServiceImplUnderTest.insertGoogleCandidate(googlePojo, user);
         verify(candidateServiceImplUnderTest.candidateRepository).save(any(Candidate.class));
@@ -217,7 +217,7 @@ public class CandidateServiceImplTest {
         final Users user = users();
         final Candidate candidate = candidate();
         when(candidateServiceImplUnderTest.candidateRepository.save(any(Candidate.class))).thenReturn(candidate);
-        when(candidateServiceImplUnderTest.candidateRepository.findById(0L)).thenReturn(Optional.empty());
+        when(candidateServiceImplUnderTest.candidateRepository.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> candidateServiceImplUnderTest.insertGoogleCandidate(googlePojo, user))
                 .isInstanceOf(HiveConnectException.class);
         verify(candidateServiceImplUnderTest.candidateRepository).save(any(Candidate.class));

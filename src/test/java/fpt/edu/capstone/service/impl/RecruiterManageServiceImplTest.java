@@ -20,7 +20,9 @@ import fpt.edu.capstone.utils.ResponseDataPagination;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -943,6 +945,16 @@ public class RecruiterManageServiceImplTest {
         when(mockMajorService.getMajorNameByCVId(1L)).thenReturn(Collections.emptyList());
         final ResponseDataPagination result = recruiterManageServiceImplUnderTest.findCVFilter(1, 10, "experience",
                 "candidateAddress", "techStack");
+    }
+
+    @Test
+    public void testSetupBanner(){
+        final Payment payment = payment();
+        final BannerActive bannerActive = bannerActive();
+        String bannerDisplayPosition = "";
+        String item = "";
+        Mockito.when(mockBannerActiveRepository.save(ArgumentMatchers.any(BannerActive.class))).thenReturn(bannerActive);
+        recruiterManageServiceImplUnderTest.setupBanner(payment, bannerActive, "", "");
     }
 
     @Test

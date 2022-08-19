@@ -39,7 +39,7 @@ public class BannerActiveImplTest {
     }
     
     private BannerActive bannerActive (){
-        BannerActive bannerActive = new BannerActive(0L, "imageUrl", 0L, "displayPosition", false,
+        BannerActive bannerActive = new BannerActive(1L, "imageUrl", 1L, "displayPosition", false,
                 "approvalStatus", LocalDateTime.of(2020, 1, 1, 0, 0, 0));
         return bannerActive;
     }
@@ -61,36 +61,36 @@ public class BannerActiveImplTest {
     @Test
     public void testGetAllByPaymentId() {
         final List<BannerActive> bannerActives = Arrays.asList(bannerActive());
-        when(mockBannerActiveRepository.getAllByPaymentId(0L)).thenReturn(bannerActives);
-        final List<BannerActive> result = bannerActiveImplUnderTest.getAllByPaymentId(0L);
+        when(mockBannerActiveRepository.getAllByPaymentId(1L)).thenReturn(bannerActives);
+        final List<BannerActive> result = bannerActiveImplUnderTest.getAllByPaymentId(1L);
     }
 
     @Test
     public void testGetAllByPaymentId_BannerActiveRepositoryReturnsNoItems() {
-        when(mockBannerActiveRepository.getAllByPaymentId(0L)).thenReturn(Collections.emptyList());
-        final List<BannerActive> result = bannerActiveImplUnderTest.getAllByPaymentId(0L);
+        when(mockBannerActiveRepository.getAllByPaymentId(1L)).thenReturn(Collections.emptyList());
+        final List<BannerActive> result = bannerActiveImplUnderTest.getAllByPaymentId(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
     @Test
     public void testGetAllBannerByPaymentId() {
-        when(mockBannerActiveRepository.getBannerActiveByPaymentId(0L)).thenReturn(Arrays.asList());
-        final List<BannerPositionDetailResponse> result = bannerActiveImplUnderTest.getAllBannerByPaymentId(0L);
+        when(mockBannerActiveRepository.getBannerActiveByPaymentId(1L)).thenReturn(Arrays.asList());
+        final List<BannerPositionDetailResponse> result = bannerActiveImplUnderTest.getAllBannerByPaymentId(1L);
     }
 
     @Test
     public void testGetAllBannerByPaymentId_BannerActiveRepositoryReturnsNoItems() {
-        when(mockBannerActiveRepository.getBannerActiveByPaymentId(0L)).thenReturn(Collections.emptyList());
-        final List<BannerPositionDetailResponse> result = bannerActiveImplUnderTest.getAllBannerByPaymentId(0L);
+        when(mockBannerActiveRepository.getBannerActiveByPaymentId(1L)).thenReturn(Collections.emptyList());
+        final List<BannerPositionDetailResponse> result = bannerActiveImplUnderTest.getAllBannerByPaymentId(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
     @Test
     public void testFindByPaymentIdAndPosition() {
-        final BannerActive bannerActive = new BannerActive(0L, "imageUrl", 0L, "displayPosition", false,
+        final BannerActive bannerActive = new BannerActive(1L, "imageUrl", 1L, "displayPosition", false,
                 "approvalStatus", LocalDateTime.of(2020, 1, 1, 0, 0, 0));
-        when(mockBannerActiveRepository.findByPaymentIdAndDisplayPosition(0L, "position")).thenReturn(bannerActive);
-        final BannerActive result = bannerActiveImplUnderTest.findByPaymentIdAndPosition(0L, "position");
+        when(mockBannerActiveRepository.findByPaymentIdAndDisplayPosition(1L, "position")).thenReturn(bannerActive);
+        final BannerActive result = bannerActiveImplUnderTest.findByPaymentIdAndPosition(1L, "position");
     }
 
     @Test
@@ -110,13 +110,13 @@ public class BannerActiveImplTest {
     @Test
     public void testFindById() throws Exception {
         final Optional<BannerActive> bannerActive = Optional.of(bannerActive());
-        when(mockBannerActiveRepository.findById(0L)).thenReturn(bannerActive);
-        final BannerActive result = bannerActiveImplUnderTest.findById(0L);
+        when(mockBannerActiveRepository.findById(1L)).thenReturn(bannerActive);
+        final BannerActive result = bannerActiveImplUnderTest.findById(1L);
     }
 
     @Test
     public void testFindById_BannerActiveRepositoryReturnsAbsent() {
-        when(mockBannerActiveRepository.findById(0L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> bannerActiveImplUnderTest.findById(0L)).isInstanceOf(HiveConnectException.class);
+        when(mockBannerActiveRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> bannerActiveImplUnderTest.findById(1L)).isInstanceOf(HiveConnectException.class);
     }
 }

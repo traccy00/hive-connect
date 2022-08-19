@@ -68,7 +68,7 @@ public class CompanyManageServiceImplTest {
 
     private Company company(){
         Company company = new Company();
-        company.setId(0L);
+        company.setId(1L);
         company.setFieldWork("fieldWork");
         company.setName("name");
         company.setEmail("companyEmail");
@@ -80,15 +80,15 @@ public class CompanyManageServiceImplTest {
         company.setTaxCode("taxCode");
         company.setIsDeleted(0);
         company.setMapUrl("mapUrl");
-        company.setCreatorId(0L);
+        company.setCreatorId(1L);
         company.setLocked(false);
         return company;
     }
 
     private Recruiter recruiter(){
         Recruiter recruiter = new Recruiter();
-        recruiter.setId(0L);
-        recruiter.setCompanyId(0L);
+        recruiter.setId(1L);
+        recruiter.setCompanyId(1L);
         recruiter.setCompanyName("companyName");
         recruiter.setFullName("fullName");
         recruiter.setVerifyAccount(true);
@@ -98,7 +98,7 @@ public class CompanyManageServiceImplTest {
         recruiter.setAdditionalLicense("additionalLicense");
         recruiter.setBusinessLicenseUrl("businessLicenseUrl");
         recruiter.setAdditionalLicenseUrl("additionalLicenseUrl");
-        recruiter.setUserId(0L);
+        recruiter.setUserId(1L);
         recruiter.setDeleted(false);
         recruiter.setCompanyAddress("companyAddress");
         recruiter.setBusinessLicenseApprovalStatus("businessLicenseApprovalStatus");
@@ -109,7 +109,7 @@ public class CompanyManageServiceImplTest {
 
     private UpdateCompanyInforRequest request(){
         UpdateCompanyInforRequest request = new UpdateCompanyInforRequest();
-        request.setCompanyId(0L);
+        request.setCompanyId(1L);
         request.setCompanyEmail("companyEmail");
         request.setCompanyPhone("companyPhone");
         request.setCompanyDescription("companyDescription");
@@ -138,12 +138,12 @@ public class CompanyManageServiceImplTest {
         request.setUrl("url");
         request.setTaxCode("6541326541");
         request.setMapUrl("mapUrl");
-        request.setCreatorId(0L);
+        request.setCreatorId(1L);
         return request;
     }
 
     private Image image(){
-        Image image =  new Image(0L, "name", "url", 0L,
+        Image image =  new Image(1L, "name", "url", 1L,
                 0, false, "contentType", ("" +
                 "content").getBytes(), false);
         return image;
@@ -152,7 +152,7 @@ public class CompanyManageServiceImplTest {
     public void testGetTop12Companies() {
         when(mockAppliedJobService.getTop12Companies()).thenReturn(Arrays.asList());
         final Optional<Image> image = Optional.of(image());
-        when(mockImageService.findAvatarByCompanyId(0L)).thenReturn(image);
+        when(mockImageService.findAvatarByCompanyId(1L)).thenReturn(image);
         final List<TopCompanyResponse> result = companyManageServiceImplUnderTest.getTop12Companies();
     }
 
@@ -160,7 +160,7 @@ public class CompanyManageServiceImplTest {
     public void testGetTop12Companies_AppliedJobServiceReturnsNoItems() {
         when(mockAppliedJobService.getTop12Companies()).thenReturn(Collections.emptyList());
         final Optional<Image> image = Optional.of(image());
-        when(mockImageService.findAvatarByCompanyId(0L)).thenReturn(image);
+        when(mockImageService.findAvatarByCompanyId(1L)).thenReturn(image);
         final List<TopCompanyResponse> result = companyManageServiceImplUnderTest.getTop12Companies();
         assertThat(result).isEqualTo(Collections.emptyList());
     }
@@ -168,40 +168,40 @@ public class CompanyManageServiceImplTest {
     @Test
     public void testGetTop12Companies_ImageServiceImplReturnsAbsent() {
         when(mockAppliedJobService.getTop12Companies()).thenReturn(Arrays.asList());
-        when(mockImageService.findAvatarByCompanyId(0L)).thenReturn(Optional.empty());
+        when(mockImageService.findAvatarByCompanyId(1L)).thenReturn(Optional.empty());
         final List<TopCompanyResponse> result = companyManageServiceImplUnderTest.getTop12Companies();
     }
 
     @Test
     public void testUpdateCompanyInformation() {
         final UpdateCompanyInforRequest request = request();
-        request.setDeleteImageIdList(Arrays.asList(0L));
+        request.setDeleteImageIdList(Arrays.asList(1L));
         final Optional<Recruiter> recruiter = Optional.of(recruiter());
-        when(mockRecruiterService.findById(0L)).thenReturn(recruiter);
+        when(mockRecruiterService.findById(1L)).thenReturn(recruiter);
         final Company company = company();
-        when(mockCompanyService.getCompanyById(0L)).thenReturn(company);
-        final UpdateCompanyInforRequest result = companyManageServiceImplUnderTest.updateCompanyInformation(0L,
+        when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
+        final UpdateCompanyInforRequest result = companyManageServiceImplUnderTest.updateCompanyInformation(1L,
                 request);
-        verify(mockImageService).saveImageCompany(true, false, 0L, Arrays.asList("value"));
-        verify(mockImageService).deleteImageById(Arrays.asList(0L));
+        verify(mockImageService).saveImageCompany(true, false, 1L, Arrays.asList("value"));
+        verify(mockImageService).deleteImageById(Arrays.asList(1L));
     }
 
     @Test
     public void testUpdateCompanyInformation_RecruiterServiceReturnsAbsent() {
         final UpdateCompanyInforRequest request = request();
-        when(mockRecruiterService.findById(0L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> companyManageServiceImplUnderTest.updateCompanyInformation(0L, request))
+        when(mockRecruiterService.findById(1L)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> companyManageServiceImplUnderTest.updateCompanyInformation(1L, request))
                 .isInstanceOf(HiveConnectException.class);
     }
 
     @Test
     public void testUpdateCompanyInformation_CompanyServiceReturnsNull() {
         final UpdateCompanyInforRequest request = request();
-        request.setDeleteImageIdList(Arrays.asList(0L));
+        request.setDeleteImageIdList(Arrays.asList(1L));
         final Optional<Recruiter> recruiter = Optional.of(recruiter());
-        when(mockRecruiterService.findById(0L)).thenReturn(recruiter);
-        when(mockCompanyService.getCompanyById(0L)).thenReturn(null);
-        assertThatThrownBy(() -> companyManageServiceImplUnderTest.updateCompanyInformation(0L, request))
+        when(mockRecruiterService.findById(1L)).thenReturn(recruiter);
+        when(mockCompanyService.getCompanyById(1L)).thenReturn(null);
+        assertThatThrownBy(() -> companyManageServiceImplUnderTest.updateCompanyInformation(1L, request))
                 .isInstanceOf(HiveConnectException.class);
     }
 
@@ -224,17 +224,17 @@ public class CompanyManageServiceImplTest {
     public void testLockCompany() {
         final Company company1 = company();
         final Optional<Company> company = Optional.of(company1);
-        when(mockCompanyService.findById(0L)).thenReturn(company);
+        when(mockCompanyService.findById(1L)).thenReturn(company);
         final Company company2 = company();
         when(mockCompanyRepository.save(any(Company.class))).thenReturn(company2);
-        companyManageServiceImplUnderTest.lockCompany(0L);
+        companyManageServiceImplUnderTest.lockCompany(1L);
         verify(mockCompanyRepository).save(any(Company.class));
     }
 
     @Test
     public void testLockCompany_CompanyServiceReturnsAbsent() {
-        when(mockCompanyService.findById(0L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> companyManageServiceImplUnderTest.lockCompany(0L))
+        when(mockCompanyService.findById(1L)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> companyManageServiceImplUnderTest.lockCompany(1L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
@@ -244,8 +244,8 @@ public class CompanyManageServiceImplTest {
         final Company company1 = company();
         final Optional<Company> company = Optional.of(company1);
         when(mockCompanyRepository.getCompanyByName("name")).thenReturn(company);
-        final Optional<Fields> fields = Optional.of(new Fields(0L, "fieldName", "status"));
-        when(mockFieldsService.findById(0L)).thenReturn(fields);
+        final Optional<Fields> fields = Optional.of(new Fields(1L, "fieldName", "status"));
+        when(mockFieldsService.findById(1L)).thenReturn(fields);
         final Company company3 = company();
         final Optional<Company> company2 = Optional.of(company3);
         when(mockCompanyRepository.getCompanyByTaxcode("taxCode")).thenReturn(company2);
@@ -256,7 +256,7 @@ public class CompanyManageServiceImplTest {
         final Image image = image();
         when(mockImageRepository.save(any(Image.class))).thenReturn(image);
         final Company company6 = company();
-        when(mockCompanyRepository.getCompanyById(0L)).thenReturn(company6);
+        when(mockCompanyRepository.getCompanyById(1L)).thenReturn(company6);
 
         final Company result = companyManageServiceImplUnderTest.createCompany(request);
         verify(mockCompanyRepository).save(any(Company.class));
@@ -267,8 +267,8 @@ public class CompanyManageServiceImplTest {
     public void testCreateCompany_CompanyRepositoryGetCompanyByNameReturnsAbsent() {
         final CreateCompanyRequest request = companyRequest();
         when(mockCompanyRepository.getCompanyByName("name")).thenReturn(Optional.empty());
-        final Optional<Fields> fields = Optional.of(new Fields(0L, "fieldName", "status"));
-        when(mockFieldsService.findById(0L)).thenReturn(fields);
+        final Optional<Fields> fields = Optional.of(new Fields(1L, "fieldName", "status"));
+        when(mockFieldsService.findById(1L)).thenReturn(fields);
         final Company company1 = company();
         final Optional<Company> company = Optional.of(company1);
         when(mockCompanyRepository.getCompanyByTaxcode("taxCode")).thenReturn(company);
@@ -279,7 +279,7 @@ public class CompanyManageServiceImplTest {
         final Image image = image();
         when(mockImageRepository.save(any(Image.class))).thenReturn(image);
         final Company company4 = company();
-        when(mockCompanyRepository.getCompanyById(0L)).thenReturn(company4);
+        when(mockCompanyRepository.getCompanyById(1L)).thenReturn(company4);
         final Company result = companyManageServiceImplUnderTest.createCompany(request);
         verify(mockCompanyRepository).save(any(Company.class));
         verify(mockImageRepository).save(any(Image.class));
@@ -291,7 +291,7 @@ public class CompanyManageServiceImplTest {
         final Company company1 = company();
         final Optional<Company> company = Optional.of(company1);
         when(mockCompanyRepository.getCompanyByName("name")).thenReturn(company);
-        when(mockFieldsService.findById(0L)).thenReturn(Optional.empty());
+        when(mockFieldsService.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> companyManageServiceImplUnderTest.createCompany(request))
                 .isInstanceOf(HiveConnectException.class);
     }
@@ -302,8 +302,8 @@ public class CompanyManageServiceImplTest {
         final Company company1 = company();
         final Optional<Company> company = Optional.of(company1);
         when(mockCompanyRepository.getCompanyByName("name")).thenReturn(company);
-        final Optional<Fields> fields = Optional.of(new Fields(0L, "fieldName", "status"));
-        when(mockFieldsService.findById(0L)).thenReturn(fields);
+        final Optional<Fields> fields = Optional.of(new Fields(1L, "fieldName", "status"));
+        when(mockFieldsService.findById(1L)).thenReturn(fields);
         when(mockCompanyRepository.getCompanyByTaxcode("taxCode")).thenReturn(Optional.empty());
         final Company company2 = company();
         when(mockModelMapper.map(any(Object.class), eq(Company.class))).thenReturn(company2);
@@ -312,7 +312,7 @@ public class CompanyManageServiceImplTest {
         final Image image = image();
         when(mockImageRepository.save(any(Image.class))).thenReturn(image);
         final Company company4 = company();
-        when(mockCompanyRepository.getCompanyById(0L)).thenReturn(company4);
+        when(mockCompanyRepository.getCompanyById(1L)).thenReturn(company4);
         final Company result = companyManageServiceImplUnderTest.createCompany(request);
         verify(mockCompanyRepository).save(any(Company.class));
         verify(mockImageRepository).save(any(Image.class));

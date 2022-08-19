@@ -44,20 +44,20 @@ public class AdminServiceImplTest {
     }
 
     private Admin admin(){
-        Admin admin = new Admin(0L, 0L, "fullName",
-                new Users(0L, "username", "password", "email", "phone", 0L, 0, LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+        Admin admin = new Admin(1L, 1L, "fullName",
+                new Users(1L, "username", "password", "email", "phone", 1L, 0, LocalDateTime.of(2020, 1, 1, 0, 0, 0),
                         false, false, false, false, "avatar", "resetPasswordToken", false));
         return admin;
     }
 
     private Users users(){
         Users users = new Users();
-        users.setId(0L);
+        users.setId(1L);
         users.setUsername("username");
         users.setPassword("password");
         users.setEmail("email");
         users.setPhone("0967445450");
-        users.setRoleId(0L);
+        users.setRoleId(1L);
         users.setIsDeleted(0);
         users.setLastLoginTime(LocalDateTime.now());
         users.setVerifiedEmail(false);
@@ -74,7 +74,7 @@ public class AdminServiceImplTest {
         final Page<Admin> admins = new PageImpl<>(Arrays.asList(admin()));
         when(mockAdminRepository.getListAdminByFilter(any(Pageable.class))).thenReturn(admins);
         final Users users = users();
-        when(mockUserService.getUserById(0L)).thenReturn(users);
+        when(mockUserService.getUserById(1L)).thenReturn(users);
         final ResponseDataPagination result = adminServiceImplUnderTest.getListAdmin(1, 10);
     }
 
@@ -83,7 +83,7 @@ public class AdminServiceImplTest {
         when(mockAdminRepository.getListAdminByFilter(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Users users = users();
-        when(mockUserService.getUserById(0L)).thenReturn(users);
+        when(mockUserService.getUserById(1L)).thenReturn(users);
         final ResponseDataPagination result = adminServiceImplUnderTest.getListAdmin(1, 10);
     }
 
@@ -92,28 +92,28 @@ public class AdminServiceImplTest {
         final Page<Admin> admins = new PageImpl<>(Arrays.asList(admin()));
         when(mockAdminRepository.getListAdminByFilter(any(Pageable.class))).thenReturn(admins);
         final Users users = users();
-        when(mockUserService.getUserById(0L)).thenReturn(users);
+        when(mockUserService.getUserById(1L)).thenReturn(users);
         assertThatThrownBy(() -> adminServiceImplUnderTest.getListAdmin(0, 0)).isInstanceOf(Exception.class);
     }
 
     @Test
     public void testFindAdminByUserId() {
         final Optional<Admin> admin = Optional.of(admin());
-        when(mockAdminRepository.findByUserId(0L)).thenReturn(admin);
-        final Optional<Admin> result = adminServiceImplUnderTest.findAdminByUserId(0L);
+        when(mockAdminRepository.findByUserId(1L)).thenReturn(admin);
+        final Optional<Admin> result = adminServiceImplUnderTest.findAdminByUserId(1L);
     }
 
     @Test
     public void testFindAdminByUserId_AdminRepositoryReturnsAbsent() {
-        when(mockAdminRepository.findByUserId(0L)).thenReturn(Optional.empty());
-        final Optional<Admin> result = adminServiceImplUnderTest.findAdminByUserId(0L);
+        when(mockAdminRepository.findByUserId(1L)).thenReturn(Optional.empty());
+        final Optional<Admin> result = adminServiceImplUnderTest.findAdminByUserId(1L);
         assertThat(result).isEmpty();
     }
 
     @Test
     public void testInsertAdmin() {
-        adminServiceImplUnderTest.insertAdmin(0L);
-        verify(mockAdminRepository).insertAdmin(0L);
+        adminServiceImplUnderTest.insertAdmin(1L);
+        verify(mockAdminRepository).insertAdmin(1L);
     }
 
     @Test

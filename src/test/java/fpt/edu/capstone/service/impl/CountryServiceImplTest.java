@@ -31,7 +31,7 @@ public class CountryServiceImplTest {
 
     @Test
     public void testGetListCountry() {
-        final List<VietnamCountry> vietnamCountries = Arrays.asList(new VietnamCountry(0L, "countryName"));
+        final List<VietnamCountry> vietnamCountries = Arrays.asList(new VietnamCountry(1L, "countryName"));
         when(mockCountryRepository.findAll()).thenReturn(vietnamCountries);
         final List<VietnamCountry> result = countryServiceImplUnderTest.getListCountry();
     }
@@ -45,15 +45,15 @@ public class CountryServiceImplTest {
 
     @Test
     public void testFindById() {
-        final Optional<VietnamCountry> vietnamCountry = Optional.of(new VietnamCountry(0L, "countryName"));
-        when(mockCountryRepository.findById(0L)).thenReturn(vietnamCountry);
-        final Optional<VietnamCountry> result = countryServiceImplUnderTest.findById(0L);
+        final Optional<VietnamCountry> vietnamCountry = Optional.of(new VietnamCountry(1L, "countryName"));
+        when(mockCountryRepository.findById(1L)).thenReturn(vietnamCountry);
+        final Optional<VietnamCountry> result = countryServiceImplUnderTest.findById(1L);
     }
 
     @Test
     public void testFindById_CountryRepositoryReturnsAbsent() {
-        when(mockCountryRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<VietnamCountry> result = countryServiceImplUnderTest.findById(0L);
+        when(mockCountryRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<VietnamCountry> result = countryServiceImplUnderTest.findById(1L);
         assertThat(result).isEmpty();
     }
 }

@@ -32,8 +32,8 @@ public class NotificationServiceImplTest {
     @InjectMocks
     private NotificationServiceImpl notificationServiceImplUnderTest;
 
-    private Notification notificationA = new Notification(0L, 0L, 0L,
-            LocalDateTime.now(), "content", false, false, 0L);
+    private Notification notificationA = new Notification(1L, 1L, 1L,
+            LocalDateTime.now(), "content", false, false, 1L);
     @Test
     public void testInsertNotification() {
         final Notification notification = notificationA;
@@ -45,32 +45,32 @@ public class NotificationServiceImplTest {
     @Test
     public void testGetAllNotificationByUserId() {
         final Page<Notification> notifications = new PageImpl<>(Arrays.asList(notificationA));
-        when(mockNotificationRepository.getAllNotificationByUserId(any(Pageable.class), eq(0L)))
+        when(mockNotificationRepository.getAllNotificationByUserId(any(Pageable.class), eq(1L)))
                 .thenReturn(notifications);
-        final ResponseDataPagination result = notificationServiceImplUnderTest.getAllNotificationByUserId(1, 10, 0L);
+        final ResponseDataPagination result = notificationServiceImplUnderTest.getAllNotificationByUserId(1, 10, 1L);
     }
 
     @Test
     public void testGetAllNotificationByUserId_NotificationRepositoryReturnsNoItems() {
-        when(mockNotificationRepository.getAllNotificationByUserId(any(Pageable.class), eq(0L)))
+        when(mockNotificationRepository.getAllNotificationByUserId(any(Pageable.class), eq(1L)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final ResponseDataPagination result = notificationServiceImplUnderTest.getAllNotificationByUserId(1, 10, 0L);
+        final ResponseDataPagination result = notificationServiceImplUnderTest.getAllNotificationByUserId(1, 10, 1L);
     }
 
     @Test
     public void testFindNotificationByReceiveIdAndTargetId() {
         final Optional<Notification> notification = Optional.of(notificationA);
-        when(mockNotificationRepository.findNotificationByReceiveIdAndTargetId(0L, 0L, 0L)).thenReturn(notification);
+        when(mockNotificationRepository.findNotificationByReceiveIdAndTargetId(1L, 1L, 1L)).thenReturn(notification);
         final Optional<Notification> result = notificationServiceImplUnderTest.findNotificationByReceiveIdAndTargetId(
-                0L, 0L, 0L);
+                1L, 1L, 1L);
     }
 
     @Test
     public void testFindNotificationByReceiveIdAndTargetId_NotificationRepositoryReturnsAbsent() {
-        when(mockNotificationRepository.findNotificationByReceiveIdAndTargetId(0L, 0L, 0L))
+        when(mockNotificationRepository.findNotificationByReceiveIdAndTargetId(1L, 1L, 1L))
                 .thenReturn(Optional.empty());
         final Optional<Notification> result = notificationServiceImplUnderTest.findNotificationByReceiveIdAndTargetId(
-                0L, 0L, 0L);
+                1L, 1L, 1L);
 
         // Verify the results
         assertThat(result).isEmpty();
@@ -78,21 +78,21 @@ public class NotificationServiceImplTest {
 
     @Test
     public void testUpdateIsSeen() {
-        notificationServiceImplUnderTest.updateIsSeen(0L);
-        verify(mockNotificationRepository).updateIsSenn(true, 0L);
+        notificationServiceImplUnderTest.updateIsSeen(1L);
+        verify(mockNotificationRepository).updateIsSenn(true, 1L);
     }
 
     @Test
     public void testFindById() throws Exception {
         final Optional<Notification> notification = Optional.of(notificationA);
-        when(mockNotificationRepository.findById(0L)).thenReturn(notification);
-        final Optional<Notification> result = notificationServiceImplUnderTest.findById(0L);
+        when(mockNotificationRepository.findById(1L)).thenReturn(notification);
+        final Optional<Notification> result = notificationServiceImplUnderTest.findById(1L);
     }
 
     @Test
     public void testFindById_NotificationRepositoryReturnsAbsent() {
-        when(mockNotificationRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Notification> result = notificationServiceImplUnderTest.findById(0L);
+        when(mockNotificationRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Notification> result = notificationServiceImplUnderTest.findById(1L);
         assertThat(result).isEmpty();
     }
 }

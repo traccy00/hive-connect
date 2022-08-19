@@ -40,17 +40,17 @@ public class RequestJoinCompanyServiceImplTest {
 
     private RequestJoinCompany requestJoinCompany(){
         RequestJoinCompany requestJoinCompany = new RequestJoinCompany();
-        requestJoinCompany.setId(0L);
+        requestJoinCompany.setId(1L);
         requestJoinCompany.setStatus("Pending");
-        requestJoinCompany.setSenderId(0L);
-        requestJoinCompany.setCompanyId(0L);
-        requestJoinCompany.setApproverId(0L);
+        requestJoinCompany.setSenderId(1L);
+        requestJoinCompany.setCompanyId(1L);
+        requestJoinCompany.setApproverId(1L);
         return requestJoinCompany;
     }
 
     private Company company(){
         Company company1 = new Company();
-        company1.setId(0L);
+        company1.setId(1L);
         company1.setFieldWork("fieldWork");
         company1.setName("name");
         company1.setEmail("email");
@@ -62,7 +62,7 @@ public class RequestJoinCompanyServiceImplTest {
         company1.setTaxCode("taxCode");
         company1.setIsDeleted(0);
         company1.setMapUrl("mapUrl");
-        company1.setCreatorId(0L);
+        company1.setCreatorId(1L);
         company1.setLocked(false);
         return company1;
     }
@@ -71,7 +71,7 @@ public class RequestJoinCompanyServiceImplTest {
         final RequestJoinCompany requestJoinCompany = requestJoinCompany();
         final Company company1 = company();
         final Optional<Company> company = Optional.of(company1);
-        when(mockCompanyService.findById(0L)).thenReturn(company);
+        when(mockCompanyService.findById(1L)).thenReturn(company);
         final RequestJoinCompany requestJoinCompany1 = requestJoinCompany();
         when(mockRequestJoinCompanyRepository.save(any(RequestJoinCompany.class))).thenReturn(requestJoinCompany1);
         final RequestJoinCompany result = requestJoinCompanyServiceImplUnderTest.createRequest(requestJoinCompany);
@@ -80,7 +80,7 @@ public class RequestJoinCompanyServiceImplTest {
     @Test
     public void testCreateRequest_CompanyServiceReturnsAbsent() {
         final RequestJoinCompany requestJoinCompany = requestJoinCompany();
-        when(mockCompanyService.findById(0L)).thenReturn(Optional.empty());
+        when(mockCompanyService.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> requestJoinCompanyServiceImplUnderTest.createRequest(requestJoinCompany))
                 .isInstanceOf(HiveConnectException.class);
     }
@@ -89,14 +89,14 @@ public class RequestJoinCompanyServiceImplTest {
     public void testGetSentRequest() {
         final RequestJoinCompany requestJoinCompany = requestJoinCompany();
         final Optional<RequestJoinCompany> optional = Optional.of(requestJoinCompany);
-        when(mockRequestJoinCompanyRepository.findBySenderId(0L)).thenReturn(optional);
-        final Optional<RequestJoinCompany> result = requestJoinCompanyServiceImplUnderTest.getSentRequest(0L);
+        when(mockRequestJoinCompanyRepository.findBySenderId(1L)).thenReturn(optional);
+        final Optional<RequestJoinCompany> result = requestJoinCompanyServiceImplUnderTest.getSentRequest(1L);
     }
 
     @Test
     public void testGetSentRequest_RequestJoinCompanyRepositoryReturnsAbsent() {
-        when(mockRequestJoinCompanyRepository.findBySenderId(0L)).thenReturn(Optional.empty());
-        final Optional<RequestJoinCompany> result = requestJoinCompanyServiceImplUnderTest.getSentRequest(0L);
+        when(mockRequestJoinCompanyRepository.findBySenderId(1L)).thenReturn(Optional.empty());
+        final Optional<RequestJoinCompany> result = requestJoinCompanyServiceImplUnderTest.getSentRequest(1L);
         assertThat(result).isEmpty();
     }
 
@@ -104,42 +104,42 @@ public class RequestJoinCompanyServiceImplTest {
     public void testGetReceiveRequest() {
         final RequestJoinCompany requestJoinCompany = requestJoinCompany();
         final Optional<List<RequestJoinCompany>> requestJoinCompanies = Optional.of(Arrays.asList(requestJoinCompany));
-        when(mockRequestJoinCompanyRepository.findByApproverId(0L)).thenReturn(requestJoinCompanies);
-        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(0L);
+        when(mockRequestJoinCompanyRepository.findByApproverId(1L)).thenReturn(requestJoinCompanies);
+        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(1L);
     }
 
     @Test
     public void testGetReceiveRequest_RequestJoinCompanyRepositoryReturnsAbsent() {
-        when(mockRequestJoinCompanyRepository.findByApproverId(0L)).thenReturn(Optional.empty());
-        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(0L);
+        when(mockRequestJoinCompanyRepository.findByApproverId(1L)).thenReturn(Optional.empty());
+        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(1L);
         assertThat(result).isEmpty();
     }
 
     @Test
     public void testGetReceiveRequest_RequestJoinCompanyRepositoryReturnsNoItems() {
-        when(mockRequestJoinCompanyRepository.findByApproverId(0L)).thenReturn(Optional.of(Collections.emptyList()));
-        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(0L);
+        when(mockRequestJoinCompanyRepository.findByApproverId(1L)).thenReturn(Optional.of(Collections.emptyList()));
+        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(1L);
         assertThat(result).isEqualTo(Optional.of(Collections.emptyList()));
     }
 
     @Test
     public void testApproveRequest() {
-        requestJoinCompanyServiceImplUnderTest.approveRequest("status", 0L);
-        verify(mockRequestJoinCompanyRepository).approveRequest("status", 0L);
+        requestJoinCompanyServiceImplUnderTest.approveRequest("status", 1L);
+        verify(mockRequestJoinCompanyRepository).approveRequest("status", 1L);
     }
 
     @Test
     public void testFindById() {
         final RequestJoinCompany requestJoinCompany = requestJoinCompany();
         final Optional<RequestJoinCompany> optional = Optional.of(requestJoinCompany);
-        when(mockRequestJoinCompanyRepository.findById(0L)).thenReturn(optional);
-        final Optional<RequestJoinCompany> result = requestJoinCompanyServiceImplUnderTest.findById(0L);
+        when(mockRequestJoinCompanyRepository.findById(1L)).thenReturn(optional);
+        final Optional<RequestJoinCompany> result = requestJoinCompanyServiceImplUnderTest.findById(1L);
     }
 
     @Test
     public void testFindById_RequestJoinCompanyRepositoryReturnsAbsent() {
-        when(mockRequestJoinCompanyRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<RequestJoinCompany> result = requestJoinCompanyServiceImplUnderTest.findById(0L);
+        when(mockRequestJoinCompanyRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<RequestJoinCompany> result = requestJoinCompanyServiceImplUnderTest.findById(1L);
         assertThat(result).isEmpty();
     }
 }

@@ -19,7 +19,7 @@ public class EducationServiceImplTest {
 
     private EducationServiceImpl educationServiceImplUnderTest;
 
-    private Education education = new Education(0L, 0L, "school", "major", LocalDateTime.now(),
+    private Education education = new Education(1L, 1L, "school", "major", LocalDateTime.now(),
             LocalDateTime.now(), false, "description");
     @Before
     public void setUp() throws Exception {
@@ -30,15 +30,15 @@ public class EducationServiceImplTest {
     @Test
     public void testGetListEducationByCvId() {
         final List<Education> educationList = Arrays.asList(education);
-        when(educationServiceImplUnderTest.educationRepository.getListEducationByCvId(0L)).thenReturn(educationList);
-        final List<Education> result = educationServiceImplUnderTest.getListEducationByCvId(0L);
+        when(educationServiceImplUnderTest.educationRepository.getListEducationByCvId(1L)).thenReturn(educationList);
+        final List<Education> result = educationServiceImplUnderTest.getListEducationByCvId(1L);
     }
 
     @Test
     public void testGetListEducationByCvId_EducationRepositoryReturnsNoItems() {
-        when(educationServiceImplUnderTest.educationRepository.getListEducationByCvId(0L))
+        when(educationServiceImplUnderTest.educationRepository.getListEducationByCvId(1L))
                 .thenReturn(Collections.emptyList());
-        final List<Education> result = educationServiceImplUnderTest.getListEducationByCvId(0L);
+        final List<Education> result = educationServiceImplUnderTest.getListEducationByCvId(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
@@ -55,26 +55,26 @@ public class EducationServiceImplTest {
         final Education updateEducation = education;
         educationServiceImplUnderTest.updateEducation(updateEducation);
         verify(educationServiceImplUnderTest.educationRepository).updateEducation("school", "major",
-                LocalDateTime.now(), LocalDateTime.now(), "description", false, 0L);
+                LocalDateTime.now(), LocalDateTime.now(), "description", false, 1L);
     }
 
     @Test
     public void testGetEducationById() {
         final Optional<Education> optional = Optional.of(education);
-        when(educationServiceImplUnderTest.educationRepository.findById(0L)).thenReturn(optional);
-        final Optional<Education> result = educationServiceImplUnderTest.getEducationById(0L);
+        when(educationServiceImplUnderTest.educationRepository.findById(1L)).thenReturn(optional);
+        final Optional<Education> result = educationServiceImplUnderTest.getEducationById(1L);
     }
 
     @Test
     public void testGetEducationById_EducationRepositoryReturnsAbsent() {
-        when(educationServiceImplUnderTest.educationRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Education> result = educationServiceImplUnderTest.getEducationById(0L);
+        when(educationServiceImplUnderTest.educationRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Education> result = educationServiceImplUnderTest.getEducationById(1L);
         assertThat(result).isEmpty();
     }
 
     @Test
     public void testDeleteEducation() {
-        educationServiceImplUnderTest.deleteEducation(0L);
-        verify(educationServiceImplUnderTest.educationRepository).deleteEducation(0L);
+        educationServiceImplUnderTest.deleteEducation(1L);
+        verify(educationServiceImplUnderTest.educationRepository).deleteEducation(1L);
     }
 }

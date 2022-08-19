@@ -33,8 +33,8 @@ public class CVImportedServiceTest {
         cvImported.setId("id");
         cvImported.setName("name");
         cvImported.setContentType("contentType");
-        cvImported.setSize(0L);
-        cvImported.setCandidateId(0L);
+        cvImported.setSize(1L);
+        cvImported.setCandidateId(1L);
         cvImported.setCreateAt(LocalDateTime.now());
         cvImported.setData("content".getBytes());
         return cvImported;
@@ -44,7 +44,7 @@ public class CVImportedServiceTest {
         final MultipartFile file = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
         final CVImported cvImported = cvImported();
         when(mockCvImportedRepository.save(any(CVImported.class))).thenReturn(cvImported);
-        final CVImported result = cvImportedServiceUnderTest.save(file, "JPG", 0L);
+        final CVImported result = cvImportedServiceUnderTest.save(file, "JPG", 1L);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class CVImportedServiceTest {
         final MultipartFile file = null;
         final CVImported cvImported = cvImported();
         when(mockCvImportedRepository.save(any(CVImported.class))).thenReturn(cvImported);
-        assertThatThrownBy(() -> cvImportedServiceUnderTest.save(file, "IMG", 0L)).isInstanceOf(IOException.class);
+        assertThatThrownBy(() -> cvImportedServiceUnderTest.save(file, "IMG", 1L)).isInstanceOf(IOException.class);
     }
 
     @Test

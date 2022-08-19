@@ -51,16 +51,16 @@ public class DetailPackageServiceImplTest {
     }
     
     private DetailPackage detailPackage(){
-        DetailPackage detailPackage = new DetailPackage(0L, 0L, "detailNamePackage", 12345L,
+        DetailPackage detailPackage = new DetailPackage(1L, 1L, "detailNamePackage", 12345L,
                 123L, "timeExpired", "description", false, false, false, 0);
         return detailPackage;
     }
     
-    private CreatePackageRequest packageRequest = new CreatePackageRequest(0L, "detailNameTest", 12345L,
+    private CreatePackageRequest packageRequest = new CreatePackageRequest(1L, "detailNameTest", 12345L,
             123L, "timeExpired", "description", false, false, 0);
     
     private Banner banner(){
-        Banner banner = new Banner(0L, 0L, 12345L, 123L, "timeExpired",
+        Banner banner = new Banner(1L, 1L, 12345L, 123L, "timeExpired",
                 "title", "description", "image", false, false, 
                 false, false, false, false, false, false);
         return banner;
@@ -69,48 +69,48 @@ public class DetailPackageServiceImplTest {
     @Test
     public void testGetListDetailPackageFilter() {
         final Page<DetailPackage> packagePage = new PageImpl<>(Arrays.asList(detailPackage()));
-        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), eq(0L), eq(false)))
+        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
                 .thenReturn(packagePage);
         final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq(0L), eq(false)))
+        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
                 .thenReturn(bannerPage);
         final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name",
-                0L, false);
+                1L, false);
     }
 
     @Test
     public void testGetListDetailPackageFilter_DetailPackageRepositoryReturnsNoItems() {
-        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), eq(0L), eq(false)))
+        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq(0L), eq(false)))
+        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
                 .thenReturn(bannerPage);
         final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name",
-                0L, false);
+                1L, false);
     }
 
     @Test
     public void testGetListDetailPackageFilter_BannerServiceReturnsNoItems() {
         final Page<DetailPackage> packagePage = new PageImpl<>(Arrays.asList(detailPackage()));
-        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), eq(0L), eq(false)))
+        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
                 .thenReturn(packagePage);
-        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq(0L), eq(false)))
+        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name",
-                0L, false);
+                1L, false);
     }
 
     @Test
     public void testFindById() {
         final Optional<DetailPackage> detailPackage = Optional.of(detailPackage());
-        when(mockDetailPackageRepository.findById(0L)).thenReturn(detailPackage);
-        final DetailPackage result = detailPackageServiceImplUnderTest.findById(0L);
+        when(mockDetailPackageRepository.findById(1L)).thenReturn(detailPackage);
+        final DetailPackage result = detailPackageServiceImplUnderTest.findById(1L);
     }
 
     @Test
     public void testFindById_DetailPackageRepositoryReturnsAbsent() {
-        when(mockDetailPackageRepository.findById(0L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detailPackageServiceImplUnderTest.findById(0L))
+        when(mockDetailPackageRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> detailPackageServiceImplUnderTest.findById(1L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
@@ -118,9 +118,9 @@ public class DetailPackageServiceImplTest {
     public void testUpdateDetailPackage() {
         final DetailPackage detailPackage = detailPackage();
         final Optional<DetailPackage> detailPackage1 = Optional.of(detailPackage());
-        when(mockDetailPackageRepository.checkExistByDetailName("detailName", 0L)).thenReturn(detailPackage1);
+        when(mockDetailPackageRepository.checkExistByDetailName("detailName", 1L)).thenReturn(detailPackage1);
         final Optional<DetailPackage> detailPackage2 = Optional.of(detailPackage());
-        when(mockDetailPackageRepository.findById(0L)).thenReturn(detailPackage2);
+        when(mockDetailPackageRepository.findById(1L)).thenReturn(detailPackage2);
         final DetailPackage detailPackage3 = detailPackage();
         when(mockDetailPackageRepository.saveAndFlush(any(DetailPackage.class))).thenReturn(detailPackage3);
         detailPackageServiceImplUnderTest.updateDetailPackage(detailPackage);
@@ -130,9 +130,9 @@ public class DetailPackageServiceImplTest {
     @Test
     public void testUpdateDetailPackage_DetailPackageRepositoryCheckExistByDetailNameReturnsAbsent() {
         final DetailPackage detailPackage = detailPackage();
-        when(mockDetailPackageRepository.checkExistByDetailName("detailName", 0L)).thenReturn(Optional.empty());
+        when(mockDetailPackageRepository.checkExistByDetailName("detailName", 1L)).thenReturn(Optional.empty());
         final Optional<DetailPackage> detailPackage1 = Optional.of(detailPackage());
-        when(mockDetailPackageRepository.findById(0L)).thenReturn(detailPackage1);
+        when(mockDetailPackageRepository.findById(1L)).thenReturn(detailPackage1);
         final DetailPackage detailPackage2 = detailPackage();
         when(mockDetailPackageRepository.saveAndFlush(any(DetailPackage.class))).thenReturn(detailPackage2);
         detailPackageServiceImplUnderTest.updateDetailPackage(detailPackage);
@@ -143,8 +143,8 @@ public class DetailPackageServiceImplTest {
     public void testUpdateDetailPackage_DetailPackageRepositoryFindByIdReturnsAbsent() {
         final DetailPackage detailPackage = detailPackage();
         final Optional<DetailPackage> detailPackage1 = Optional.of(detailPackage());
-        when(mockDetailPackageRepository.checkExistByDetailName("detailName", 0L)).thenReturn(detailPackage1);
-        when(mockDetailPackageRepository.findById(0L)).thenReturn(Optional.empty());
+        when(mockDetailPackageRepository.checkExistByDetailName("detailName", 1L)).thenReturn(detailPackage1);
+        when(mockDetailPackageRepository.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> detailPackageServiceImplUnderTest.updateDetailPackage(detailPackage))
                 .isInstanceOf(HiveConnectException.class);
     }
@@ -153,8 +153,8 @@ public class DetailPackageServiceImplTest {
     public void testCreateNormalPackage() {
         final CreatePackageRequest request = packageRequest;
         final Optional<RentalPackage> optional = Optional.of(
-                new RentalPackage(0L, "packageGroup", "description", false));
-        when(mockRentalPackageService.findById(0L)).thenReturn(optional);
+                new RentalPackage(1L, "packageGroup", "description", false));
+        when(mockRentalPackageService.findById(1L)).thenReturn(optional);
         final Optional<DetailPackage> detailPackage = Optional.of(detailPackage());
         when(mockDetailPackageRepository.findByDetailName("detailName")).thenReturn(detailPackage);
         final DetailPackage detailPackage1 = detailPackage();
@@ -162,7 +162,7 @@ public class DetailPackageServiceImplTest {
         final DetailPackage detailPackage2 = detailPackage();
         when(mockDetailPackageRepository.save(any(DetailPackage.class))).thenReturn(detailPackage2);
         final Optional<DetailPackage> detailPackage3 = Optional.of(detailPackage());
-        when(mockDetailPackageRepository.findById(0L)).thenReturn(detailPackage3);
+        when(mockDetailPackageRepository.findById(1L)).thenReturn(detailPackage3);
         detailPackageServiceImplUnderTest.createNormalPackage(request);
         verify(mockDetailPackageRepository).save(any(DetailPackage.class));
     }
@@ -170,7 +170,7 @@ public class DetailPackageServiceImplTest {
     @Test
     public void testCreateNormalPackage_RentalPackageServiceReturnsAbsent() {
         final CreatePackageRequest request = packageRequest;
-        when(mockRentalPackageService.findById(0L)).thenReturn(Optional.empty());
+        when(mockRentalPackageService.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> detailPackageServiceImplUnderTest.createNormalPackage(request))
                 .isInstanceOf(HiveConnectException.class);
     }
@@ -179,15 +179,15 @@ public class DetailPackageServiceImplTest {
     public void testCreateNormalPackage_DetailPackageRepositoryFindByDetailNameReturnsAbsent() {
         final CreatePackageRequest request = packageRequest;
         final Optional<RentalPackage> optional = Optional.of(
-                new RentalPackage(0L, "packageGroup", "description", false));
-        when(mockRentalPackageService.findById(0L)).thenReturn(optional);
+                new RentalPackage(1L, "packageGroup", "description", false));
+        when(mockRentalPackageService.findById(1L)).thenReturn(optional);
         when(mockDetailPackageRepository.findByDetailName("detailName")).thenReturn(Optional.empty());
         final DetailPackage detailPackage = detailPackage();
         when(mockModelMapper.map(any(Object.class), eq(DetailPackage.class))).thenReturn(detailPackage);
         final DetailPackage detailPackage1 = detailPackage();
         when(mockDetailPackageRepository.save(any(DetailPackage.class))).thenReturn(detailPackage1);
         final Optional<DetailPackage> detailPackage2 = Optional.of(detailPackage());
-        when(mockDetailPackageRepository.findById(0L)).thenReturn(detailPackage2);
+        when(mockDetailPackageRepository.findById(1L)).thenReturn(detailPackage2);
         detailPackageServiceImplUnderTest.createNormalPackage(request);
         verify(mockDetailPackageRepository).save(any(DetailPackage.class));
     }
@@ -196,15 +196,15 @@ public class DetailPackageServiceImplTest {
     public void testCreateNormalPackage_DetailPackageRepositoryFindByIdReturnsAbsent() {
         final CreatePackageRequest request = packageRequest;
         final Optional<RentalPackage> optional = Optional.of(
-                new RentalPackage(0L, "packageGroup", "description", false));
-        when(mockRentalPackageService.findById(0L)).thenReturn(optional);
+                new RentalPackage(1L, "packageGroup", "description", false));
+        when(mockRentalPackageService.findById(1L)).thenReturn(optional);
         final Optional<DetailPackage> detailPackage = Optional.of(detailPackage());
         when(mockDetailPackageRepository.findByDetailName("detailName")).thenReturn(detailPackage);
         final DetailPackage detailPackage1 = detailPackage();
         when(mockModelMapper.map(any(Object.class), eq(DetailPackage.class))).thenReturn(detailPackage1);
         final DetailPackage detailPackage2 = detailPackage();
         when(mockDetailPackageRepository.save(any(DetailPackage.class))).thenReturn(detailPackage2);
-        when(mockDetailPackageRepository.findById(0L)).thenReturn(Optional.empty());
+        when(mockDetailPackageRepository.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> detailPackageServiceImplUnderTest.createNormalPackage(request))
                 .isInstanceOf(HiveConnectException.class);
         verify(mockDetailPackageRepository).save(any(DetailPackage.class));
@@ -213,25 +213,25 @@ public class DetailPackageServiceImplTest {
     @Test
     public void testDeleteDetailPackage() {
         final Optional<DetailPackage> detailPackage = Optional.of(detailPackage());
-        when(mockDetailPackageRepository.findById(0L)).thenReturn(detailPackage);
+        when(mockDetailPackageRepository.findById(1L)).thenReturn(detailPackage);
         final DetailPackage detailPackage1 = detailPackage();
         when(mockDetailPackageRepository.save(any(DetailPackage.class))).thenReturn(detailPackage1);
-        detailPackageServiceImplUnderTest.deleteDetailPackage(0L);
+        detailPackageServiceImplUnderTest.deleteDetailPackage(1L);
         verify(mockDetailPackageRepository).save(any(DetailPackage.class));
     }
 
     @Test
     public void testDeleteDetailPackage_DetailPackageRepositoryFindByIdReturnsAbsent() {
-        when(mockDetailPackageRepository.findById(0L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detailPackageServiceImplUnderTest.deleteDetailPackage(0L))
+        when(mockDetailPackageRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> detailPackageServiceImplUnderTest.deleteDetailPackage(1L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
     @Test
     public void testGetDetailPackageInfor() {
         final DetailPackage detailPackage = detailPackage();
-        when(mockDetailPackageRepository.findByRentalPackageIdAndId(0L, 0L)).thenReturn(detailPackage);
+        when(mockDetailPackageRepository.findByRentalPackageIdAndId(1L, 1L)).thenReturn(detailPackage);
         final Banner banner = banner();
-        final DetailPackageResponse result = detailPackageServiceImplUnderTest.getDetailPackageInfor(0L, 0L);
+        final DetailPackageResponse result = detailPackageServiceImplUnderTest.getDetailPackageInfor(1L, 1L);
     }
 }

@@ -36,34 +36,34 @@ public class ProfileViewerServiceImplTest {
     }
     private ProfileViewer profileViewer(){
         ProfileViewer viewer = new ProfileViewer();
-        viewer.setId(0L);
-        viewer.setCvId(0L);
-        viewer.setViewerId(0L);
-        viewer.setCandidateId(0L);
+        viewer.setId(1L);
+        viewer.setCvId(1L);
+        viewer.setViewerId(1L);
+        viewer.setCandidateId(1L);
         return viewer;
     }
     @Test
     public void testGetProfileViewerOfCv() {
         final ProfileViewer viewer = profileViewer();
         final Page<ProfileViewer> viewerPage = new PageImpl<>(Arrays.asList(viewer));
-        when(mockProfileViewerRepository.getAllByCvId(any(Pageable.class), eq(0L))).thenReturn(viewerPage);
+        when(mockProfileViewerRepository.getAllByCvId(any(Pageable.class), eq(1L))).thenReturn(viewerPage);
         final Page<ProfileViewer> result = profileViewerServiceImplUnderTest.getProfileViewerOfCv(PageRequest.of(0, 1),
-                0L);
+                1L);
     }
 
     @Test
     public void testGetProfileViewerOfCv_ProfileViewerRepositoryReturnsNoItems() {
-        when(mockProfileViewerRepository.getAllByCvId(any(Pageable.class), eq(0L)))
+        when(mockProfileViewerRepository.getAllByCvId(any(Pageable.class), eq(1L)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<ProfileViewer> result = profileViewerServiceImplUnderTest.getProfileViewerOfCv(PageRequest.of(0, 1),
-                0L);
+                1L);
     }
 
     @Test
     public void testGetByCvIdAndViewerId() {
         final ProfileViewer viewer = profileViewer();
-        when(mockProfileViewerRepository.getByCvIdAndViewerId(0L, 0L)).thenReturn(viewer);
-        final ProfileViewer result = profileViewerServiceImplUnderTest.getByCvIdAndViewerId(0L, 0L);
+        when(mockProfileViewerRepository.getByCvIdAndViewerId(1L, 1L)).thenReturn(viewer);
+        final ProfileViewer result = profileViewerServiceImplUnderTest.getByCvIdAndViewerId(1L, 1L);
     }
 
     @Test
@@ -86,14 +86,14 @@ public class ProfileViewerServiceImplTest {
     public void testGetByCvIdAndViewerIdOptional() {
         final ProfileViewer viewer = profileViewer();
         final Optional<ProfileViewer> optional = Optional.of(viewer);
-        when(mockProfileViewerRepository.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(optional);
-        final Optional<ProfileViewer> result = profileViewerServiceImplUnderTest.getByCvIdAndViewerIdOptional(0L, 0L);
+        when(mockProfileViewerRepository.getByCvIdAndViewerIdOptional(1L, 1L)).thenReturn(optional);
+        final Optional<ProfileViewer> result = profileViewerServiceImplUnderTest.getByCvIdAndViewerIdOptional(1L, 1L);
     }
 
     @Test
     public void testGetByCvIdAndViewerIdOptional_ProfileViewerRepositoryReturnsAbsent() {
-        when(mockProfileViewerRepository.getByCvIdAndViewerIdOptional(0L, 0L)).thenReturn(Optional.empty());
-        final Optional<ProfileViewer> result = profileViewerServiceImplUnderTest.getByCvIdAndViewerIdOptional(0L, 0L);
+        when(mockProfileViewerRepository.getByCvIdAndViewerIdOptional(1L, 1L)).thenReturn(Optional.empty());
+        final Optional<ProfileViewer> result = profileViewerServiceImplUnderTest.getByCvIdAndViewerIdOptional(1L, 1L);
         assertThat(result).isEmpty();
     }
 }

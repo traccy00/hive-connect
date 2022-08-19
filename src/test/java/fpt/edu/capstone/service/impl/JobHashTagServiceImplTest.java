@@ -27,19 +27,19 @@ public class JobHashTagServiceImplTest {
     public void setUp() throws Exception {
         jobHashTagServiceImplUnderTest = new JobHashTagServiceImpl(mockJobHashTagRepository);
     }
-    private JobHashtag jobHashtag = new JobHashtag(0L, 0L, 0L, "hashTagName", "status");
+    private JobHashtag jobHashtag = new JobHashtag(1L, 1L, 1L, "hashTagName", "status");
 
     @Test
     public void testGetHashTagOfJob() {
         final List<JobHashtag> hashtagList = Arrays.asList(jobHashtag);
-        when(mockJobHashTagRepository.getJobHashTagByJobId(0L)).thenReturn(hashtagList);
-        final List<JobHashtag> result = jobHashTagServiceImplUnderTest.getHashTagOfJob(0L);
+        when(mockJobHashTagRepository.getJobHashTagByJobId(1L)).thenReturn(hashtagList);
+        final List<JobHashtag> result = jobHashTagServiceImplUnderTest.getHashTagOfJob(1L);
     }
 
     @Test
     public void testGetHashTagOfJob_JobHashTagRepositoryReturnsNoItems() {
-        when(mockJobHashTagRepository.getJobHashTagByJobId(0L)).thenReturn(Collections.emptyList());
-        final List<JobHashtag> result = jobHashTagServiceImplUnderTest.getHashTagOfJob(0L);
+        when(mockJobHashTagRepository.getJobHashTagByJobId(1L)).thenReturn(Collections.emptyList());
+        final List<JobHashtag> result = jobHashTagServiceImplUnderTest.getHashTagOfJob(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 }

@@ -24,19 +24,19 @@ public class MajorLevelServiceImplTest {
         majorLevelServiceImplUnderTest.majorLevelRepository = mock(MajorLevelRepository.class);
     }
 
-    private MajorLevel majorLevel = new MajorLevel(0L, 0L, 0L, 0L, "level", false);
+    private MajorLevel majorLevel = new MajorLevel(1L, 1L, 1L, 1L, "level", false);
     @Test
     public void testGetListMajorLevelByCvId() {
         final List<MajorLevel> majorLevels = Arrays.asList(majorLevel);
-        when(majorLevelServiceImplUnderTest.majorLevelRepository.getListMajorLevelByCvId(0L)).thenReturn(majorLevels);
-        final List<MajorLevel> result = majorLevelServiceImplUnderTest.getListMajorLevelByCvId(0L);
+        when(majorLevelServiceImplUnderTest.majorLevelRepository.getListMajorLevelByCvId(1L)).thenReturn(majorLevels);
+        final List<MajorLevel> result = majorLevelServiceImplUnderTest.getListMajorLevelByCvId(1L);
     }
 
     @Test
     public void testGetListMajorLevelByCvId_MajorLevelRepositoryReturnsNoItems() {
-        when(majorLevelServiceImplUnderTest.majorLevelRepository.getListMajorLevelByCvId(0L))
+        when(majorLevelServiceImplUnderTest.majorLevelRepository.getListMajorLevelByCvId(1L))
                 .thenReturn(Collections.emptyList());
-        final List<MajorLevel> result = majorLevelServiceImplUnderTest.getListMajorLevelByCvId(0L);
+        final List<MajorLevel> result = majorLevelServiceImplUnderTest.getListMajorLevelByCvId(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
@@ -59,20 +59,20 @@ public class MajorLevelServiceImplTest {
     public void testUpdateMajorLevel() {
         final MajorLevel majorLevela = majorLevel;
         majorLevelServiceImplUnderTest.updateMajorLevel(majorLevela);
-        verify(majorLevelServiceImplUnderTest.majorLevelRepository).updateNewMajorLevel(0L, 0L, "level", false, 0L);
+        verify(majorLevelServiceImplUnderTest.majorLevelRepository).updateNewMajorLevel(1L, 1L, "level", false, 1L);
     }
 
     @Test
     public void testGetMajorLevelById() {
         final Optional<MajorLevel> optional = Optional.of(majorLevel);
-        when(majorLevelServiceImplUnderTest.majorLevelRepository.findById(0L)).thenReturn(optional);
-        final Optional<MajorLevel> result = majorLevelServiceImplUnderTest.getMajorLevelById(0L);
+        when(majorLevelServiceImplUnderTest.majorLevelRepository.findById(1L)).thenReturn(optional);
+        final Optional<MajorLevel> result = majorLevelServiceImplUnderTest.getMajorLevelById(1L);
     }
 
     @Test
     public void testGetMajorLevelById_MajorLevelRepositoryReturnsAbsent() {
-        when(majorLevelServiceImplUnderTest.majorLevelRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<MajorLevel> result = majorLevelServiceImplUnderTest.getMajorLevelById(0L);
+        when(majorLevelServiceImplUnderTest.majorLevelRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<MajorLevel> result = majorLevelServiceImplUnderTest.getMajorLevelById(1L);
         assertThat(result).isEmpty();
     }
 }

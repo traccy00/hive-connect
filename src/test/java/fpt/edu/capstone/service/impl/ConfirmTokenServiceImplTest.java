@@ -24,9 +24,9 @@ public class ConfirmTokenServiceImplTest {
 
     @Test
     public void testSaveConfirmToken() {
-        final ConfirmToken confirmToken = new ConfirmToken(0L, 0L, "confirmationToken",
+        final ConfirmToken confirmToken = new ConfirmToken(1L, 1L, "confirmationToken",
                 LocalDateTime.now());
-        final ConfirmToken token = new ConfirmToken(0L, 0L, "confirmationToken", LocalDateTime.now());
+        final ConfirmToken token = new ConfirmToken(1L, 1L, "confirmationToken", LocalDateTime.now());
         when(confirmTokenServiceImplUnderTest.confirmTokenRepository.save(any(ConfirmToken.class))).thenReturn(token);
         confirmTokenServiceImplUnderTest.saveConfirmToken(confirmToken);
         verify(confirmTokenServiceImplUnderTest.confirmTokenRepository).save(any(ConfirmToken.class));
@@ -45,14 +45,14 @@ public class ConfirmTokenServiceImplTest {
 
     @Test
     public void testGetByUserId() {
-        final ConfirmToken token = new ConfirmToken(0L, 0L, "confirmationToken", LocalDateTime.now());
-        when(confirmTokenServiceImplUnderTest.confirmTokenRepository.getByUserId(0L)).thenReturn(token);
-        final ConfirmToken result = confirmTokenServiceImplUnderTest.getByUserId(0L);
+        final ConfirmToken token = new ConfirmToken(1L, 1L, "confirmationToken", LocalDateTime.now());
+        when(confirmTokenServiceImplUnderTest.confirmTokenRepository.getByUserId(1L)).thenReturn(token);
+        final ConfirmToken result = confirmTokenServiceImplUnderTest.getByUserId(1L);
     }
 
     @Test
     public void testGetByConfirmToken() {
-        final ConfirmToken token = new ConfirmToken(0L, 0L, "confirmationToken", LocalDateTime.now());
+        final ConfirmToken token = new ConfirmToken(1L, 1L, "confirmationToken", LocalDateTime.now());
         when(confirmTokenServiceImplUnderTest.confirmTokenRepository.getByConfirmationToken("token")).thenReturn(token);
         final ConfirmToken result = confirmTokenServiceImplUnderTest.getByConfirmToken("token");
     }

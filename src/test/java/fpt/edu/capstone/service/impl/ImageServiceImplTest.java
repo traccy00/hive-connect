@@ -36,7 +36,7 @@ public class ImageServiceImplTest {
     public void setUp() throws Exception {
         imageServiceImplUnderTest = new ImageServiceImpl(mockImageRepository);
     }
-    private Image imageEntity = new Image(0L, "name", "url", 0L,
+    private Image imageEntity = new Image(1L, "name", "url", 1L,
             0, false, "contentType", "content".getBytes(), false);
     @Test
     public void testIsValidFile() {
@@ -50,7 +50,7 @@ public class ImageServiceImplTest {
         final MultipartFile file = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
         final Image image = imageEntity;
         when(mockImageRepository.save(any(Image.class))).thenReturn(image);
-        final Image result = imageServiceImplUnderTest.saveCompanyAvatar(file, "IMG", 0L);
+        final Image result = imageServiceImplUnderTest.saveCompanyAvatar(file, "IMG", 1L);
     }
 
     @Test
@@ -58,21 +58,21 @@ public class ImageServiceImplTest {
         final MultipartFile file = null;
         final Image image = imageEntity;
         when(mockImageRepository.save(any(Image.class))).thenReturn(image);
-        assertThatThrownBy(() -> imageServiceImplUnderTest.saveCompanyAvatar(file, "jpg", 0L))
+        assertThatThrownBy(() -> imageServiceImplUnderTest.saveCompanyAvatar(file, "jpg", 1L))
                 .isInstanceOf(IOException.class);
     }
 
     @Test
     public void testFindAvatarByCompanyId() {
         final Optional<Image> image = Optional.of(imageEntity);
-        when(mockImageRepository.findAvatarByCompanyId(0L)).thenReturn(image);
-        final Optional<Image> result = imageServiceImplUnderTest.findAvatarByCompanyId(0L);
+        when(mockImageRepository.findAvatarByCompanyId(1L)).thenReturn(image);
+        final Optional<Image> result = imageServiceImplUnderTest.findAvatarByCompanyId(1L);
     }
 
     @Test
     public void testFindAvatarByCompanyId_ImageRepositoryReturnsAbsent() {
-        when(mockImageRepository.findAvatarByCompanyId(0L)).thenReturn(Optional.empty());
-        final Optional<Image> result = imageServiceImplUnderTest.findAvatarByCompanyId(0L);
+        when(mockImageRepository.findAvatarByCompanyId(1L)).thenReturn(Optional.empty());
+        final Optional<Image> result = imageServiceImplUnderTest.findAvatarByCompanyId(1L);
         assertThat(result).isEmpty();
     }
 
@@ -93,63 +93,63 @@ public class ImageServiceImplTest {
     @Test
     public void testFinById() {
         final Optional<Image> image = Optional.of(imageEntity);
-        when(mockImageRepository.findById(0L)).thenReturn(image);
-        final Optional<Image> result = imageServiceImplUnderTest.finById(0L);
+        when(mockImageRepository.findById(1L)).thenReturn(image);
+        final Optional<Image> result = imageServiceImplUnderTest.finById(1L);
     }
 
     @Test
     public void testFinById_ImageRepositoryReturnsAbsent() {
-        when(mockImageRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Image> result = imageServiceImplUnderTest.finById(0L);
+        when(mockImageRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Image> result = imageServiceImplUnderTest.finById(1L);
         assertThat(result).isEmpty();
     }
 
     @Test
     public void testGetAvatarRecruiter() {
         final Image image = imageEntity;
-        when(mockImageRepository.getAvatarRecruiter(0L)).thenReturn(image);
-        final Image result = imageServiceImplUnderTest.getAvatarRecruiter(0L);
+        when(mockImageRepository.getAvatarRecruiter(1L)).thenReturn(image);
+        final Image result = imageServiceImplUnderTest.getAvatarRecruiter(1L);
     }
 
     @Test
     public void testGetAvatarCandidate() {
         final Image image = imageEntity;
-        when(mockImageRepository.getAvatarCandidate(0L)).thenReturn(image);
-        final Image result = imageServiceImplUnderTest.getAvatarCandidate(0L);
+        when(mockImageRepository.getAvatarCandidate(1L)).thenReturn(image);
+        final Image result = imageServiceImplUnderTest.getAvatarCandidate(1L);
     }
 
     @Test
     public void testGetImageCompany() {
         final Optional<Image> image = Optional.ofNullable(imageEntity);
-        when(mockImageRepository.getImageCompany(0L, false)).thenReturn(image);
-        final Optional<Image> result = imageServiceImplUnderTest.getImageCompany(0L, false);
+        when(mockImageRepository.getImageCompany(1L, false)).thenReturn(image);
+        final Optional<Image> result = imageServiceImplUnderTest.getImageCompany(1L, false);
     }
 
     @Test
     public void testDeleteImageById() {
-        imageServiceImplUnderTest.deleteImageById(Arrays.asList(0L));
-        verify(mockImageRepository).deleteImageById(Arrays.asList(0L));
+        imageServiceImplUnderTest.deleteImageById(Arrays.asList(1L));
+        verify(mockImageRepository).deleteImageById(Arrays.asList(1L));
     }
 
     @Test
     public void testSaveImageCompany() {
         final Image image = imageEntity;
         when(mockImageRepository.save(any(Image.class))).thenReturn(image);
-        imageServiceImplUnderTest.saveImageCompany(false, false, 0L, Arrays.asList("value"));
+        imageServiceImplUnderTest.saveImageCompany(false, false, 1L, Arrays.asList("value"));
         verify(mockImageRepository).save(any(Image.class));
     }
 
     @Test
     public void testGetCompanyImageList() {
         final List<Image> images = Arrays.asList(imageEntity);
-        when(mockImageRepository.getCompanyImageList(0L, false, false)).thenReturn(images);
-        final List<Image> result = imageServiceImplUnderTest.getCompanyImageList(0L, false, false);
+        when(mockImageRepository.getCompanyImageList(1L, false, false)).thenReturn(images);
+        final List<Image> result = imageServiceImplUnderTest.getCompanyImageList(1L, false, false);
     }
 
     @Test
     public void testGetCompanyImageList_ImageRepositoryReturnsNoItems() {
-        when(mockImageRepository.getCompanyImageList(0L, false, false)).thenReturn(Collections.emptyList());
-        final List<Image> result = imageServiceImplUnderTest.getCompanyImageList(0L, false, false);
+        when(mockImageRepository.getCompanyImageList(1L, false, false)).thenReturn(Collections.emptyList());
+        final List<Image> result = imageServiceImplUnderTest.getCompanyImageList(1L, false, false);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 }

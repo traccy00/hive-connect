@@ -34,7 +34,7 @@ public class RoleServiceImplTest {
     
     private Role role(){
         Role role = new Role();
-        role.setId(0L);
+        role.setId(1L);
         role.setName("name");
         role.setDescription("description");
         return role;
@@ -42,21 +42,21 @@ public class RoleServiceImplTest {
     
     @Test
     public void testGetRoleById() {
-        when(mockRoleRepository.getById(0L)).thenReturn(role());
-        final Role result = roleServiceImplUnderTest.getRoleById(0L);
+        when(mockRoleRepository.getById(1L)).thenReturn(role());
+        final Role result = roleServiceImplUnderTest.getRoleById(1L);
     }
 
     @Test
     public void testFindRoleById() {
         final Optional<Role> optional = Optional.of(role());
-        when(mockRoleRepository.findById(0L)).thenReturn(optional);
-        final Optional<Role> result = roleServiceImplUnderTest.findRoleById(0L);
+        when(mockRoleRepository.findById(1L)).thenReturn(optional);
+        final Optional<Role> result = roleServiceImplUnderTest.findRoleById(1L);
     }
 
     @Test
     public void testFindRoleById_RoleRepositoryReturnsAbsent() {
-        when(mockRoleRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Role> result = roleServiceImplUnderTest.findRoleById(0L);
+        when(mockRoleRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Role> result = roleServiceImplUnderTest.findRoleById(1L);
         assertThat(result).isEmpty();
     }
 

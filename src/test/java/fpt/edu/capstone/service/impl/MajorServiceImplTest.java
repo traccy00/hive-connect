@@ -23,7 +23,7 @@ public class MajorServiceImplTest {
 
     private MajorServiceImpl majorServiceImplUnderTest;
 
-    private Major major = new Major(0L, 0L, "majorName", "status");
+    private Major major = new Major(1L, 1L, "majorName", "status");
     @Before
     public void setUp() throws Exception {
         majorServiceImplUnderTest = new MajorServiceImpl(mockMajorRepository);
@@ -31,36 +31,36 @@ public class MajorServiceImplTest {
 
     @Test
     public void testGetNameByMajorId() {
-        when(mockMajorRepository.getNameByMajorId(0L)).thenReturn("result");
-        final String result = majorServiceImplUnderTest.getNameByMajorId(0L);
+        when(mockMajorRepository.getNameByMajorId(1L)).thenReturn("result");
+        final String result = majorServiceImplUnderTest.getNameByMajorId(1L);
         assertThat(result).isEqualTo("result");
     }
 
     @Test
     public void testGetAllMajorByFieldId() {
         final List<Major> majors = Arrays.asList(major);
-        when(mockMajorRepository.getAllMajorByFieldId(0L)).thenReturn(majors);
-        final List<Major> result = majorServiceImplUnderTest.getAllMajorByFieldId(0L);
+        when(mockMajorRepository.getAllMajorByFieldId(1L)).thenReturn(majors);
+        final List<Major> result = majorServiceImplUnderTest.getAllMajorByFieldId(1L);
     }
 
     @Test
     public void testGetAllMajorByFieldId_MajorRepositoryReturnsNoItems() {
-        when(mockMajorRepository.getAllMajorByFieldId(0L)).thenReturn(Collections.emptyList());
-        final List<Major> result = majorServiceImplUnderTest.getAllMajorByFieldId(0L);
+        when(mockMajorRepository.getAllMajorByFieldId(1L)).thenReturn(Collections.emptyList());
+        final List<Major> result = majorServiceImplUnderTest.getAllMajorByFieldId(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
     @Test
     public void testGetMajorNameByCVId() {
-        when(mockMajorRepository.getMajorNameByCVId(0L)).thenReturn(Arrays.asList("value"));
-        final List<String> result = majorServiceImplUnderTest.getMajorNameByCVId(0L);
+        when(mockMajorRepository.getMajorNameByCVId(1L)).thenReturn(Arrays.asList("value"));
+        final List<String> result = majorServiceImplUnderTest.getMajorNameByCVId(1L);
         assertThat(result).isEqualTo(Arrays.asList("value"));
     }
 
     @Test
     public void testGetMajorNameByCVId_MajorRepositoryReturnsNoItems() {
-        when(mockMajorRepository.getMajorNameByCVId(0L)).thenReturn(Collections.emptyList());
-        final List<String> result = majorServiceImplUnderTest.getMajorNameByCVId(0L);
+        when(mockMajorRepository.getMajorNameByCVId(1L)).thenReturn(Collections.emptyList());
+        final List<String> result = majorServiceImplUnderTest.getMajorNameByCVId(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 }

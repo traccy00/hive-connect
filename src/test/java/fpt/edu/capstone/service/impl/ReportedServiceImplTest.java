@@ -58,12 +58,12 @@ public class ReportedServiceImplTest {
 
     private Users users(){
         Users users = new Users();
-        users.setId(0L);
+        users.setId(1L);
         users.setUsername("username");
         users.setPassword("password");
         users.setEmail("email");
         users.setPhone("0967445450");
-        users.setRoleId(0L);
+        users.setRoleId(1L);
         users.setIsDeleted(0);
         users.setLastLoginTime(LocalDateTime.now());
         users.setVerifiedEmail(false);
@@ -78,7 +78,7 @@ public class ReportedServiceImplTest {
 
     private ReportJobRequest request(){
         ReportJobRequest request = new ReportJobRequest();
-        request.setJobId(0L);
+        request.setJobId(1L);
         request.setReportReason("reportReason");
         request.setRelatedLink("relatedLink");
         request.setFullName("fullName");
@@ -90,39 +90,39 @@ public class ReportedServiceImplTest {
 
     private Job job(){
         Job job = new Job();
-        job.setId(0L);
-        job.setCompanyId(0L);
+        job.setId(1L);
+        job.setCompanyId(1L);
         job.setJobName("jobName");
         job.setWorkPlace("workPlace");
         job.setWorkForm("workForm");
         job.setStartDate(LocalDateTime.now());
         job.setEndDate(LocalDateTime.now().plusDays(10));
-        job.setFromSalary(0L);
-        job.setToSalary(0L);
-        job.setNumberRecruits(0L);
+        job.setFromSalary(1L);
+        job.setToSalary(1L);
+        job.setNumberRecruits(1L);
         job.setRank("rank");
         job.setExperience("experience");
         job.setGender(false);
         job.setJobDescription("jobDescription");
         job.setJobRequirement("jobRequirement");
         job.setBenefit("benefit");
-        job.setFieldId(0L);
+        job.setFieldId(1L);
         job.setIsDeleted(0);
         job.setPopularJob(false);
         job.setNewJob(false);
         job.setUrgentJob(false);
-        job.setRecruiterId(0L);
+        job.setRecruiterId(1L);
         job.setWeekday("weekday");
-        job.setCountryId(0L);
+        job.setCountryId(1L);
         job.setFlag("Posted");
         return job;
     }
 
     private Report report(){
         Report report = new Report();
-        report.setId(0L);
+        report.setId(1L);
         report.setReportReason("reportReason");
-        report.setPersonReportId(0L);
+        report.setPersonReportId(1L);
         report.setRelatedLink("relatedLink");
         report.setApprovalReportedStatus("approvalReportedStatus");
         report.setFullName("fullName");
@@ -130,14 +130,14 @@ public class ReportedServiceImplTest {
         report.setUserAddress("userAddress");
         report.setUserEmail("userEmail");
         report.setReportType("reportType");
-        report.setJobId(0L);
+        report.setJobId(1L);
         return report;
     }
 
     private Recruiter recruiter(){
         Recruiter recruiter = new Recruiter();
-        recruiter.setId(0L);
-        recruiter.setCompanyId(0L);
+        recruiter.setId(1L);
+        recruiter.setCompanyId(1L);
         recruiter.setCompanyName("companyName");
         recruiter.setFullName("fullName");
         recruiter.setVerifyAccount(true);
@@ -147,7 +147,7 @@ public class ReportedServiceImplTest {
         recruiter.setAdditionalLicense("additionalLicense");
         recruiter.setBusinessLicenseUrl("businessLicenseUrl");
         recruiter.setAdditionalLicenseUrl("additionalLicenseUrl");
-        recruiter.setUserId(0L);
+        recruiter.setUserId(1L);
         recruiter.setDeleted(false);
         recruiter.setCompanyAddress("companyAddress");
         recruiter.setBusinessLicenseApprovalStatus("businessLicenseApprovalStatus");
@@ -159,17 +159,17 @@ public class ReportedServiceImplTest {
     @Test
     public void testSearchReportedUsers() {
         when(mockReportedRepository.searchReportedUsers(any(Pageable.class), eq("username"), eq("personReportName"),
-                eq(Arrays.asList(0L)), eq(Arrays.asList(0L)))).thenReturn(new PageImpl<>(Arrays.asList()));
+                eq(Arrays.asList(1L)), eq(Arrays.asList(1L)))).thenReturn(new PageImpl<>(Arrays.asList()));
         final Page<ReportedUserResponse> result = reportedServiceImplUnderTest.searchReportedUsers(PageRequest.of(0, 1),
-                "username", "personReportName", Arrays.asList(0L), Arrays.asList(0L));
+                "username", "personReportName", Arrays.asList(1L), Arrays.asList(1L));
     }
 
     @Test
     public void testSearchReportedUsers_ReportedRepositoryReturnsNoItems() {
         when(mockReportedRepository.searchReportedUsers(any(Pageable.class), eq("username"), eq("personReportName"),
-                eq(Arrays.asList(0L)), eq(Arrays.asList(0L)))).thenReturn(new PageImpl<>(Collections.emptyList()));
+                eq(Arrays.asList(1L)), eq(Arrays.asList(1L)))).thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<ReportedUserResponse> result = reportedServiceImplUnderTest.searchReportedUsers(PageRequest.of(0, 1),
-                "username", "personReportName", Arrays.asList(0L), Arrays.asList(0L));
+                "username", "personReportName", Arrays.asList(1L), Arrays.asList(1L));
     }
 
     @Test
@@ -194,26 +194,26 @@ public class ReportedServiceImplTest {
     public void testReportJob() {
         final ReportJobRequest request = request();
         final Users users =users();
-        when(mockUserService.getUserById(0L)).thenReturn(users);
+        when(mockUserService.getUserById(1L)).thenReturn(users);
         final Job job = job();
-        when(mockJobService.getJobById(0L)).thenReturn(job);
+        when(mockJobService.getJobById(1L)).thenReturn(job);
         final Report report = report();
         when(mockModelMapper.map(any(Object.class), eq(Report.class))).thenReturn(report);
         final Recruiter recruiter = recruiter();
-        when(mockRecruiterService.getRecruiterById(0L)).thenReturn(recruiter);
+        when(mockRecruiterService.getRecruiterById(1L)).thenReturn(recruiter);
         final Report report1 = report();
         when(mockReportedRepository.save(any(Report.class))).thenReturn(report1);
         final Optional<Report> report2 = Optional.of(report());
-        when(mockReportedRepository.findById(0L)).thenReturn(report2);
-        final Report result = reportedServiceImplUnderTest.reportJob(request, 0L);
+        when(mockReportedRepository.findById(1L)).thenReturn(report2);
+        final Report result = reportedServiceImplUnderTest.reportJob(request, 1L);
         verify(mockReportedRepository).save(any(Report.class));
     }
 
     @Test
     public void testReportJob_UserServiceReturnsNull() {
         final ReportJobRequest request = request();
-        when(mockUserService.getUserById(0L)).thenReturn(null);
-        assertThatThrownBy(() -> reportedServiceImplUnderTest.reportJob(request, 0L))
+        when(mockUserService.getUserById(1L)).thenReturn(null);
+        assertThatThrownBy(() -> reportedServiceImplUnderTest.reportJob(request, 1L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
@@ -221,9 +221,9 @@ public class ReportedServiceImplTest {
     public void testReportJob_JobServiceReturnsNull() {
         final ReportJobRequest request = request();
         final Users users = users();
-        when(mockUserService.getUserById(0L)).thenReturn(users);
-        when(mockJobService.getJobById(0L)).thenReturn(null);
-        assertThatThrownBy(() -> reportedServiceImplUnderTest.reportJob(request, 0L))
+        when(mockUserService.getUserById(1L)).thenReturn(users);
+        when(mockJobService.getJobById(1L)).thenReturn(null);
+        assertThatThrownBy(() -> reportedServiceImplUnderTest.reportJob(request, 1L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
@@ -231,17 +231,17 @@ public class ReportedServiceImplTest {
     public void testReportJob_ReportedRepositoryFindByIdReturnsAbsent() {
         final ReportJobRequest request = request();
         final Users users = users();
-        when(mockUserService.getUserById(0L)).thenReturn(users);
+        when(mockUserService.getUserById(1L)).thenReturn(users);
         final Job job = job();
-        when(mockJobService.getJobById(0L)).thenReturn(job);
+        when(mockJobService.getJobById(1L)).thenReturn(job);
         final Report report = report();
         when(mockModelMapper.map(any(Object.class), eq(Report.class))).thenReturn(report);
         final Recruiter recruiter = recruiter();
-        when(mockRecruiterService.getRecruiterById(0L)).thenReturn(recruiter);
+        when(mockRecruiterService.getRecruiterById(1L)).thenReturn(recruiter);
         final Report report1 = report();
         when(mockReportedRepository.save(any(Report.class))).thenReturn(report1);
-        when(mockReportedRepository.findById(0L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> reportedServiceImplUnderTest.reportJob(request, 0L))
+        when(mockReportedRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> reportedServiceImplUnderTest.reportJob(request, 1L))
                 .isInstanceOf(HiveConnectException.class);
         verify(mockReportedRepository).save(any(Report.class));
     }

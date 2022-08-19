@@ -26,52 +26,52 @@ public class LanguageServiceImplTest {
 
     @Test
     public void testGetListLanguageByCvId() {
-        final List<Language> list = Arrays.asList(new Language(0L, "language", "level", 0L));
-        when(languageServiceImplUnderTest.languageRepository.getListLanguageByCvId(0L)).thenReturn(list);
-        final List<Language> result = languageServiceImplUnderTest.getListLanguageByCvId(0L);
+        final List<Language> list = Arrays.asList(new Language(1L, "language", "level", 1L));
+        when(languageServiceImplUnderTest.languageRepository.getListLanguageByCvId(1L)).thenReturn(list);
+        final List<Language> result = languageServiceImplUnderTest.getListLanguageByCvId(1L);
     }
 
     @Test
     public void testGetListLanguageByCvId_LanguageRepositoryReturnsNoItems() {
-        when(languageServiceImplUnderTest.languageRepository.getListLanguageByCvId(0L))
+        when(languageServiceImplUnderTest.languageRepository.getListLanguageByCvId(1L))
                 .thenReturn(Collections.emptyList());
-        final List<Language> result = languageServiceImplUnderTest.getListLanguageByCvId(0L);
+        final List<Language> result = languageServiceImplUnderTest.getListLanguageByCvId(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
     @Test
     public void testInsertLanguage() {
-        final Language newLanguage = new Language(0L, "language", "level", 0L);
-        final Language language = new Language(0L, "language", "level", 0L);
+        final Language newLanguage = new Language(1L, "language", "level", 1L);
+        final Language language = new Language(1L, "language", "level", 1L);
         when(languageServiceImplUnderTest.languageRepository.save(any(Language.class))).thenReturn(language);
         final Language result = languageServiceImplUnderTest.insertLanguage(newLanguage);
     }
 
     @Test
     public void testDeleteLanguage() {
-        final Language language = new Language(0L, "language", "level", 0L);
+        final Language language = new Language(1L, "language", "level", 1L);
         languageServiceImplUnderTest.deleteLanguage(language);
         verify(languageServiceImplUnderTest.languageRepository).delete(any(Language.class));
     }
 
     @Test
     public void testUpdateLanguage() {
-        final Language language = new Language(0L, "language", "level", 0L);
+        final Language language = new Language(1L, "language", "level", 1L);
         languageServiceImplUnderTest.updateLanguage(language);
-        verify(languageServiceImplUnderTest.languageRepository).updateLanguage("language", "level", 0L);
+        verify(languageServiceImplUnderTest.languageRepository).updateLanguage("language", "level", 1L);
     }
 
     @Test
     public void testGetLanguageById() {
-        final Optional<Language> language = Optional.of(new Language(0L, "language", "level", 0L));
-        when(languageServiceImplUnderTest.languageRepository.findById(0L)).thenReturn(language);
-        final Optional<Language> result = languageServiceImplUnderTest.getLanguageById(0L);
+        final Optional<Language> language = Optional.of(new Language(1L, "language", "level", 1L));
+        when(languageServiceImplUnderTest.languageRepository.findById(1L)).thenReturn(language);
+        final Optional<Language> result = languageServiceImplUnderTest.getLanguageById(1L);
     }
 
     @Test
     public void testGetLanguageById_LanguageRepositoryReturnsAbsent() {
-        when(languageServiceImplUnderTest.languageRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Language> result = languageServiceImplUnderTest.getLanguageById(0L);
+        when(languageServiceImplUnderTest.languageRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Language> result = languageServiceImplUnderTest.getLanguageById(1L);
         assertThat(result).isEmpty();
     }
 }

@@ -390,7 +390,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         }
     }
 
-    private void setupBanner(Payment payment, BannerActive bannerActive, String bannerDisplayPosition, String item) {
+    public void setupBanner(Payment payment, BannerActive bannerActive, String bannerDisplayPosition, String item) {
         if (bannerActive != null && bannerActive.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
             //can not change banner image if admin approved
             return;

@@ -2,12 +2,11 @@ package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.payment.PaymentDTO;
+import fpt.edu.capstone.dto.payment.PaymentResponse;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
 import fpt.edu.capstone.dto.payment.RevenueResponse;
-import fpt.edu.capstone.entity.DetailPackage;
-import fpt.edu.capstone.entity.Job;
-import fpt.edu.capstone.entity.Payment;
-import fpt.edu.capstone.entity.Recruiter;
+import fpt.edu.capstone.entity.*;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.PaymentRepository;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
@@ -19,21 +18,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ui.ModelMap;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,6 +50,9 @@ class PaymentServiceImplTest {
 	DetailPackageServiceImpl detailPackageService;
 
 	@Mock
+	BannerServiceImpl bannerService;
+
+	@Mock
 	PaymentRepository paymentRepository;
 
 	@Mock
@@ -67,8 +66,39 @@ class PaymentServiceImplTest {
 		MockitoAnnotations.openMocks(this);
 	}
 
-	//PayController line 64
+	private Recruiter recruiter(){
+		Recruiter recruiter = new Recruiter();
+		recruiter.setId(1L);
+		recruiter.setCompanyId(1L);
+		recruiter.setCompanyName("companyName");
+		recruiter.setFullName("fullName");
+		recruiter.setVerifyAccount(true);
+		recruiter.setGender(false);
+		recruiter.setPosition("HR");
+		recruiter.setLinkedinAccount("linkedinAccount");
+		recruiter.setAdditionalLicense("additionalLicense");
+		recruiter.setBusinessLicenseUrl("businessLicenseUrl");
+		recruiter.setAdditionalLicenseUrl("additionalLicenseUrl");
+		recruiter.setUserId(1L);
+		recruiter.setDeleted(false);
+		recruiter.setCompanyAddress("companyAddress");
+		recruiter.setBusinessLicenseApprovalStatus("businessLicenseApprovalStatus");
+		recruiter.setAvatarUrl("avatarUrl");
+		recruiter.setTotalCvView(10);
+		return recruiter;
+	}
 
+	Payment payment(){
+		Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType", "bankCode", "command",
+						"currCode", "local", LocalDateTime.of(2020, 1, 1, 0, 0, 0), false);
+		return payment;
+	}
+	
+	DetailPackage detailPackage(){
+		DetailPackage detailPackage = new DetailPackage(1L, 1L, "detailName", 1231L, 1L, "timeExpired",
+				"description", false, false, false, 0);
+		return detailPackage;
+	}
 	@Test
 	void givenVnpOrderInfoInvalid_whenCallSavePayment_thenModelMapperMapAreNotCalled() {
 		String vnpOrderInfo = "recruiterId a detailPackageId b bannerId 1 amount 1 description abc orderType abc bankCode abc jobId 1";
@@ -106,9 +136,185 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals("Nhà tuyển dụng có id = " + payment.getRecruiterId() + "không tồn tại", exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
+	@Test
+	public void testGetListPaymentFilter() {
+		final List<Payment> paymentList = Arrays.asList();
+		when(paymentRepository.getListPaymentFilter(1L, 1L, 1L, "transactionCode", "orderType"))
+				.thenReturn(paymentList);
+		final List<Payment> result = paymentService.getListPaymentFilter(1L, 1L, 1L, "transactionCode",
+				"orderType");
+	}
+
+	@Test
+	public void testGetListPaymentFilter_PaymentRepositoryReturnsNoItems() {
+		when(paymentRepository.getListPaymentFilter(1L, 1L, 1L, "transactionCode", "orderType"))
+				.thenReturn(Collections.emptyList());
+		final List<Payment> result = paymentService.getListPaymentFilter(1L, 1L, 1L, "transactionCode",
+				"orderType");
+		assertThat(result).isEqualTo(Collections.emptyList());
+	}
+
+	@Test
+	public void testFindRecruiterPurchasedPackage() {
+		final List<Payment> paymentList = Arrays.asList(payment());
+		when(paymentRepository.findByRecruiterIdAndExpiredStatusFalse(1L)).thenReturn(paymentList);
+		final DetailPackage detailPackage = detailPackage();
+		when(detailPackageService.findById(1L)).thenReturn(detailPackage);
+		final Banner banner = new Banner(1L, 1L, 123456L, 123L, "timeExpired", "detailName", "description", "image", false,
+				false, false, false, false, false, false, false);
+		when(bannerService.findById(1L)).thenReturn(banner);
+		final List<PaymentResponse> result = paymentService.findRecruiterPurchasedPackage(1L);
+	}
+
+	@Test
+	public void testFindRecruiterPurchasedPackage_PaymentRepositoryReturnsNull() {
+		when(paymentRepository.findByRecruiterIdAndExpiredStatusFalse(1L)).thenReturn(null);
+		assertThatThrownBy(() -> paymentService.findRecruiterPurchasedPackage(1L))
+				.isInstanceOf(HiveConnectException.class);
+	}
+
+	@Test
+	public void testFindRecruiterPurchasedPackage_PaymentRepositoryReturnsNoItems() {
+		when(paymentRepository.findByRecruiterIdAndExpiredStatusFalse(1L)).thenReturn(Collections.emptyList());
+		final DetailPackage detailPackage = detailPackage();
+		when(detailPackageService.findById(1L)).thenReturn(detailPackage);
+		final Banner banner = new Banner(1L, 1L, 1L, 1L, "timeExpired", "detailName", "description", "image", false,
+				false, false, false, false, false, false, false);
+		when(bannerService.findById(1L)).thenReturn(banner);
+		final List<PaymentResponse> result = paymentService.findRecruiterPurchasedPackage(1L);
+		assertThat(result).isEqualTo(Collections.emptyList());
+	}
+
+	@Test
+	public void testGetRevenueExporter() {
+		final List<Payment> paymentList = Arrays.asList(
+				payment());
+		when(paymentRepository.getRevenueInMonthExporter(LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+				LocalDateTime.of(2020, 1, 1, 0, 0, 0))).thenReturn(paymentList);
+		final RevenueResponse response = new RevenueResponse();
+		response.setId(1L);
+		response.setRecruiterId(1L);
+		response.setRecruiterName("fullName");
+		response.setJobId(1L);
+		response.setDetailPackageId(1L);
+		response.setRentalPackageName("Banner quảng cáo");
+		response.setBannerId(1L);
+		response.setTransactionCode("transactionCode");
+		response.setAmount(0);
+		response.setDescription("description");
+		response.setOrderType("orderType");
+		response.setBankCode("bankCode");
+		response.setCommand("command");
+		response.setCurrCode("currCode");
+		response.setLocal("local");
+		when(modelMapper.map(any(Object.class), eq(RevenueResponse.class))).thenReturn(response);
+
+		when(rentalPackageService.getRentalPackageName(1L)).thenReturn("Banner quảng cáo");
+		final Recruiter recruiter = recruiter();
+		when(recruiterService.getRecruiterById(1L)).thenReturn(recruiter);
+		final List<RevenueResponse> result = paymentService.getRevenueExporter(
+				LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+	}
+
+	@Test
+	public void testGetRevenueExporter_PaymentRepositoryReturnsNoItems() {
+		when(paymentRepository.getRevenueInMonthExporter(LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+				LocalDateTime.of(2020, 1, 1, 0, 0, 0))).thenReturn(Collections.emptyList());
+		final RevenueResponse response = new RevenueResponse();
+		response.setId(1L);
+		response.setRecruiterId(1L);
+		response.setRecruiterName("fullName");
+		response.setJobId(1L);
+		response.setDetailPackageId(1L);
+		response.setRentalPackageName("Banner quảng cáo");
+		response.setBannerId(1L);
+		response.setTransactionCode("transactionCode");
+		response.setAmount(0);
+		response.setDescription("description");
+		response.setOrderType("orderType");
+		response.setBankCode("bankCode");
+		response.setCommand("command");
+		response.setCurrCode("currCode");
+		response.setLocal("local");
+		when(modelMapper.map(any(Object.class), eq(RevenueResponse.class))).thenReturn(response);
+		when(rentalPackageService.getRentalPackageName(1L)).thenReturn("Banner quảng cáo");
+		final Recruiter recruiter = recruiter();
+		when(recruiterService.getRecruiterById(1L)).thenReturn(recruiter);
+		final List<RevenueResponse> result = paymentService.getRevenueExporter(
+				LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+		assertThat(result).isEqualTo(Collections.emptyList());
+	}
+
+	@Test
+	public void testFindById() throws Exception {
+		final Optional<Payment> payment = Optional.of(
+				payment());
+		when(paymentRepository.findById(1L)).thenReturn(payment);
+		final Payment result = paymentService.findById(1L);
+	}
+
+	@Test
+	public void testFindById_PaymentRepositoryReturnsAbsent() {
+		when(paymentRepository.findById(1L)).thenReturn(Optional.empty());
+		assertThatThrownBy(() -> paymentService.findById(1L)).isInstanceOf(HiveConnectException.class);
+	}
+
+	@Test
+	public void testUpdatePayment() {
+		final Payment payment = payment();
+		final Payment payment1 = payment();
+		when(paymentRepository.saveAndFlush(any(Payment.class))).thenReturn(payment1);
+		paymentService.updatePayment(payment);
+		verify(paymentRepository).saveAndFlush(any(Payment.class));
+	}
+
+	@Test
+	public void testFindAll() {
+		final List<Payment> paymentList = Arrays.asList(
+				payment());
+		when(paymentRepository.findAll()).thenReturn(paymentList);
+		final List<Payment> result = paymentService.findAll();
+	}
+
+	@Test
+	public void testFindAll_PaymentRepositoryReturnsNoItems() {
+		when(paymentRepository.findAll()).thenReturn(Collections.emptyList());
+		final List<Payment> result = paymentService.findAll();
+		assertThat(result).isEqualTo(Collections.emptyList());
+	}
+
+	@Test
+	public void testSave() {
+		final Payment payment = payment();
+		final Payment payment1 = payment();
+		when(paymentRepository.save(any(Payment.class))).thenReturn(payment1);
+		paymentService.save(payment);
+		verify(paymentRepository).save(any(Payment.class));
+	}
+
+	@Test
+	public void testFindByIdAndRecruiterId() {
+		final Payment payment = payment();
+		when(paymentRepository.findByIdAndRecruiterId(1L, 1L)).thenReturn(payment);
+		final Payment result = paymentService.findByIdAndRecruiterId(1L, 1L);
+	}
+
+	@Test
+	public void testGetListJobIdInPayment() {
+		when(paymentRepository.getListJobIdInPayment()).thenReturn(Arrays.asList(1L));
+		final List<Long> result = paymentService.getListJobIdInPayment();
+		assertThat(result).isEqualTo(Arrays.asList(1L));
+	}
+
+	@Test
+	public void testGetListJobIdInPayment_PaymentRepositoryReturnsNoItems() {
+		when(paymentRepository.getListJobIdInPayment()).thenReturn(Collections.emptyList());
+		final List<Long> result = paymentService.getListJobIdInPayment();
+		assertThat(result).isEqualTo(Collections.emptyList());
+	}
 
 	@Test
 	void givenPaymentGetBannerIdGreaterThan0AndPaymentGetDetailPackageIdGreaterThan0_whenCallSavePayment_thenThrowException() {

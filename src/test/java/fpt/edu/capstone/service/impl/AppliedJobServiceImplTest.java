@@ -41,31 +41,31 @@ public class AppliedJobServiceImplTest {
 
     @Test
     public void testGetAppliedJobPendingApproval() {
-        final AppliedJob appliedJob = new AppliedJob(0L, 0L, 0L, false, "approvalStatus", false, "cvUploadUrl");
-        when(mockAppliedJobRepository.getAppliedJobPendingApproval(0L, 0L, "status", false)).thenReturn(appliedJob);
-        final AppliedJob result = appliedJobServiceImplUnderTest.getAppliedJobPendingApproval(0L, 0L);
+        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl");
+        when(mockAppliedJobRepository.getAppliedJobPendingApproval(1L, 1L, "status", false)).thenReturn(appliedJob);
+        final AppliedJob result = appliedJobServiceImplUnderTest.getAppliedJobPendingApproval(1L, 1L);
     }
 
     @Test
     public void testGetAppliedJobBefore() {
-        final AppliedJob appliedJob = new AppliedJob(0L, 0L, 0L, false, "approvalStatus", false, "cvUploadUrl");
-        when(mockAppliedJobRepository.getByCandidateIdAndJobId(0L, 0L)).thenReturn(appliedJob);
-        final AppliedJob result = appliedJobServiceImplUnderTest.getAppliedJobBefore(0L, 0L);
+        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl");
+        when(mockAppliedJobRepository.getByCandidateIdAndJobId(1L, 1L)).thenReturn(appliedJob);
+        final AppliedJob result = appliedJobServiceImplUnderTest.getAppliedJobBefore(1L, 1L);
     }
 
     @Test
     public void testGetCvAppliedJob() {
         final Page<AppliedJob> appliedJobs = new PageImpl<>(
-                Arrays.asList(new AppliedJob(0L, 0L, 0L, false, "approvalStatus", false, "cvUploadUrl")));
-        when(mockAppliedJobRepository.getCvAppliedJob(any(Pageable.class), eq(0L), eq(false))).thenReturn(appliedJobs);
-        final Page<AppliedJob> result = appliedJobServiceImplUnderTest.getCvAppliedJob(PageRequest.of(0, 1), 0L, false);
+                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl")));
+        when(mockAppliedJobRepository.getCvAppliedJob(any(Pageable.class), eq(1L), eq(false))).thenReturn(appliedJobs);
+        final Page<AppliedJob> result = appliedJobServiceImplUnderTest.getCvAppliedJob(PageRequest.of(0, 1), 1L, false);
     }
 
     @Test
     public void testGetCvAppliedJob_AppliedJobRepositoryReturnsNoItems() {
-        when(mockAppliedJobRepository.getCvAppliedJob(any(Pageable.class), eq(0L), eq(false)))
+        when(mockAppliedJobRepository.getCvAppliedJob(any(Pageable.class), eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<AppliedJob> result = appliedJobServiceImplUnderTest.getCvAppliedJob(PageRequest.of(0, 1), 0L, false);
+        final Page<AppliedJob> result = appliedJobServiceImplUnderTest.getCvAppliedJob(PageRequest.of(0, 1), 1L, false);
     }
 
     @Test
@@ -84,40 +84,40 @@ public class AppliedJobServiceImplTest {
     @Test
     public void testSearchAppliedJobsOfCandidate() {
         final Page<AppliedJob> appliedJobs = new PageImpl<>(
-                Arrays.asList(new AppliedJob(0L, 0L, 0L, false, "approvalStatus", false, "cvUploadUrl")));
-        when(mockAppliedJobRepository.searchAppliedJobsOfCandidate(any(Pageable.class), eq(0L),
+                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl")));
+        when(mockAppliedJobRepository.searchAppliedJobsOfCandidate(any(Pageable.class), eq(1L),
                 eq("approvalStatus"))).thenReturn(appliedJobs);
         final Page<AppliedJob> result = appliedJobServiceImplUnderTest.searchAppliedJobsOfCandidate(
-                PageRequest.of(0, 1), 0L, "approvalStatus");
+                PageRequest.of(0, 1), 1L, "approvalStatus");
     }
 
     @Test
     public void testSearchAppliedJobsOfCandidate_AppliedJobRepositoryReturnsNoItems() {
-        when(mockAppliedJobRepository.searchAppliedJobsOfCandidate(any(Pageable.class), eq(0L),
+        when(mockAppliedJobRepository.searchAppliedJobsOfCandidate(any(Pageable.class), eq(1L),
                 eq("approvalStatus"))).thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<AppliedJob> result = appliedJobServiceImplUnderTest.searchAppliedJobsOfCandidate(
-                PageRequest.of(0, 1), 0L, "approvalStatus");
+                PageRequest.of(0, 1), 1L, "approvalStatus");
     }
 
     @Test
     public void testCountApplyPercentage() {
-        when(mockAppliedJobRepository.countApplyPercentage(0L)).thenReturn(Arrays.asList());
+        when(mockAppliedJobRepository.countApplyPercentage(1L)).thenReturn(Arrays.asList());
         final List<CountCandidateApplyPercentageResponse> result = appliedJobServiceImplUnderTest.countApplyPercentage(
-                0L);
+                1L);
     }
 
     @Test
     public void testCountApplyPercentage_AppliedJobRepositoryReturnsNoItems() {
-        when(mockAppliedJobRepository.countApplyPercentage(0L)).thenReturn(Collections.emptyList());
+        when(mockAppliedJobRepository.countApplyPercentage(1L)).thenReturn(Collections.emptyList());
         final List<CountCandidateApplyPercentageResponse> result = appliedJobServiceImplUnderTest.countApplyPercentage(
-                0L);
+                1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
     @Test
     public void testCountAppliedCVOfJob() {
-        when(mockAppliedJobRepository.countAppliedCVOfAJob(0L)).thenReturn(0);
-        final int result = appliedJobServiceImplUnderTest.countAppliedCVOfJob(0L);
+        when(mockAppliedJobRepository.countAppliedCVOfAJob(1L)).thenReturn(0);
+        final int result = appliedJobServiceImplUnderTest.countAppliedCVOfJob(1L);
         assertThat(result).isEqualTo(0);
     }
 }

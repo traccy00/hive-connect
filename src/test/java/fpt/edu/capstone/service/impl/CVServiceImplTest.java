@@ -31,61 +31,61 @@ public class CVServiceImplTest {
     }
 
     private CV cv (){
-        CV cv = new CV(0L, 0L, 0L, "summary", "totalExperienceYear");
+        CV cv = new CV(1L, 1L, 1L, "summary", "totalExperienceYear");
         return cv;
     }
 
     @Test
     public void testFindCvByCandidateId() {
         final List<CV> cvList = Arrays.asList(cv());
-        when(cvServiceImplUnderTest.cvRepository.findCvByCandidateId(0L)).thenReturn(cvList);
-        final List<CV> result = cvServiceImplUnderTest.findCvByCandidateId(0L);
+        when(cvServiceImplUnderTest.cvRepository.findCvByCandidateId(1L)).thenReturn(cvList);
+        final List<CV> result = cvServiceImplUnderTest.findCvByCandidateId(1L);
     }
 
     @Test
     public void testFindCvByCandidateId_CVRepositoryReturnsNoItems() {
-        when(cvServiceImplUnderTest.cvRepository.findCvByCandidateId(0L)).thenReturn(Collections.emptyList());
-        final List<CV> result = cvServiceImplUnderTest.findCvByCandidateId(0L);
+        when(cvServiceImplUnderTest.cvRepository.findCvByCandidateId(1L)).thenReturn(Collections.emptyList());
+        final List<CV> result = cvServiceImplUnderTest.findCvByCandidateId(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
     @Test
     public void testFindCvById() {
         final Optional<CV> cv = Optional.of(cv());
-        when(cvServiceImplUnderTest.cvRepository.findById(0L)).thenReturn(cv);
-        final Optional<CV> result = cvServiceImplUnderTest.findCvById(0L);
+        when(cvServiceImplUnderTest.cvRepository.findById(1L)).thenReturn(cv);
+        final Optional<CV> result = cvServiceImplUnderTest.findCvById(1L);
     }
 
     @Test
     public void testFindCvById_CVRepositoryReturnsAbsent() {
-        when(cvServiceImplUnderTest.cvRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<CV> result = cvServiceImplUnderTest.findCvById(0L);
+        when(cvServiceImplUnderTest.cvRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<CV> result = cvServiceImplUnderTest.findCvById(1L);
         assertThat(result).isEmpty();
     }
 
     @Test
     public void testUpdateSummary() {
-        cvServiceImplUnderTest.updateSummary(0L, "newSummary");
-        verify(cvServiceImplUnderTest.cvRepository).updateSummary(0L, "newSummary");
+        cvServiceImplUnderTest.updateSummary(1L, "newSummary");
+        verify(cvServiceImplUnderTest.cvRepository).updateSummary(1L, "newSummary");
     }
 
     @Test
     public void testUpdateUpdatedDateOfCV() {
-        cvServiceImplUnderTest.updateUpdatedDateOfCV(0L, LocalDateTime.now());
-        verify(cvServiceImplUnderTest.cvRepository).updateUpdatedDateOfCV(0L, LocalDateTime.now());
+        cvServiceImplUnderTest.updateUpdatedDateOfCV(1L, LocalDateTime.now());
+        verify(cvServiceImplUnderTest.cvRepository).updateUpdatedDateOfCV(1L, LocalDateTime.now());
     }
 
     @Test
     public void testFindByIdAndCandidateId() {
         final Optional<CV> cv = Optional.of(cv());
-        when(cvServiceImplUnderTest.cvRepository.findByIdAndCAndCandidateId(0L, 0L)).thenReturn(cv);
-        final Optional<CV> result = cvServiceImplUnderTest.findByIdAndCandidateId(0L, 0L);
+        when(cvServiceImplUnderTest.cvRepository.findByIdAndCAndCandidateId(1L, 1L)).thenReturn(cv);
+        final Optional<CV> result = cvServiceImplUnderTest.findByIdAndCandidateId(1L, 1L);
     }
 
     @Test
     public void testFindByIdAndCandidateId_CVRepositoryReturnsAbsent() {
-        when(cvServiceImplUnderTest.cvRepository.findByIdAndCAndCandidateId(0L, 0L)).thenReturn(Optional.empty());
-        final Optional<CV> result = cvServiceImplUnderTest.findByIdAndCandidateId(0L, 0L);
+        when(cvServiceImplUnderTest.cvRepository.findByIdAndCAndCandidateId(1L, 1L)).thenReturn(Optional.empty());
+        final Optional<CV> result = cvServiceImplUnderTest.findByIdAndCandidateId(1L, 1L);
         assertThat(result).isEmpty();
     }
 
@@ -117,8 +117,8 @@ public class CVServiceImplTest {
 
     @Test
     public void testGetCVByCandidateId() {
-        final CV cv = new CV(0L, 0L, 0L, "summary", "totalExperienceYear");
-        when(cvServiceImplUnderTest.cvRepository.getByCandidateId(0L)).thenReturn(cv);
-        final CV result = cvServiceImplUnderTest.getCVByCandidateId(0L);
+        final CV cv = new CV(1L, 1L, 1L, "summary", "totalExperienceYear");
+        when(cvServiceImplUnderTest.cvRepository.getByCandidateId(1L)).thenReturn(cv);
+        final CV result = cvServiceImplUnderTest.getCVByCandidateId(1L);
     }
 }

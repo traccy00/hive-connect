@@ -31,7 +31,7 @@ public class FieldsServiceImplTest {
 
     @Test
     public void testGetAllField() {
-        final List<Fields> list = Arrays.asList(new Fields(0L, "fieldName", "status"));
+        final List<Fields> list = Arrays.asList(new Fields(1L, "fieldName", "status"));
         when(mockFieldsRepository.getAllField()).thenReturn(list);
         final List<Fields> result = fieldsServiceImplUnderTest.getAllField();
     }
@@ -45,28 +45,28 @@ public class FieldsServiceImplTest {
 
     @Test
     public void testExistById() {
-        when(mockFieldsRepository.existsById(0L)).thenReturn(false);
-        final boolean result = fieldsServiceImplUnderTest.existById(0L);
+        when(mockFieldsRepository.existsById(1L)).thenReturn(false);
+        final boolean result = fieldsServiceImplUnderTest.existById(1L);
         assertThat(result).isFalse();
     }
 
     @Test
     public void testGetById() {
-        when(mockFieldsRepository.getById(0L)).thenReturn(new Fields(0L, "fieldName", "status"));
-        final Fields result = fieldsServiceImplUnderTest.getById(0L);
+        when(mockFieldsRepository.getById(1L)).thenReturn(new Fields(1L, "fieldName", "status"));
+        final Fields result = fieldsServiceImplUnderTest.getById(1L);
     }
 
     @Test
     public void testFindById() {
-        final Optional<Fields> fields = Optional.of(new Fields(0L, "fieldName", "status"));
-        when(mockFieldsRepository.findById(0L)).thenReturn(fields);
-        final Optional<Fields> result = fieldsServiceImplUnderTest.findById(0L);
+        final Optional<Fields> fields = Optional.of(new Fields(1L, "fieldName", "status"));
+        when(mockFieldsRepository.findById(1L)).thenReturn(fields);
+        final Optional<Fields> result = fieldsServiceImplUnderTest.findById(1L);
     }
 
     @Test
     public void testFindById_FieldsRepositoryReturnsAbsent() {
-        when(mockFieldsRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Fields> result = fieldsServiceImplUnderTest.findById(0L);
+        when(mockFieldsRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Fields> result = fieldsServiceImplUnderTest.findById(1L);
         assertThat(result).isEmpty();
     }
 }

@@ -33,7 +33,7 @@ public class RentalPackageServiceImplTest {
 
     private RentalPackage rentalPackage(){
         RentalPackage rentalPackage = new RentalPackage();
-        rentalPackage.setId(0L);
+        rentalPackage.setId(1L);
         rentalPackage.setPackageGroup("packageGroup");
         rentalPackage.setDescription("description");
         rentalPackage.setStatus(false);
@@ -56,8 +56,8 @@ public class RentalPackageServiceImplTest {
 
     @Test
     public void testExistById() {
-        when(mockRentalPackageServiceRepository.existsById(0L)).thenReturn(false);
-        final boolean result = rentalPackageServiceImplUnderTest.existById(0L);
+        when(mockRentalPackageServiceRepository.existsById(1L)).thenReturn(false);
+        final boolean result = rentalPackageServiceImplUnderTest.existById(1L);
         assertThat(result).isFalse();
     }
 
@@ -80,21 +80,21 @@ public class RentalPackageServiceImplTest {
     @Test
     public void testFindById() {
         final Optional<RentalPackage> optional = Optional.of(rentalPackage());
-        when(mockRentalPackageServiceRepository.findById(0L)).thenReturn(optional);
-        final Optional<RentalPackage> result = rentalPackageServiceImplUnderTest.findById(0L);
+        when(mockRentalPackageServiceRepository.findById(1L)).thenReturn(optional);
+        final Optional<RentalPackage> result = rentalPackageServiceImplUnderTest.findById(1L);
     }
 
     @Test
     public void testFindById_RentalPackageServiceRepositoryReturnsAbsent() {
-        when(mockRentalPackageServiceRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<RentalPackage> result = rentalPackageServiceImplUnderTest.findById(0L);
+        when(mockRentalPackageServiceRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<RentalPackage> result = rentalPackageServiceImplUnderTest.findById(1L);
         assertThat(result).isEmpty();
     }
 
     @Test
     public void testGetRentalPackageName() {
-        when(mockRentalPackageServiceRepository.getRentalPackageName(0L)).thenReturn("result");
-        final String result = rentalPackageServiceImplUnderTest.getRentalPackageName(0L);
+        when(mockRentalPackageServiceRepository.getRentalPackageName(1L)).thenReturn("result");
+        final String result = rentalPackageServiceImplUnderTest.getRentalPackageName(1L);
         assertThat(result).isEqualTo("result");
     }
 }

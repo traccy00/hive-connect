@@ -25,23 +25,23 @@ public class CertificateServiceImplTest {
     }
     
     private Certificate certificate(){
-        Certificate certificate = new Certificate(0L, "certificateName", "certificateUrl", 0L, 0L);;
+        Certificate certificate = new Certificate(1L, "certificateName", "certificateUrl", 1L, 1L);;
         return certificate;
     }
 
     @Test
     public void testGetListCertificateByCvId() {
         final List<Certificate> certificates = Arrays.asList(certificate());
-        when(certificateServiceImplUnderTest.certificateRepository.getListCertificateByCvId(0L))
+        when(certificateServiceImplUnderTest.certificateRepository.getListCertificateByCvId(1L))
                 .thenReturn(certificates);
-        final List<Certificate> result = certificateServiceImplUnderTest.getListCertificateByCvId(0L);
+        final List<Certificate> result = certificateServiceImplUnderTest.getListCertificateByCvId(1L);
     }
 
     @Test
     public void testGetListCertificateByCvId_CertificateRepositoryReturnsNoItems() {
-        when(certificateServiceImplUnderTest.certificateRepository.getListCertificateByCvId(0L))
+        when(certificateServiceImplUnderTest.certificateRepository.getListCertificateByCvId(1L))
                 .thenReturn(Collections.emptyList());
-        final List<Certificate> result = certificateServiceImplUnderTest.getListCertificateByCvId(0L);
+        final List<Certificate> result = certificateServiceImplUnderTest.getListCertificateByCvId(1L);
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
@@ -59,27 +59,27 @@ public class CertificateServiceImplTest {
         final Certificate certificate = certificate();
         certificateServiceImplUnderTest.updateService(certificate);
         verify(certificateServiceImplUnderTest.certificateRepository).updateCertificate("certificateName",
-                "certificateUrl", 0L, 0L);
+                "certificateUrl", 1L, 1L);
     }
 
     @Test
     public void testDeleteCertificate() {
         final Certificate certificate = certificate();
         certificateServiceImplUnderTest.deleteCertificate(certificate);
-        verify(certificateServiceImplUnderTest.certificateRepository).deleteCertificate(0L);
+        verify(certificateServiceImplUnderTest.certificateRepository).deleteCertificate(1L);
     }
 
     @Test
     public void testGetCertificateById() {
         final Optional<Certificate> certificate = Optional.of(certificate());
-        when(certificateServiceImplUnderTest.certificateRepository.findById(0L)).thenReturn(certificate);
-        final Optional<Certificate> result = certificateServiceImplUnderTest.getCertificateById(0L);
+        when(certificateServiceImplUnderTest.certificateRepository.findById(1L)).thenReturn(certificate);
+        final Optional<Certificate> result = certificateServiceImplUnderTest.getCertificateById(1L);
     }
 
     @Test
     public void testGetCertificateById_CertificateRepositoryReturnsAbsent() {
-        when(certificateServiceImplUnderTest.certificateRepository.findById(0L)).thenReturn(Optional.empty());
-        final Optional<Certificate> result = certificateServiceImplUnderTest.getCertificateById(0L);
+        when(certificateServiceImplUnderTest.certificateRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Certificate> result = certificateServiceImplUnderTest.getCertificateById(1L);
         assertThat(result).isEmpty();
     }
 }
