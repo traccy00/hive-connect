@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Where(clause = "is_deleted = 0")
 @Entity
 @Table(name = "job")
 public class Job extends BaseEntity {
@@ -71,7 +70,7 @@ public class Job extends BaseEntity {
     private long fieldId;
 
     @Column(name = "is_deleted")
-    private int isDeleted = 0;
+    private int isDeleted;
 
     @Column(name = "is_popular_job")
     private boolean isPopularJob;
@@ -93,4 +92,7 @@ public class Job extends BaseEntity {
 
     @Column(name = "flag")
     private String flag;
+
+    @Column(name = "academic_level")
+    private String academicLevel;
 }
