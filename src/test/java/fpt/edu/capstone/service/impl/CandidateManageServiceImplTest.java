@@ -418,7 +418,7 @@ class CandidateManageServiceImplTest {
         Job job =  new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.of(2020, 1, 1, 0, 0, 0),
                 LocalDateTime.of(2020, 1, 1, 0, 0, 0), 1L, 1L, 1L, "rank", "experience", false,
                 "jobDescription", "jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L,
-                "flag");
+                "flag", "academicLevel");
         return job;
     }
 
