@@ -29,7 +29,7 @@ public interface RecruiterService {
 
     List<AppliedJobByRecruiterResponse> getListAppliedByForRecruiter(long recruiterId);
 
-    Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, String username, String email);
+    Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, String username, String email, String fullName, long userId, boolean isLocked);
 
     void updateCompany(long companyId, long id);
 

@@ -88,8 +88,8 @@ public class RecruiterServiceImpl implements RecruiterService {
     }
 
     @Override
-    public Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, String username, String email) {
-        return recruiterRepository.searchRecruitersForAdmin(pageable, username, email);
+    public Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, String username, String email, String fullName, long userId, boolean isLocked) {
+        return recruiterRepository.searchRecruitersForAdmin(pageable, username, email, fullName, userId, isLocked);
     }
 
     //check thêm tên file có hợp lệ không

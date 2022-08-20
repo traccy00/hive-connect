@@ -30,6 +30,11 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
             "u.avatar as avatar, u.is_active as isActive, a.id as adminId, a.full_name as fullName, u.is_locked as isLocked " +
             "from users u join admins a on u.id = a.user_id " +
             "join roles r on u.role_id = r.id " +
-            "where lower(u.username) like lower(concat('%',:username,'%')) and lower(u.email) like lower(concat('%',:email,'%'))", nativeQuery = true)
-    Page<AdminManageResponse> searchAdmin(Pageable pageable, @Param("username") String username, @Param("email") String email);
+            "where lower(u.username) like lower(concat('%',:username,'%')) and lower(u.email) like lower(concat('%',:email,'%')) " +
+            "and a.full_name like lower(concat('%',:fullName,'%')) " +
+            "and (u.id =:userId or 0=:userId) " +
+            "and u.is_locked =:isLocked", nativeQuery = true)
+    Page<AdminManageResponse> searchAdmin(Pageable pageable, @Param("username") String username,
+                                          @Param("email") String email,@Param("fullName") String fullName,
+                                          @Param("userId") long userId, @Param("isLocked") boolean isLocked);
 }

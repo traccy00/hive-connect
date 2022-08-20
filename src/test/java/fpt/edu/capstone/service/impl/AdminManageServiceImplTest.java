@@ -242,49 +242,49 @@ public class AdminManageServiceImplTest {
     @Test
     public void testSearchUsersForAdmin() {
         when(mockRecruiterService.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
-                eq("email"))).thenReturn(new PageImpl<>(Arrays.asList()));
+                eq("email"), eq("fullName"), eq(1L),  eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
         when(mockCandidateService.searchCandidatesForAdmin(any(Pageable.class), eq("username"),
-                eq("email"))).thenReturn(new PageImpl<>(Arrays.asList()));
-        when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email")))
+                eq("email"), eq("fullName"), eq(1L), eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
+        when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false)))
                 .thenReturn(new PageImpl<>(Arrays.asList()));
         final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("selectTab", 1, 10,
-                "username", "email");
+                "username", "email", "", 1L, false);
     }
 
     @Test
     public void testSearchUsersForAdmin_RecruiterServiceReturnsNoItems() {
         when(mockRecruiterService.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
-                eq("email"))).thenReturn(new PageImpl<>(Collections.emptyList()));
+                eq("email"), "", 1L,  eq(false))).thenReturn(new PageImpl<>(Collections.emptyList()));
         when(mockCandidateService.searchCandidatesForAdmin(any(Pageable.class), eq("username"),
-                eq("email"))).thenReturn(new PageImpl<>(Arrays.asList()));
-        when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email")))
+                eq("email"), eq("fullName"), eq(1L),  eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
+        when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false)))
                 .thenReturn(new PageImpl<>(Arrays.asList()));
         final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("selectTab", 1, 10,
-                "username", "email");
+                "username", "email", "", 1L, false);
     }
 
     @Test
     public void testSearchUsersForAdmin_CandidateServiceReturnsNoItems() {
         when(mockRecruiterService.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
-                eq("email"))).thenReturn(new PageImpl<>(Arrays.asList()));
+                eq("email"), eq("fullName"), eq(1L),  eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
         when(mockCandidateService.searchCandidatesForAdmin(any(Pageable.class), eq("username"),
-                eq("email"))).thenReturn(new PageImpl<>(Collections.emptyList()));
-        when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email")))
+                eq("email"), eq("fullName"), eq(1L),  eq(false))).thenReturn(new PageImpl<>(Collections.emptyList()));
+        when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false)))
                 .thenReturn(new PageImpl<>(Arrays.asList()));
         final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("selectTab", 1, 10,
-                "username", "email");
+                "username", "email", "", 1L, false);
     }
 
     @Test
     public void testSearchUsersForAdmin_AdminServiceReturnsNoItems() {
         when(mockRecruiterService.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
-                eq("email"))).thenReturn(new PageImpl<>(Arrays.asList()));
+                eq("email"), eq("fullName"), eq(1L),eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
         when(mockCandidateService.searchCandidatesForAdmin(any(Pageable.class), eq("username"),
-                eq("email"))).thenReturn(new PageImpl<>(Arrays.asList()));
-        when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email")))
+                eq("email"), eq("fullName"), eq(1L),  eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
+        when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("selectTab", 1, 10,
-                "username", "email");
+                "username", "email", "", 1L, false);
     }
 
     @Test

@@ -32,7 +32,8 @@ public interface CandidateService  {
 
     void updateIsNeedJob(boolean isNeedJob, long id);
 
-    Page<CandidateManageResponse> searchCandidatesForAdmin(Pageable pageable, String username, String email);
+    Page<CandidateManageResponse> searchCandidatesForAdmin(Pageable pageable, String username,
+                                                           String email,String fullName, long userId, boolean isLocked);
 
     void save(Candidate candidate);
 

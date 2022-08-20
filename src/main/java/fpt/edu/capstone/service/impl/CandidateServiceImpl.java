@@ -78,8 +78,9 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Page<CandidateManageResponse> searchCandidatesForAdmin(Pageable pageable, String username, String email) {
-        return candidateRepository.searchCandidateForAdmin(pageable, username, email);
+    public Page<CandidateManageResponse> searchCandidatesForAdmin(Pageable pageable, String username, String email,
+                                                                  String fullName, long userId, boolean isLocked) {
+        return candidateRepository.searchCandidateForAdmin(pageable, username, email, fullName, userId, isLocked);
     }
 
     @Override

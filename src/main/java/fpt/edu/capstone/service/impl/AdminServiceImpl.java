@@ -70,7 +70,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Page<AdminManageResponse> searchAdmins(Pageable pageable, String username, String email) {
-        return adminRepository.searchAdmin(pageable, username, email);
+    public Page<AdminManageResponse> searchAdmins(Pageable pageable, String username, String email, String fullName,
+                                                  long userId, boolean isLocked) {
+        return adminRepository.searchAdmin(pageable, username, email,fullName,userId, isLocked);
     }
 }

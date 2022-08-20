@@ -118,17 +118,17 @@ public class AdminServiceImplTest {
 
     @Test
     public void testSearchAdmins() {
-        when(mockAdminRepository.searchAdmin(any(Pageable.class), eq("username"), eq("email")))
+        when(mockAdminRepository.searchAdmin(any(Pageable.class), eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false)))
                 .thenReturn(new PageImpl<>(Arrays.asList()));
         final Page<AdminManageResponse> result = adminServiceImplUnderTest.searchAdmins(PageRequest.of(1, 10),
-                "username", "email");
+                "username", "email", "", 1L, false);
     }
 
     @Test
     public void testSearchAdmins_AdminRepositoryReturnsNoItems() {
-        when(mockAdminRepository.searchAdmin(any(Pageable.class), eq("username"), eq("email")))
+        when(mockAdminRepository.searchAdmin(any(Pageable.class), eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<AdminManageResponse> result = adminServiceImplUnderTest.searchAdmins(PageRequest.of(1, 10),
-                "username", "email");
+                "username", "email", "", 1L, false);
     }
 }

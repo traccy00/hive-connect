@@ -56,9 +56,12 @@ public class AdminController {
                                             @RequestParam(defaultValue = "10") Integer pageSize,
                                             @RequestParam(required = false) String username,
                                             @RequestParam(required = false) String email,
+                                            @RequestParam(required = false) String fullName,
+                                            @RequestParam(required = false, defaultValue = "0") long userId,
+                                            @RequestParam(required = false) boolean isLocked,
                                             @RequestParam String tab) {
         try {
-            ResponseDataPagination pagination = adminManageService.searchUsersForAdmin(tab, pageNo, pageSize, username, email);
+            ResponseDataPagination pagination = adminManageService.searchUsersForAdmin(tab, pageNo, pageSize, username, email, fullName, userId, isLocked);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

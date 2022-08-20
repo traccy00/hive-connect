@@ -162,16 +162,16 @@ public class AdminManageServiceImpl implements AdminManageService {
     }
 
     @Override
-    public ResponseDataPagination searchUsersForAdmin(String selectTab, Integer pageNo, Integer pageSize, String username, String email) {
+    public ResponseDataPagination searchUsersForAdmin(String selectTab, Integer pageNo, Integer pageSize, String username, String email,String fullName, long userId, boolean isLocked) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
         Page users;
         if (selectTab.equals("Recruiter")) {
-            users = recruiterService.searchRecruitersForAdmin(pageable, username, email);
+            users = recruiterService.searchRecruitersForAdmin(pageable, username, email, fullName, userId, isLocked);
         } else if (selectTab.equals("Candidate")) {
-            users = candidateService.searchCandidatesForAdmin(pageable, username, email);
+            users = candidateService.searchCandidatesForAdmin(pageable, username, email, fullName, userId, isLocked);
         } else if (selectTab.equals("Admin")) {
-            users = adminService.searchAdmins(pageable, username, email);
+            users = adminService.searchAdmins(pageable, username, email, fullName, userId, isLocked);
         } else {
             throw new HiveConnectException("Vui lòng chọn danh sách loại người dùng.");
         }

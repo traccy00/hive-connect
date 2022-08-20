@@ -53,8 +53,13 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
             "u.is_verified_email as isVerifiedEmail, u.created_at as createdAt, u.updated_at as updatedAt, u.is_locked as isLocked " +
             "from users u join candidate c on u.id = c.user_id " +
             "join roles r on u.role_id = r.id " +
-            "where lower(u.username) like lower(concat('%',:username,'%')) and lower(u.email) like lower(concat('%',:email,'%'))", nativeQuery = true)
-    Page<CandidateManageResponse> searchCandidateForAdmin(Pageable pageable, @Param("username") String username, @Param("email") String email);
+            "where lower(u.username) like lower(concat('%',:username,'%')) and lower(u.email) like lower(concat('%',:email,'%')) " +
+            "and lower(c.full_name) like  lower(concat('%',:fullName,'%')) " +
+            "and (u.id =:userId or 0=:userId) " +
+            "and u.is_locked=:isLocked", nativeQuery = true)
+    Page<CandidateManageResponse> searchCandidateForAdmin(Pageable pageable, @Param("username") String username,
+                                                          @Param("email") String email,@Param("fullName") String fullName,
+                                                          @Param("userId") long userId, @Param("isLocked") boolean isLocked);
 
     @Query(value = "select * from candidate c where c.id = ?", nativeQuery = true)
     Candidate getCandidateById(long id);

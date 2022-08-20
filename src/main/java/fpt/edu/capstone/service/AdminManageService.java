@@ -19,7 +19,7 @@ public interface AdminManageService {
 
     ResponseDataPagination getBannerOfRecruiterForAdmin(Integer pageNo, Integer pageSize);
 
-    ResponseDataPagination searchUsersForAdmin(String selectTab, Integer pageNo, Integer pageSize, String username, String email);
+    ResponseDataPagination searchUsersForAdmin(String selectTab, Integer pageNo, Integer pageSize, String username, String email, String fullName, long userId, boolean isLocked);
 
     ResponseDataPagination searchReportedUsers(Integer pageNo, Integer pageSize, String username, String personReportName,
                                                List<Long> userId, List<Long> personReportId);

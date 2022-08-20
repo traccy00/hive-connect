@@ -555,17 +555,17 @@ public class RecruiterServiceImplTest {
     @Test
     public void testSearchRecruitersForAdmin() {
         when(mockRecruiterRepository.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
-                eq("email"))).thenReturn(new PageImpl<>(Arrays.asList()));
+                eq("email"), eq("fullName"), eq(1L), eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
         final Page<RecruiterManageResponse> result = recruiterServiceImplUnderTest.searchRecruitersForAdmin(
-                PageRequest.of(1, 10), "username", "email");
+                PageRequest.of(1, 10), "username", "email", "", 1L, false);
     }
 
     @Test
     public void testSearchRecruitersForAdmin_RecruiterRepositoryReturnsNoItems() {
         when(mockRecruiterRepository.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
-                eq("email"))).thenReturn(new PageImpl<>(Collections.emptyList()));
+                eq("email"), eq("fullName"), eq(1L), eq(false))).thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<RecruiterManageResponse> result = recruiterServiceImplUnderTest.searchRecruitersForAdmin(
-                PageRequest.of(1, 10), "username", "email");
+                PageRequest.of(1, 10), "username", "email", "", 1L, false);
     }
 
 //    @Test

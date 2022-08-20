@@ -152,17 +152,17 @@ public class CandidateServiceImplTest {
     @Test
     public void testSearchCandidatesForAdmin() {
         when(candidateServiceImplUnderTest.candidateRepository.searchCandidateForAdmin(any(Pageable.class),
-                eq("username"), eq("email"))).thenReturn(new PageImpl<>(Arrays.asList()));
+                eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
         final Page<CandidateManageResponse> result = candidateServiceImplUnderTest.searchCandidatesForAdmin(
-                PageRequest.of(1, 10), "username", "email");
+                PageRequest.of(1, 10), "username", "email", "", 1L, false);
     }
 
     @Test
     public void testSearchCandidatesForAdmin_CandidateRepositoryReturnsNoItems() {
         when(candidateServiceImplUnderTest.candidateRepository.searchCandidateForAdmin(any(Pageable.class),
-                eq("username"), eq("email"))).thenReturn(new PageImpl<>(Collections.emptyList()));
+                eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false))).thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<CandidateManageResponse> result = candidateServiceImplUnderTest.searchCandidatesForAdmin(
-                PageRequest.of(1, 10), "username", "email");
+                PageRequest.of(1, 10), "username", "email", "", 1L, false);
     }
 
     @Test
