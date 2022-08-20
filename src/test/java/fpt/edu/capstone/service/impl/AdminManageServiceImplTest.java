@@ -328,11 +328,11 @@ public class AdminManageServiceImplTest {
         when(mockReportedRepository.findById(1L)).thenReturn(report);
         final Job job = new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0),
                 LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L, "rank", "experience", false, "jobDescription",
-                "jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L, "flag");
+                "jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L, "flag", "academicLevel");
         when(mockJobService.getJobById(1L)).thenReturn(job);
         final Job job1 = new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0),
                 LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L, "rank", "experience", false, "jobDescription",
-                "jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L, "flag");
+                "jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L, "flag", "academicLevel");
         when(mockJobRepository.save(any(Job.class))).thenReturn(job1);
         final Report report1 = new Report(1L, 1L, "reportReason", 1L,  "relatedLink", "approvalStatus", "fullName",
                 "phone", "userAddress", "userEmail", "reportType", 1L);

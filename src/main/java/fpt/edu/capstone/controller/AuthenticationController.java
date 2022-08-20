@@ -1,5 +1,6 @@
 package fpt.edu.capstone.controller;
 
+import fpt.edu.capstone.common.CommonValidator;
 import fpt.edu.capstone.common.user.GooglePojo;
 import fpt.edu.capstone.common.user.GoogleUtils;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
@@ -69,9 +70,11 @@ public class AuthenticationController {
 
     private final RequestJoinCompanyService requestJoinCompanyService;
 
+    private final CommonValidator commonValidator;
+
     @PostMapping("/login")
     @Operation(summary = "Login user")
-    public ResponseDataUser login(@RequestBody @Valid LoginRequest request) throws Exception {
+    public ResponseDataUser login(@RequestBody @Valid LoginRequest request) {
         try {
             Optional<Users> userByUserName = userService.findUsersByUsernameOrEmail(request.getUsername());
             Optional<Users> userByEmailGmail = userService.findByEmail(request.getUsername() + "@gmail.com");
@@ -84,7 +87,8 @@ public class AuthenticationController {
             } else if (userByUserName.isPresent()) {
                 users = userByUserName;
             } else {
-                throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+                throw new HiveConnectException(ResponseMessageConstants.ACCOUNT_DOES_NOT_EXIST
+                        + " " + ResponseMessageConstants.LOGIN_FAILED);
             }
             if (users.isPresent()) {
                 if (users.get().isLocked()) {
@@ -92,10 +96,12 @@ public class AuthenticationController {
                 }
             }
             if (!users.isPresent()) {
-                throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+                throw new HiveConnectException(ResponseMessageConstants.ACCOUNT_DOES_NOT_EXIST
+                        + " " + ResponseMessageConstants.LOGIN_FAILED);
             }
             if (users.get().isGoogle()) {
-                throw new HiveConnectException(ResponseMessageConstants.LOGIN_FAILED);
+                throw new HiveConnectException(ResponseMessageConstants.ACCOUNT_DOES_NOT_EXIST
+                        + " " + ResponseMessageConstants.LOGIN_FAILED);
             }
             authenticate(request.getUsername().trim(), request.getPassword());
             String username = request.getUsername();
@@ -181,11 +187,11 @@ public class AuthenticationController {
         } catch (DisabledException e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
-            throw new Exception("Tài khoản bị khóa", e);
+            throw new Exception(ResponseMessageConstants.USER_HAS_BEEN_LOCKED, e);
         } catch (BadCredentialsException e) {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
-            throw new Exception("Sai tên đăng nhập hoặc mật khẩu", e);
+            throw new Exception(ResponseMessageConstants.USERNAME_OR_PASSWORD_INCORRECT, e);
         }
     }
 
@@ -354,14 +360,23 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/resend-email/{username}")
-    @Operation(summary = "resend email ")
-    public ResponseData resendEmail(@PathVariable("username") String username) {
+    @PostMapping("/resend-email/{email}")
+    @Operation(summary = "resend email")
+    public ResponseData resendEmail(@PathVariable("email") String email) {
         try {
-            Users user = userService.getByUserName(username);
-            ConfirmToken cf = confirmTokenService.getByUserId(user.getId());
+            if (email.trim().isEmpty() || !commonValidator.validate(email)) {
+                throw new HiveConnectException(ResponseMessageConstants.EMAIL_INVALID);
+            }
+            Optional<Users> user = userService.findByEmail(email);
+            if (!user.isPresent()) {
+                throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+            }
+            if (user.get().isVerifiedEmail()) {
+                throw new HiveConnectException(ResponseMessageConstants.EMAIL_VERIFIED);
+            }
+            ConfirmToken cf = confirmTokenService.getByUserId(user.get().getId());
             String mailToken = cf.getConfirmationToken();
-            confirmTokenService.verifyEmailUser(user.getEmail(), mailToken);
+            confirmTokenService.verifyEmailUser(user.get().getEmail(), mailToken);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.RESEND_EMAIL_SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -408,6 +423,39 @@ public class AuthenticationController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+    /*
+     * @author Mai
+     */
+    // Sending a simple Email
+//    @PostMapping("/sendMail")
+//    @Operation(summary = "send email")
+//    public ResponseData sendMail(@RequestBody EmailDetails details) {
+//        try {
+//            String status = emailService.sendSimpleMail(details);
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), status);
+//        } catch (Exception e) {
+//            String msg = LogUtils.printLogStackTrace(e);
+//            logger.error(msg);
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Error while Sending Mail!!!");
+//        }
+//    }
+
+    /*
+     * @author Mai
+     */
+    // Sending email with attachment
+//    @PostMapping("/sendMailWithAttachment")
+//    public ResponseData sendMailWithAttachment(@RequestBody EmailDetails details) {
+//        try {
+//            String status = emailService.sendMailWithAttachment(details);
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), status);
+//        } catch (Exception e) {
+//            String msg = LogUtils.printLogStackTrace(e);
+//            logger.error(msg);
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Error while Sending Mail!!");
+//        }
+//    }
 
     @PostMapping("/forgot-password")
     @Operation(summary = "user forgot password, system will send a mail to user's email with reset password token link")

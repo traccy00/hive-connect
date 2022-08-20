@@ -67,7 +67,7 @@ public class CandidateJobServiceImplTest {
     private Job job(){
         Job job = new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.now(),
                 LocalDateTime.now(), 1L, 1L, 1L, "rank", "experience", false, "jobDescription",
-                "jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L, "Posted");
+                "jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L, "Posted", "academicLevel");
         return job;
     }
 

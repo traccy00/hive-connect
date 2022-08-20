@@ -19,6 +19,7 @@ public interface ResponseMessageConstants {
     String RECRUITER_DOES_NOT_EXIST = "Không tìm thấy người tuyển dụng này";
     String CANDIDATE_DOES_NOT_EXIST = "Không tìm thấy ứng viên này";
     String CHOOSE_UPLOAD_FILE = "Vui lòng chọn tệp tải lên";
+    String EMAIL_INVALID = "Email không hợp lệ.";
 
     // LOGIN
     String LOGIN_ACCESS_DENIED = "Đăng nhập bị từ chối.";
@@ -27,16 +28,17 @@ public interface ResponseMessageConstants {
     String LOGIN_FAILED = "Đăng nhập thất bại";
     String LOGIN_PROVIDER_INVALID = "MSG_LOGIN_PROVIDER_INVALID";
     String LOGIN_REFRESH_EXCEPTION = "MSG_LOGIN_REFRESH_EXCEPTION";
-    String USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS = "MSG_USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS";
+    String USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS = "Tên đăng nhập không hợp lệ";
     String AUTHENTICATION_IS_NOT_SUPPORT_BY_SERVER = "MSG_AUTHENTICATION_IS_NOT_SUPPORT_BY_SERVER";
-    String USERNAME_OR_PASSWORD_INCORRECT = "MSG_USERNAME_OR_PASSWORD_INCORRECT";
+    String USERNAME_OR_PASSWORD_INCORRECT = "Sai tên đăng nhập hoặc mật khẩu.";
+    String ACCOUNT_DOES_NOT_EXIST = "Tài khoản không tồn tại.";
 
     //REGISTER
     String REGISTER_SUCCESS = "Đăng ký thành công.";
     String REGISTER_FAILED = "Đăng ký thất bại.";
     String CHANGE_PASSWORD_SUCCESS = "Thay đổi mật khẩu thành công";
     String CHANGE_PASSWORD_FAILED = "Thay đổi mật khẩu thất bại";
-    String RESEND_EMAIL_SUCCESS = "Gửi lại xác thực không thành công";
+    String RESEND_EMAIL_SUCCESS = "Gửi lại xác thực thành công";
     String EMAIL_EXISTS = "Email đã được sử dụng.";
     String USERNAME_EXISTS = "Tên đăng nhập đã được sử dụng.";
     String ROLE_DOES_NOT_EXISTS = "Loại vai trò người dùng không tồn tại trong hệ thống";
@@ -53,6 +55,7 @@ public interface ResponseMessageConstants {
     String PHONE_NUMBER_IN_USE = "Số điện thoại đã được sử dụng.";
     String PHONE_NUMBER_VERIFIED = "Số điện thoại đã được xác minh! Không thể thay đổi";
     String USER_HAS_BEEN_LOCKED = "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên hoặc gọi hotline 0967445450.";
+    String EMAIL_VERIFIED = "Email đã được xác thực.";
 
     // COMMON
     String UPDATE_FAILED = "Cập nhật thất bại.";
