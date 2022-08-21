@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.dto.company.ListCompany;
 import fpt.edu.capstone.entity.Company;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,7 @@ public interface CompanyService {
 
     boolean existById(long id);
 
-    List <Company> getAllCompany();
+    List <ListCompany> getAllCompany();
 
     Optional<Company> findById(long companyId);
 

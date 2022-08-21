@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.company.ListCompany;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.repository.CompanyRepository;
 import org.junit.Before;
@@ -7,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -27,12 +29,15 @@ public class CompanyServiceImplTest {
 
     @Mock
     private CompanyRepository mockCompanyRepository;
-
+    @Mock
+    private ImageServiceImpl imageService;
+    @Mock
+    private ModelMapper modelMapper;
     private CompanyServiceImpl companyServiceImplUnderTest;
 
     @Before
     public void setUp() throws Exception {
-        companyServiceImplUnderTest = new CompanyServiceImpl(mockCompanyRepository);
+        companyServiceImplUnderTest = new CompanyServiceImpl(mockCompanyRepository, imageService, modelMapper);
     }
     private Company company(){
         Company company = new Company();
@@ -71,13 +76,13 @@ public class CompanyServiceImplTest {
         final Company company = company();
         final List<Company> companies = Arrays.asList(company);
         when(mockCompanyRepository.findAll()).thenReturn(companies);
-        final List<Company> result = companyServiceImplUnderTest.getAllCompany();
+        final List<ListCompany> result = companyServiceImplUnderTest.getAllCompany();
     }
 
     @Test
     public void testGetAllCompany_CompanyRepositoryReturnsNoItems() {
         when(mockCompanyRepository.findAll()).thenReturn(Collections.emptyList());
-        final List<Company> result = companyServiceImplUnderTest.getAllCompany();
+        final List<ListCompany> result = companyServiceImplUnderTest.getAllCompany();
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
