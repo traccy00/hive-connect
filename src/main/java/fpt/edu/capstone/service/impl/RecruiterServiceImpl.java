@@ -212,6 +212,8 @@ public class RecruiterServiceImpl implements RecruiterService {
         recruiter.setCreatedAt(nowDate);
         recruiter.setTotalCvView(-1);
         recruiter.setFullName(fullName);
+        recruiter.setBusinessLicenseApprovalStatus("");
+        recruiter.setAdditionalLicenseApprovalStatus("");
         return recruiterRepository.save(recruiter);
     }
 }
