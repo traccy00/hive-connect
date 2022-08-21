@@ -25,9 +25,12 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             "or (lower(j.workPlace) like lower(concat('%', :jobName ,'%')) or :jobName is null or :jobName ='')) " +
             "and (lower(j.workForm) like lower(concat('%', :workForm ,'%')) or :workForm is null or :workForm ='') " +
             "and (lower(j.workPlace) like lower(concat('%', :workPlace ,'%')) or :workPlace is null or :workPlace ='') " +
+            "and (j.fromSalary =:fromSalary or :fromSalary <= j.fromSalary or 0 =:fromSalary) " +
+            "and(j.toSalary =:toSalary or :toSalary >= j.toSalary or 0 =:toSalary) " +
             "and j.isDeleted  = 0")
     Page<Job> searchListJobFilter(Pageable pageable, @Param("fieldId") long fieldId, @Param("countryId") long countryId,
-                                  @Param("jobName") String jobName, @Param("workForm") String workForm, @Param("workPlace") String workPlace);
+                                  @Param("jobName") String jobName, @Param("workForm") String workForm, @Param("workPlace")
+                                          String workPlace,@Param("fromSalary") long fromSalary,@Param("toSalary") long toSalary);
 
     @Modifying
     @Query("update Job j set j.isDeleted = 1 where j.id =:jobId")

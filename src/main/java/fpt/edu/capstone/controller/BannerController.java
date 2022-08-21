@@ -18,10 +18,14 @@ import fpt.edu.capstone.utils.ResponseData;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -98,9 +102,16 @@ public class BannerController {
     @GetMapping("/get-banner-for-approval")
     @Operation(summary = "Admin module - Get banner upload by recruiter for approval")
     public ResponseData getBannerOfRecruiterForAdmin(@RequestParam(defaultValue = "0") Integer pageNo,
-                                                     @RequestParam(defaultValue = "10") Integer pageSize) {
+                                                     @RequestParam(defaultValue = "10") Integer pageSize,
+                                                     @RequestParam(value = "screenName", required = false) String screenName,
+                                                     @RequestParam(value = "from") String from,
+                                                     @RequestParam(value = "to") String to) {
         try {
-            ResponseDataPagination pagination = adminManageService.getBannerOfRecruiterForAdmin(pageNo, pageSize);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime start = LocalDate.parse(from, formatter).atStartOfDay();
+            LocalDateTime end = LocalDate.parse(to, formatter).atStartOfDay();
+
+            ResponseDataPagination pagination = adminManageService.getBannerOfRecruiterForAdmin(pageNo, pageSize, screenName,start, end);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

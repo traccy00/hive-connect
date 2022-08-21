@@ -174,7 +174,7 @@ public class ReportedServiceImplTest {
 
     @Test
     public void testSearchReportedJob() {
-        when(mockReportedRepository.searchReportedJob(any(Pageable.class), eq("jobName")))
+        when(mockReportedRepository.searchReportedJob(any(Pageable.class),null,null,null,null, eq("jobName")))
                 .thenReturn(new PageImpl<>(Arrays.asList()));
         final Page<ReportedJobResponse> result = reportedServiceImplUnderTest.searchReportedJob(PageRequest.of(1, 10),
                 LocalDateTime.now(), LocalDateTime.now().plusDays(3),
@@ -183,7 +183,7 @@ public class ReportedServiceImplTest {
 
     @Test
     public void testSearchReportedJob_ReportedRepositoryReturnsNoItems() {
-        when(mockReportedRepository.searchReportedJob(any(Pageable.class), eq("jobName")))
+        when(mockReportedRepository.searchReportedJob(any(Pageable.class), null,null,null,null,eq("jobName")))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<ReportedJobResponse> result = reportedServiceImplUnderTest.searchReportedJob(PageRequest.of(1, 10),
                 LocalDateTime.now(), LocalDateTime.now().plusDays(3),

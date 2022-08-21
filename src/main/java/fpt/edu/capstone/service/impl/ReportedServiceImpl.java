@@ -46,7 +46,7 @@ public class ReportedServiceImpl implements ReportedService {
     @Override
     public Page<ReportedJobResponse> searchReportedJob(Pageable pageable, LocalDateTime createdAtFrom, LocalDateTime createAtTo, LocalDateTime updatedAtFrom,
                                                        LocalDateTime updatedAtTo, String jobName) {
-        return reportedRepository.searchReportedJob(pageable, jobName);
+        return reportedRepository.searchReportedJob(pageable,createdAtFrom,createAtTo,updatedAtFrom,updatedAtTo, jobName);
     }
 
     @Override

@@ -96,15 +96,15 @@ public class BannerActiveImplTest {
     @Test
     public void testGetAllBannerForApproval() {
         final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(bannerActive()));
-        when(mockBannerActiveRepository.getAllBannerForApproval(any(Pageable.class))).thenReturn(bannerActives);
-        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(1, 10));
+        when(mockBannerActiveRepository.getAllBannerForApproval(any(Pageable.class),null,null,null)).thenReturn(bannerActives);
+        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(1, 10),null,null,null);
     }
 
     @Test
     public void testGetAllBannerForApproval_BannerActiveRepositoryReturnsNoItems() {
-        when(mockBannerActiveRepository.getAllBannerForApproval(any(Pageable.class)))
+        when(mockBannerActiveRepository.getAllBannerForApproval(any(Pageable.class),null,null,null))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(1, 10));
+        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(1, 10),null,null,null);
     }
 
     @Test

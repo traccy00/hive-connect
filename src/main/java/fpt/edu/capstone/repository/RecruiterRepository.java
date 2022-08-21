@@ -56,7 +56,7 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
             "where lower(u.username) like lower(concat('%',:username,'%')) " +
             "and lower(u.email) like lower(concat('%',:email,'%')) " +
             "and lower(r.fullname) like lower(concat('%',:fullName,'%')) " +
-            "and (u.id =:userId or 0=:userId )" +
+            "and (u.id =:userId or 0=:userId) " +
             "and u.is_locked=:isLocked", nativeQuery = true)
     Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, @Param("username") String username,
                                                            @Param("email") String email,@Param("fullName") String fullName, @Param("userId") long userId, @Param("isLocked") boolean isLocked);

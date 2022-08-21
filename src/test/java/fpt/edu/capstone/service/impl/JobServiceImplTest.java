@@ -189,7 +189,7 @@ class JobServiceImplTest {
 		List<Job> jobList = Arrays.asList(job1,job2);
 
 		when(jobRepository.searchListJobFilter(any(Pageable.class),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
+						eq("do some thing"),eq("abc"),eq("abc"),0,0))
 						.thenReturn(new PageImpl<>(jobList));
 
 		JobResponse jobResponse1 = new JobResponse();
@@ -207,7 +207,7 @@ class JobServiceImplTest {
 		when(companyService.getCompanyById(2L)).thenReturn(company2);
 
 		 ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1,1,1L,
-						1L,"do some thing","abc","abc");
+						1L,"do some thing","abc","abc",0,0);
 		List<JobResponse> data = (List<JobResponse>) responseDataPagination.getData();
 
 		assertEquals(2,data.size());
@@ -224,8 +224,9 @@ class JobServiceImplTest {
 		List<Job> jobList = Arrays.asList(job1,job2);
 
 		when(jobRepository.searchListJobFilter(any(Pageable.class),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
-						.thenReturn(new PageImpl<>(jobList));
+				eq("do some thing"),eq("abc"),eq("abc"),0,0))
+				.thenReturn(new PageImpl<>(jobList));
+
 
 		JobResponse jobResponse1 = new JobResponse();
 		JobResponse jobResponse2 = new JobResponse();
@@ -243,7 +244,7 @@ class JobServiceImplTest {
 		when(companyService.getCompanyById(2L)).thenReturn(company2);
 
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1,10,1L,
-						1L,"do some thing","abc","abc");
+						1L,"do some thing","abc","abc",0,0);
 
 		assertEquals("Success",responseDataPagination.getStatus());
 	}
@@ -259,8 +260,9 @@ class JobServiceImplTest {
 		List<Job> jobList = Arrays.asList(job1,job2);
 
 		when(jobRepository.searchListJobFilter(any(Pageable.class),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
-						.thenReturn(new PageImpl<>(jobList));
+				eq("do some thing"),eq("abc"),eq("abc"),0,0))
+				.thenReturn(new PageImpl<>(jobList));
+
 
 		JobResponse jobResponse1 = new JobResponse();
 		JobResponse jobResponse2 = new JobResponse();
@@ -278,7 +280,7 @@ class JobServiceImplTest {
 		when(companyService.getCompanyById(2L)).thenReturn(company2);
 
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1,10,1L,
-						1L,"do some thing","abc","abc");
+						1L,"do some thing","abc","abc",0,0);
 
 		Pagination pagination = (Pagination) responseDataPagination.getPagination();
 
@@ -295,9 +297,10 @@ class JobServiceImplTest {
 		job2.setCompanyId(2L);
 		List<Job> jobList = Arrays.asList(job1,job2);
 
-		when(jobRepository.searchListJobFilter(any(Pageable.class),eq(1L),eq(10L),
-						eq("do some thing"),eq("abc"),eq("abc")))
-						.thenReturn(new PageImpl<>(jobList));
+		when(jobRepository.searchListJobFilter(any(Pageable.class),eq(1L),eq(1L),
+				eq("do some thing"),eq("abc"),eq("abc"),0,0))
+				.thenReturn(new PageImpl<>(jobList));
+
 
 		JobResponse jobResponse1 = new JobResponse();
 		JobResponse jobResponse2 = new JobResponse();
@@ -315,7 +318,7 @@ class JobServiceImplTest {
 		when(companyService.getCompanyById(2L)).thenReturn(company2);
 
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1,1,1L,
-						1L,"do some thing","abc","abc");
+						1L,"do some thing","abc","abc",0,0);
 
 		Pagination pagination = (Pagination) responseDataPagination.getPagination();
 
@@ -333,8 +336,9 @@ class JobServiceImplTest {
 		List<Job> jobList = Arrays.asList(job1,job2);
 
 		when(jobRepository.searchListJobFilter(any(Pageable.class),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
-						.thenReturn(new PageImpl<>(jobList));
+				eq("do some thing"),eq("abc"),eq("abc"),0,0))
+				.thenReturn(new PageImpl<>(jobList));
+
 
 		JobResponse jobResponse1 = new JobResponse();
 		JobResponse jobResponse2 = new JobResponse();
@@ -352,7 +356,7 @@ class JobServiceImplTest {
 		when(companyService.getCompanyById(2L)).thenReturn(company2);
 
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1,1,1L,
-						1L,"do some thing","abc","abc");
+						1L,"do some thing","abc","abc",0,0);
 
 		Pagination pagination = (Pagination) responseDataPagination.getPagination();
 
@@ -370,8 +374,9 @@ class JobServiceImplTest {
 		List<Job> jobList = Arrays.asList(job1,job2);
 
 		when(jobRepository.searchListJobFilter(any(Pageable.class),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
-						.thenReturn(new PageImpl<>(jobList));
+				eq("do some thing"),eq("abc"),eq("abc"),0,0))
+				.thenReturn(new PageImpl<>(jobList));
+
 
 		JobResponse jobResponse1 = new JobResponse();
 		JobResponse jobResponse2 = new JobResponse();
@@ -389,7 +394,7 @@ class JobServiceImplTest {
 		when(companyService.getCompanyById(2L)).thenReturn(company2);
 
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1,1,1L,
-						1L,"do some thing","abc","abc");
+						1L,"do some thing","abc","abc",0,0);
 
 		Pagination pagination = (Pagination) responseDataPagination.getPagination();
 
@@ -400,32 +405,32 @@ class JobServiceImplTest {
 	void givenPageSizeIsNull_whenCallSearchListJobFilter_thenAssertJobRepositorySearchListJobFilterIsNotCalled() {
 		Exception exception = assertThrows(Exception.class, () -> {
 			jobService.searchListJobFilter(1, null, 1L,
-							1L, "do some thing",  "abc", "abc");
+							1L, "do some thing",  "abc", "abc",0,0);
 		});
 		// if app crash when PageSize is null jobRepository.searchListJobFilter are not called
 		verify(jobRepository,times(0)).searchListJobFilter(any(Pageable.class),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc"));
+						eq("do some thing"),eq("abc"),eq("abc"),0,0);
 	}
 
 	@Test
 	void givenPageNoIsNull_whenCallSearchListJobFilter_thenAssertJobRepositorySearchListJobFilterIsNotCalled() {
 		Exception exception = assertThrows(Exception.class, () -> {
 			jobService.searchListJobFilter(null, 1, 1L,
-							1L, "do some thing",  "abc", "abc");
+							1L, "do some thing",  "abc", "abc",0,0);
 		});
 	// if app crash when PageNo is null jobRepository.searchListJobFilter are not called
 		verify(jobRepository,times(0)).searchListJobFilter(any(Pageable.class),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc"));
+						eq("do some thing"),eq("abc"),eq("abc"),0,0);
 	}
 
 	@Test
 	void givenJobServiceSearchListJobFilterIsEmpty_whenCallSearchListJobFilter_thenReturnResponseDataPaginationDataCurrentPage() {
 
 		when(jobRepository.searchListJobFilter(any(),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
+						eq("do some thing"),eq("abc"),eq("abc"),0,0))
 						.thenReturn(Page.empty());
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1, 1, 1L,
-							1L, "do some thing", "abc", "abc");
+							1L, "do some thing", "abc", "abc",0,0);
 
 		Pagination pagination = (Pagination) responseDataPagination.getPagination();
 
@@ -436,10 +441,10 @@ class JobServiceImplTest {
 	void givenJobServiceSearchListJobFilterIsEmpty_whenCallSearchListJobFilter_thenReturnResponseDataPaginationDataGetPageSize() {
 
 		when(jobRepository.searchListJobFilter(any(),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
+						eq("do some thing"),eq("abc"),eq("abc"),0,0))
 						.thenReturn(Page.empty());
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1, 1, 1L,
-						1L, "do some thing", "abc", "abc");
+						1L, "do some thing", "abc", "abc",0,0);
 
 		Pagination pagination = (Pagination) responseDataPagination.getPagination();
 
@@ -450,10 +455,10 @@ class JobServiceImplTest {
 	void givenJobServiceSearchListJobFilterIsEmpty_whenCallSearchListJobFilter_thenReturnResponseDataPaginationDataGetTotalPage() {
 
 		when(jobRepository.searchListJobFilter(any(),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
+						eq("do some thing"),eq("abc"),eq("abc"),0,0))
 						.thenReturn(Page.empty());
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1, 1, 1L,
-						1L, "do some thing",  "abc", "abc");
+						1L, "do some thing",  "abc", "abc",0,0);
 
 		Pagination pagination = (Pagination) responseDataPagination.getPagination();
 
@@ -464,10 +469,10 @@ class JobServiceImplTest {
 	void givenJobServiceSearchListJobFilterIsEmpty_whenCallSearchListJobFilter_thenReturnResponseDataPaginationDataGetTotalRecords() {
 
 		when(jobRepository.searchListJobFilter(any(),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
+						eq("do some thing"),eq("abc"),eq("abc"),0,0))
 						.thenReturn(Page.empty());
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1, 1, 1L,
-						1L, "do some thing",  "abc", "abc");
+						1L, "do some thing",  "abc", "abc",0,0);
 
 		Pagination pagination = (Pagination) responseDataPagination.getPagination();
 
@@ -478,10 +483,10 @@ class JobServiceImplTest {
 	void givenJobServiceSearchListJobFilterIsEmpty_whenCallSearchListJobFilter_thenReturn1() {
 
 		when(jobRepository.searchListJobFilter(any(),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
+						eq("do some thing"),eq("abc"),eq("abc"),0,0))
 						.thenReturn(Page.empty());
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1, 1, 1L,
-						1L, "do some thing", "abc", "abc");
+						1L, "do some thing", "abc", "abc",0,0);
 
 		assertEquals("Success",responseDataPagination.getStatus());
 	}
@@ -490,10 +495,10 @@ class JobServiceImplTest {
 	void givenJobServiceSearchListJobFilterIsEmpty_whenCallSearchListJobFilter_thenReturn2() {
 
 		when(jobRepository.searchListJobFilter(any(),eq(1L),eq(1L),
-						eq("do some thing"),eq("abc"),eq("abc")))
+						eq("do some thing"),eq("abc"),eq("abc"),0,0))
 						.thenReturn(Page.empty());
 		ResponseDataPagination responseDataPagination = jobService.searchListJobFilter(1, 1, 1L,
-						1L, "do some thing", "abc", "abc");
+						1L, "do some thing", "abc", "abc",0,0);
 
 		List<JobResponse> data = (List<JobResponse>) responseDataPagination.getData();
 

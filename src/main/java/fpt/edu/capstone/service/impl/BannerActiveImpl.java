@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -42,8 +43,8 @@ public class BannerActiveImpl implements BannerActiveService {
     }
 
     @Override
-    public Page<BannerActive> getAllBannerForApproval(Pageable pageable) {
-        return bannerActiveRepository.getAllBannerForApproval(pageable);
+    public Page<BannerActive> getAllBannerForApproval(Pageable pageable, String screenName, LocalDateTime from, LocalDateTime to) {
+        return bannerActiveRepository.getAllBannerForApproval(pageable, screenName, from, to);
     }
 
     @Override

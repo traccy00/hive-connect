@@ -128,7 +128,7 @@ public class AdminManageServiceImplTest {
         final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(
                 new BannerActive(1L, "bannerImageUrl", 1L, "displayPosition", false, "approvalStatus",
                         LocalDateTime.of(2021, 10, 1, 0, 0, 0))));
-        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class))).thenReturn(bannerActives);
+        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class),null,null,null)).thenReturn(bannerActives);
         final Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType",
                 "bankCode", "command", "currCode", "local", LocalDateTime.of(2021, 10, 1, 0, 0, 0), false);
         when(mockPaymentService.findById(1L)).thenReturn(payment);
@@ -159,12 +159,12 @@ public class AdminManageServiceImplTest {
         company1.setCreatorId(1L);
         final Optional<Company> company = Optional.of(company1);
         when(mockCompanyService.findById(1L)).thenReturn(company);
-        final ResponseDataPagination result = adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(1, 10);
+        final ResponseDataPagination result = adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(1, 10,null,null,null);
     }
 
     @Test
     public void testGetBannerOfRecruiterForAdmin_BannerActiveServiceReturnsNoItems() {
-        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class)))
+        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class),null,null,null))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType",
                 "bankCode", "command", "currCode", "local", LocalDateTime.of(2021, 10, 1, 0, 0, 0), false);
@@ -196,7 +196,7 @@ public class AdminManageServiceImplTest {
         company1.setCreatorId(1L);
         final Optional<Company> company = Optional.of(company1);
         when(mockCompanyService.findById(1L)).thenReturn(company);
-        final ResponseDataPagination result = adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(1, 10);
+        final ResponseDataPagination result = adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(1, 10,null,null,null);
     }
 
     @Test
@@ -204,7 +204,7 @@ public class AdminManageServiceImplTest {
         final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(
                 new BannerActive(1L, "bannerImageUrl", 1L, "displayPosition", false, "approvalStatus",
                         LocalDateTime.of(2021, 10, 1, 0, 0, 0))));
-        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class))).thenReturn(bannerActives);
+        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class),null,null,null)).thenReturn(bannerActives);
         final Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType",
                 "bankCode", "command", "currCode", "local", LocalDateTime.of(2021, 10, 1, 0, 0, 0), false);
         when(mockPaymentService.findById(1L)).thenReturn(payment);
@@ -212,7 +212,7 @@ public class AdminManageServiceImplTest {
                 false, false, false, false, false, false, false);
         when(mockBannerService.findById(1L)).thenReturn(banner);
         when(mockRecruiterService.findById(1L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(0, 0))
+        assertThatThrownBy(() -> adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(0, 0,null,null,null))
                 .isInstanceOf(HiveConnectException.class);
     }
 
@@ -221,7 +221,7 @@ public class AdminManageServiceImplTest {
         final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(
                 new BannerActive(1L, "bannerImageUrl", 1L, "displayPosition", false, "approvalStatus",
                         LocalDateTime.of(2021, 10, 1, 0, 0, 0))));
-        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class))).thenReturn(bannerActives);
+        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class),null,null,null)).thenReturn(bannerActives);
         final Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType",
                 "bankCode", "command", "currCode", "local", LocalDateTime.of(2021, 10, 1, 0, 0, 0), false);
         when(mockPaymentService.findById(1L)).thenReturn(payment);
@@ -236,7 +236,7 @@ public class AdminManageServiceImplTest {
         when(mockRecruiterService.findById(1L)).thenReturn(recruiter);
 
         when(mockCompanyService.findById(1L)).thenReturn(Optional.empty());
-        final ResponseDataPagination result = adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(1, 10);
+        final ResponseDataPagination result = adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(1, 10,null,null,null);
     }
 
     @Test

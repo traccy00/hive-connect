@@ -17,7 +17,8 @@ import java.util.Optional;
 public interface JobService {
     void createJob(CreateJobRequest request);
 
-    ResponseDataPagination searchListJobFilter(Integer pageNo,Integer pageSize, long fieldId, long countryId, String jobName, String workForm, String workPlace);
+    ResponseDataPagination searchListJobFilter(Integer pageNo,Integer pageSize, long fieldId, long countryId,
+                                               String jobName, String workForm, String workPlace, long fromSalary, long toSalary);
 
     void updateJob(UpdateJobRequest request);
 

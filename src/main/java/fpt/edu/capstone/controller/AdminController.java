@@ -18,7 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 
@@ -117,14 +119,21 @@ public class AdminController {
     @GetMapping("/get-reported-job")
     public ResponseData getReportedJob(@RequestParam(defaultValue = "0") Integer pageNo,
                                        @RequestParam(defaultValue = "10") Integer pageSize,
-                                       @RequestParam(value = "createdAtFrom", required = false) LocalDateTime createdAtFrom,
-                                       @RequestParam(value = "createdAtTo", required = false) LocalDateTime createdAtTo,
-                                       @RequestParam(value = "updatedAtFrom", required = false) LocalDateTime updatedAtFrom,
-                                       @RequestParam(value = "updatedAtTo", required = false) LocalDateTime updatedAtTo,
+                                       @RequestParam(value = "createdAtFrom", required = false) String createdAtFrom,
+                                       @RequestParam(value = "createdAtTo", required = false) String createdAtTo,
+                                       @RequestParam(value = "updatedAtFrom", required = false) String updatedAtFrom,
+                                       @RequestParam(value = "updatedAtTo", required = false) String updatedAtTo,
                                        @RequestParam(value = "jobName", defaultValue = StringUtils.EMPTY) String jobName) {
         try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime createdFrom = LocalDate.parse(createdAtFrom, formatter).atStartOfDay();
+            LocalDateTime createdTo = LocalDate.parse(createdAtTo, formatter).atStartOfDay();
+
+            LocalDateTime updatedFrom = LocalDate.parse(updatedAtFrom, formatter).atStartOfDay();
+            LocalDateTime updatedTo = LocalDate.parse(updatedAtTo, formatter).atStartOfDay();
+
             ResponseDataPagination reports = adminManageService.
-                    searchReportedJob(pageNo, pageSize, createdAtFrom, createdAtTo, updatedAtFrom, updatedAtTo, jobName);
+                    searchReportedJob(pageNo, pageSize, createdFrom, createdTo, updatedFrom, updatedTo, jobName);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, reports);
         } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);

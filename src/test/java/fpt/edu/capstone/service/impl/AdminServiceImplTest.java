@@ -23,6 +23,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -96,6 +98,40 @@ public class AdminServiceImplTest {
         assertThatThrownBy(() -> adminServiceImplUnderTest.getListAdmin(0, 0)).isInstanceOf(Exception.class);
     }
 
+    @Test
+    public void findAdminByUserIdIsNull(){
+        Optional<Admin> opAdmin = Optional.empty();
+        when(mockAdminRepository.findByUserId(1L)).thenReturn(opAdmin);
+        assertEquals(false, adminServiceImplUnderTest.findAdminByUserId(1L).isPresent());
+    }
+
+    @Test
+    public void findAdminByUserIdIsNotNullCheckValueFail(){
+        Admin admin = new Admin();
+        Admin admin1 = new Admin();
+        admin1.setId(2L);
+
+        Optional<Admin> opAdmin = Optional.of(admin);
+        Optional<Admin> opAdmin1 = Optional.of(admin1);
+
+        when(mockAdminRepository.findByUserId(1L)).thenReturn(opAdmin);
+        assertEquals(true, adminServiceImplUnderTest.findAdminByUserId(1L).isPresent());
+        assertNotEquals(opAdmin1, adminServiceImplUnderTest.findAdminByUserId(1L));
+    }
+
+    @Test
+    public void findAdminByUserIdIsNotNullAndCheckValueTrue(){
+        Admin admin = new Admin();
+        admin.setId(1L);
+
+        Optional<Admin> opAdmin = Optional.of(admin);
+
+        when(mockAdminRepository.findByUserId(1L)).thenReturn(opAdmin);
+
+        assertEquals(true, adminServiceImplUnderTest.findAdminByUserId(1L).isPresent());
+        assertEquals(opAdmin, adminServiceImplUnderTest.findAdminByUserId(1L));
+    }
+    
     @Test
     public void testFindAdminByUserId() {
         final Optional<Admin> admin = Optional.of(admin());

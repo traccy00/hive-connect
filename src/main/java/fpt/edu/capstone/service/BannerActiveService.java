@@ -5,6 +5,7 @@ import fpt.edu.capstone.entity.BannerActive;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BannerActiveService {
@@ -17,7 +18,7 @@ public interface BannerActiveService {
 
     BannerActive findByPaymentIdAndPosition(long paymentId, String position);
 
-    Page<BannerActive> getAllBannerForApproval(Pageable pageable);
+    Page<BannerActive> getAllBannerForApproval(Pageable pageable, String screenName, LocalDateTime from, LocalDateTime to);
 
     BannerActive findById(long id);
 }

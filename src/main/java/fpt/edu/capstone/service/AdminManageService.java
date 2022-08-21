@@ -17,7 +17,7 @@ public interface AdminManageService {
 
     void approveBanner(ApproveBannerRequest request);
 
-    ResponseDataPagination getBannerOfRecruiterForAdmin(Integer pageNo, Integer pageSize);
+    ResponseDataPagination getBannerOfRecruiterForAdmin(Integer pageNo, Integer pageSize, String screenName, LocalDateTime from, LocalDateTime to);
 
     ResponseDataPagination searchUsersForAdmin(String selectTab, Integer pageNo, Integer pageSize, String username, String email, String fullName, long userId, boolean isLocked);
 

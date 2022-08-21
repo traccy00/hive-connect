@@ -115,11 +115,11 @@ public class AdminManageServiceImpl implements AdminManageService {
     }
 
     @Override
-    public ResponseDataPagination getBannerOfRecruiterForAdmin(Integer pageNo, Integer pageSize) {
+    public ResponseDataPagination getBannerOfRecruiterForAdmin(Integer pageNo, Integer pageSize, String screenName, LocalDateTime from, LocalDateTime to) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
-        Page<BannerActive> bannerActives = bannerActiveService.getAllBannerForApproval(pageable);
+        Page<BannerActive> bannerActives = bannerActiveService.getAllBannerForApproval(pageable, screenName, from, to);
         List<BannerForApprovalResponse> responseList = new ArrayList<>();
         if (bannerActives.hasContent()) {
             for (BannerActive bannerActive : bannerActives) {
