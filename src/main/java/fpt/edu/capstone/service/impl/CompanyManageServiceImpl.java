@@ -1,10 +1,7 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
-import fpt.edu.capstone.dto.company.CompanyResponse;
-import fpt.edu.capstone.dto.company.CreateCompanyRequest;
-import fpt.edu.capstone.dto.company.TopCompanyResponse;
-import fpt.edu.capstone.dto.company.UpdateCompanyInforRequest;
+import fpt.edu.capstone.dto.company.*;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Fields;
 import fpt.edu.capstone.entity.Image;
@@ -27,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -129,9 +127,17 @@ public class CompanyManageServiceImpl implements CompanyManageService {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
         Page<Company> companyPageable = companyService.searchCompany(pageable, companyName);
+        List<ListCompany> list = companyPageable.getContent().stream().map(company -> modelMapper.
+                map(company, ListCompany.class)).collect(Collectors.toList());
+        for (ListCompany c: list) {
+            Optional<Image> image = imageService.getImageCompany(c.getId(), true);
+            if (image.isPresent()) {
+                c.setAvatar(image.get().getUrl());
+            }
+        }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();
-        responseDataPagination.setData(companyPageable.getContent());
+        responseDataPagination.setData(list);
         pagination.setCurrentPage(pageNo);
         pagination.setPageSize(pageSize);
         pagination.setTotalPage(companyPageable.getTotalPages());

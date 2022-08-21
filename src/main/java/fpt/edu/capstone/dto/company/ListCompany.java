@@ -9,7 +9,7 @@ public class ListCompany {
     private long id;
     private String fieldWork;
     private String name;
-    private String companyAvatar;
+    private String avatar;
     private String email;
     private String phone;
     private String description;

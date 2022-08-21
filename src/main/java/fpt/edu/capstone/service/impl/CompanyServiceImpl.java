@@ -42,11 +42,10 @@ public class CompanyServiceImpl implements CompanyService {
         List<Company> companyList = companyRepository.findAll();
         List<ListCompany> list = companyList.stream().map(company -> modelMapper.
                 map(company, ListCompany.class)).collect(Collectors.toList());
-
         for (ListCompany c: list) {
             Optional<Image> image = imageService.getImageCompany(c.getId(), true);
             if (image.isPresent()) {
-                c.setCompanyAvatar(image.get().getUrl());
+                c.setAvatar(image.get().getUrl());
             }
         }
         return list;
