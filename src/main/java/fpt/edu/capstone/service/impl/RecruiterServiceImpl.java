@@ -103,19 +103,19 @@ public class RecruiterServiceImpl implements RecruiterService {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         if (optionalRecruiter.get().getCompanyId() == 0) {
-            throw new HiveConnectException("Nhà tuyển dụng chưa có thông tin công ty. Vui lòng cập nhật thông tin công ty trước.");
+            throw new HiveConnectException(ResponseMessageConstants.RECRUITER_DOES_NOT_HAVE_COMPANY_INFOR);
         }
         if (businessMultipartFile == null && additionalMultipartFile == null) {
-            throw new HiveConnectException("Không có file nào được upload");
+            throw new HiveConnectException(ResponseMessageConstants.CHOOSE_UPLOAD_FILE);
         }
         //check xem đã save được vào amazon chưa
         //"1": business license, "2": additional license
         if (businessMultipartFile != null) {
             //check xem license đã từng upload lên chưa, trạng thái như thế nào?
-            if (optionalRecruiter.get().getBusinessLicenseUrl() != null && optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null) {
-                if ((optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus()))
-                ) {
-                    throw new HiveConnectException("Nhà tuyển dụng đã có giấy phép kinh doanh hoặc giấy phép đang được duyệt, không thể thay đổi");
+            if (optionalRecruiter.get().getBusinessLicenseUrl() != null
+                    && optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null) {
+                if ((optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus()))) {
+                    throw new HiveConnectException(ResponseMessageConstants.BUSINESS_LICENSE_IS_PENDING_APPROVAL);
                 }
             }
             String fileName = dinaryService.uploadFileToDinary(null, businessMultipartFile);
@@ -129,7 +129,7 @@ public class RecruiterServiceImpl implements RecruiterService {
                     && optionalRecruiter.get().getAdditionalLicenseApprovalStatus() != null) {
                 if (optionalRecruiter.get().getAdditionalLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())
                         || optionalRecruiter.get().getAdditionalLicenseApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
-                    throw new HiveConnectException("Nhà tuyển dụng đã có giấy phép kinh doanh hoặc giấy phép đang được duyệt, không thể thay đổi");
+                    throw new HiveConnectException(ResponseMessageConstants.BUSINESS_LICENSE_IS_PENDING_APPROVAL);
                 }
             }
             String fileName = dinaryService.uploadFileToDinary(null, additionalMultipartFile);
