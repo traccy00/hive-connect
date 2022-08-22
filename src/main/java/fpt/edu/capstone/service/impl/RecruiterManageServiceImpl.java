@@ -103,7 +103,8 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (!optionalRecruiter.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
-        String message = "";
+        String message = "Tài khoản của bạn chưa thực hiện xác thực email. " +
+                "Vui lòng xác thực email để có thể đăng tin tuyển dụng.";
         int step = 0;
         int totalStep = 4;
         Users user = userRepository.getById(optionalRecruiter.get().getUserId());
@@ -113,29 +114,25 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         //verify step 1: email
         if (user.isVerifiedEmail()) {
             step++;
+            message = "Tài khoản của bạn chưa thực hiện xác thực thông tin công ty. " +
+                    "Vui lòng xác thực công ty tại trang Tài khoản > Thông tin công ty để có thể đăng tin tuyển dụng.";
         }
         //verify step 2: company
         if (optionalRecruiter.get().getCompanyId() > 0) {
             step++;
+            message = "Tài khoản của bạn chưa thực hiện xác thực số điện thoại. " +
+                    "Vui lòng xác thực số điện thoại tại trang Tài khoản > Thông tin tài khoản để có thể đăng tin tuyển dụng.";
         }
         //verify step 3: phone number
         if (user.isVerifiedPhone()) {
             step++;
+            message = "Tài khoản của bạn chưa thực hiện xác thực giấy phép kinh doanh. " +
+                    "Vui lòng xác thực giấy phép tại trang Tài khoản > Thông tin công ty để có thể đăng tin tuyển dụng.";
         }
         //verify step 4: business license
         if (optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null
                 && optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
             step++;
-        }
-        if (step == 0) {
-            message = "Tài khoản của bạn chưa thực hiện xác thực email. Vui lòng xác thực email để có thể đăng tin tuyển dụng.";
-        } else if (step == 1) {
-            message = "Tài khoản của bạn chưa thực hiện xác thực thông tin công ty. Vui lòng xác thực công ty tại trang Tài khoản > Thông tin công ty để có thể đăng tin tuyển dụng.";
-        } else if (step == 2) {
-            message = "Tài khoản của bạn chưa thực hiện xác thực số điện thoại. Vui lòng xác thực số điện thoại tại trang Tài khoản > Thông tin tài khoản để có thể đăng tin tuyển dụng.";
-        } else if (step == 3) {
-            message = "Tài khoản của bạn chưa thực hiện xác thực giấy phép kinh doanh. Vui lòng xác thực giấy phép tại trang Tài khoản > Thông tin công ty để có thể đăng tin tuyển dụng.";
-        } else if (step == 4) {
             message = "Tài khoản của bạn đã xác thực thành công. Đăng tin tuyển dụng ngay thôi.";
         }
         response.setMessage(message);
@@ -243,8 +240,8 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (userService.findByPhoneAndIdIsNotIn(request.getPhone(), recruiter.getUserId()) != null) {
             throw new HiveConnectException(ResponseMessageConstants.PHONE_NUMBER_IN_USE);
         } else {
-            if(!request.getPhone().equals(user.getPhone())) {
-                if(user.isVerifiedPhone()) {
+            if (!request.getPhone().equals(user.getPhone())) {
+                if (user.isVerifiedPhone()) {
                     throw new HiveConnectException(ResponseMessageConstants.PHONE_NUMBER_VERIFIED);
                 }
                 user.setPhone(request.getPhone());
@@ -424,7 +421,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         Page<Job> jobsListOfRecruiter = jobService.getJobOfRecruiter(pageable, recruiterId);
         if (jobsListOfRecruiter.hasContent()) {
             for (Job job : jobsListOfRecruiter) {
-                if(!LocalDateTimeUtils.checkExpireTime(job.getEndDate())){
+                if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                     JobForRecruiterResponse response = new JobForRecruiterResponse();
                     response.setJobId(job.getId());
                     response.setJobName(job.getJobName());
@@ -714,7 +711,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                 List<WorkExperience> workExperiencesOfCv = workExperienceRepository.getListWorkExperienceByCvId(cv.getId());
                 if (!workExperiencesOfCv.isEmpty()) {
                     List<String> experienceDesc = new ArrayList<>();
-                    for(WorkExperience workExperience : workExperiencesOfCv) {
+                    for (WorkExperience workExperience : workExperiencesOfCv) {
                         String workEx = workExperience.getCompanyName() + " - " + workExperience.getPosition();
                         experienceDesc.add(workEx);
                     }
