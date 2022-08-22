@@ -106,6 +106,7 @@ public interface ResponseMessageConstants {
     String FIELD_WORK_OF_COMPANY_DOES_NOT_EXIST = "Lĩnh vực công ty không tồn tại";
     String CANCEL_REPORT_JOB_SUCCESSFULLY = "Hủy báo cáo tin tuyển dụng thành công";
     String REPORTED_JOB_DOES_NOT_EXIST = "Yêu cầu báo cáo tin tuyển dụng không tồn tại.";
+    int TOP_COMPANY_HOMEPAGE_SIZE = 12;
 
     //BANNER
     String CREATE_BANNER_FAIL = "Tạo banner thất bại";

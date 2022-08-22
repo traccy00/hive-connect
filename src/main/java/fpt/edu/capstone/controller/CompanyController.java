@@ -81,7 +81,7 @@ public class CompanyController {
     @GetMapping("/get-top-12-recruitment-companies")
     public ResponseData getTop12Companies() {
         try {
-            List<TopCompanyResponse> topCompanies = companyManageService.getTop12Companies();
+            List<TopCompanyResponse> topCompanies = companyManageService.getTopCompaniesHomepage();
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, topCompanies);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

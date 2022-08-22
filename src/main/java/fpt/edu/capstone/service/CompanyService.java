@@ -20,4 +20,5 @@ public interface CompanyService {
 
     Page<Company> searchCompany(Pageable pageable, String companyName);
 
+    List<Company> getAdditionCompanies(int additionSize, List<Long> existsId);
 }

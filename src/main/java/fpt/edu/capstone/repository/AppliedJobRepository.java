@@ -33,9 +33,9 @@ public interface AppliedJobRepository extends JpaRepository<AppliedJob, Long> {
     @Query(value = "select count(job_id) as applyCvNumber, t1.company_id as companyId, t1.company_name as companyName from " +
             "(select aj.job_id, j.company_id, c.name as company_name from applied_job aj " +
             "join job j on aj.job_id = j.id " +
-            "join companies c on j.company_id = c.id) t1 " +
+            "join companies c on j.company_id = c.id where aj.created_at > current_date - interval '365' day) t1 " +
             "group by company_id, t1.company_name order by applyCvNumber desc limit 12;", nativeQuery = true)
-    List<CompanyResponse> getTop12Companies();
+    List<CompanyResponse> getTopCompaniesHomepage();
 
     @Query(value = "select * from applied_job aj where candidate_id = :candidateId " +
             "and (approval_status like (:status) or :status is null or :status = '')",

@@ -9,7 +9,7 @@ import fpt.edu.capstone.utils.ResponseDataPagination;
 import java.util.List;
 
 public interface CompanyManageService {
-    List<TopCompanyResponse> getTop12Companies();
+    List<TopCompanyResponse> getTopCompaniesHomepage();
 
     UpdateCompanyInforRequest updateCompanyInformation(long recruiterId, UpdateCompanyInforRequest request);
 

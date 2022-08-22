@@ -15,7 +15,7 @@ public interface AppliedJobService {
 
     Page<AppliedJob> getCvAppliedJob(Pageable pageable, long jobId, boolean isApplied);
 
-    List<CompanyResponse> getTop12Companies();
+    List<CompanyResponse> getTopCompaniesHomepage();
 
     Page<AppliedJob> searchAppliedJobsOfCandidate(Pageable pageable, long candidateId, String approvalStatus);
 

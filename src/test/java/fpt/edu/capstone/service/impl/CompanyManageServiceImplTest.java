@@ -150,26 +150,26 @@ public class CompanyManageServiceImplTest {
     }
     @Test
     public void testGetTop12Companies() {
-        when(mockAppliedJobService.getTop12Companies()).thenReturn(Arrays.asList());
+        when(mockAppliedJobService.getTopCompaniesHomepage()).thenReturn(Arrays.asList());
         final Optional<Image> image = Optional.of(image());
         when(mockImageService.findAvatarByCompanyId(1L)).thenReturn(image);
-        final List<TopCompanyResponse> result = companyManageServiceImplUnderTest.getTop12Companies();
+        final List<TopCompanyResponse> result = companyManageServiceImplUnderTest.getTopCompaniesHomepage();
     }
 
     @Test
     public void testGetTop12Companies_AppliedJobServiceReturnsNoItems() {
-        when(mockAppliedJobService.getTop12Companies()).thenReturn(Collections.emptyList());
+        when(mockAppliedJobService.getTopCompaniesHomepage()).thenReturn(Collections.emptyList());
         final Optional<Image> image = Optional.of(image());
         when(mockImageService.findAvatarByCompanyId(1L)).thenReturn(image);
-        final List<TopCompanyResponse> result = companyManageServiceImplUnderTest.getTop12Companies();
+        final List<TopCompanyResponse> result = companyManageServiceImplUnderTest.getTopCompaniesHomepage();
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
     @Test
     public void testGetTop12Companies_ImageServiceImplReturnsAbsent() {
-        when(mockAppliedJobService.getTop12Companies()).thenReturn(Arrays.asList());
+        when(mockAppliedJobService.getTopCompaniesHomepage()).thenReturn(Arrays.asList());
         when(mockImageService.findAvatarByCompanyId(1L)).thenReturn(Optional.empty());
-        final List<TopCompanyResponse> result = companyManageServiceImplUnderTest.getTop12Companies();
+        final List<TopCompanyResponse> result = companyManageServiceImplUnderTest.getTopCompaniesHomepage();
     }
 
     @Test

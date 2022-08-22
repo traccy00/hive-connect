@@ -47,9 +47,9 @@ public class CompanyManageServiceImpl implements CompanyManageService {
     private final ImageRepository imageRepository;
 
     @Override
-    public List<TopCompanyResponse> getTop12Companies() {
+    public List<TopCompanyResponse> getTopCompaniesHomepage() {
         List<TopCompanyResponse> responseList = new ArrayList<>();
-        List<CompanyResponse> companyList = appliedJobService.getTop12Companies();
+        List<CompanyResponse> companyList = appliedJobService.getTopCompaniesHomepage();
         for (CompanyResponse company : companyList) {
             TopCompanyResponse response = new TopCompanyResponse();
             Optional<Image> image = imageService.findAvatarByCompanyId(company.getCompanyId());
@@ -60,6 +60,21 @@ public class CompanyManageServiceImpl implements CompanyManageService {
             response.setCompanyId(company.getCompanyId());
             response.setCompanyName(company.getCompanyName());
             responseList.add(response);
+        }
+        if (companyList != null && companyList.size() < ResponseMessageConstants.TOP_COMPANY_HOMEPAGE_SIZE) {
+            int additionSize = ResponseMessageConstants.TOP_COMPANY_HOMEPAGE_SIZE - companyList.size();
+            List<Long> existsId = companyList.stream().map(CompanyResponse::getCompanyId).collect(Collectors.toList());
+            List<Company> additionCompanies = companyService.getAdditionCompanies(additionSize, existsId);
+            for (Company company : additionCompanies) {
+                TopCompanyResponse response = new TopCompanyResponse();
+                Optional<Image> image = imageService.findAvatarByCompanyId(company.getId());
+                if (image.isPresent()) {
+                    response.setCompanyAvatar(image.get().getUrl());
+                }
+                response.setCompanyId(company.getId());
+                response.setCompanyName(company.getName());
+                responseList.add(response);
+            }
         }
         return responseList;
     }

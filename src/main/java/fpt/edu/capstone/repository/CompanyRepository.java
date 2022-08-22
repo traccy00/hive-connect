@@ -33,4 +33,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     @Query(value = "select * from companies c where name like concat('%',:companyName,'%')", nativeQuery = true)
     Page<Company> getAllByName(Pageable pageable, @Param("companyName") String companyName);
+
+    @Query(value = "select * from companies c where c.id not in (:existsId) order by random() limit :additionSize", nativeQuery = true)
+    List<Company> getAdditionCompanies(@Param("additionSize") int additionSize, @Param("existsId") List<Long> existsId);
 }
