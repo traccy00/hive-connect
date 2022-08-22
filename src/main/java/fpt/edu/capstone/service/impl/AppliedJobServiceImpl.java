@@ -7,7 +7,6 @@ import fpt.edu.capstone.repository.AppliedJobRepository;
 import fpt.edu.capstone.service.AppliedJobService;
 import fpt.edu.capstone.utils.Enums;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,8 +37,8 @@ public class AppliedJobServiceImpl implements AppliedJobService {
     }
 
     @Override
-    public List<CompanyResponse> getTop12Companies() {
-      return appliedJobRepository.getTop12Companies();
+    public List<CompanyResponse> getTopCompaniesHomepage() {
+      return appliedJobRepository.getTopCompaniesHomepage();
     }
 
     @Override

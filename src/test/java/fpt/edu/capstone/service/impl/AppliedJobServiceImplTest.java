@@ -70,14 +70,14 @@ public class AppliedJobServiceImplTest {
 
     @Test
     public void testGetTop12Companies() {
-        when(mockAppliedJobRepository.getTop12Companies()).thenReturn(Arrays.asList());
-        final List<CompanyResponse> result = appliedJobServiceImplUnderTest.getTop12Companies();
+        when(mockAppliedJobRepository.getTopCompaniesHomepage()).thenReturn(Arrays.asList());
+        final List<CompanyResponse> result = appliedJobServiceImplUnderTest.getTopCompaniesHomepage();
     }
 
     @Test
     public void testGetTop12Companies_AppliedJobRepositoryReturnsNoItems() {
-        when(mockAppliedJobRepository.getTop12Companies()).thenReturn(Collections.emptyList());
-        final List<CompanyResponse> result = appliedJobServiceImplUnderTest.getTop12Companies();
+        when(mockAppliedJobRepository.getTopCompaniesHomepage()).thenReturn(Collections.emptyList());
+        final List<CompanyResponse> result = appliedJobServiceImplUnderTest.getTopCompaniesHomepage();
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 

@@ -60,4 +60,9 @@ public class CompanyServiceImpl implements CompanyService {
     public Page<Company> searchCompany(Pageable pageable, String companyName) {
         return companyRepository.getAllByName(pageable, companyName);
     }
+
+    @Override
+    public List<Company> getAdditionCompanies(int additionSize, List<Long> existsId) {
+        return companyRepository.getAdditionCompanies(additionSize, existsId);
+    }
 }

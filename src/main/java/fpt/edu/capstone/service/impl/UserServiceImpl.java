@@ -218,14 +218,17 @@ public class UserServiceImpl implements UserService {
     public void forgotPassword(String email) throws Exception {
         try {
             //verify user by email
-            Users user = findByEmail(email).get();
+            Optional<Users> user = findByEmail(email);
+            if(!user.isPresent()) {
+                throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+            }
             //generate reset token
             String token = RandomString.make(30);
-            user.setResetPasswordToken(token);
-            userRepository.save(user);
+            user.get().setResetPasswordToken(token);
+            userRepository.save(user.get());
             //send mail with link reset token to user's email
             String resetPasswordLink = "http://localhost:4200/auth/forgot-password?token=" + token;
-            emailService.sendResetPasswordEmail(user.getEmail(), resetPasswordLink);
+            emailService.sendResetPasswordEmail(user.get().getEmail(), resetPasswordLink);
         } catch (Exception e) {
             throw e;
         }
