@@ -114,6 +114,9 @@ public interface ResponseMessageConstants {
     //CV
     String CV_NOT_EXIST = "CV không tồn tại";
     String YOUR_CV_EXISTED = "CV đã tồn tại";
+    String PROFILE_DOES_NOT_EXIST = "Bạn chưa tạo hồ sơ";
+    String CANCEL_APPLY_SUCCESSFULLY = "Hủy ứng tuyển thành công";
+    String APPLY_FOR_JOB_SUCCESSFULLY = "Ứng tuyển thành công";
 
     //PAYMENT
     String PRICE_EQUAL_GREATER_THAN_ZERO = "Giá của gói lớn hơn hoặc bằng 0.";
