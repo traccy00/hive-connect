@@ -5,7 +5,7 @@ public interface ResponseMessageConstants {
     String ERROR = "MSG_ERROR";
     String ACCESS_DENIED = "Truy cập bị từ chối.";
 
-    String GET_LIST_SUCCESS= "Lấy danh sách thành công";
+    String GET_LIST_SUCCESS = "Lấy danh sách thành công";
     String DATA_INVALID = "Dữ liệu không hợp lệ.";
     String DATA_IS_NULL_OR_EMPTY = "Không có dữ liệu.";
     String REQUEST_NOT_EXIST = "Không tìm thấy người dùng hoặc yêu cầu không tồn tại.";
@@ -56,6 +56,15 @@ public interface ResponseMessageConstants {
     String PHONE_NUMBER_VERIFIED = "Số điện thoại đã được xác minh! Không thể thay đổi";
     String USER_HAS_BEEN_LOCKED = "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên hoặc gọi hotline 0967445450.";
     String EMAIL_VERIFIED = "Email đã được xác thực.";
+    String ACCOUNT_VERIFY_SUCCESSFULLY = "Tài khoản của bạn đã xác thực thành công. Đăng tin tuyển dụng ngay thôi.";
+    String BUSINESS_LICENSE_HAS_NOT_BEEN_VERIFIED = "Tài khoản của bạn chưa thực hiện xác thực giấy phép kinh doanh. " +
+            "Vui lòng xác thực giấy phép tại trang Tài khoản > Thông tin công ty để có thể đăng tin tuyển dụng.";
+    String PHONE_NUMBER_HAS_BEEN_NOT_VERIFIED = "Tài khoản của bạn chưa thực hiện xác thực số điện thoại. " +
+            "Vui lòng xác thực số điện thoại tại trang Tài khoản > Thông tin tài khoản để có thể đăng tin tuyển dụng.";
+    String COMPANY_HAS_BEEN_NOT_VERIFIED = "Tài khoản của bạn chưa thực hiện xác thực thông tin công ty. " +
+            "Vui lòng xác thực công ty tại trang Tài khoản > Thông tin công ty để có thể đăng tin tuyển dụng.";
+    String EMAIL_HAS_BEEN_NOT_VERIFIED = "Tài khoản của bạn chưa thực hiện xác thực email. " +
+            "Vui lòng xác thực email để có thể đăng tin tuyển dụng.";
 
     // COMMON
     String UPDATE_FAILED = "Cập nhật thất bại.";
@@ -86,7 +95,7 @@ public interface ResponseMessageConstants {
     //AMAZON
 //    String AMAZON_SAVE_URL = "https://hive-connect-images.s3.us-west-1.amazonaws.com/hiveconnect/";
     String AMAZON_SAVE_URL = "https://hive-connect-social.s3.ap-southeast-1.amazonaws.com/hiveconnect/";
-//    String AMAZON_SAVE_URL = "https://hive-connect.s3.ap-southeast-1.amazonaws.com/hiveconnect/";
+    //    String AMAZON_SAVE_URL = "https://hive-connect.s3.ap-southeast-1.amazonaws.com/hiveconnect/";
     String UPLOAD_IMAGE_EXCEPTION = "MSG_UPLOAD_IMAGE_EXCEPTION";
     String REQUEST_EXCEPTION = "MSG_REQUEST_EXCEPTION";
     String UPLOAD_IMG_EXCEPTION = "MSG_UPLOAD_IMG_EXCEPTION";
@@ -117,6 +126,9 @@ public interface ResponseMessageConstants {
     String PROFILE_DOES_NOT_EXIST = "Bạn chưa tạo hồ sơ";
     String CANCEL_APPLY_SUCCESSFULLY = "Hủy ứng tuyển thành công";
     String APPLY_FOR_JOB_SUCCESSFULLY = "Ứng tuyển thành công";
+    String VIEW_CV_ALL_INFORMATION = "Đọc toàn bộ thông tin";
+    String TOTAL_VIEW_CV_RUN_OUT = "Bạn đã hết lượt xem thông tin liên hệ CV của ứng viên";
+    String PAY_FOR_PACKAGE_TO_VIEW_CV = "Bạn hãy mua gói để xem thông tin liên hệ của ứng viên";
 
     //PAYMENT
     String PRICE_EQUAL_GREATER_THAN_ZERO = "Giá của gói lớn hơn hoặc bằng 0.";
