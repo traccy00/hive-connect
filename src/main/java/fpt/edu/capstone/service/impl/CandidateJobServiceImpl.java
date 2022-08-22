@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.ApprovalJobRequest;
 import fpt.edu.capstone.dto.job.JobDetailResponse;
 import fpt.edu.capstone.dto.job.JobResponse;
@@ -305,12 +306,12 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         //company information
         //company does not exist by user can post job -> exception
         if(String.valueOf(job.getCompanyId()) == null || job.getCompanyId() == 0) {
-            throw new HiveConnectException("Liên hệ admin");
+            throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
         }
         Company company = companyService.getCompanyById(job.getCompanyId());
         //company does not exist by user can post job -> exception
         if (company == null) {
-            throw new HiveConnectException("Liên hệ admin");
+            throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
         }
         detail.setCompanyName(company.getName());
         detail.setCompany(company);
