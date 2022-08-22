@@ -19,7 +19,7 @@ public interface AppliedJobRepository extends JpaRepository<AppliedJob, Long> {
     boolean existsByCandidateIdAndJobId(long candidateId, long jobId);
 
     @Query(value = "select * from applied_job aj where aj.candidate_id = ?1 and job_id = ?2 " +
-            "order by updated_at desc limit 1", nativeQuery = true)
+            "order by created_at desc limit 1", nativeQuery = true)
     AppliedJob getByCandidateIdAndJobId(long candidateId, long jobId);
 
     @Query(value = "select * from applied_job aj where aj.job_id = ?1 and aj.is_applied = ?2", nativeQuery = true)

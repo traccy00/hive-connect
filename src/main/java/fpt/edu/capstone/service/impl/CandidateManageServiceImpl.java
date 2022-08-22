@@ -282,47 +282,35 @@ public class CandidateManageServiceImpl implements CandidateManageService {
                 if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())
                         || appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
                     appliedJob1.setApplied(false);
+                    appliedJob1.update();
                     message = ResponseMessageConstants.CANCEL_APPLY_SUCCESSFULLY;
                     //đã apply và ở trạng thái reject, có thể apply lại (new record)
                 } else if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT.getStatus())) {
-                    Object AppliedJobRequest = request;
-                    AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
-                    appliedJob.setApplied(true);
-                    appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-                    if (request.getCvUrl() != null) {
-                        appliedJob.setCvUploadUrl(request.getCvUrl());
-                        appliedJob.setUploadCv(true);
-                    }
-                    appliedJob.create();
-                    appliedJobRepository.save(appliedJob);
+                    createNewApplyRecord(request);
                     message = ResponseMessageConstants.APPLY_FOR_JOB_SUCCESSFULLY;
                 }
-            }else {
-                Object AppliedJobRequest = request;
-                AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
-                appliedJob.setApplied(true);
-                appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-                if (request.getCvUrl() != null) {
-                    appliedJob.setCvUploadUrl(request.getCvUrl());
-                    appliedJob.setUploadCv(true);
-                }
-                appliedJob.create();
-                appliedJobRepository.save(appliedJob);
+            }else {//đã hủy apply với tin tuyển dụng này rồi, tạo một apply mới
+                createNewApplyRecord(request);
                 message = ResponseMessageConstants.APPLY_FOR_JOB_SUCCESSFULLY;
             }
-        } else {
-            Object AppliedJobRequest = request;
-            AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
-            appliedJob.setApplied(true);
-            appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-            if (request.getCvUrl() != null) {
-                appliedJob.setCvUploadUrl(request.getCvUrl());
-                appliedJob.setUploadCv(true);
-            }
-            appliedJob.create();
-            appliedJobRepository.save(appliedJob);
+        } else {//chưa apply job này lần nào
+            createNewApplyRecord(request);
             message = ResponseMessageConstants.APPLY_FOR_JOB_SUCCESSFULLY;
         }
         return message;
+    }
+
+    private void createNewApplyRecord(AppliedJobRequest request) {
+        AppliedJob appliedJob = new AppliedJob();
+        appliedJob.setJobId(request.getJobId());
+        appliedJob.setCandidateId(request.getCandidateId());
+        appliedJob.setApplied(true);
+        appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+        if (request.getCvUrl() != null && !request.getCvUrl().trim().isEmpty()) {
+            appliedJob.setCvUploadUrl(request.getCvUrl());
+            appliedJob.setUploadCv(true);
+        }
+        appliedJob.create();
+        appliedJobRepository.save(appliedJob);
     }
 }
