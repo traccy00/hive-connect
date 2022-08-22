@@ -76,6 +76,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findAllByRecruiterId(long recId);
 
     @Query(value = "with r as (select unnest (string_to_array((select j.job_name as job_name from job j where j.id = :detailJobId) , ' ')) as parts) " +
-            "select * from job j where exists(select 1 from r where j.job_name like concat('%', r.parts,'%')) limit 20", nativeQuery = true)
+            "select * from job j where exists(select 1 from r where j.job_name like concat('%', r.parts,'%')) " +
+            "and j.id not in (:detailJobId) limit 20", nativeQuery = true)
     List<Job> getSameJobsOtherCompanies(@Param("detailJobId") long detailJobId);
 }

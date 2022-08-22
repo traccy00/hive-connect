@@ -54,17 +54,21 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void createJob(CreateJobRequest request) {
+        if(!request.getFlag().equals(Enums.Flag.Posted.getStatus())
+                && !request.getFlag().equals(Enums.Flag.Draft.getStatus())) {
+            throw new HiveConnectException(ResponseMessageConstants.CREATE_JOB_STATUS_INVALID);
+        }
         long companyId = request.getCompanyId();
         long recruiterId = request.getRecruiterId();
         long fieldId = request.getFieldId();
         if (!companyService.findById(companyId).isPresent()) {
-            throw new HiveConnectException("Công ty của nhà tuyển dụng không tồn tại.");
+            throw new HiveConnectException(ResponseMessageConstants.COMPANY_DOES_NOT_EXIST);
         }
         if (!recruiterService.existById(recruiterId)) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         if (!fieldsService.existById(fieldId)) {
-            throw new HiveConnectException("Lĩnh vực kinh doanh không tồn tại.");
+            throw new HiveConnectException(ResponseMessageConstants.FIELD_WORK_OF_COMPANY_DOES_NOT_EXIST);
         }
         if(request.getFromSalary() < 0 || request.getToSalary() < 0 || (request.getFromSalary() > request.getToSalary())) {
             throw new HiveConnectException(ResponseMessageConstants.SALARY_INVALID);
@@ -72,7 +76,8 @@ public class JobServiceImpl implements JobService {
         Object CreateJobRequest = request;
         Job job = modelMapper.map(CreateJobRequest, Job.class);
         job.create();
-        job.setFlag(Enums.Flag.Posted.getStatus());
+//        job.setFlag(Enums.Flag.Posted.getStatus());
+        job.setFlag(request.getFlag());
         jobRepository.save(job);
     }
 
