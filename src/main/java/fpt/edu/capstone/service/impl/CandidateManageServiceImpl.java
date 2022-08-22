@@ -257,12 +257,13 @@ public class CandidateManageServiceImpl implements CandidateManageService {
     }
 
     @Override
-    public void appliedJob(AppliedJobRequest request) throws Exception {
+    public String appliedJob(AppliedJobRequest request) throws Exception {
+        String message = "";
         if (request.getCvUrl() == null || request.getCvUrl().trim().isEmpty()) {
             //profile apply
             CV cv = cvService.getCVByCandidateId(request.getCandidateId());
             if (cv == null) {
-                throw new HiveConnectException("Bạn chưa tạo hồ sơ");
+                throw new HiveConnectException(ResponseMessageConstants.PROFILE_DOES_NOT_EXIST);
             }
         }
         if (!jobService.existsById(request.getJobId())) {
@@ -275,15 +276,14 @@ public class CandidateManageServiceImpl implements CandidateManageService {
         AppliedJob appliedJob1 = appliedJobService.getAppliedJobBefore(request.getCandidateId(), request.getJobId());
         // từng apply, có record tồn tại
         if (appliedJob1 != null) {
-            //đâ apply
+            //đâ apply thì có thể hủy apply
             if (appliedJob1.isApplied()) {
-                //đã apply và đang ở trạng thái pending, có thể hủy apply
-                if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())) {
+                //đã apply và đang ở trạng thái pending hoặc approved, có thể hủy apply
+                if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.PENDING.getStatus())
+                        || appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
                     appliedJob1.setApplied(false);
-                    //đã apply và được approved
-                } else if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
-                    throw new HiveConnectException("CV này đã được chấp nhận.");
-                    //đã từng apply và bị reject, có thể apply lại
+                    message = ResponseMessageConstants.CANCEL_APPLY_SUCCESSFULLY;
+                    //đã apply và ở trạng thái reject, có thể apply lại (new record)
                 } else if (appliedJob1.getApprovalStatus().equals(Enums.ApprovalStatus.REJECT.getStatus())) {
                     Object AppliedJobRequest = request;
                     AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
@@ -295,16 +295,21 @@ public class CandidateManageServiceImpl implements CandidateManageService {
                     }
                     appliedJob.create();
                     appliedJobRepository.save(appliedJob);
-                    return;
+                    message = ResponseMessageConstants.APPLY_FOR_JOB_SUCCESSFULLY;
                 }
-                //đã hủy apply, cập nhật lại thành apply
-            } else {
-                appliedJob1.setApplied(true);
+            }else {
+                Object AppliedJobRequest = request;
+                AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
+                appliedJob.setApplied(true);
+                appliedJob.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
+                if (request.getCvUrl() != null) {
+                    appliedJob.setCvUploadUrl(request.getCvUrl());
+                    appliedJob.setUploadCv(true);
+                }
+                appliedJob.create();
+                appliedJobRepository.save(appliedJob);
+                message = ResponseMessageConstants.APPLY_FOR_JOB_SUCCESSFULLY;
             }
-            appliedJob1.setApprovalStatus(Enums.ApprovalStatus.PENDING.getStatus());
-            appliedJob1.update();
-            appliedJobRepository.save(appliedJob1);
-            //chưa từng apply
         } else {
             Object AppliedJobRequest = request;
             AppliedJob appliedJob = modelMapper.map(AppliedJobRequest, AppliedJob.class);
@@ -316,6 +321,8 @@ public class CandidateManageServiceImpl implements CandidateManageService {
             }
             appliedJob.create();
             appliedJobRepository.save(appliedJob);
+            message = ResponseMessageConstants.APPLY_FOR_JOB_SUCCESSFULLY;
         }
+        return message;
     }
 }

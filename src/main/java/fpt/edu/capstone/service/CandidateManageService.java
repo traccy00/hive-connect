@@ -19,6 +19,6 @@ public interface CandidateManageService {
 
     ResponseDataPagination getProfileViewer(Integer pageNo, Integer pageSize, long cvId, long candidateId);
 
-    void appliedJob(AppliedJobRequest request) throws Exception;
+    String appliedJob(AppliedJobRequest request) throws Exception;
 
 }
