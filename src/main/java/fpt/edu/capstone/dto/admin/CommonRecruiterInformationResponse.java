@@ -11,4 +11,5 @@ public class CommonRecruiterInformationResponse {
     private long totalCreatedJob;
     private String candidateApplyPercentage;
     private String message;
+    private long totalViewCV;
 }

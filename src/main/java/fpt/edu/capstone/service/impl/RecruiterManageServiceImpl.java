@@ -103,8 +103,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (!optionalRecruiter.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
-        String message = "Tài khoản của bạn chưa thực hiện xác thực email. " +
-                "Vui lòng xác thực email để có thể đăng tin tuyển dụng.";
+        String message = "";
         int step = 0;
         int totalStep = 4;
         Users user = userRepository.getById(optionalRecruiter.get().getUserId());
@@ -114,26 +113,30 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         //verify step 1: email
         if (user.isVerifiedEmail()) {
             step++;
-            message = "Tài khoản của bạn chưa thực hiện xác thực thông tin công ty. " +
-                    "Vui lòng xác thực công ty tại trang Tài khoản > Thông tin công ty để có thể đăng tin tuyển dụng.";
+        } else {
+            message = ResponseMessageConstants.EMAIL_HAS_BEEN_NOT_VERIFIED;
         }
         //verify step 2: company
         if (optionalRecruiter.get().getCompanyId() > 0) {
             step++;
-            message = "Tài khoản của bạn chưa thực hiện xác thực số điện thoại. " +
-                    "Vui lòng xác thực số điện thoại tại trang Tài khoản > Thông tin tài khoản để có thể đăng tin tuyển dụng.";
+        } else {
+            message = ResponseMessageConstants.PHONE_NUMBER_HAS_BEEN_NOT_VERIFIED;
         }
         //verify step 3: phone number
         if (user.isVerifiedPhone()) {
             step++;
-            message = "Tài khoản của bạn chưa thực hiện xác thực giấy phép kinh doanh. " +
-                    "Vui lòng xác thực giấy phép tại trang Tài khoản > Thông tin công ty để có thể đăng tin tuyển dụng.";
+        } else {
+            message = ResponseMessageConstants.PHONE_NUMBER_HAS_BEEN_NOT_VERIFIED;
         }
         //verify step 4: business license
         if (optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null
                 && optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
             step++;
-            message = "Tài khoản của bạn đã xác thực thành công. Đăng tin tuyển dụng ngay thôi.";
+        } else {
+            message = ResponseMessageConstants.BUSINESS_LICENSE_HAS_NOT_BEEN_VERIFIED;
+        }
+        if(step == totalStep) {
+            message = ResponseMessageConstants.ACCOUNT_VERIFY_SUCCESSFULLY;
         }
         response.setMessage(message);
         response.setRecruiterFullName(optionalRecruiter.get().getFullName());
@@ -161,7 +164,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             result = formatter.format(applyPercentage);
         }
         response.setCandidateApplyPercentage(result);
-
+        response.setTotalViewCV(optionalRecruiter.get().getTotalCvView());
         return response;
     }
 
@@ -175,7 +178,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
                 Users user = userService.getUserById(recruiter.getUserId());
                 if (user == null) {
-                    throw new HiveConnectException("Liên hệ admin");
+                    throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
                 }
                 response.setUserName(user.getUsername());
 
@@ -624,7 +627,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (profileViewer.isPresent()) {
             cvProfileResponse.setEmail(email);
             cvProfileResponse.setPhoneNumber(phoneNumber);
-            message = "Đọc toàn bộ thông tin";
+            message = ResponseMessageConstants.VIEW_CV_ALL_INFORMATION;
         } else if (recruiter.getTotalCvView() > 0) {
             cvProfileResponse.setEmail(email);
             cvProfileResponse.setPhoneNumber(phoneNumber);
@@ -636,17 +639,17 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             viewCvResponse.setCvId(cvId);
             viewCvResponse.setViewerId(recruiterId);
             insertWhoViewCv(viewCvResponse);
-            message = "Đọc toàn bộ thông tin";
+            message = ResponseMessageConstants.VIEW_CV_ALL_INFORMATION;
         } else if (recruiter.getTotalCvView() == 0) {
             cvProfileResponse.setEmail("*****@gmail.com");
             cvProfileResponse.setPhoneNumber("+84**********");
             cvProfileResponse.setSocialLink("https://******/******");
-            message = "Bạn đã hết lượt xem thông tin liên hệ của ứng viên CV";
+            message = ResponseMessageConstants.TOTAL_VIEW_CV_RUN_OUT;
         } else {
             cvProfileResponse.setEmail("*****@gmail.com");
             cvProfileResponse.setPhoneNumber("+84**********");
             cvProfileResponse.setSocialLink("https://******/******");
-            message = "Bạn hãy mua gói để xem thông tin liên hệ của ứng viên";
+            message = ResponseMessageConstants.PAY_FOR_PACKAGE_TO_VIEW_CV;
         }
         viewCVWithPayResponse.setMessage(message);
         viewCVWithPayResponse.setCvProfileResponse(cvProfileResponse);
