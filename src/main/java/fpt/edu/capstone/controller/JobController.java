@@ -1,6 +1,7 @@
 package fpt.edu.capstone.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
 import fpt.edu.capstone.entity.*;
@@ -52,6 +53,11 @@ public class JobController {
         try {
             if (request == null) {
                 return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.DATA_INVALID);
+            }
+            CommonRecruiterInformationResponse commonInfor = recruiterManageService.getCommonInforOfRecruiter(request.getRecruiterId());
+            int totalStep = 4;
+            if(!commonInfor.getVerifyStep().equals(totalStep + " / " + totalStep)) {
+                throw new HiveConnectException(commonInfor.getMessage());
             }
             jobService.createJob(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.CREATE_JOB_SUCCESS);

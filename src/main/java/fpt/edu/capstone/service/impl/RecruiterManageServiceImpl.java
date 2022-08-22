@@ -660,7 +660,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     public void insertWhoViewCv(ViewCvResponse response) {
         Optional<CV> cv = cvService.findByIdAndCandidateId(response.getCvId(), response.getCandidateId());
         if (!cv.isPresent()) {
-            throw new HiveConnectException("CV không tồn tại");
+            throw new HiveConnectException(ResponseMessageConstants.CV_NOT_EXIST);
         }
         Recruiter recruiter = recruiterService.getRecruiterById(response.getViewerId());
         if (recruiter == null) {
@@ -690,7 +690,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         }
         Page<AppliedJob> appliedJobs = appliedJobService.getCvAppliedJob(pageable, jobId, true);
         if (appliedJobs.isEmpty()) {
-            throw new HiveConnectException("Không có CV nào ứng tuyển.");
+            throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_HAVE_CV_APPLY_FOR);
         }
         if (appliedJobs.hasContent()) {
             for (AppliedJob appliedJob : appliedJobs) {

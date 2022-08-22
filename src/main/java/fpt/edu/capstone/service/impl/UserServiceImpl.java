@@ -196,6 +196,9 @@ public class UserServiceImpl implements UserService {
         if (!StringUtils.equals(newPassword, confirmPassword)) {
             throw new HiveConnectException(ResponseMessageConstants.CONFIRM_PASSWORD_WRONG);
         }
+        if(StringUtils.equals(oldPassword, newPassword)) {
+            throw new HiveConnectException(ResponseMessageConstants.NEW_PASSWORD_CAN_BE_SAME_OLAD_PASSWORD);
+        }
         user.setPassword(passwordEncoder.encode(newPassword));
         saveUser(user);
     }

@@ -83,6 +83,7 @@ public interface ResponseMessageConstants {
     String REPORT_JOB_FAIL = "Báo cáo tin tuyển dụng thất bại.";
     String CREATE_JOB_STATUS_INVALID = "Trạng thái tạo tin tuyển dụng không hợp lệ.";
     String HAVE_NOT_FOLLOWED_JOB = "Bạn chưa theo dõi công việc nào cả";
+    String JOB_DOES_NOT_HAVE_CV_APPLY_FOR = "Không có CV nào ứng tuyển.";
 
     //PAYMENT
     String PAYMENT_SUCCESS = "Thanh toán thành công";
@@ -158,4 +159,7 @@ public interface ResponseMessageConstants {
 
     //REVENUE
     String TOTAL_REVENUE = "Tổng doanh thu";
+    String BUSINESS_LICENSE_IS_PENDING_APPROVAL = "Nhà tuyển dụng đã có giấy phép kinh doanh hoặc giấy phép đang được duyệt, không thể thay đổi";
+    String RECRUITER_DOES_NOT_HAVE_COMPANY_INFOR ="Nhà tuyển dụng chưa có thông tin công ty. Vui lòng cập nhật thông tin công ty trước." ;
+    String NEW_PASSWORD_CAN_BE_SAME_OLAD_PASSWORD = "Mật khẩu mới không thể giống với mật khẩu cũ.";
 }
