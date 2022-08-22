@@ -72,6 +72,8 @@ public interface ResponseMessageConstants {
     String UPDATE_JOB_FAILED = "Cập nhật tin tuyển dụng thất bại.";
     String SALARY_INVALID = "Mức lương không hợp lệ.";
     String REPORT_JOB_FAIL = "Báo cáo tin tuyển dụng thất bại.";
+    String CREATE_JOB_STATUS_INVALID = "Trạng thái tạo tin tuyển dụng không hợp lệ.";
+    String HAVE_NOT_FOLLOWED_JOB = "Bạn chưa theo dõi công việc nào cả";
 
     //PAYMENT
     String PAYMENT_SUCCESS = "Thanh toán thành công";
@@ -93,8 +95,6 @@ public interface ResponseMessageConstants {
     String UPLOAD_IMAGE_OVER_SIZE = "Hình ảnh tải lên bị quá dung lượng cho phép";
     String UPDATE_SUCCESSFULLY = "Cập nhật thành công";
 
-    String HAVE_NOT_FOLLOWED_JOB = "Bạn chưa theo dõi công việc nào cả";
-
     //COMPANY
     String COMPANY_DOES_NOT_EXIST = "Công ty không tồn tại.";
     String SEND_OTP_SUCCESS = "Gửi OTP thành công.";
@@ -103,7 +103,7 @@ public interface ResponseMessageConstants {
     String YOU_DONT_HAVE_PERMISSION = "Không có quyền chỉnh sửa";
     String TAX_CODE_EXISTS = "Mã số thuế đã được sử dụng cho công ty khác";
     String COMPANY_NAME_EXISTS = "Tên công ty đã được sử dụng";
-    String FIELD_WORK_OF_COMPANY_DOES_NOT_EXIST = "Lĩnh vực công ty không tồn tại";
+    String FIELD_WORK_OF_COMPANY_DOES_NOT_EXIST = "Lĩnh vực kinh doanh không tồn tại";
     String CANCEL_REPORT_JOB_SUCCESSFULLY = "Hủy báo cáo tin tuyển dụng thành công";
     String REPORTED_JOB_DOES_NOT_EXIST = "Yêu cầu báo cáo tin tuyển dụng không tồn tại.";
     int TOP_COMPANY_HOMEPAGE_SIZE = 12;

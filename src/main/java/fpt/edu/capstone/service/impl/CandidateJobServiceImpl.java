@@ -325,6 +325,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         detail.setNumberRecruits(job.getNumberRecruits());
         detail.setWorkForm(job.getWorkForm());
         detail.setRank(job.getRank());
+        detail.setAcademicLevel(job.getAcademicLevel());
         detail.setGender(job.isGender());
         detail.setExperience(job.getExperience());
         detail.setWorkPlace(job.getWorkPlace());

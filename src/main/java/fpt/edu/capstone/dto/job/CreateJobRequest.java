@@ -28,6 +28,7 @@ public class CreateJobRequest {
     private long toSalary;
     private long numberRecruits;
     private String rank;
+    private String academicLevel;
     private String experience;
     private boolean gender;
     private String jobDescription;

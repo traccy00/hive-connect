@@ -27,6 +27,7 @@ public class JobDetailResponse {
     private long numberRecruits;
     private String workForm;
     private String rank;
+    private String academicLevel;
     private boolean gender;
     private String experience;
     private String workPlace;
