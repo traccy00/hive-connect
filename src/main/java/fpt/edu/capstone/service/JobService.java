@@ -53,4 +53,6 @@ public interface JobService {
     List<JobResponse> getSameJobsOtherCompanies(long detailJobId);
 
     HomePageData getDataHomePage();
+
+    int countJobInSystem();
 }

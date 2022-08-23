@@ -119,4 +119,7 @@ public interface CVRepository extends JpaRepository<CV, Long> {
             "and ca.isNeedJob = true")
     Page<CV> findCVFilter(Pageable pageable,@Param("experience") String experience,
                           @Param("candidateAddress") String candidateAddress,@Param("techStack") String techStack);
+
+    @Query(value = "select count(*) from cv c", nativeQuery = true)
+    int countCV();
 }

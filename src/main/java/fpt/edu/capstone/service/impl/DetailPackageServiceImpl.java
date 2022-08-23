@@ -104,7 +104,7 @@ public class DetailPackageServiceImpl implements DetailPackageService {
             throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
         }
         Optional<DetailPackage> existedPackage = detailPackageRepository
-                .checkExistByDetailName(detailPackage.getDetailName(), detailPackage.getId());
+                .checkExistByDetailName(detailPackage.getDetailName().trim(), detailPackage.getId());
         if(existedPackage.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.PACKAGE_NAME_EXISTS);
         }
@@ -140,7 +140,7 @@ public class DetailPackageServiceImpl implements DetailPackageService {
         if(request.getDetailName() == null || request.getDetailName().trim().isEmpty()) {
             throw new HiveConnectException(ResponseMessageConstants.REQUIRE_INPUT_MANDATORY_FIELD);
         }
-        Optional<DetailPackage> existedPackage = detailPackageRepository.findByDetailName(request.getDetailName());
+        Optional<DetailPackage> existedPackage = detailPackageRepository.findByDetailName(request.getDetailName().trim());
         if(existedPackage.isPresent()) {
             throw new HiveConnectException(ResponseMessageConstants.PACKAGE_NAME_EXISTS);
         }

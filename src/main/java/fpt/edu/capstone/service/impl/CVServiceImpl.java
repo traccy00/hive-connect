@@ -52,6 +52,11 @@ public class CVServiceImpl implements CVService {
         return cvRepository.findCVFilter(pageable, experience, candidateAddress, techStack);
     }
 
+    @Override
+    public int countCVInSystem() {
+        return cvRepository.countCV();
+    }
+
     public CV getCVByCandidateId(long candidateId) { //Nam
         return cvRepository.getByCandidateId(candidateId);
     }

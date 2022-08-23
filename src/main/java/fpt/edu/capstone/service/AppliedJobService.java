@@ -23,4 +23,6 @@ public interface AppliedJobService {
 
     int countAppliedCVOfJob(long jobId);
 
+    int countAppliedCVInSystem();
+
 }

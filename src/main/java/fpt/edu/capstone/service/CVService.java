@@ -24,4 +24,6 @@ public interface CVService {
     void save(CV cv);
 
     Page<CV> findCVFilter(Pageable pageable, String experience, String candidateAddress, String techStack);
+
+    int countCVInSystem();
 }

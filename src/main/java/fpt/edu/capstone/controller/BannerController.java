@@ -8,10 +8,9 @@ import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.DetailPurchasedPackageResponse;
 import fpt.edu.capstone.entity.Banner;
 import fpt.edu.capstone.entity.BannerActive;
-import fpt.edu.capstone.service.AdminManageService;
-import fpt.edu.capstone.service.BannerActiveService;
-import fpt.edu.capstone.service.BannerService;
-import fpt.edu.capstone.service.RecruiterManageService;
+import fpt.edu.capstone.entity.Payment;
+import fpt.edu.capstone.exception.HiveConnectException;
+import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
 import fpt.edu.capstone.utils.ResponseData;
@@ -42,6 +41,8 @@ public class BannerController {
     private final RecruiterManageService recruiterManageService;
 
     private final AdminManageService adminManageService;
+
+    private final PaymentService paymentService;
 
     //config cho các gói banner
     @Operation(summary = "Admin module - Create new banner package on Manage Banner screen")
@@ -77,6 +78,10 @@ public class BannerController {
     @Operation(summary = "Admin module - Update banner package on Manage Banner screen")
     public ResponseData updateBanner(@RequestBody UpdateBannerRequest request) {
         try {
+            List<Payment> paymentList = paymentService.getPaymentBannerInUse(request.getBannerId());
+            if(paymentList != null && !paymentList.isEmpty()) {
+                throw new HiveConnectException(ResponseMessageConstants.PACKAGE_IN_USE);
+            }
             bannerService.updateBanner(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
         } catch (Exception e) {

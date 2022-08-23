@@ -1,5 +1,6 @@
 package fpt.edu.capstone.repository;
 
+import com.twilio.twiml.voice.Pay;
 import fpt.edu.capstone.entity.Payment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +46,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query(value = "select distinct p.jobId from Payment p where p.jobId > 0 and p.expiredStatus = false ")
     List <Long> getListJobIdInPayment();
 
-//    @Query(value = "")
-//    List<Payment> findByB
+    List<Payment> findByBannerIdAndExpiredStatusIsFalse(long bannerId);
+
+    List<Payment> findByDetailPackageIdAndExpiredStatusIsFalse(long detailPackageId);
+
 }
