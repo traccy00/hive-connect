@@ -5,9 +5,11 @@ import fpt.edu.capstone.dto.detail_package.CreatePackageRequest;
 import fpt.edu.capstone.dto.detail_package.DetailPackageResponse;
 import fpt.edu.capstone.dto.rental_package.RentalPackageRequest;
 import fpt.edu.capstone.entity.DetailPackage;
+import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.entity.RentalPackage;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.DetailPackageService;
+import fpt.edu.capstone.service.PaymentService;
 import fpt.edu.capstone.service.RentalPackageService;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -33,6 +35,8 @@ public class PackageController {
     private final RentalPackageService rentalPackageService;
 
     private final ModelMapper modelMapper;
+
+    private final PaymentService paymentService;
 
     @GetMapping("/list-package")
     public ResponseData getListDetailPackage(@RequestParam(defaultValue = "0") Integer pageNo,
@@ -93,9 +97,13 @@ public class PackageController {
 
 
     @PutMapping("/update-new-package")
-    @Operation(summary = "chỉnh sửa dịch vụ con")
+    @Operation(summary = "chỉnh sửa gói dịch vụ chính và gói dịch vụ mở hồ sơ ứng viên")
     public ResponseData updateSubPackage(@RequestBody DetailPackage request){
         try {
+            List<Payment> paymentList = paymentService.getPaymentNormalPackageInUse(request.getId());
+            if(paymentList != null && !paymentList.isEmpty()) {
+                throw new HiveConnectException(ResponseMessageConstants.PACKAGE_IN_USE);
+            }
             detailPackageService.updateDetailPackage(request);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS);
         }catch (Exception e){

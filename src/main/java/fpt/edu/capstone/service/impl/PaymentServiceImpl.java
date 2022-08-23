@@ -340,4 +340,14 @@ public class PaymentServiceImpl implements PaymentService {
     public List<Long> getListJobIdInPayment() {
         return paymentRepository.getListJobIdInPayment();
     }
+
+    @Override
+    public List<Payment> getPaymentBannerInUse(long bannerId) {
+        return paymentRepository.findByBannerIdAndExpiredStatusIsFalse(bannerId);
+    }
+
+    @Override
+    public List<Payment> getPaymentNormalPackageInUse(long detailPackageId) {
+        return paymentRepository.findByDetailPackageIdAndExpiredStatusIsFalse(detailPackageId);
+    }
 }

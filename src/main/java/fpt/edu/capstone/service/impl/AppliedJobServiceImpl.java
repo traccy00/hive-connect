@@ -55,4 +55,9 @@ public class AppliedJobServiceImpl implements AppliedJobService {
     public int countAppliedCVOfJob(long jobId) {
         return appliedJobRepository.countAppliedCVOfAJob(jobId);
     }
+
+    @Override
+    public int countAppliedCVInSystem() {
+        return appliedJobRepository.countAppliedCVInSystem();
+    }
 }

@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service;
 
+import fpt.edu.capstone.dto.recruiter.TotalRecruitmentStatistic;
 import fpt.edu.capstone.dto.register.*;
 import fpt.edu.capstone.entity.Users;
 
@@ -53,4 +54,6 @@ public interface UserService {
     Users findByPhoneAndIdIsNotIn(String phone, long id);
 
     Optional <Users> findUsersByUsernameOrEmail(String username);
+
+    HashMap<String, Integer> countTotalRecruitmentStatistic();
 }

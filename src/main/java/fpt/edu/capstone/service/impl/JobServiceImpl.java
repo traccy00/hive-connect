@@ -243,6 +243,12 @@ public class JobServiceImpl implements JobService {
         return data;
     }
 
+    @Override
+    public int countJobInSystem() {
+        String flag = Enums.Flag.Posted.getStatus();
+        return jobRepository.countJobInSystem(flag);
+    }
+
     public List<JobHomePageResponse> displayJobInHomePage(Page<Job> jobs) {
         List<JobHomePageResponse> responseList = new ArrayList<>();
         if (jobs.hasContent()) {

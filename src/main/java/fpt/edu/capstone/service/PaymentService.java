@@ -36,4 +36,8 @@ public interface PaymentService {
     Payment findByIdAndRecruiterId(long id, long recruiterId);
 
     List<Long> getListJobIdInPayment();
+
+    List<Payment> getPaymentBannerInUse(long bannerId);
+
+    List<Payment> getPaymentNormalPackageInUse(long id);
 }

@@ -1,14 +1,13 @@
 package fpt.edu.capstone.service.impl;
 
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.recruiter.TotalRecruitmentStatistic;
 import fpt.edu.capstone.dto.register.*;
 import fpt.edu.capstone.entity.Role;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.UserRepository;
-import fpt.edu.capstone.service.EmailService;
-import fpt.edu.capstone.service.RoleService;
-import fpt.edu.capstone.service.UserService;
+import fpt.edu.capstone.service.*;
 import lombok.AllArgsConstructor;
 import net.bytebuddy.utility.RandomString;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +28,12 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final EmailService emailService;
+
+    private final AppliedJobService appliedJobService;
+
+    private final JobService jobService;
+
+    private final CVService cvService;
 
     @Override
     public Users getUserById(long id) {
@@ -277,5 +282,18 @@ public class UserServiceImpl implements UserService {
         user.setResetPasswordToken(null);
         user.update();
         saveUser(user);
+    }
+
+
+    @Override
+    public HashMap<String, Integer> countTotalRecruitmentStatistic() {
+        int countAppliedPerson = appliedJobService.countAppliedCVInSystem();
+        int countJob = jobService.countJobInSystem();
+        int countCV = cvService.countCVInSystem();
+        HashMap<String, Integer> responseList = new HashMap<>();
+        responseList.put("Số tin tuyển dụng", countJob);
+        responseList.put("Số CV", countCV);
+        responseList.put("Số người ứng tuyển", countAppliedPerson);
+        return responseList;
     }
 }

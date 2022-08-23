@@ -79,4 +79,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             "select * from job j where exists(select 1 from r where j.job_name like concat('%', r.parts,'%')) " +
             "and j.id not in (:detailJobId) limit 20", nativeQuery = true)
     List<Job> getSameJobsOtherCompanies(@Param("detailJobId") long detailJobId);
+
+    @Query(value = "select count(*) from job j where flag = ?", nativeQuery = true)
+    int countJobInSystem(String flag);
 }

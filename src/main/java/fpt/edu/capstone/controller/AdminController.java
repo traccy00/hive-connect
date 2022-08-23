@@ -3,8 +3,10 @@ package fpt.edu.capstone.controller;
 import fpt.edu.capstone.dto.admin.LicenseApprovalResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.ApprovalLicenseRequest;
+import fpt.edu.capstone.dto.recruiter.TotalRecruitmentStatistic;
 import fpt.edu.capstone.dto.register.CountRegisterUserResponse;
 import fpt.edu.capstone.entity.*;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.LogUtils;
@@ -95,6 +97,19 @@ public class AdminController {
     public ResponseData countUsers() {
         try {
             HashMap<String, List<CountRegisterUserResponse>> responseHashMap = userService.countUser();
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, responseHashMap);
+        } catch (Exception e) {
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
+
+    @GetMapping("/count-recruitment-statistic")
+    public ResponseData countTotalRecruitmentStatistic() {
+        try {
+            HashMap<String, Integer> responseHashMap = userService
+                    .countTotalRecruitmentStatistic();
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, responseHashMap);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
