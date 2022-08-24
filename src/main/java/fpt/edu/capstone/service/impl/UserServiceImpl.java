@@ -291,9 +291,9 @@ public class UserServiceImpl implements UserService {
         int countJob = jobService.countJobInSystem();
         int countCV = cvService.countCVInSystem();
         HashMap<String, Integer> responseList = new HashMap<>();
-        responseList.put("Số tin tuyển dụng", countJob);
-        responseList.put("Số CV", countCV);
-        responseList.put("Số người ứng tuyển", countAppliedPerson);
+        responseList.put("countJob", countJob);
+        responseList.put("countCv", countCV);
+        responseList.put("countApplied", countAppliedPerson);
         return responseList;
     }
 }
