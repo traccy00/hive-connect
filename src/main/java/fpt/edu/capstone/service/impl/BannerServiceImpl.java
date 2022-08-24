@@ -137,7 +137,7 @@ public class BannerServiceImpl implements BannerService {
     public ResponseDataPagination getBannerByFilter(Integer pageNo, Integer pageSize, String title, boolean isDeleted) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-        Page<Banner> bannerPage = bannerRepository.getBannerByFilter(pageable, title,3,  isDeleted);
+        Page<Banner> bannerPage = bannerRepository.getBannerByFilter(pageable, title,"","", 3,  isDeleted);
         List <Banner> bannerList = bannerPage.getContent();
 
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
@@ -153,8 +153,8 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    public Page<Banner> getListFilter(Pageable pageable, String name, long rentalId, boolean isDeleted) {
-        return bannerRepository.getBannerByFilter(pageable, name, rentalId, isDeleted);
+    public Page<Banner> getListFilter(Pageable pageable, String name, String timeExpired, String benefit, long rentalId, boolean isDeleted) {
+        return bannerRepository.getBannerByFilter(pageable, name, timeExpired, benefit, rentalId, isDeleted);
     }
 
     @Override

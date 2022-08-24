@@ -42,10 +42,13 @@ public class PackageController {
     public ResponseData getListDetailPackage(@RequestParam(defaultValue = "0") Integer pageNo,
                                              @RequestParam(defaultValue = "10") Integer pageSize,
                                              @RequestParam(value = "name", defaultValue = "") String name ,
+                                             @RequestParam(value = "timeExpired", defaultValue = "") String timeExpired ,
+                                             @RequestParam(value = "benefit", defaultValue = "") String benefit ,
                                              @RequestParam(value = "rentalPackageId", defaultValue = "0", required = false) long rentalPackageId,
                                              @RequestParam(value = "status",required = false) boolean isDeleted){
         try {
-            ResponseDataPagination pagination = detailPackageService.getListDetailPackageFilter(pageNo, pageSize, name, rentalPackageId, isDeleted);
+            ResponseDataPagination pagination = detailPackageService.getListDetailPackageFilter(pageNo, pageSize, name,
+                                                                        timeExpired, benefit, rentalPackageId, isDeleted);
 
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.SUCCESS,pagination);
         }catch (Exception e){

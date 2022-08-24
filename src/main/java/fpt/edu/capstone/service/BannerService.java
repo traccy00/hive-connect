@@ -24,8 +24,7 @@ public interface BannerService {
 
     ResponseDataPagination getBannerByFilter(Integer pageNo, Integer pageSize, String title, boolean isDeleted);
 
-    Page<Banner> getListFilter(Pageable pageable, @Param("name") String name,
-                                      @Param("rentalId") long rentalId, @Param("status") boolean isDeleted);
+    Page<Banner> getListFilter(Pageable pageable, String name, String timeExpired, String benefit, long rentalId, boolean isDeleted);
 
     Banner findByRentalPackageIdAndId(long rentalPackageId, long id);
 

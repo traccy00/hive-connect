@@ -69,35 +69,35 @@ public class DetailPackageServiceImplTest {
     @Test
     public void testGetListDetailPackageFilter() {
         final Page<DetailPackage> packagePage = new PageImpl<>(Arrays.asList(detailPackage()));
-        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
+        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), "","", eq(1L), eq(false)))
                 .thenReturn(packagePage);
         final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
+        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
                 .thenReturn(bannerPage);
-        final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name",
+        final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name","","",
                 1L, false);
     }
 
     @Test
     public void testGetListDetailPackageFilter_DetailPackageRepositoryReturnsNoItems() {
-        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
+        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
+        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
                 .thenReturn(bannerPage);
         final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name",
-                1L, false);
+                "","",  1L, false);
     }
 
     @Test
     public void testGetListDetailPackageFilter_BannerServiceReturnsNoItems() {
         final Page<DetailPackage> packagePage = new PageImpl<>(Arrays.asList(detailPackage()));
-        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
+        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
                 .thenReturn(packagePage);
-        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
+        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name",
-                1L, false);
+                "","",  1L, false);
     }
 
     @Test

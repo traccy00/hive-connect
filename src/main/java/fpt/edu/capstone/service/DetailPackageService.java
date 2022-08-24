@@ -8,7 +8,8 @@ import fpt.edu.capstone.utils.ResponseDataPagination;
 import java.util.Optional;
 
 public interface DetailPackageService {
-    ResponseDataPagination getListDetailPackageFilter(Integer pageNo, Integer pageSize, String name, long rentalId, boolean isDeleted);
+    ResponseDataPagination getListDetailPackageFilter(Integer pageNo, Integer pageSize, String name, String timeExpired,
+                                                      String benefit, long rentalId, boolean isDeleted);
 
     DetailPackage findById(long id);
 

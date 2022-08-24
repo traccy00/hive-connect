@@ -261,14 +261,14 @@ public class BannerServiceImplTest {
     @Test
     public void testGetBannerByFilter() {
         final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"), eq(3L), eq(false)))
+        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"),"","", eq(3L), eq(false)))
                 .thenReturn(bannerPage);
         final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(0, 0, "title", false);
     }
 
     @Test
     public void testGetBannerByFilter_BannerRepositoryReturnsNoItems() {
-        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"), eq(3L), eq(false)))
+        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"), "","",eq(3L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(0, 0, "title", false);
     }
@@ -276,16 +276,16 @@ public class BannerServiceImplTest {
     @Test
     public void testGetListFilter() {
         final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
+        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
                 .thenReturn(bannerPage);
-        final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(1, 10), "name", 1L, false);
+        final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(1, 10), "name", "","",1L, false);
     }
 
     @Test
     public void testGetListFilter_BannerRepositoryReturnsNoItems() {
-        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"), eq(1L), eq(false)))
+        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(1, 10), "name", 1L, false);
+        final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(1, 10), "name","","", 1L, false);
     }
 
     @Test

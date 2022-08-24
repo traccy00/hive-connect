@@ -26,10 +26,14 @@ public interface BannerRepository extends JpaRepository<Banner, Long> {
     @Query(value = "select * from banner b where lower(b.title) = lower(?)", nativeQuery = true)
     List<Banner> getBannersByTitle(String title);
 
-    @Query("select b from Banner b where (lower(b.title) like lower(concat('%', :name ,'%')) or :name is null or :name = '') " +
+    @Query("select b from Banner b where " +
+            "(lower(b.title) like lower(concat('%', :name ,'%')) or :name is null or :name = '') " +
+            "and (lower(b.timeExpired) like lower(concat('%', :timeExpired, '%')) or :timeExpired is null or :timeExpired ='') " +
+            "and (lower(b.description) like lower(concat('%', :benefit, '%')) or :benefit is null or :benefit ='') " +
             "and b.rentalPackageId =:rentalId or 0 =:rentalId "+
             "and (b.isDeleted =:isDeleted or :isDeleted is null)")
-    Page<Banner> getBannerByFilter(Pageable pageable, @Param("name") String title,  @Param("rentalId") long rentalId,
+    Page<Banner> getBannerByFilter(Pageable pageable, @Param("name") String title, @Param("timeExpired") String timeExpired,
+                                   @Param("benefit") String benefit, @Param("rentalId") long rentalId,
                                    @Param("isDeleted") boolean isDeleted);
 
     Banner findByRentalPackageIdAndId(long rentalPackageId, long id);

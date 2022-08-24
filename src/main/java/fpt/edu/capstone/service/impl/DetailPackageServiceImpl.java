@@ -38,7 +38,8 @@ public class DetailPackageServiceImpl implements DetailPackageService {
     private final BannerService bannerService;
 
     @Override
-    public ResponseDataPagination getListDetailPackageFilter(Integer pageNo, Integer pageSize, String name, long rentalId, boolean isDeleted) {
+    public ResponseDataPagination getListDetailPackageFilter(Integer pageNo, Integer pageSize, String name,
+                                                             String timeExpired, String benefit, long rentalId, boolean isDeleted) {
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
 
@@ -47,8 +48,8 @@ public class DetailPackageServiceImpl implements DetailPackageService {
 
         if(rentalId == 0){
             RentalPackageResponse packageResponse = new RentalPackageResponse();
-            Page<DetailPackage> packagePage = detailPackageRepository.getListFilter(pageable, name, rentalId, isDeleted);
-            Page <Banner> bannerPage = bannerService.getListFilter(pageable, name, rentalId, isDeleted);
+            Page<DetailPackage> packagePage = detailPackageRepository.getListFilter(pageable, name,timeExpired, benefit, rentalId, isDeleted);
+            Page <Banner> bannerPage = bannerService.getListFilter(pageable, name,timeExpired, benefit, rentalId, isDeleted);
 
             packageResponse.setDetailPackage(packagePage.getContent());
             packageResponse.setBanner(bannerPage.getContent());
@@ -68,7 +69,7 @@ public class DetailPackageServiceImpl implements DetailPackageService {
         }
 
         if(rentalId == 1 || rentalId == 2 ){
-            Page<DetailPackage> packagePage = detailPackageRepository.getListFilter(pageable, name, rentalId, isDeleted);
+            Page<DetailPackage> packagePage = detailPackageRepository.getListFilter(pageable, name,timeExpired,benefit, rentalId, isDeleted);
             responseDataPagination.setData(packagePage.toList());
             pagination.setCurrentPage(pageNo);
             pagination.setPageSize(pageSize);
@@ -78,7 +79,7 @@ public class DetailPackageServiceImpl implements DetailPackageService {
             responseDataPagination.setPagination(pagination);
         }
         if(rentalId == 3){
-            Page <Banner> bannerPage = bannerService.getListFilter(pageable, name, rentalId, isDeleted);
+            Page <Banner> bannerPage = bannerService.getListFilter(pageable, name,timeExpired, benefit, rentalId, isDeleted);
             responseDataPagination.setData(bannerPage.toList());
             pagination.setCurrentPage(pageNo);
             pagination.setPageSize(pageSize);
