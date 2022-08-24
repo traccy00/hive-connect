@@ -155,7 +155,7 @@ public class PaymentController {
             LocalDateTime start = LocalDate.parse(startDate, formatter).atStartOfDay();
             LocalDateTime end = LocalDate.parse(endDate, formatter).atStartOfDay();
 
-            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
             String currentDateTime = dateFormatter.format(new Date());
             String headerKey = "Content-Disposition";
             String headerValue = "attachment; filename=revenue" + currentDateTime + ".xlsx";

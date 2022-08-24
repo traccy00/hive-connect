@@ -62,7 +62,7 @@ public class PaymentServiceImpl implements PaymentService {
         String bannerId = String.valueOf(paymentDTO.getBannerId());
         String jobId = String.valueOf(paymentDTO.getJobId());
         String description = paymentDTO.getDescription();
-        String orderType = paymentDTO.getOrderType();
+        String orderType = paymentDTO.getOrderType()+ "Gói_"+ detailPackageId;
         String p = "recruiterId " + recruiterId + " jobId " + jobId + " detailPackageId " + detailPackageId +
                 " bannerId " + bannerId + " amount " + String.valueOf(amount) + " bankCode " + paymentDTO.getBankCode() +
                 " description " + description + " orderType " + orderType;

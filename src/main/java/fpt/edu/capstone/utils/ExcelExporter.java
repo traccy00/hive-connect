@@ -63,6 +63,7 @@ public class ExcelExporter {
         font.setFontHeight(14);
         style.setFont(font);
 
+        int totalAmount =0;
         for (RevenueResponse r : revenueResponses) {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
@@ -72,7 +73,11 @@ public class ExcelExporter {
             createCell(row, columnCount++, r.getRecruiterName(), style);
             createCell(row, columnCount++, r.getRentalPackageName(), style);
             createCell(row, columnCount++, r.getAmount(), style);
+            totalAmount+=r.getAmount();
         }
+        Row r = sheet.createRow(revenueResponses.size());
+        createCell(r, 0, "TỔNG",style);
+        createCell(r, 3,totalAmount, style);
     }
 
     public void export(HttpServletResponse response) throws IOException {
