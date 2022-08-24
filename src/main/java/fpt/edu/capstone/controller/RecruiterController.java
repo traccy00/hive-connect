@@ -108,6 +108,8 @@ public class RecruiterController {
         }
     }
 
+
+
     //fetch request by sender_id
     @GetMapping("/get-sent-request")
     @Operation(summary = "recruiter gửi request xem là nó đã gửi request chưa")
@@ -172,6 +174,19 @@ public class RecruiterController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.ERROR);
+        }
+    }
+
+    @PutMapping("/remove-recruiter-from-company/{recruiterId}")
+    @Operation(summary = "xóa recruiter khỏi company")
+    public ResponseData removeRecruiterFromCompany(@PathVariable(value = "recruiterId") long recruiterId){
+        try {
+            recruiterService.removeRecruiterFromCompany(recruiterId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS);
+        } catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.ERROR);
         }

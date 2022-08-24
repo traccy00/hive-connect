@@ -52,4 +52,6 @@ public interface RecruiterService {
     Integer getTotalViewCV(long recId);
 
     Recruiter insertRecruiterForRegister(long userId, String fullName);
+
+    void removeRecruiterFromCompany(long recId);
 }

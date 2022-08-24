@@ -216,4 +216,14 @@ public class RecruiterServiceImpl implements RecruiterService {
         recruiter.setAdditionalLicenseApprovalStatus("");
         return recruiterRepository.save(recruiter);
     }
+
+    @Override
+    public void removeRecruiterFromCompany(long recId) {
+        Recruiter recruiter = recruiterRepository.getById(recId);
+        if(recruiter == null){
+            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+        }
+        recruiter.setCompanyId(0);
+        recruiterRepository.saveAndFlush(recruiter);
+    }
 }
