@@ -184,7 +184,7 @@ public class RecruiterManageServiceImplTest {
 
     private DetailPackage detailPackage(){
         DetailPackage detailPackage = new DetailPackage(1L, 1L, "detailName", 1L,
-                1L, "timeExpired", "description", false, false, false, 0);
+                1L, "timeExpired", "description", false, false, false, 0,false,false,false);
         return detailPackage;
     }
 

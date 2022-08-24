@@ -158,7 +158,8 @@ public class DetailPackageServiceImpl implements DetailPackageService {
                 throw new HiveConnectException(ResponseMessageConstants.PAYMENT_PACKAGE_BENEFIT_INVALID);
             }
         } else if(request.getRentalPackageId() == 2) {
-            if(!request.isRelatedJob() && !request.isSuggestJob()) {
+            if(!request.isRelatedJob() && !request.isSuggestJob() && !request.isNewJob() &&
+                    !request.isPopularJob() && !request.isUrgentJob()) {
                 throw new HiveConnectException(ResponseMessageConstants.PAYMENT_PACKAGE_BENEFIT_INVALID);
             }
         }

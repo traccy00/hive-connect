@@ -52,12 +52,12 @@ public class DetailPackageServiceImplTest {
     
     private DetailPackage detailPackage(){
         DetailPackage detailPackage = new DetailPackage(1L, 1L, "detailNamePackage", 12345L,
-                123L, "timeExpired", "description", false, false, false, 0);
+                123L, "timeExpired", "description", false, false, false, 0,false,false, false);
         return detailPackage;
     }
     
     private CreatePackageRequest packageRequest = new CreatePackageRequest(1L, "detailNameTest", 12345L,
-            123L, "timeExpired", "description", false, false, 0);
+            123L, "timeExpired", "description", false, false, 0, false, false, false);
     
     private Banner banner(){
         Banner banner = new Banner(1L, 1L, 12345L, 123L, "timeExpired",

@@ -96,7 +96,7 @@ class PaymentServiceImplTest {
 	
 	DetailPackage detailPackage(){
 		DetailPackage detailPackage = new DetailPackage(1L, 1L, "detailName", 1231L, 1L, "timeExpired",
-				"description", false, false, false, 0);
+				"description", false, false, false, 0, false,false,false);
 		return detailPackage;
 	}
 	@Test

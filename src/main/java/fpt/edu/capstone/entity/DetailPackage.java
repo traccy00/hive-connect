@@ -37,12 +37,7 @@ public class DetailPackage extends BaseEntity {
     private String timeExpired;
 
     @Column(name = "description")
-    private String description; // mô tả về gói khuyến mãi
-
-//    @Column(name = "label")
-    //Việc làm tốt nhất , việc làm nổi bật, việc làm hấp dẫn , none,
-    // sẽ được hiển thị 1 nhãn dán nhỏ bên cạnh công việc, hiểu đơn giản như đi mua tủ lạnh, luôn có những nhán dán sale 50%... được dán ở góc bên phải của tủ lạnh
-//    private String label;
+    private String description;
 
    @Column(name = "is_related_job")
     private boolean isRelatedJob;
@@ -50,28 +45,18 @@ public class DetailPackage extends BaseEntity {
     @Column(name = "is_suggest_job")
     private boolean isSuggestJob;
 
-//    @Column(name = "is_golden_hour")
-//    private boolean goldenHour;
-//
-//    @Column(name = "is_normal_hour")
-//    private boolean normalHour;
-//
-//    //GÓI MUA THÊM
-//    @Column(name = "max_upload_six_image")
-//    private boolean maxUploadSixImage;
-
-//    @Column(name = "is_urgent")
-//    private boolean isUrgent; // tin tuyển dụng được gán gấp vào tiêu đề //nếu type ( line 7 = GÓI MUA THÊM và isUrgent = true thì được gán GẤP vào tiêu đề)
-//
-//    @Column(name = "is_hot")
-//    private boolean isHot;
-//
-//    @Column(name = "is_good_job")
-//    private boolean isGoodJob;
-
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
     @Column(name = "max_cv_view")
     private int maxCvView; // được xem full thông tin tối đa bao nhiêu cv
+
+    @Column(name = "is_popular_job")
+    private boolean isPopularJob;
+
+    @Column(name = "is_new_job")
+    private boolean isNewJob;
+
+    @Column(name = "is_urgent_job")
+    private boolean isUrgentJob;
 }

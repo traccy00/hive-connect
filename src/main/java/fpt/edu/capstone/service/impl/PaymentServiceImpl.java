@@ -264,12 +264,12 @@ public class PaymentServiceImpl implements PaymentService {
                 }
                 if (detailPackage.getRentalPackageId() == 2) {
                     //Kích hoạt tính năng gói package đó cho Job tương ứng
-                    Job job = jobService.getJobById(payment.getJobId());
-                    job.setPopularJob(true);
-                    job.setUrgentJob(true);
-                    job.setNewJob(true);
-                    job.update();
-                    jobService.saveJob(job);
+//                    Job job = jobService.getJobById(payment.getJobId());
+//                    job.setPopularJob(true);
+//                    job.setUrgentJob(true);
+//                    job.setNewJob(true);
+//                    job.update();
+//                    jobService.saveJob(job);
                 }
             }
         }

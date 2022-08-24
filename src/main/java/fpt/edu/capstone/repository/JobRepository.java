@@ -41,13 +41,16 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query(value = "select * from Job where work_form like upper(concat('%', :workForm ,'%')) and flag =:flag order by random()", nativeQuery = true)
     Page<Job> getListJobByWorkForm(Pageable pageable, @Param("workForm") String workForm, @Param("flag") String flag);
 
-    @Query(value = "select * from job where is_new_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
+    @Query(value = "select * from job j join  payment p on j.id = p.job_id join detail_package dp on dp .id  = p.detail_package_id " +
+            "where dp.is_new_job = ?1 and (j.is_deleted = ?2 or j.is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
     Page<Job> getNewestJob(Pageable pageable, boolean isNewJob, int isDeleted, String flag);
 
-    @Query(value = "select * from job where is_urgent_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
+    @Query(value = "select * from job j join  payment p on j.id = p.job_id join detail_package dp on dp .id  = p.detail_package_id " +
+            "where dp.is_urgent_job = ?1 and (j.is_deleted = ?2 or j.is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
     Page<Job> getUrgentJob(Pageable pageable, boolean isUrgentJob, int isDeleted, String flag);
 
-    @Query(value = "select * from job where is_popular_job = ?1 and (is_deleted = ?2 or is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
+    @Query(value = "select * from job j join  payment p on j.id = p.job_id join detail_package dp on dp .id  = p.detail_package_id " +
+            "where dp.is_popular_job = ?1 and (j.is_deleted = ?2 or j.is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
     Page<Job> getPopularJob(Pageable pageable, boolean isPopularJob, int isDeleted, String flag);
 
     @Query(value = "Select * from Job where field_id =:fieldId and is_deleted = 0 and flag =:flag order by random()", nativeQuery = true)
