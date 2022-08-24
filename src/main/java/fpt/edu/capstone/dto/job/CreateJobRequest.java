@@ -30,7 +30,7 @@ public class CreateJobRequest {
     private String rank;
     private String academicLevel;
     private String experience;
-    private boolean gender;
+    private Boolean gender;
     private String jobDescription;
     private String jobRequirement;
     private String benefit;

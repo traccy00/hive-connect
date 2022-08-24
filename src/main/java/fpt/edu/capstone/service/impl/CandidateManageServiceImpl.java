@@ -139,7 +139,7 @@ public class CandidateManageServiceImpl implements CandidateManageService {
                 jobResponse.setNumberRecruits(job.getNumberRecruits());
                 jobResponse.setRank(job.getRank());
                 jobResponse.setWorkForm(job.getWorkForm());
-                jobResponse.setGender(job.isGender());
+                jobResponse.setGender(job.getGender());
                 jobResponse.setStartDate(job.getStartDate());
                 jobResponse.setEndDate(job.getEndDate());
                 jobResponse.setWorkPlace(job.getWorkPlace());

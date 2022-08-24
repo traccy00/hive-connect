@@ -55,7 +55,7 @@ public class Job extends BaseEntity {
     private String experience;
 
     @Column(name = "gender")
-    private boolean gender;
+    private Boolean gender;
 
     @Column(name = "job_description")
     private String jobDescription;

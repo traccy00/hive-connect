@@ -24,7 +24,7 @@ public class JobResponse {
     private long numberRecruits;
     private String rank;
     private String workForm;
-    private boolean gender;
+    private Boolean gender;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String workPlace;

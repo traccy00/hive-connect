@@ -25,7 +25,7 @@ public class JobHomePageResponse {
     private long numberRecruits;
     private String rank;
     private String experience;
-    private boolean gender;
+    private Boolean gender;
     private String jobDescription;
     private String jobRequirement;
     private String benefit;
