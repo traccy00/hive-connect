@@ -27,9 +27,6 @@ public class DetailJobResponse {
     private String benefit;
     private long fieldId;
     private String fieldName;
-    private boolean isPopularJob;
-    private boolean isNewJob;
-    private boolean isUrgentJob;
     private long recruiterId;
     private String recruiterName;
     private String weekday;

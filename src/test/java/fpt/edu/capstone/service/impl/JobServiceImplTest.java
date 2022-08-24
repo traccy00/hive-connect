@@ -602,7 +602,7 @@ class JobServiceImplTest {
 	Job job(){
 		Job job = new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0),
 				LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L, "rank", "experience", false, "jobDescription",
-				"jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L, "flag",  "academicLevel");
+				"jobRequirement", "benefit", 1L, 0, 1L, "weekday", 1L, "flag",  "academicLevel");
 		return job;
 	}
 	@Test
@@ -844,7 +844,7 @@ class JobServiceImplTest {
 		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs4);
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
@@ -885,7 +885,7 @@ class JobServiceImplTest {
 		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs3);
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
@@ -927,7 +927,7 @@ class JobServiceImplTest {
 		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs3);
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
@@ -969,7 +969,7 @@ class JobServiceImplTest {
 		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs3);
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
@@ -1011,7 +1011,7 @@ class JobServiceImplTest {
 		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs3);
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
@@ -1053,7 +1053,7 @@ class JobServiceImplTest {
 				.thenReturn(new PageImpl<>(Collections.emptyList()));
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
@@ -1094,7 +1094,7 @@ class JobServiceImplTest {
 		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs4);
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 
@@ -1135,7 +1135,7 @@ class JobServiceImplTest {
 		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs4);
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 
@@ -1177,7 +1177,7 @@ class JobServiceImplTest {
 		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs4);
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
@@ -1203,7 +1203,7 @@ class JobServiceImplTest {
 		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs4);
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
@@ -1233,7 +1233,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
@@ -1265,7 +1265,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 
@@ -1297,7 +1297,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 
@@ -1330,7 +1330,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
@@ -1348,7 +1348,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
 				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, false, false, false, 1L,
+				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
 				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
 		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
 		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));

@@ -162,9 +162,6 @@ public class RecruiterManageServiceImplTest {
         job.setBenefit("benefit");
         job.setFieldId(1L);
         job.setIsDeleted(0);
-        job.setPopularJob(false);
-        job.setNewJob(false);
-        job.setUrgentJob(false);
         job.setRecruiterId(1L);
         job.setWeekday("weekday");
         job.setCountryId(1L);

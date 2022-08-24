@@ -145,9 +145,6 @@ public class CandidateManageServiceImpl implements CandidateManageService {
                 jobResponse.setWorkPlace(job.getWorkPlace());
                 jobResponse.setCreatedAt(job.getCreatedAt());
                 jobResponse.setUpdatedAt(job.getUpdatedAt());
-                jobResponse.setPopularJob(job.isPopularJob());
-                jobResponse.setNewJob(job.isNewJob());
-                jobResponse.setUrgentJob(job.isUrgentJob());
                 responseList.add(jobResponse);
             }
         }

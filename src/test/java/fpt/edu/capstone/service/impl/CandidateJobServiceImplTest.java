@@ -67,7 +67,7 @@ public class CandidateJobServiceImplTest {
     private Job job(){
         Job job = new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.now(),
                 LocalDateTime.now(), 1L, 1L, 1L, "rank", "experience", false, "jobDescription",
-                "jobRequirement", "benefit", 1L, 0, false, false, false, 1L, "weekday", 1L, "Posted", "academicLevel");
+                "jobRequirement", "benefit", 1L, 0, 1L, "weekday", 1L, "Posted", "academicLevel");
         return job;
     }
 
@@ -267,9 +267,6 @@ public class CandidateJobServiceImplTest {
         jobResponse.setWorkPlace("workPlace");
         jobResponse.setCreatedAt(LocalDateTime.of(2022, 1, 1, 0, 0, 0));
         jobResponse.setUpdatedAt(LocalDateTime.of(2022, 1, 1, 0, 0, 0));
-        jobResponse.setPopularJob(false);
-        jobResponse.setNewJob(false);
-        jobResponse.setUrgentJob(false);
         jobResponse.setCompanyAvatar("url");
         return jobResponse;
     }

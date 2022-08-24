@@ -15,7 +15,6 @@ public class CvAppliedJobResponse {
     private List<String> educations;
     private String careerGoal;
     private String address;
-//    private String experienceYear;
     private String approvalStatus;
     private String cvUrl;
     private long cvId;

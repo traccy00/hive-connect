@@ -89,9 +89,6 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setWorkPlace(job.getWorkPlace());
                 jobResponse.setCreatedAt(job.getCreatedAt());
                 jobResponse.setUpdatedAt(job.getUpdatedAt());
-                jobResponse.setPopularJob(job.isPopularJob());
-                jobResponse.setNewJob(job.isNewJob());
-                jobResponse.setUrgentJob(job.isUrgentJob());
 
                 Optional<Image> image = imageService.getImageCompany(company.getId(), true);
                 if (image.isPresent()) {
@@ -152,9 +149,6 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setWorkPlace(job.getWorkPlace());
                 jobResponse.setCreatedAt(job.getCreatedAt());
                 jobResponse.setUpdatedAt(job.getUpdatedAt());
-                jobResponse.setPopularJob(job.isPopularJob());
-                jobResponse.setNewJob(job.isNewJob());
-                jobResponse.setUrgentJob(job.isUrgentJob());
 
                 Optional<Image> image = imageService.getImageCompany(company.getId(), true);
                 if (image.isPresent()) {
@@ -258,9 +252,6 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 jobResponse.setWorkPlace(job.getWorkPlace());
                 jobResponse.setCreatedAt(job.getCreatedAt());
                 jobResponse.setUpdatedAt(job.getUpdatedAt());
-                jobResponse.setPopularJob(job.isPopularJob());
-                jobResponse.setNewJob(job.isNewJob());
-                jobResponse.setUrgentJob(job.isUrgentJob());
 
                 Optional<Image> image = imageService.getImageCompany(company.getId(), true);
                 if (image.isPresent()) {
@@ -339,9 +330,6 @@ public class CandidateJobServiceImpl implements CandidateJobService {
         detail.setCreatedAt(job.getCreatedAt());
         detail.setUpdatedAt(job.getUpdatedAt());
         detail.setIsDeleted(job.getIsDeleted());
-        detail.setPopularJob(job.isPopularJob());
-        detail.setNewJob(job.isNewJob());
-        detail.setUrgentJob(job.isUrgentJob());
         detail.setWeekday(job.getWeekday());
         detail.setCountryId(job.getCountryId());
         detail.setCompanyId(job.getCompanyId());

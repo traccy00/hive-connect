@@ -72,15 +72,6 @@ public class Job extends BaseEntity {
     @Column(name = "is_deleted")
     private int isDeleted;
 
-    @Column(name = "is_popular_job")
-    private boolean isPopularJob;
-
-    @Column(name = "is_new_job")
-    private boolean isNewJob;
-
-    @Column(name = "is_urgent_job")
-    private boolean isUrgentJob;
-
     @Column(name = "recruiter_id")
     private long recruiterId;
 

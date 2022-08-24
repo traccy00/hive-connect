@@ -30,9 +30,6 @@ public class JobHomePageResponse {
     private String jobRequirement;
     private String benefit;
     private long fieldId;
-    private boolean isPopularJob;
-    private boolean isNewJob;
-    private boolean isUrgentJob;
     private long recruiterId;
     private String weekday;
     private long countryId;

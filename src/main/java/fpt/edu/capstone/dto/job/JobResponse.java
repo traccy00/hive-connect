@@ -30,9 +30,6 @@ public class JobResponse {
     private String workPlace;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private boolean isPopularJob;
-    private boolean isNewJob;
-    private boolean isUrgentJob;
     private int isDeleted;
     private String companyAvatar;
 }

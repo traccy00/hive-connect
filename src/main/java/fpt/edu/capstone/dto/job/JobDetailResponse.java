@@ -42,9 +42,6 @@ public class JobDetailResponse {
     private List<JobHashtag> jobHashtagList;
     private String weekday;
     private int isDeleted;
-    private boolean isPopularJob;
-    private boolean isNewJob;
-    private boolean isUrgentJob;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     //company information

@@ -27,8 +27,4 @@ public class UpdateJobRequest {
     private String benefit;
     private String weekday;
     private String flag;//Draft, Posted
-    //ADMIN mới được quyền chỉnh sửa những trường này
-//    private boolean isPopularJob;
-//    private boolean isNewJob;
-//    private boolean isUrgentJob;
 }
