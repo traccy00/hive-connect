@@ -11,11 +11,14 @@ public class UpdateJobRequest {
     private long jobId;
     private long fieldId;
     private long countryId;
+    private long companyId;
+    private long recruiterId;
     private String jobName;
     private String workPlace;
     private String workForm;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private LocalDateTime createdAt;
     private long fromSalary;
     private long toSalary;
     private long numberRecruits;

@@ -127,14 +127,13 @@ public class JobServiceImpl implements JobService {
         if (job == null) {
             throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
-        if (job.getFlag().equals(Enums.Flag.Posted.getStatus())) {
-            return;
-        }
-        Object UpdateJobRequest = request;
-        job = modelMapper.map(UpdateJobRequest, Job.class);
-        job.update();
-        job.setFlag(request.getFlag());
-        jobRepository.save(job);
+        job = modelMapper.map(request, Job.class);
+        job.setId(request.getJobId());
+        job.setCreatedAt(request.getCreatedAt());
+        job.create();
+        job.setFlag(Enums.Flag.Posted.getStatus());
+//        job.setFlag(request.getFlag());
+        jobRepository.saveAndFlush(job);
     }
 
     @Override
