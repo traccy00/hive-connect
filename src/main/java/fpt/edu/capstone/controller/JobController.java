@@ -386,4 +386,16 @@ public class JobController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
         }
     }
+
+    @PutMapping("draft-job/{jobId}") // Gỡ bài ???
+    public ResponseData draftJob(@PathVariable("jobId") long jobId){
+        try {
+            jobService.draftJob(jobId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.HIDE_JOB_SUCCESS);
+        } catch (Exception e){
+            String msg = LogUtils.printLogStackTrace(e);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
 }

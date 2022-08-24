@@ -55,4 +55,6 @@ public interface JobService {
     HomePageData getDataHomePage();
 
     int countJobInSystem();
+
+    void draftJob(long jobId);
 }

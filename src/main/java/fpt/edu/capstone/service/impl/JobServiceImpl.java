@@ -75,10 +75,8 @@ public class JobServiceImpl implements JobService {
         if(request.getFromSalary() < 0 || request.getToSalary() < 0 || (request.getFromSalary() > request.getToSalary())) {
             throw new HiveConnectException(ResponseMessageConstants.SALARY_INVALID);
         }
-        Object CreateJobRequest = request;
-        Job job = modelMapper.map(CreateJobRequest, Job.class);
+        Job job = modelMapper.map(request, Job.class);
         job.create();
-//        job.setFlag(Enums.Flag.Posted.getStatus());
         job.setFlag(request.getFlag());
         jobRepository.save(job);
     }
@@ -253,6 +251,18 @@ public class JobServiceImpl implements JobService {
     public int countJobInSystem() {
         String flag = Enums.Flag.Posted.getStatus();
         return jobRepository.countJobInSystem(flag);
+    }
+
+    @Override
+    public void draftJob(long jobId) {
+        Job job = jobRepository.getById(jobId);
+        int countApplied = appliedJobService.countAppliedCVOfJob(jobId);
+        if(countApplied > 1){
+            throw new HiveConnectException(ResponseMessageConstants.JOB_HAS_AN_APPLIED_2);
+        }
+        job.setFlag(Enums.Flag.Draft.getStatus());
+        jobRepository.saveAndFlush(job);
+
     }
 
     public List<JobHomePageResponse> displayJobInHomePage(Page<Job> jobs) {

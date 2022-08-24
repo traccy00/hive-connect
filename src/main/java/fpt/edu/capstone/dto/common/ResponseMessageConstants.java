@@ -85,6 +85,8 @@ public interface ResponseMessageConstants {
     String HAVE_NOT_FOLLOWED_JOB = "Bạn chưa theo dõi công việc nào cả";
     String JOB_DOES_NOT_HAVE_CV_APPLY_FOR = "Không có CV nào ứng tuyển.";
     String JOB_HAS_AN_APPLIED = "Công việc đã có người ứng tuyển. Không thể chỉnh sửa.";
+    String JOB_HAS_AN_APPLIED_2 = "Công việc đã có người ứng tuyển. Không thể ẩn công việc.";
+    String HIDE_JOB_SUCCESS = "Ẩn bài thành công.";
 
     //PAYMENT
     String PAYMENT_SUCCESS = "Thanh toán thành công";
