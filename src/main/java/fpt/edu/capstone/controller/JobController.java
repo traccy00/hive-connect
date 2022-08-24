@@ -387,7 +387,7 @@ public class JobController {
         }
     }
 
-    @PutMapping("draft-job/{jobId}") // Gỡ bài ???
+    @PutMapping("/draft-job/{jobId}") // Gỡ bài ???
     public ResponseData draftJob(@PathVariable("jobId") long jobId){
         try {
             jobService.draftJob(jobId);

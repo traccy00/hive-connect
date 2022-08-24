@@ -370,13 +370,9 @@ public class CVController {
         try {
             Optional<Certificate> certificate = certificateService.getCertificateById(id);
             if (certificate.isPresent()) {
-                LocalDateTime nowDate = LocalDateTime.now();
                 certificateService.deleteCertificate(certificate.get());
-                cvService.updateUpdatedDateOfCV(certificate.get().getCvId(), nowDate);
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
-                        ResponseMessageConstants.DELETE_SUCCESSFULLY, certificate.get());
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Bằng cấp trống.");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),ResponseMessageConstants.DELETE_SUCCESSFULLY);
         } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
             logger.error(msg);

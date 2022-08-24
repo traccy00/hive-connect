@@ -25,7 +25,7 @@ public interface CertificateRepository extends JpaRepository<Certificate, Long> 
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM public.certificate WHERE id=?1", nativeQuery = true)
+    @Query(value = "DELETE FROM public.certificate WHERE id= ?1", nativeQuery = true)
     void deleteCertificate(long id);
 
 }
