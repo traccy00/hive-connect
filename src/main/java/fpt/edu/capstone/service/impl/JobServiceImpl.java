@@ -52,6 +52,8 @@ public class JobServiceImpl implements JobService {
 
     private final JobHashTagService jobHashTagService;
 
+    private final AppliedJobService appliedJobService;
+
     @Override
     public void createJob(CreateJobRequest request) {
         if(!request.getFlag().equals(Enums.Flag.Posted.getStatus())
@@ -127,6 +129,11 @@ public class JobServiceImpl implements JobService {
         if (job == null) {
             throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
         }
+        int countApplied = appliedJobService.countAppliedCVOfJob(request.getJobId());
+        if(countApplied > 1){
+            throw new HiveConnectException(ResponseMessageConstants.JOB_HAS_AN_APPLIED);
+        }
+
         job = modelMapper.map(request, Job.class);
         job.setId(request.getJobId());
         job.setCreatedAt(request.getCreatedAt());

@@ -84,6 +84,7 @@ public interface ResponseMessageConstants {
     String CREATE_JOB_STATUS_INVALID = "Trạng thái tạo tin tuyển dụng không hợp lệ.";
     String HAVE_NOT_FOLLOWED_JOB = "Bạn chưa theo dõi công việc nào cả";
     String JOB_DOES_NOT_HAVE_CV_APPLY_FOR = "Không có CV nào ứng tuyển.";
+    String JOB_HAS_AN_APPLIED = "Công việc đã có người ứng tuyển. Không thể chỉnh sửa.";
 
     //PAYMENT
     String PAYMENT_SUCCESS = "Thanh toán thành công";
