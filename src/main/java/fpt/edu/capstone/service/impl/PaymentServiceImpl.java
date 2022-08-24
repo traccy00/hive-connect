@@ -62,7 +62,7 @@ public class PaymentServiceImpl implements PaymentService {
         String bannerId = String.valueOf(paymentDTO.getBannerId());
         String jobId = String.valueOf(paymentDTO.getJobId());
         String description = paymentDTO.getDescription();
-        String orderType = paymentDTO.getOrderType()+ "_Goi_"+ detailPackageId;
+        String orderType = paymentDTO.getOrderType();
         String p = "recruiterId " + recruiterId + " jobId " + jobId + " detailPackageId " + detailPackageId +
                 " bannerId " + bannerId + " amount " + String.valueOf(amount) + " bankCode " + paymentDTO.getBankCode() +
                 " description " + description + " orderType " + orderType;
@@ -234,7 +234,18 @@ public class PaymentServiceImpl implements PaymentService {
             if (key.equals("bankCode")) paymentDTO.setBankCode(value);
             if (key.equals("jobId")) paymentDTO.setJobId(Long.parseLong(value));
         });
+        if(paymentDTO.getBannerId() == 0){
+            DetailPackage getName = detailPackageService.findById(paymentDTO.getDetailPackageId());
+            String name  = getName.getDetailName();
+            paymentDTO.setOrderType("MUA " +name);
+        } else {
+            Banner getName = bannerService.findById(paymentDTO.getBannerId());
+            String bannerName = getName.getTitle();
+            paymentDTO.setOrderType("MUA "+bannerName);
+        }
+
         LocalDateTime now = LocalDateTime.now();
+
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
         Recruiter recruiter = recruiterService.getRecruiterById(payment.getRecruiterId());
         if (recruiter == null) {
