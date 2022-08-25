@@ -132,10 +132,14 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             message = ResponseMessageConstants.PHONE_NUMBER_HAS_BEEN_NOT_VERIFIED;
             uncheck = "phone";
         }
+        Company company = companyService.getCompanyById(optionalRecruiter.get().getCompanyId());
         //verify step 4: business license
-        if (optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null
-                && optionalRecruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
-            step++;
+        if(company != null) {
+            Recruiter companyCreator = recruiterService.getRecruiterById(company.getCreatorId());
+            if (companyCreator.getBusinessLicenseApprovalStatus() != null
+                    && companyCreator.getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+                step++;
+            }
         } else {
             message = ResponseMessageConstants.BUSINESS_LICENSE_HAS_NOT_BEEN_VERIFIED;
             uncheck = "license";
@@ -170,7 +174,11 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             result = formatter.format(applyPercentage);
         }
         response.setCandidateApplyPercentage(result);
-        response.setTotalViewCV(optionalRecruiter.get().getTotalCvView());
+        if(optionalRecruiter.get().getTotalCvView() == -1) {
+            response.setTotalViewCV(0);
+        } else {
+            response.setTotalViewCV(optionalRecruiter.get().getTotalCvView());
+        }
         return response;
     }
 
