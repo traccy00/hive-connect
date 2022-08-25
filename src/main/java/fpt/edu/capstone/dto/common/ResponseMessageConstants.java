@@ -30,7 +30,7 @@ public interface ResponseMessageConstants {
     String LOGIN_REFRESH_EXCEPTION = "MSG_LOGIN_REFRESH_EXCEPTION";
     String USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS = "Tên đăng nhập không hợp lệ";
     String AUTHENTICATION_IS_NOT_SUPPORT_BY_SERVER = "MSG_AUTHENTICATION_IS_NOT_SUPPORT_BY_SERVER";
-    String USERNAME_OR_PASSWORD_INCORRECT = "Sai tên đăng nhập hoặc mật khẩu.";
+    String USERNAME_OR_PASSWORD_INCORRECT = "Sai email hoặc mật khẩu.";
     String ACCOUNT_DOES_NOT_EXIST = "Tài khoản không tồn tại.";
 
     //REGISTER
