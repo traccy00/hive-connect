@@ -16,4 +16,6 @@ public interface RequestJoinCompanyService {
     void approveRequest(String status, long id);
 
     Optional<RequestJoinCompany> findById(long id);
+
+    void deleteOldSentRequest(long id);
 }
