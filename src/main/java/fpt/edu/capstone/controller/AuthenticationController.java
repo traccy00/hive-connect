@@ -140,7 +140,8 @@ public class AuthenticationController {
                 }
                 if (recruiter.get().getCompanyId() == 0) {
                     response.setJoinedCompany(false);
-                    Optional<RequestJoinCompany> requestJoinCompany = requestJoinCompanyService.findById(recruiter.get().getId());
+                    Optional<RequestJoinCompany> requestJoinCompany = requestJoinCompanyService
+                            .getSentRequest(recruiter.get().getId());
                     if (requestJoinCompany.isPresent()) {
                         response.setCreatedOrRequestedJoinCompany(true);
                     } else {
@@ -151,7 +152,8 @@ public class AuthenticationController {
                     response.setCreatedOrRequestedJoinCompany(true);
                 }
                 if (recruiter.get().getBusinessLicenseApprovalStatus() != null
-                        && recruiter.get().getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
+                        && recruiter.get().getBusinessLicenseApprovalStatus()
+                        .equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
                     response.setApprovedBusinessLicense(true);
                 } else {
                     response.setApprovedBusinessLicense(false);
@@ -171,8 +173,8 @@ public class AuthenticationController {
             } else {
                 response.setVerifiedEmail(true);
             }
-
-            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.LOGIN_SUCCESS, response, token);
+            return new ResponseDataUser(Enums.ResponseStatus.SUCCESS.getStatus(),
+                    ResponseMessageConstants.LOGIN_SUCCESS, response, token);
 
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
