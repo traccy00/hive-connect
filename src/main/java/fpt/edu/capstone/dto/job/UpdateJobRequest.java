@@ -30,4 +30,5 @@ public class UpdateJobRequest {
     private String benefit;
     private String weekday;
     private String flag;//Draft, Posted
+    private String academicLevel;
 }

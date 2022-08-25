@@ -677,13 +677,13 @@ class JobServiceImplTest {
 	@Test
 	public void testGetJobOfRecruiter() {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getAllByRecruiterIdOrderByCreatedAtDesc(any(Pageable.class), eq(1L))).thenReturn(jobs);
+		when(jobRepository.getAllByRecruiterIdOrderByUpdatedAtDesc(any(Pageable.class), eq(1L))).thenReturn(jobs);
 		final Page<Job> result = jobService.getJobOfRecruiter(PageRequest.of(1, 10), 1L);
 	}
 
 	@Test
 	public void testGetJobOfRecruiter_JobRepositoryReturnsNoItems() {
-		when(jobRepository.getAllByRecruiterIdOrderByCreatedAtDesc(any(Pageable.class), eq(1L)))
+		when(jobRepository.getAllByRecruiterIdOrderByUpdatedAtDesc(any(Pageable.class), eq(1L)))
 				.thenReturn(new PageImpl<>(Collections.emptyList()));
 		final Page<Job> result = jobService.getJobOfRecruiter(PageRequest.of(1, 10), 1L);
 	}
