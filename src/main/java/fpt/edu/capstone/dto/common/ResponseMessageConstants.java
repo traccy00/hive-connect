@@ -30,7 +30,7 @@ public interface ResponseMessageConstants {
     String LOGIN_REFRESH_EXCEPTION = "MSG_LOGIN_REFRESH_EXCEPTION";
     String USERNAME_OR_PASSWORD_MUST_NOT_CONTAIN_ANY_SPACE_CHARACTERS = "Tên đăng nhập không hợp lệ";
     String AUTHENTICATION_IS_NOT_SUPPORT_BY_SERVER = "MSG_AUTHENTICATION_IS_NOT_SUPPORT_BY_SERVER";
-    String USERNAME_OR_PASSWORD_INCORRECT = "Sai tên đăng nhập hoặc mật khẩu.";
+    String USERNAME_OR_PASSWORD_INCORRECT = "Sai email hoặc mật khẩu.";
     String ACCOUNT_DOES_NOT_EXIST = "Tài khoản không tồn tại.";
 
     //REGISTER
@@ -166,4 +166,8 @@ public interface ResponseMessageConstants {
     String RECRUITER_DOES_NOT_HAVE_COMPANY_INFOR ="Nhà tuyển dụng chưa có thông tin công ty. Vui lòng cập nhật thông tin công ty trước." ;
     String NEW_PASSWORD_CAN_BE_SAME_OLAD_PASSWORD = "Mật khẩu mới không thể giống với mật khẩu cũ.";
     String PACKAGE_IN_USE = "Đang có người dùng sử dụng gói dịch vụ này, không thể sửa đổi thông tin";
+    String RECRUITER_HAS_ALREADY_HAD_COMPANY = "Nhà tuyển dụng đã tham gia công ty";
+    String UPLOAD_FILE_SUCCESS = "Tải lên tệp thành công";
+    String UPLOAD_FILE_FAILED = "Tải lên tệp thất bại";
+    String GENDER_MALE = "Nam";
 }

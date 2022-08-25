@@ -104,6 +104,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
         String message = "";
+        String uncheck = "";
         int step = 0;
         int totalStep = 4;
         Users user = userRepository.getById(optionalRecruiter.get().getUserId());
@@ -115,18 +116,21 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             step++;
         } else {
             message = ResponseMessageConstants.EMAIL_HAS_BEEN_NOT_VERIFIED;
+            uncheck = "email";
         }
         //verify step 2: company
         if (optionalRecruiter.get().getCompanyId() > 0) {
             step++;
         } else {
-            message = ResponseMessageConstants.PHONE_NUMBER_HAS_BEEN_NOT_VERIFIED;
+            message = ResponseMessageConstants.COMPANY_HAS_BEEN_NOT_VERIFIED;
+            uncheck = "company";
         }
         //verify step 3: phone number
         if (user.isVerifiedPhone()) {
             step++;
         } else {
             message = ResponseMessageConstants.PHONE_NUMBER_HAS_BEEN_NOT_VERIFIED;
+            uncheck = "phone";
         }
         //verify step 4: business license
         if (optionalRecruiter.get().getBusinessLicenseApprovalStatus() != null
@@ -134,10 +138,12 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             step++;
         } else {
             message = ResponseMessageConstants.BUSINESS_LICENSE_HAS_NOT_BEEN_VERIFIED;
+            uncheck = "license";
         }
-        if(step == totalStep) {
+        if (step == totalStep) {
             message = ResponseMessageConstants.ACCOUNT_VERIFY_SUCCESSFULLY;
         }
+        response.setUncheck(uncheck);
         response.setMessage(message);
         response.setRecruiterFullName(optionalRecruiter.get().getFullName());
         response.setVerifyStep(step + " / " + totalStep);

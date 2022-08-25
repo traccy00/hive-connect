@@ -4,6 +4,7 @@ import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.company.*;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Recruiter;
+import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.service.CompanyManageService;
 import fpt.edu.capstone.service.CompanyService;
 import fpt.edu.capstone.service.RecruiterManageService;
@@ -54,6 +55,9 @@ public class CompanyController {
             Optional<Recruiter> recruiter = recruiterService.findById(request.getCreatorId());
             if (!recruiter.isPresent()) {
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.USER_DOES_NOT_EXIST, request.getCreatorId());
+            }
+            if(recruiter.get().getCompanyId() > 0) {
+                throw new HiveConnectException(ResponseMessageConstants.RECRUITER_HAS_ALREADY_HAD_COMPANY);
             }
             Company company = companyManageService.createCompany(request);
             recruiterService.updateCompany(company.getId(), recruiter.get().getId());

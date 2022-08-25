@@ -143,10 +143,6 @@ public class JobController {
                     notificationService.insertNotification(notification);
                 }
             }
-
-            //Get all candidate following this job
-
-
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPDATE_JOB_SUCCESS);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

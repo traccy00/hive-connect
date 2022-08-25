@@ -14,18 +14,15 @@ import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 
 @Service
 @AllArgsConstructor
@@ -123,6 +120,10 @@ public class JobServiceImpl implements JobService {
     @Override
     //TODO : fix insert for update function
     public void updateJob(UpdateJobRequest request) {
+        if(!request.getFlag().equals(Enums.Flag.Posted.getStatus())
+                && !request.getFlag().equals(Enums.Flag.Draft.getStatus())) {
+            throw new HiveConnectException(ResponseMessageConstants.CREATE_JOB_STATUS_INVALID);
+        }
         Job job = jobRepository.getById(request.getJobId());
         if (job == null) {
             throw new HiveConnectException(ResponseMessageConstants.JOB_DOES_NOT_EXIST);
@@ -136,8 +137,8 @@ public class JobServiceImpl implements JobService {
         job.setId(request.getJobId());
         job.setCreatedAt(request.getCreatedAt());
         job.create();
-        job.setFlag(Enums.Flag.Posted.getStatus());
-//        job.setFlag(request.getFlag());
+//        job.setFlag(Enums.Flag.Posted.getStatus());
+        job.setFlag(request.getFlag());
         jobRepository.saveAndFlush(job);
     }
 
@@ -181,7 +182,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Page<Job> getJobOfRecruiter(Pageable pageable, long recruiterId) {
-        return jobRepository.getAllByRecruiterId(pageable, recruiterId);
+        return jobRepository.getAllByRecruiterIdOrderByUpdatedAtDesc(pageable, recruiterId);
     }
 
     @Override
