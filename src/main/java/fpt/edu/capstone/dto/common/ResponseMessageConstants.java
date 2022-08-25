@@ -166,4 +166,5 @@ public interface ResponseMessageConstants {
     String RECRUITER_DOES_NOT_HAVE_COMPANY_INFOR ="Nhà tuyển dụng chưa có thông tin công ty. Vui lòng cập nhật thông tin công ty trước." ;
     String NEW_PASSWORD_CAN_BE_SAME_OLAD_PASSWORD = "Mật khẩu mới không thể giống với mật khẩu cũ.";
     String PACKAGE_IN_USE = "Đang có người dùng sử dụng gói dịch vụ này, không thể sửa đổi thông tin";
+    String RECRUITER_HAS_ALREADY_HAD_COMPANY = "Nhà tuyển dụng đã tham gia công ty";
 }
