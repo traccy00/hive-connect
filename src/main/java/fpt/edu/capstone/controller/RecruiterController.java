@@ -5,6 +5,7 @@ import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
+import fpt.edu.capstone.dto.recruiter.SentRequestJoinCompanyResponse;
 import fpt.edu.capstone.dto.recruiter.UploadBusinessLicenseRequest;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.Notification;
@@ -99,8 +100,13 @@ public class RecruiterController {
     @PostMapping("/send-request-join-company") //không cần gửi approval id
     public ResponseData sendRequestJoinCompany(@RequestBody RequestJoinCompany requestJoinCompany) {
         try {
+            Optional<RequestJoinCompany> op = requestJoinCompanyService.getSentRequest(requestJoinCompany.getSenderId());
+            if(op.isPresent()) {
+                requestJoinCompanyService.deleteOldSentRequest(op.get().getId());
+            }
             requestJoinCompanyService.createRequest(requestJoinCompany);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Send request successful", requestJoinCompany);
+
         } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);
             logger.error(msg);
@@ -117,7 +123,16 @@ public class RecruiterController {
         try {
             Optional<RequestJoinCompany> requestJoinCompanyOp = requestJoinCompanyService.getSentRequest(senderId);
             if (requestJoinCompanyOp.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, requestJoinCompanyOp.get());
+                Optional<Company> companyOptinal = companyService.findById(requestJoinCompanyOp.get().getCompanyId());
+                if(!companyOptinal.isPresent()) {
+                    return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.COMPANY_DOES_NOT_EXIST);
+                }
+                SentRequestJoinCompanyResponse sentRequestJoinCompanyResponse = new SentRequestJoinCompanyResponse();
+                sentRequestJoinCompanyResponse.setId(requestJoinCompanyOp.get().getId());
+                sentRequestJoinCompanyResponse.setApproverId(requestJoinCompanyOp.get().getApproverId());
+                sentRequestJoinCompanyResponse.setStatus(requestJoinCompanyOp.get().getStatus());
+                sentRequestJoinCompanyResponse.setCompany(companyOptinal.get());
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, sentRequestJoinCompanyResponse);
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.NO_REQUEST_JOIN_COMPANY_SENT);
         } catch (Exception ex) {

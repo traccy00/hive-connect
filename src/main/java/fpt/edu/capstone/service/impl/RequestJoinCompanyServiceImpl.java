@@ -52,4 +52,9 @@ public class RequestJoinCompanyServiceImpl implements RequestJoinCompanyService 
     public Optional<RequestJoinCompany> findById(long id) {
         return requestJoinCompanyRepository.findById(id);
     }
+
+    @Override
+    public void deleteOldSentRequest(long id) {
+        requestJoinCompanyRepository.deleteById(id);
+    }
 }
