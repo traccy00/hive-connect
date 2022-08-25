@@ -5,6 +5,7 @@ import fpt.edu.capstone.dto.payment.PaymentResponse;
 import fpt.edu.capstone.dto.payment.PaymentResponseDTO;
 import fpt.edu.capstone.dto.payment.RevenueResponse;
 import fpt.edu.capstone.entity.Payment;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import fpt.edu.capstone.utils.ResponseDataPaginationRevenue;
 
 import java.io.UnsupportedEncodingException;
@@ -14,8 +15,8 @@ import java.util.List;
 public interface PaymentService {
     PaymentResponseDTO getPaymentVNPay(PaymentDTO paymentDTO) throws UnsupportedEncodingException;
 
-    List <Payment> getListPaymentFilter(long recruiterId,long rentalPackageId,
-                                        long bannerId,String transactionCode,String orderType);
+    ResponseDataPagination getListPaymentFilter(Integer pageNo, Integer pageSize, long recruiterId, long rentalPackageId,
+                                                long bannerId, String transactionCode, String orderType);
 
     List<PaymentResponse> findRecruiterPurchasedPackage(long recruiterId);
 

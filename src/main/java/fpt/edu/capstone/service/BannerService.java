@@ -22,7 +22,7 @@ public interface BannerService {
 
     void updateBanner(UpdateBannerRequest request);
 
-    ResponseDataPagination getBannerByFilter(Integer pageNo, Integer pageSize, String title, boolean isDeleted);
+    ResponseDataPagination getBannerByFilter(Integer pageNo, Integer pageSize, String title, boolean isDeleted, String timeExpired, String section);
 
     Page<Banner> getListFilter(Pageable pageable, String name, String timeExpired, String benefit, long rentalId, boolean isDeleted);
 

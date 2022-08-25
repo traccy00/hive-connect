@@ -17,7 +17,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             "and (p.bannerId =:bannerId or 0=:bannerId) " +
             "and (lower(p.transactionCode) like lower(concat('%', :code ,'%')) or :code is null or :code ='')" +
             "and  (lower(p.orderType) like lower(concat('%', :type ,'%')) or :type is null or :type ='') ")
-    List<Payment> getListPaymentFilter(@Param("recruiterId") long recruiterId,@Param("rentalPackageId") long rentalPackageId,
+    Page<Payment> getListPaymentFilter(Pageable pageable, @Param("recruiterId") long recruiterId,@Param("rentalPackageId") long rentalPackageId,
                                        @Param("bannerId") long bannerId,@Param("code") String transactionCode,@Param("type") String orderType);
 
     @Query(value = "select * from Payment p order by created_at desc    ", nativeQuery = true)

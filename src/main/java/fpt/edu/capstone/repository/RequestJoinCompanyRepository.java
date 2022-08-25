@@ -1,6 +1,8 @@
 package fpt.edu.capstone.repository;
 
 import fpt.edu.capstone.entity.RequestJoinCompany;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +17,7 @@ public interface RequestJoinCompanyRepository extends JpaRepository<RequestJoinC
     Optional<RequestJoinCompany> findBySenderId(long senderId);
 
     @Query(value = "Select * from request_join_company where approver_id = ?1", nativeQuery = true)
-    Optional<List<RequestJoinCompany>> findByApproverId(long senderId);
+    Page<RequestJoinCompany> findByApproverId(Pageable pageable, long senderId);
 
     @Modifying
     @Transactional

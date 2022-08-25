@@ -143,13 +143,12 @@ public class RecruiterController {
     //fetch request by creator_id Check xem thang nay co phair creator cua thang nao khong => fetch
     @GetMapping("/get-receive-request")
     @Operation(summary = "recruiter - người tạo company đang có những request nào")
-    public ResponseData getReceiveRequest(@RequestParam long approverId) {
+    public ResponseData getReceiveRequest(@RequestParam(defaultValue = "0") Integer pageNo,
+                                          @RequestParam(defaultValue = "10") Integer pageSize,
+                                          @RequestParam long approverId) {
         try {
-            Optional<List<RequestJoinCompany>> requestJoinCompanyOp = requestJoinCompanyService.getReceiveRequest(approverId);
-            if (requestJoinCompanyOp.isPresent()) {
-                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, requestJoinCompanyOp.get());
-            }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.NO_REQUEST_JOIN_COMPANY_RECEIVED, null);
+            ResponseDataPagination requestJoinCompanyOp = requestJoinCompanyService.getReceiveRequest(pageNo, pageSize, approverId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.NO_REQUEST_JOIN_COMPANY_RECEIVED, requestJoinCompanyOp);
         } catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }

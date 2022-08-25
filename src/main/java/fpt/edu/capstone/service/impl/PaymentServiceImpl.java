@@ -12,6 +12,7 @@ import fpt.edu.capstone.repository.PaymentRepository;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import fpt.edu.capstone.utils.ResponseDataPaginationRevenue;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -120,11 +121,23 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<Payment> getListPaymentFilter(long recruiterId, long rentalPackageId,
+    public ResponseDataPagination getListPaymentFilter(Integer pageNo, Integer pageSize, long recruiterId, long rentalPackageId,
                                               long bannerId, String transactionCode, String orderType) {
-        List<Payment> paymentList = paymentRepository.
-                getListPaymentFilter(recruiterId, rentalPackageId, bannerId, transactionCode, orderType);
-        return paymentList;
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+        Page<Payment> paymentList = paymentRepository.
+                getListPaymentFilter(pageable, recruiterId, rentalPackageId, bannerId, transactionCode, orderType);
+
+        ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+        Pagination pagination = new Pagination();
+        responseDataPagination.setData(paymentList.getContent());
+        pagination.setCurrentPage(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPage(paymentList.getTotalPages());
+        pagination.setTotalRecords(Integer.parseInt(String.valueOf(paymentList.getTotalElements())));
+        responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+        responseDataPagination.setPagination(pagination);
+        return responseDataPagination;
     }
 
     @Override

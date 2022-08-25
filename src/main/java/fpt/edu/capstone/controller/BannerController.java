@@ -62,10 +62,12 @@ public class BannerController {
     @GetMapping("/get-all-banner-package")
     public ResponseData getAllBanner(@RequestParam(value = "name", required = false) String title,
                                      @RequestParam(value = "status", required = false) boolean isDeleted,
+                                     @RequestParam(value = "timeExpired", defaultValue = "") String timeExpired ,
+                                     @RequestParam(value = "section", defaultValue = "") String section ,
                                      @RequestParam(defaultValue = "1") Integer pageNo,
                                      @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
-            ResponseDataPagination pagination = bannerService.getBannerByFilter(pageNo, pageSize, title, isDeleted);
+            ResponseDataPagination pagination = bannerService.getBannerByFilter(pageNo, pageSize, title, isDeleted, timeExpired, section);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

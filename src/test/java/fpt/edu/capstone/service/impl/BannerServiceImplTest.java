@@ -263,14 +263,14 @@ public class BannerServiceImplTest {
         final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
         when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"),"","", eq(3L), eq(false)))
                 .thenReturn(bannerPage);
-        final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(0, 0, "title", false);
+        final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(0, 0, "title", false, "", "");
     }
 
     @Test
     public void testGetBannerByFilter_BannerRepositoryReturnsNoItems() {
         when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"), "","",eq(3L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(0, 0, "title", false);
+        final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(0, 0, "title", false, "", "");
     }
 
     @Test

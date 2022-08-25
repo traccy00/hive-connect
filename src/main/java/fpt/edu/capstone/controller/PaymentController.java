@@ -95,14 +95,16 @@ public class PaymentController {
     }
 
     @GetMapping("/payment-information")
-    public ResponseData transactionHandle(@RequestParam(defaultValue = "0", value = "recruiterId", required = false) long recruiterId,
+    public ResponseData transactionHandle(@RequestParam(defaultValue = "0") Integer pageNo,
+                                          @RequestParam(defaultValue = "10") Integer pageSize,
+                                          @RequestParam(defaultValue = "0", value = "recruiterId", required = false) long recruiterId,
                                           @RequestParam(defaultValue = "0", value = "rentalPackageId", required = false) long rentalPackageId,
                                           @RequestParam(defaultValue = "0", value = "bannerId", required = false) long bannerId,
                                           @RequestParam(value = "transactionCode", required = false) String transactionCode,
                                           @RequestParam(value = "orderType", required = false) String orderType) {
         try {
-            List<Payment> paymentList = paymentService.
-                    getListPaymentFilter(recruiterId, rentalPackageId, bannerId, transactionCode, orderType);
+            ResponseDataPagination paymentList = paymentService.
+                    getListPaymentFilter(pageNo, pageSize, recruiterId, rentalPackageId, bannerId, transactionCode, orderType);
             return new ResponseData(Enums.ResponseStatus.SUCCESS, ResponseMessageConstants.GET_LIST_SUCCESS, paymentList);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

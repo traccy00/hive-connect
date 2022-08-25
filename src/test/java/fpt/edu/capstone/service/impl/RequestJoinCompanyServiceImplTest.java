@@ -100,27 +100,27 @@ public class RequestJoinCompanyServiceImplTest {
         assertThat(result).isEmpty();
     }
 
-    @Test
-    public void testGetReceiveRequest() {
-        final RequestJoinCompany requestJoinCompany = requestJoinCompany();
-        final Optional<List<RequestJoinCompany>> requestJoinCompanies = Optional.of(Arrays.asList(requestJoinCompany));
-        when(mockRequestJoinCompanyRepository.findByApproverId(1L)).thenReturn(requestJoinCompanies);
-        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(1L);
-    }
+//    @Test
+//    public void testGetReceiveRequest() {
+//        final RequestJoinCompany requestJoinCompany = requestJoinCompany();
+//        final Optional<List<RequestJoinCompany>> requestJoinCompanies = Optional.of(Arrays.asList(requestJoinCompany));
+//        when(mockRequestJoinCompanyRepository.findByApproverId(1L)).thenReturn(requestJoinCompanies);
+//        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(1L);
+//    }
+//
+//    @Test
+//    public void testGetReceiveRequest_RequestJoinCompanyRepositoryReturnsAbsent() {
+//        when(mockRequestJoinCompanyRepository.findByApproverId(1L)).thenReturn(Optional.empty());
+//        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(1L);
+//        assertThat(result).isEmpty();
+//    }
 
-    @Test
-    public void testGetReceiveRequest_RequestJoinCompanyRepositoryReturnsAbsent() {
-        when(mockRequestJoinCompanyRepository.findByApproverId(1L)).thenReturn(Optional.empty());
-        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(1L);
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    public void testGetReceiveRequest_RequestJoinCompanyRepositoryReturnsNoItems() {
-        when(mockRequestJoinCompanyRepository.findByApproverId(1L)).thenReturn(Optional.of(Collections.emptyList()));
-        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(1L);
-        assertThat(result).isEqualTo(Optional.of(Collections.emptyList()));
-    }
+//    @Test
+//    public void testGetReceiveRequest_RequestJoinCompanyRepositoryReturnsNoItems() {
+//        when(mockRequestJoinCompanyRepository.findByApproverId(1L)).thenReturn(Optional.of(Collections.emptyList()));
+//        final Optional<List<RequestJoinCompany>> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequest(1L);
+//        assertThat(result).isEqualTo(Optional.of(Collections.emptyList()));
+//    }
 
     @Test
     public void testApproveRequest() {
