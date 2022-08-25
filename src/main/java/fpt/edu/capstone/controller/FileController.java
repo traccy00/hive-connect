@@ -1,5 +1,6 @@
 package fpt.edu.capstone.controller;
 
+import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.entity.Candidate;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.service.CandidateService;
@@ -212,7 +213,8 @@ public class FileController {
     public ResponseData uploadToDinary(@RequestParam MultipartFile file){
         try {
             String url = dinaryService.uploadFile(file);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Tải lên tệp thành công", url);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
+                    ResponseMessageConstants.UPLOAD_FILE_SUCCESS, url);
         }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
@@ -232,7 +234,7 @@ public class FileController {
                 String phone = formatter.formatCellValue(row.getCell(1));
                 candidate.setFullName(row.getCell(0).getStringCellValue());
                 user.setPhone(phone);
-                if(row.getCell(2).getStringCellValue().equalsIgnoreCase("Nam")){
+                if(row.getCell(2).getStringCellValue().equalsIgnoreCase(ResponseMessageConstants.GENDER_MALE)){
                     candidate.setGender(true);
                 } else {
                     candidate.setGender(false);
@@ -243,9 +245,9 @@ public class FileController {
                 candidate.setSocialLink(row.getCell(6).getStringCellValue());
                 candidateService.save(candidate);
             }
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "Tải lên mẫu hồ sơ thành công");
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.UPLOAD_FILE_SUCCESS);
         } catch (Exception e){
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Không thể tải mẫu hồ sơ");
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.UPLOAD_FILE_FAILED);
         }
     }
 }

@@ -1,29 +1,24 @@
 package fpt.edu.capstone.service.impl;
 
-import com.amazonaws.services.importexport.model.UpdateJobResult;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.job.*;
 import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.JobRepository;
-import fpt.edu.capstone.service.MajorService;
 import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -682,13 +677,13 @@ class JobServiceImplTest {
 	@Test
 	public void testGetJobOfRecruiter() {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getAllByRecruiterId(any(Pageable.class), eq(1L))).thenReturn(jobs);
+		when(jobRepository.getAllByRecruiterIdOrderByCreatedAtDesc(any(Pageable.class), eq(1L))).thenReturn(jobs);
 		final Page<Job> result = jobService.getJobOfRecruiter(PageRequest.of(1, 10), 1L);
 	}
 
 	@Test
 	public void testGetJobOfRecruiter_JobRepositoryReturnsNoItems() {
-		when(jobRepository.getAllByRecruiterId(any(Pageable.class), eq(1L)))
+		when(jobRepository.getAllByRecruiterIdOrderByCreatedAtDesc(any(Pageable.class), eq(1L)))
 				.thenReturn(new PageImpl<>(Collections.emptyList()));
 		final Page<Job> result = jobService.getJobOfRecruiter(PageRequest.of(1, 10), 1L);
 	}

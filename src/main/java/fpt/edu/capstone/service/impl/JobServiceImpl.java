@@ -14,18 +14,15 @@ import fpt.edu.capstone.utils.ResponseDataPagination;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 
 @Service
 @AllArgsConstructor
@@ -181,7 +178,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Page<Job> getJobOfRecruiter(Pageable pageable, long recruiterId) {
-        return jobRepository.getAllByRecruiterId(pageable, recruiterId);
+        return jobRepository.getAllByRecruiterIdOrderByCreatedAtDesc(pageable, recruiterId);
     }
 
     @Override

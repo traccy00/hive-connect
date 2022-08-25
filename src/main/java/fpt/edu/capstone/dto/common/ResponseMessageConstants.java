@@ -167,4 +167,7 @@ public interface ResponseMessageConstants {
     String NEW_PASSWORD_CAN_BE_SAME_OLAD_PASSWORD = "Mật khẩu mới không thể giống với mật khẩu cũ.";
     String PACKAGE_IN_USE = "Đang có người dùng sử dụng gói dịch vụ này, không thể sửa đổi thông tin";
     String RECRUITER_HAS_ALREADY_HAD_COMPANY = "Nhà tuyển dụng đã tham gia công ty";
+    String UPLOAD_FILE_SUCCESS = "Tải lên tệp thành công";
+    String UPLOAD_FILE_FAILED = "Tải lên tệp thất bại";
+    String GENDER_MALE = "Nam";
 }
