@@ -313,7 +313,7 @@ public class JobController {
             //Add Notification
             String appr = approvalJobRequest.getApprovalStatus().equals("Approved") ? " chấp thuận" : " từ chối";
             Job j = jobService.getJobById(approvalJobRequest.getJobId());
-            String content = "Đơn ứng tuyển của bạn vào " + j.getJobName() + " vừa được" + appr;
+            String content = "Đơn ứng tuyển của bạn vào " + j.getJobName() + " vừa được" + appr +"\n " + approvalJobRequest.getMessage();
             Candidate c = candidateService.getCandidateById(approvalJobRequest.getCandidateId());
             Notification notification = new Notification(0, c.getUserId(), 2, LocalDateTime.now(), content, false, false, j.getId());
             notificationService.insertNotification(notification);

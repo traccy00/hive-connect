@@ -11,6 +11,7 @@ public class ApprovalJobRequest {
     private long jobId;
     private long candidateId;
     private String approvalStatus;
+    private String message;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
