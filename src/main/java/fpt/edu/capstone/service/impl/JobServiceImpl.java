@@ -134,6 +134,8 @@ public class JobServiceImpl implements JobService {
         }
 
         job = modelMapper.map(request, Job.class);
+        job.setStartDate(request.getStartDate());
+        job.setEndDate(request.getEndDate());
         job.setId(request.getJobId());
         job.setCreatedAt(request.getCreatedAt());
         job.create();

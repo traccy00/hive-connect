@@ -158,9 +158,10 @@ public class AdminController {
     }
 
     @PutMapping("/lock-unlock-user")
-    public ResponseData lockUnlockUser(@RequestParam long userId) {
+    public ResponseData lockUnlockUser(@RequestParam("userId") long userId,
+                                       @RequestParam(value = "reason", defaultValue = StringUtils.EMPTY) String reason) {
         try {
-            Users updateUser = userService.lockUnlockUser(userId);
+            Users updateUser = userService.lockUnlockUser(userId, reason);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, updateUser);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);
@@ -169,17 +170,17 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/active-deactive-user")
-    public ResponseData activeDeactiveUser(@RequestParam long userId) {
-        try {
-            Users updateUser = userService.activeDeactiveUser(userId);
-            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, updateUser);
-        } catch (Exception e) {
-            String msg = LogUtils.printLogStackTrace(e);
-            logger.error(msg);
-            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
-        }
-    }
+//    @PutMapping("/active-deactive-user")
+//    public ResponseData activeDeactiveUser(@RequestParam long userId) {
+//        try {
+//            Users updateUser = userService.activeDeactiveUser(userId);
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, updateUser);
+//        } catch (Exception e) {
+//            String msg = LogUtils.printLogStackTrace(e);
+//            logger.error(msg);
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+//        }
+//    }
 
     @GetMapping("/get-licenses-approval")
     @Operation(summary = "Get list license for Admin approval")

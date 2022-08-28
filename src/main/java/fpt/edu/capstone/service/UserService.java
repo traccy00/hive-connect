@@ -31,9 +31,9 @@ public interface UserService {
 
     HashMap<String, List<CountRegisterUserResponse>> countUser();
 
-    Users lockUnlockUser(long userId);
+    Users lockUnlockUser(long userId, String reason) throws Exception;
 
-    Users activeDeactiveUser(long userId);
+//    Users activeDeactiveUser(long userId);
 
     void updatePhoneNumber(String phoneNumber, long userId);
 

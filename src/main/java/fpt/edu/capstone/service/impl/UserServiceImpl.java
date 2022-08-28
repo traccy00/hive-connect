@@ -1,5 +1,12 @@
 package fpt.edu.capstone.service.impl;
 
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
 import fpt.edu.capstone.dto.recruiter.TotalRecruitmentStatistic;
 import fpt.edu.capstone.dto.register.*;
@@ -148,7 +155,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Users lockUnlockUser(long userId) {
+    public Users lockUnlockUser(long userId, String reason) throws Exception{
         Users user = userRepository.getById(userId);
         if (user == null) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
@@ -157,27 +164,49 @@ public class UserServiceImpl implements UserService {
             user.setLocked(false);
         } else {
             user.setLocked(true);
+            Email from = new Email("hive.connect.social@gmail.com");
+            Email to = new Email(user.getEmail());
+
+            String subject = "Hive Connect Account Locked";
+            Content content = new Content("text/html",
+                    reason + " Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên bằng cách trả lời lại thư này.");
+
+            Mail mail = new Mail(from, subject, to, content);
+
+            SendGrid sg = new SendGrid("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");
+            Request request = new Request();
+
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+
+            Response response = sg.api(request);
+
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getHeaders());
+            System.out.println(response.getBody());
+            user.setLockReason(reason);
         }
         user.update();
         userRepository.save(user);
         return user;
     }
 
-    @Override
-    public Users activeDeactiveUser(long userId) {
-        Users user = userRepository.getById(userId);
-        if (user == null) {
-            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
-        }
-        if (user.isActive()) {
-            user.setActive(false);
-        } else {
-            user.setActive(true);
-        }
-        user.update();
-        userRepository.save(user);
-        return user;
-    }
+//    @Override
+//    public Users activeDeactiveUser(long userId) {
+//        Users user = userRepository.getById(userId);
+//        if (user == null) {
+//            throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
+//        }
+//        if (user.isActive()) {
+//            user.setActive(false);
+//        } else {
+//            user.setActive(true);
+//        }
+//        user.update();
+//        userRepository.save(user);
+//        return user;
+//    }
 
     @Override
     public void updatePhoneNumber(String phoneNumber, long userId) {

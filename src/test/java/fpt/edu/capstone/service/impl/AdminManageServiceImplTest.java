@@ -291,7 +291,7 @@ public class AdminManageServiceImplTest {
     public void testSearchReportedUsers() {
         final List<Users> users = Arrays.asList(
                 new Users(1L, "username", "password", "email", "phone", 1L, 0, LocalDateTime.of(2021, 10, 1, 0, 0, 0),
-                        false, false, false, false, "avatar", "resetPasswordToken", false));
+                        false, false, false, false, "avatar", "resetPasswordToken", false, "lockReason"));
         when(mockUserService.findAll()).thenReturn(users);
         when(mockReportedService.searchReportedUsers(any(Pageable.class), eq("username"), eq("personReportName"),
                 eq(Arrays.asList(1L)), eq(Arrays.asList(1L)))).thenReturn(new PageImpl<>(Arrays.asList()));
@@ -312,7 +312,7 @@ public class AdminManageServiceImplTest {
     public void testSearchReportedUsers_ReportedServiceReturnsNoItems() {
         final List<Users> users = Arrays.asList(
                 new Users(1L, "username", "password", "email", "phone", 1L, 0, LocalDateTime.of(2021, 10, 1, 0, 0, 0),
-                        false, false, false, false, "avatar", "resetPasswordToken", false));
+                        false, false, false, false, "avatar", "resetPasswordToken", false, "lockReason"));
         when(mockUserService.findAll()).thenReturn(users);
         when(mockReportedService.searchReportedUsers(any(Pageable.class), eq("username"), eq("personReportName"),
                 eq(Arrays.asList(1L)), eq(Arrays.asList(1L)))).thenReturn(new PageImpl<>(Collections.emptyList()));

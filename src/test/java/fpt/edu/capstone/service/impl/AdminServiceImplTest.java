@@ -48,7 +48,7 @@ public class AdminServiceImplTest {
     private Admin admin(){
         Admin admin = new Admin(1L, 1L, "fullName",
                 new Users(1L, "username", "password", "email", "phone", 1L, 0, LocalDateTime.of(2021, 10, 1, 0, 0, 0),
-                        false, false, false, false, "avatar", "resetPasswordToken", false));
+                        false, false, false, false, "avatar", "resetPasswordToken", false, "lockReason"));
         return admin;
     }
 

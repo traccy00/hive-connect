@@ -62,4 +62,7 @@ public class Users extends BaseEntity {
 
     @Column(name = "is_google")
     private boolean isGoogle;
+
+    @Column(name = "lock_reason")
+    private String lockReason;
 }
