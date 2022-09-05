@@ -50,4 +50,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     List<Payment> findByDetailPackageIdAndExpiredStatusIsFalse(long detailPackageId);
 
+    Payment findByJobId(long jobId);
+
 }

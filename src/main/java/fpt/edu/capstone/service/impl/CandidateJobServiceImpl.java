@@ -50,6 +50,8 @@ public class CandidateJobServiceImpl implements CandidateJobService {
 
     private final FollowRepository followRepository;
 
+    private final PaymentService paymentService;
+
     @Override
     public ResponseDataPagination getNewestJob(Integer pageNo, Integer pageSize) {
         List<JobResponse> responseList = new ArrayList<>();
@@ -225,41 +227,45 @@ public class CandidateJobServiceImpl implements CandidateJobService {
             for (Job job : jobs) {
                 JobResponse jobResponse = new JobResponse();
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
-                jobResponse.setJobId(job.getId());
-                jobResponse.setCompanyId(job.getCompanyId());
-                jobResponse.setRecruiterId(job.getRecruiterId());
-                List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
-                if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
-                    List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
-                    jobResponse.setListHashtag(hashTagNameList);
-                }
-                Company company = companyService.getCompanyById(job.getCompanyId());
-                if (company != null) {
-                    jobResponse.setCompanyName(company.getName());
-                }
-                jobResponse.setJobName(job.getJobName());
-                jobResponse.setJobDescription(job.getJobDescription());
-                jobResponse.setJobRequirement(job.getJobRequirement());
-                jobResponse.setBenefit(job.getBenefit());
-                jobResponse.setFromSalary(job.getFromSalary());
-                jobResponse.setToSalary(job.getToSalary());
-                jobResponse.setNumberRecruits(job.getNumberRecruits());
-                jobResponse.setRank(job.getRank());
-                jobResponse.setWorkForm(job.getWorkForm());
-                jobResponse.setGender(job.getGender());
-                jobResponse.setStartDate(job.getStartDate());
-                jobResponse.setEndDate(job.getEndDate());
-                jobResponse.setWorkPlace(job.getWorkPlace());
-                jobResponse.setCreatedAt(job.getCreatedAt());
-                jobResponse.setUpdatedAt(job.getUpdatedAt());
+                    Payment payment = paymentService.findByJobId(job.getId());
+                    if(payment.getJobId() != 0){
+                        jobResponse.setPayment(true);
+                    }
+                    jobResponse.setJobId(job.getId());
+                    jobResponse.setCompanyId(job.getCompanyId());
+                    jobResponse.setRecruiterId(job.getRecruiterId());
+                    List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
+                    if (!(listJobHashTag.isEmpty() && listJobHashTag == null)) {
+                        List<String> hashTagNameList = listJobHashTag.stream().map(JobHashtag::getHashTagName).collect(Collectors.toList());
+                        jobResponse.setListHashtag(hashTagNameList);
+                    }
+                    Company company = companyService.getCompanyById(job.getCompanyId());
+                    if (company != null) {
+                        jobResponse.setCompanyName(company.getName());
+                    }
+                    jobResponse.setJobName(job.getJobName());
+                    jobResponse.setJobDescription(job.getJobDescription());
+                    jobResponse.setJobRequirement(job.getJobRequirement());
+                    jobResponse.setBenefit(job.getBenefit());
+                    jobResponse.setFromSalary(job.getFromSalary());
+                    jobResponse.setToSalary(job.getToSalary());
+                    jobResponse.setNumberRecruits(job.getNumberRecruits());
+                    jobResponse.setRank(job.getRank());
+                    jobResponse.setWorkForm(job.getWorkForm());
+                    jobResponse.setGender(job.getGender());
+                    jobResponse.setStartDate(job.getStartDate());
+                    jobResponse.setEndDate(job.getEndDate());
+                    jobResponse.setWorkPlace(job.getWorkPlace());
+                    jobResponse.setCreatedAt(job.getCreatedAt());
+                    jobResponse.setUpdatedAt(job.getUpdatedAt());
 
-                Optional<Image> image = imageService.getImageCompany(company.getId(), true);
-                if (image.isPresent()) {
-                    jobResponse.setCompanyAvatar(image.get().getUrl());
+                    Optional<Image> image = imageService.getImageCompany(company.getId(), true);
+                    if (image.isPresent()) {
+                        jobResponse.setCompanyAvatar(image.get().getUrl());
+                    }
+                    responseList.add(jobResponse);
                 }
-                responseList.add(jobResponse);
             }
-        }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
         Pagination pagination = new Pagination();

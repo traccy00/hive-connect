@@ -32,4 +32,5 @@ public class JobResponse {
     private LocalDateTime updatedAt;
     private int isDeleted;
     private String companyAvatar;
+    private boolean isPayment;
 }

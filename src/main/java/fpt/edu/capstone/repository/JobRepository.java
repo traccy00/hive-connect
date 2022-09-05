@@ -43,7 +43,8 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     Page<Job> getListJobByWorkForm(Pageable pageable, @Param("workForm") String workForm, @Param("flag") String flag);
 
     @Query(value = "select * from job j join  payment p on j.id = p.job_id join detail_package dp on dp .id  = p.detail_package_id " +
-            "where dp.is_new_job = ?1 and (j.is_deleted = ?2 or j.is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
+            "where dp.is_new_job = ?1 and (j.is_deleted = ?2 or j.is_deleted is null) " +
+            "and flag = ?3 order by random()", nativeQuery = true)
     Page<Job> getNewestJob(Pageable pageable, boolean isNewJob, int isDeleted, String flag);
 
     @Query(value = "select * from job j join  payment p on j.id = p.job_id join detail_package dp on dp .id  = p.detail_package_id " +

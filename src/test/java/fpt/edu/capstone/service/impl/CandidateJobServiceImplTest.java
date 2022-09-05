@@ -55,6 +55,8 @@ public class CandidateJobServiceImplTest {
     private ImageService mockImageService;
     @Mock
     private FollowRepository mockFollowRepository;
+    @Mock
+    private PaymentService paymentService;
 
     private CandidateJobServiceImpl candidateJobServiceImplUnderTest;
 
@@ -62,7 +64,7 @@ public class CandidateJobServiceImplTest {
     public void setUp() throws Exception {
         candidateJobServiceImplUnderTest = new CandidateJobServiceImpl(mockModelMapper, mockJobService,
                 mockJobRepository, mockJobHashTagService, mockCompanyService, mockAppliedJobService,
-                mockAppliedJobRepository, mockFieldsService, mockImageService, mockFollowRepository);
+                mockAppliedJobRepository, mockFieldsService, mockImageService, mockFollowRepository, paymentService);
     }
     private Job job(){
         Job job = new Job(1L, 1L, "jobName", "workPlace", "workForm", LocalDateTime.now(),
