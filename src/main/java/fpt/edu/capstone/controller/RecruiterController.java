@@ -3,6 +3,7 @@ package fpt.edu.capstone.controller;
 import fpt.edu.capstone.dto.AppliedJobByRecruiterResponse;
 import fpt.edu.capstone.dto.admin.CommonRecruiterInformationResponse;
 import fpt.edu.capstone.dto.common.ResponseMessageConstants;
+import fpt.edu.capstone.dto.recruiter.ReceiveRequestJoinCompanyResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
 import fpt.edu.capstone.dto.recruiter.SentRequestJoinCompanyResponse;
@@ -12,14 +13,12 @@ import fpt.edu.capstone.entity.Notification;
 import fpt.edu.capstone.entity.Recruiter;
 import fpt.edu.capstone.entity.RequestJoinCompany;
 import fpt.edu.capstone.service.*;
-import fpt.edu.capstone.utils.Enums;
-import fpt.edu.capstone.utils.LogUtils;
-import fpt.edu.capstone.utils.ResponseData;
-import fpt.edu.capstone.utils.ResponseDataPagination;
+import fpt.edu.capstone.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -153,6 +152,19 @@ public class RecruiterController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
+//    @GetMapping("/get-receive-request")
+//    @Operation(summary = "recruiter - người tạo company đang có những request nào")
+//    public ResponseData getReceiveRequest(@RequestParam long approverId) {
+//        try {
+//            Optional<List<RequestJoinCompany>> requestJoinCompanyOp = requestJoinCompanyService.getReceiveRequest(approverId);
+//            if (requestJoinCompanyOp.isPresent()) {
+//                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, requestJoinCompanyOp.get());
+//            }
+//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.NO_REQUEST_JOIN_COMPANY_RECEIVED, null);
+//        } catch (Exception ex) {
+//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
+//        }
+//    }
 
     @PutMapping("/approve-join-company-request")
     @Operation(summary = "recruiter thực hiện approve/deny request company")
@@ -269,6 +281,33 @@ public class RecruiterController {
             String msg = LogUtils.printLogStackTrace(e);
             logger.error(msg);
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-receive-request")
+    public ResponseData getReceiveRequestJoinCompanyWithFilter(
+                                  @RequestParam(defaultValue = "0") Integer pageNo,
+                                  @RequestParam(defaultValue = "10") Integer pageSize,
+                                  @RequestParam(defaultValue = "") String fullName,
+                                  @RequestParam(defaultValue = "") String email,
+                                  @RequestParam(defaultValue = "") String status,
+                                  @RequestParam(defaultValue = "") String phone,
+                                  @RequestParam(required = true) long id) {
+        try {
+            Page<ReceiveRequestJoinCompanyResponse> page = requestJoinCompanyService.getReceiveRequestJoinCompanyWithFilter(fullName, email, phone, status, id, pageSize, pageNo);
+            ResponseDataPagination responseDataPagination = new ResponseDataPagination();
+            Pagination pagination = new Pagination();
+            System.out.println(page.getContent());
+            responseDataPagination.setData(page.getContent());
+            pagination.setCurrentPage(pageNo);
+            pagination.setPageSize(pageSize);
+            pagination.setTotalPage(page.getTotalPages());
+            pagination.setTotalRecords(Integer.parseInt(String.valueOf(page.getTotalElements())));
+            responseDataPagination.setStatus(Enums.ResponseStatus.SUCCESS.getStatus());
+            responseDataPagination.setPagination(pagination);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "", responseDataPagination);
+        } catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
 }

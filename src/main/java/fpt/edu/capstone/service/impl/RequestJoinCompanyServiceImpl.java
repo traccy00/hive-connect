@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.dto.recruiter.ReceiveRequestJoinCompanyResponse;
 import fpt.edu.capstone.entity.Company;
 import fpt.edu.capstone.entity.RequestJoinCompany;
 import fpt.edu.capstone.exception.HiveConnectException;
@@ -70,6 +71,14 @@ public class RequestJoinCompanyServiceImpl implements RequestJoinCompanyService 
     @Override
     public Optional<RequestJoinCompany> findById(long id) {
         return requestJoinCompanyRepository.findById(id);
+    }
+
+    @Override
+    public Page<ReceiveRequestJoinCompanyResponse> getReceiveRequestJoinCompanyWithFilter(String fullName, String email, String phone, String status, long approveId, int pageSize, int pageNo){
+        int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
+        Pageable pageable = PageRequest.of(pageReq, pageSize);
+        Page<ReceiveRequestJoinCompanyResponse> page = requestJoinCompanyRepository.getReceiveRequestJoinCompanyWithFilter( fullName, email, phone, status,  approveId,pageable);
+        return page;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package fpt.edu.capstone.repository;
 
+import fpt.edu.capstone.dto.recruiter.ReceiveRequestJoinCompanyResponse;
 import fpt.edu.capstone.entity.RequestJoinCompany;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,4 +24,7 @@ public interface RequestJoinCompanyRepository extends JpaRepository<RequestJoinC
     @Transactional
     @Query(value = "Update request_join_company set status = ?1 where id = ?2", nativeQuery = true)
     void approveRequest(String status, long id);
+
+    @Query(value = "select r.id, r.fullname as fullname , rjc.status, u.email , u.phone  from request_join_company rjc join recruiter r on r.id  = rjc.sender_id join users u on u.id = r.user_id where lower(r.fullname)  like lower(concat('%', ?1 ,'%')) and lower(u.email) like lower(concat('%', ?2 ,'%')) and  (u.phone like concat('%', ?3 ,'%') or u.phone is null ) and lower(rjc.status) like lower(concat('%', ?4 ,'%')) and rjc.approver_id = ?5 ", nativeQuery = true)
+    Page<ReceiveRequestJoinCompanyResponse> getReceiveRequestJoinCompanyWithFilter( String fullName, String email, String phone, String status,long approveId,  Pageable pageable);
 }
