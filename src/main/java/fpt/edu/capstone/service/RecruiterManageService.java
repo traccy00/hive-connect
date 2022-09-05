@@ -33,6 +33,8 @@ public interface RecruiterManageService {
 
     ViewCVWithPayResponse getCvWithPay(long recruiterId, long cvId);
 
+    ViewCVWithPayResponse previewCV(long recruiterId, long cvId);
+
     void insertWhoViewCv(ViewCvResponse response);
 
     ResponseDataPagination getCvListAppliedJob(Integer pageNo, Integer pageSize, long jobId);

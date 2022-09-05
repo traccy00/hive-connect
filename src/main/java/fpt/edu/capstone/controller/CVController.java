@@ -507,4 +507,17 @@ public class CVController {
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ex.getMessage());
         }
     }
+
+    @GetMapping("/preview-cv")
+    public ResponseData previewCV(@RequestParam long recruiterId, @RequestParam long cvId) {
+        try {
+            ViewCVWithPayResponse response = recruiterManageService.previewCV(recruiterId, cvId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), response.getMessage(),
+                    response.getCvProfileResponse());
+        } catch (Exception ex) {
+            String msg = LogUtils.printLogStackTrace(ex);
+            logger.error(msg);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ex.getMessage());
+        }
+    }
 }

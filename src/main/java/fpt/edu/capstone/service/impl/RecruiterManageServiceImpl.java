@@ -671,6 +671,64 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     }
 
     @Override
+    public ViewCVWithPayResponse previewCV(long recruiterId, long cvId) {
+        ViewCVWithPayResponse viewCVWithPayResponse = new ViewCVWithPayResponse();
+        Optional<Recruiter> r = recruiterService.findById(recruiterId);
+        if (!r.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.RECRUITER_DOES_NOT_EXIST);
+        }
+        Recruiter recruiter = r.get();
+        Optional<CV> cv = cvService.findCvById(cvId);
+        if (!cv.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.CV_NOT_EXIST);
+        }
+        Optional<Candidate> c = candidateService.findById(cv.get().getCandidateId());
+        if (!c.isPresent()) {
+            throw new HiveConnectException(ResponseMessageConstants.CANDIDATE_DOES_NOT_EXIST);
+        }
+        CVProfileResponse cvProfileResponse = new CVProfileResponse();
+        List<Certificate> certificates = certificateService.getListCertificateByCvId(cv.get().getId());
+        List<Education> educations = educationService.getListEducationByCvId(cv.get().getId());
+        List<Language> languages = languageService.getListLanguageByCvId(cv.get().getId());
+        List<MajorLevel> majorLevels = majorLevelService.getListMajorLevelByCvId(cv.get().getId());
+        List<OtherSkill> otherSkills = otherSkillService.getListOtherSkillByCvId(cv.get().getId());
+        List<WorkExperience> workExperiences = workExperienceService.getListWorkExperienceByCvId(cv.get().getId());
+        cvProfileResponse.setCandidateId(cv.get().getCandidateId());
+        cvProfileResponse.setCertificates(certificates);
+        cvProfileResponse.setEducations(educations);
+        cvProfileResponse.setLanguages(languages);
+        cvProfileResponse.setSummary(cv.get().getSummary());
+        cvProfileResponse.setMajorLevels(majorLevels);
+        cvProfileResponse.setOtherSkills(otherSkills);
+        cvProfileResponse.setWorkExperiences(workExperiences);
+
+
+        Candidate candidate = c.get();
+        cvProfileResponse.setCandidateId(candidate.getId());
+        cvProfileResponse.setGender(candidate.isGender());
+        cvProfileResponse.setBirthDate(candidate.getBirthDate());
+        cvProfileResponse.setCountry(candidate.getCountry());
+        cvProfileResponse.setFullName(candidate.getFullName());
+        cvProfileResponse.setAddress(candidate.getAddress());
+        cvProfileResponse.setSocialLink(candidate.getSocialLink());
+
+        cvProfileResponse.setExperienceLevel(candidate.getExperienceLevel());
+        cvProfileResponse.setIntroduction(candidate.getIntroduction());
+
+        Optional<Users> u = userService.findByIdOp(candidate.getUserId());
+        Users users = u.get();
+        String phoneNumber = users.getPhone();
+        cvProfileResponse.setAvatarUrl(users.getAvatar());
+        String email = users.getEmail();
+        String message = "";
+        cvProfileResponse.setEmail("*****@gmail.com");
+        cvProfileResponse.setPhoneNumber("+84**********");
+        cvProfileResponse.setSocialLink("https://******/******");
+        viewCVWithPayResponse.setCvProfileResponse(cvProfileResponse);
+        return viewCVWithPayResponse;
+    }
+
+    @Override
     public void insertWhoViewCv(ViewCvResponse response) {
         Optional<CV> cv = cvService.findByIdAndCandidateId(response.getCvId(), response.getCandidateId());
         if (!cv.isPresent()) {
