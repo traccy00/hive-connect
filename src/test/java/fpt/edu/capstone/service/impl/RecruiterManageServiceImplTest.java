@@ -861,33 +861,33 @@ public class RecruiterManageServiceImplTest {
     public void testGetJobOfRecruiter() {
         when(mockRecruiterService.existById(1L)).thenReturn(false);
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getJobOfRecruiter(any(Pageable.class), eq(1L))).thenReturn(jobs);
+        when(mockJobService.getJobOfRecruiter(any(Pageable.class), eq(1L), "")).thenReturn(jobs);
 
         final Company company = company();
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         when(mockAppliedJobService.countAppliedCVOfJob(1L)).thenReturn(0);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 11, 10L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 11, 10L, "");
     }
 
     @Test
     public void testGetJobOfRecruiter_JobServiceReturnsNoItems() {
         when(mockRecruiterService.existById(1L)).thenReturn(false);
-        when(mockJobService.getJobOfRecruiter(any(Pageable.class), eq(1L)))
+        when(mockJobService.getJobOfRecruiter(any(Pageable.class), eq(1L), ""))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Company company = company();
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         when(mockAppliedJobService.countAppliedCVOfJob(1L)).thenReturn(0);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 11, 10L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 11, 10L, "");
     }
 
     @Test
     public void testGetJobOfRecruiter_CompanyServiceReturnsNull() {
         when(mockRecruiterService.existById(1L)).thenReturn(false);
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getJobOfRecruiter(any(Pageable.class), eq(1L))).thenReturn(jobs);
+        when(mockJobService.getJobOfRecruiter(any(Pageable.class), eq(1L), "")).thenReturn(jobs);
         when(mockCompanyService.getCompanyById(1L)).thenReturn(null);
 
-        assertThatThrownBy(() -> recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 11, 10L))
+        assertThatThrownBy(() -> recruiterManageServiceImplUnderTest.getJobOfRecruiter(1, 11, 10L, ""))
                 .isInstanceOf(HiveConnectException.class);
     }
 

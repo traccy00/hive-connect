@@ -27,7 +27,7 @@ public interface RecruiterManageService {
 
     DetailPurchasedPackageResponse getDetailPurchasedPackage(long recruiterId, long paymentId);
 
-    ResponseDataPagination getJobOfRecruiter(Integer pageNo, Integer pageSize, long paymentId);
+    ResponseDataPagination getJobOfRecruiter(Integer pageNo, Integer pageSize, long recruiterId, String jobName);
 
     ResponseDataPagination findCVFilter(Integer pageNo, Integer pageSize, String experience, String candidateAddress, String techStack);
 

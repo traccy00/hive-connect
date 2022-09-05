@@ -63,7 +63,9 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query(value = "select * from job j where (lower(j.job_name) like lower(concat('%', :majorName ,'%')))", nativeQuery = true)
     List <Job> getListSuggestJobByCv(@Param("majorName") String majorName);
 
-    Page<Job> getAllByRecruiterIdOrderByUpdatedAtDesc(Pageable pageable, long recruiterId);
+    @Query(value = "select j from Job j where j.recruiterId =:recruiterId " +
+            "and ((lower(j.jobName)) like lower(concat('%', :jobName ,'%')) or :jobName is null or :jobName ='') ")
+    Page<Job> getAllByRecruiterIdAndJobNameOrderByUpdatedAtDesc(Pageable pageable,@Param("recruiterId") long recruiterId,@Param("jobName") String jobName);
 
     @Query(value = "select * from job where id = ?", nativeQuery = true)
     Job getById(long id);

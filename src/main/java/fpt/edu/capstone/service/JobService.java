@@ -40,7 +40,7 @@ public interface JobService {
 
     Job getJobById(long jobId);
 
-    Page<Job> getJobOfRecruiter(Pageable pageable, long recruiterId);
+    Page<Job> getJobOfRecruiter(Pageable pageable, long recruiterId, String jobName);
 
     Optional<Job> findById(long id);
 

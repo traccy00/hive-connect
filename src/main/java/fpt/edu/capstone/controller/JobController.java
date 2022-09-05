@@ -329,9 +329,10 @@ public class JobController {
     @GetMapping("/get-jobs-of-recruiter")
     public ResponseData getJobListOfRecruiter(@RequestParam(defaultValue = "0") Integer pageNo,
                                               @RequestParam(defaultValue = "10") Integer pageSize,
-                                              @RequestParam("recruiterId") long recruiterId) {
+                                              @RequestParam("recruiterId") long recruiterId,
+                                              @RequestParam(defaultValue = StringUtils.EMPTY, required = false) String jobName) {
         try {
-            ResponseDataPagination pagination = recruiterManageService.getJobOfRecruiter(pageNo, pageSize, recruiterId);
+            ResponseDataPagination pagination = recruiterManageService.getJobOfRecruiter(pageNo, pageSize, recruiterId, jobName);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception e) {
             String msg = LogUtils.printLogStackTrace(e);

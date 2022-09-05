@@ -426,7 +426,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
     }
 
     @Override
-    public ResponseDataPagination getJobOfRecruiter(Integer pageNo, Integer pageSize, long recruiterId) {
+    public ResponseDataPagination getJobOfRecruiter(Integer pageNo, Integer pageSize, long recruiterId, String jobName) {
         List<JobForRecruiterResponse> responseList = new ArrayList<>();
 
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
@@ -435,7 +435,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         if (!recruiterService.existById(recruiterId)) {
             throw new HiveConnectException(ResponseMessageConstants.USER_DOES_NOT_EXIST);
         }
-        Page<Job> jobsListOfRecruiter = jobService.getJobOfRecruiter(pageable, recruiterId);
+        Page<Job> jobsListOfRecruiter = jobService.getJobOfRecruiter(pageable, recruiterId, jobName);
         if (jobsListOfRecruiter.hasContent()) {
             for (Job job : jobsListOfRecruiter) {
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
