@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    @Query(value = "Select * from notification WHERE receiver_id = ?1", nativeQuery = true)
+        @Query(value = "Select * from notification WHERE receiver_id = ?1 order by date desc", nativeQuery = true)
     Page<Notification> getAllNotificationByUserId(Pageable pageable, long userId);
 
     @Query(value = "Select * from notification Where receiver_id = ?1 and target_id = ?2 and type = ?3", nativeQuery = true)
