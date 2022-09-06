@@ -170,4 +170,7 @@ public interface ResponseMessageConstants {
     String UPLOAD_FILE_SUCCESS = "Tải lên tệp thành công";
     String UPLOAD_FILE_FAILED = "Tải lên tệp thất bại";
     String GENDER_MALE = "Nam";
+
+    //OTHER
+    String PROFILE_VIEWER_NOT_FOUND = "CV này chưa được xem bởi người dùng này";
 }

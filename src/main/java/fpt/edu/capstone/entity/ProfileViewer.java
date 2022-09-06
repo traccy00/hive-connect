@@ -26,4 +26,7 @@ public class ProfileViewer extends BaseEntity {
 
     @Column(name = "candidate_id")
     private long candidateId;
+
+    @Column(name = "is_save")
+    private boolean isSave;
 }

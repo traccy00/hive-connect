@@ -71,6 +71,9 @@ public class CVController {
     @Autowired
     private CandidateManageService candidateManageService;
 
+    @Autowired
+    private ProfileViewerService profileViewerService;
+
     //Them phan add summary
 
     @GetMapping("/get-list-CV")
@@ -511,7 +514,12 @@ public class CVController {
     @GetMapping("/preview-cv")
     public ResponseData previewCV(@RequestParam long recruiterId, @RequestParam long cvId) {
         try {
-            ViewCVWithPayResponse response = recruiterManageService.previewCV(recruiterId, cvId);
+            ViewCVWithPayResponse response = new ViewCVWithPayResponse();
+            if(profileViewerService.getByCvIdAndViewerIdOptional(cvId, recruiterId).isPresent()) {
+                response = recruiterManageService.getCvWithPay(recruiterId, cvId);
+            }else {
+                response = recruiterManageService.previewCV(recruiterId, cvId);
+            }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), response.getMessage(),
                     response.getCvProfileResponse());
         } catch (Exception ex) {

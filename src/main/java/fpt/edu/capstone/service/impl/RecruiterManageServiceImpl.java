@@ -744,6 +744,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             saveProfileViewer.setViewerId(response.getViewerId());
             saveProfileViewer.setCvId(response.getCvId());
             saveProfileViewer.setCandidateId(response.getCandidateId());
+            saveProfileViewer.setSave(false);
             saveProfileViewer.create();
             profileViewerRepository.save(saveProfileViewer);
         }

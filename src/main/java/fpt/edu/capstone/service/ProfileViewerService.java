@@ -16,4 +16,6 @@ public interface ProfileViewerService {
     List<ProfileViewer> findAll(PageRequest pageRequest);
 
     Optional<ProfileViewer> getByCvIdAndViewerIdOptional(long cvId, long viewerId);
+
+    void updateIsSave(boolean isSave, long id, long recruiterId);
 }

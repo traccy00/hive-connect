@@ -38,4 +38,9 @@ public class ProfileViewerServiceImpl implements ProfileViewerService {
     public Optional<ProfileViewer> getByCvIdAndViewerIdOptional(long cvId, long viewerId) {
         return profileViewerRepository.getByCvIdAndViewerIdOptional(cvId, viewerId);
     }
+
+    @Override
+    public void updateIsSave(boolean isSave, long id, long recruiterId) {
+        profileViewerRepository.updateIsSave(isSave, id, recruiterId);
+    }
 }
