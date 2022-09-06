@@ -64,8 +64,10 @@ public class CandidateJobServiceImpl implements CandidateJobService {
             for (Job job : jobs) {
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                     JobResponse jobResponse = new JobResponse();
-                    Payment payment = paymentService.findByJobId(job.getId());
-                    if (payment.getJobId() != 0) {
+                    Optional<Payment> payment = paymentService.findByJobId(job.getId());
+                    if (payment == null || payment.isEmpty()) {
+                        jobResponse.setPayment(false);
+                    } else {
                         jobResponse.setPayment(true);
                     }
                     jobResponse.setJobId(job.getId());
@@ -128,8 +130,10 @@ public class CandidateJobServiceImpl implements CandidateJobService {
             for (Job job : jobs) {
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                     JobResponse jobResponse = new JobResponse();
-                    Payment payment = paymentService.findByJobId(job.getId());
-                    if (payment.getJobId() != 0) {
+                    Optional<Payment> payment = paymentService.findByJobId(job.getId());
+                    if (payment == null || payment.isEmpty()) {
+                        jobResponse.setPayment(false);
+                    } else {
                         jobResponse.setPayment(true);
                     }
                     jobResponse.setJobId(job.getId());
@@ -229,17 +233,20 @@ public class CandidateJobServiceImpl implements CandidateJobService {
 
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
-
-        Page<Job> jobs = jobService.getPopularJobList(pageable);
+        List <Long> popularJobId = jobService.getListPopularJobId();
+        Page<Job> jobs = jobService.getPopularJobList(pageable, popularJobId);
         if (jobs.hasContent()) {
             for (Job job : jobs) {
                 JobResponse jobResponse = new JobResponse();
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
-                    Payment payment = paymentService.findByJobId(job.getId());
-                    if(payment.getJobId() != 0){
+                    Optional<Payment> payment = paymentService.findByJobId(job.getId());
+                    if (payment == null || payment.isEmpty()) {
+                        jobResponse.setPayment(false);
+                    } else {
                         jobResponse.setPayment(true);
                     }
                     jobResponse.setJobId(job.getId());
+
                     jobResponse.setCompanyId(job.getCompanyId());
                     jobResponse.setRecruiterId(job.getRecruiterId());
                     List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());

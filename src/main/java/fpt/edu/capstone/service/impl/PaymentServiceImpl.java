@@ -376,7 +376,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Payment findByJobId(long jobId) {
+    public Optional<Payment> findByJobId(long jobId) {
         return paymentRepository.findByJobId(jobId);
     }
 }

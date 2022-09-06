@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("select p from Payment p where (p.recruiterId =:recruiterId or 0 =:recruiterId) " +
@@ -50,6 +51,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     List<Payment> findByDetailPackageIdAndExpiredStatusIsFalse(long detailPackageId);
 
-    Payment findByJobId(long jobId);
+    Optional<Payment> findByJobId(long jobId);
 
 }

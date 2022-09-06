@@ -42,18 +42,25 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query(value = "select * from Job where work_form like upper(concat('%', :workForm ,'%')) and flag =:flag order by random()", nativeQuery = true)
     Page<Job> getListJobByWorkForm(Pageable pageable, @Param("workForm") String workForm, @Param("flag") String flag);
 
-    @Query(value = "select * from job j join  payment p on j.id = p.job_id join detail_package dp on dp .id  = p.detail_package_id " +
-            "where dp.is_new_job = ?1 and (j.is_deleted = ?2 or j.is_deleted is null) " +
-            "and flag = ?3 order by random()", nativeQuery = true)
+    @Query(value = "select * from job j " +
+            "join  payment p on j.id = p.job_id join detail_package dp on dp .id  = p.detail_package_id " +
+            "where (dp.is_new_job  = ?1 ) " +
+            "or (((j.start_date >= current_date - interval '21 days') or (j.start_date >= current_date + interval '21 days'))) " +
+            "and flag = ?3 and (j.is_deleted = ?2 or j.is_deleted is null) order by random()", nativeQuery = true)
     Page<Job> getNewestJob(Pageable pageable, boolean isNewJob, int isDeleted, String flag);
 
-    @Query(value = "select * from job j join  payment p on j.id = p.job_id join detail_package dp on dp .id  = p.detail_package_id " +
-            "where dp.is_urgent_job = ?1 and (j.is_deleted = ?2 or j.is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
+    @Query(value = "select * from job j " +
+            "join  payment p on j.id = p.job_id join detail_package dp on dp.id  = p.detail_package_id " +
+            "where ((dp.is_urgent_job  = ?1) or (j.end_date - j.start_date  <=  interval '21 days')) " +
+            "and p.expired_status = false and (j.is_deleted = ?2 or j.is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
     Page<Job> getUrgentJob(Pageable pageable, boolean isUrgentJob, int isDeleted, String flag);
 
-    @Query(value = "select * from job j join  payment p on j.id = p.job_id join detail_package dp on dp .id  = p.detail_package_id " +
-            "where dp.is_popular_job = ?1 and (j.is_deleted = ?2 or j.is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
-    Page<Job> getPopularJob(Pageable pageable, boolean isPopularJob, int isDeleted, String flag);
+    @Query(value = "select * from job j " +
+            "left join  payment p on j.id = p.job_id " +
+            "left join detail_package dp on dp .id  = p.detail_package_id " +
+            "where (dp.is_popular_job = ?1) or (j.id in (?4)) " +
+            "and (j.is_deleted = ?2 or j.is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
+    Page<Job> getPopularJob(Pageable pageable, boolean isPopularJob, int isDeleted, String flag, List<Long> popularJobId);
 
     @Query(value = "Select * from Job where field_id =:fieldId and is_deleted = 0 and flag =:flag order by random()", nativeQuery = true)
     Page<Job> getListJobByFieldId(Pageable pageable, @Param("fieldId") long fieldId, @Param("flag") String flag);
@@ -89,4 +96,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query(value = "select count(*) from job j where flag = ?", nativeQuery = true)
     int countJobInSystem(String flag);
+
+    @Query(value = "with t as (select count(*) as a,job_id  from applied_job aj where aj.is_applied = true group by job_id ) select job_id  from t where t.a >= ?1", nativeQuery = true)
+    List<Long> getListPopularJobId(long appliedNumber);
 }
