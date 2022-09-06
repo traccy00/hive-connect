@@ -306,6 +306,7 @@ public class CandidateManageServiceImpl implements CandidateManageService {
         if (request.getCvUrl() != null && !request.getCvUrl().trim().isEmpty()) {
             appliedJob.setCvUploadUrl(request.getCvUrl());
             appliedJob.setUploadCv(true);
+            appliedJob.setSeenUploadedCV(false);
         }
         appliedJob.create();
         appliedJobRepository.save(appliedJob);

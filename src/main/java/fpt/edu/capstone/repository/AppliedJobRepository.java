@@ -1,5 +1,6 @@
 package fpt.edu.capstone.repository;
 
+import com.amazonaws.services.apigateway.model.Op;
 import fpt.edu.capstone.dto.company.CompanyResponse;
 import fpt.edu.capstone.dto.recruiter.CountCandidateApplyPercentageResponse;
 import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
@@ -7,11 +8,14 @@ import fpt.edu.capstone.entity.AppliedJob;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AppliedJobRepository extends JpaRepository<AppliedJob, Long> {
@@ -51,4 +55,13 @@ public interface AppliedJobRepository extends JpaRepository<AppliedJob, Long> {
 
     @Query(value = "select count(*) from applied_job aj where is_applied = true;", nativeQuery = true)
     int countAppliedCVInSystem();
+
+    @Query(value = "select * from applied_job aj where job_id = ?2 and candidate_id = ?1 and is_applied = true", nativeQuery = true)
+    Optional<AppliedJob> getAppliedJobByJobIDandCandidateID(long jobId, long candidateId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE applied_job set is_seen_uploaded_cv = true where job_id = ?1 and candidate_id = ?2 and is_applied = true", nativeQuery = true)
+    void updateIsSeenUploadedCV(long jobId, long candidateId);
+
 }

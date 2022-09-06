@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AppliedJobService {
     AppliedJob getAppliedJobPendingApproval(long jobId, long candidateId);
@@ -24,5 +25,9 @@ public interface AppliedJobService {
     int countAppliedCVOfJob(long jobId);
 
     int countAppliedCVInSystem();
+
+    Optional<AppliedJob> getAppliedJobByJobIDandCandidateID(long jobId, long candidateId);
+
+    void updateIsSeenUploadedCV(long jobId, long candidateId);
 
 }

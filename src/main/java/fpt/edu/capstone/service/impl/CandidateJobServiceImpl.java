@@ -65,7 +65,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                     JobResponse jobResponse = new JobResponse();
                     Optional<Payment> payment = paymentService.findByJobId(job.getId());
-                    if (payment == null || payment.isEmpty()) {
+                    if (payment == null || !payment.isPresent()) {
                         jobResponse.setPayment(false);
                     } else {
                         jobResponse.setPayment(true);
@@ -131,7 +131,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                     JobResponse jobResponse = new JobResponse();
                     Optional<Payment> payment = paymentService.findByJobId(job.getId());
-                    if (payment == null || payment.isEmpty()) {
+                    if (payment == null || !payment.isPresent()) {
                         jobResponse.setPayment(false);
                     } else {
                         jobResponse.setPayment(true);
@@ -240,7 +240,7 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 JobResponse jobResponse = new JobResponse();
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                     Optional<Payment> payment = paymentService.findByJobId(job.getId());
-                    if (payment == null || payment.isEmpty()) {
+                    if (payment == null || !payment.isPresent()) {
                         jobResponse.setPayment(false);
                     } else {
                         jobResponse.setPayment(true);

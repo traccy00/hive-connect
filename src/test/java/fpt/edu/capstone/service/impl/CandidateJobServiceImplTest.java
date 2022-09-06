@@ -452,9 +452,9 @@ public class CandidateJobServiceImplTest {
         request.setApprovalStatus("approvalStatus");
         request.setCreatedAt(LocalDateTime.of(2022, 1, 1, 0, 0, 0));
         request.setUpdatedAt(LocalDateTime.of(2022, 1, 1, 0, 0, 0));
-        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl");
+        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false);
         when(mockAppliedJobService.getAppliedJobPendingApproval(1L, 1L)).thenReturn(appliedJob);
-        final AppliedJob appliedJob1 = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl");
+        final AppliedJob appliedJob1 = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false);
         when(mockAppliedJobRepository.save(any(AppliedJob.class))).thenReturn(appliedJob1);
         candidateJobServiceImplUnderTest.approveJob(request);
         verify(mockAppliedJobRepository).save(any(AppliedJob.class));
@@ -481,7 +481,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
 
         when(mockFieldsService.getById(1L)).thenReturn(new Fields(1L, "fieldName", "status"));
-        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl");
+        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false);
         when(mockAppliedJobService.getAppliedJobBefore(1L, 1L)).thenReturn(appliedJob);
 
         when(mockFollowRepository.getFollowIfHave(1L, 1L, 1L)).thenReturn(Optional.of(new Follow(1L, 1L, 1L, 1L)));
@@ -517,7 +517,7 @@ public class CandidateJobServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         when(mockFieldsService.getById(1L)).thenReturn(new Fields(1L, "fieldName", "status"));
-        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl");
+        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false);
         when(mockAppliedJobService.getAppliedJobBefore(1L, 1L)).thenReturn(appliedJob);
         when(mockFollowRepository.getFollowIfHave(1L, 1L, 1L)).thenReturn(Optional.empty());
         final JobDetailResponse result = candidateJobServiceImplUnderTest.getJobDetail(1L, 1L);

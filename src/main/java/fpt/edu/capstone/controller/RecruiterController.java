@@ -41,6 +41,8 @@ public class RecruiterController {
 
     private final ProfileViewerService profileViewerService;
 
+    private final AppliedJobService appliedJobService;
+
     @GetMapping("/recruiter-profile/{userId}")
     public ResponseData getRecruiterProfile(@PathVariable("userId") long userId) {
         try {
@@ -293,6 +295,49 @@ public class RecruiterController {
             profileViewerService.updateIsSave(isSave, id,recruiterId);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, isSave);
         }catch (Exception ex){
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
+        }
+    }
+
+    @GetMapping("/is-seen-uploaded-cv")
+    public ResponseData isSeenUploadedCV(@RequestParam long candidateId, @RequestParam long jobId) {
+        try {
+            Optional<AppliedJob> appliedJobOP = appliedJobService.getAppliedJobByJobIDandCandidateID(jobId, candidateId);
+            if(!appliedJobOP.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Candidate is not applied this job");
+            }
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "SUCCESS", appliedJobOP.get().isSeenUploadedCV());
+        }catch (Exception ex) {
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
+        }
+    }
+
+    @GetMapping("/see-upload-cv-detail")
+    public ResponseData seeUploadCVDetail(@RequestParam long candidateId, @RequestParam long jobId, @RequestParam long recruiterId) {
+        try {
+            Optional<AppliedJob> appliedJobOP = appliedJobService.getAppliedJobByJobIDandCandidateID(candidateId, jobId);
+            if(!appliedJobOP.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Candidate is not applied this job");
+            }
+            if(appliedJobOP.get().isSeenUploadedCV()) {
+                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "CAN READ CV 1", appliedJobOP.get().getCvUploadUrl());
+            }
+
+            Optional<Recruiter> recruiterOptional = recruiterService.findById(recruiterId);
+            if(!recruiterOptional.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.RECRUITER_DOES_NOT_EXIST);
+            }
+            if(recruiterOptional.get().getTotalCvView() == 0) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.TOTAL_VIEW_CV_RUN_OUT);
+            }
+            if(recruiterOptional.get().getTotalCvView() == -1) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.PAY_FOR_PACKAGE_TO_VIEW_CV);
+            }
+            recruiterService.updateTotalCvView(recruiterOptional.get().getTotalCvView() - 1, recruiterOptional.get().getId());
+            appliedJobService.updateIsSeenUploadedCV(jobId, candidateId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), "CAN READ CV", appliedJobOP.get().getCvUploadUrl());
+
+        }catch (Exception ex) {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }

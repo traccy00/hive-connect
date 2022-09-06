@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -59,5 +60,15 @@ public class AppliedJobServiceImpl implements AppliedJobService {
     @Override
     public int countAppliedCVInSystem() {
         return appliedJobRepository.countAppliedCVInSystem();
+    }
+
+    @Override
+    public Optional<AppliedJob> getAppliedJobByJobIDandCandidateID(long jobId, long candidateId) {
+        return appliedJobRepository.getAppliedJobByJobIDandCandidateID(jobId, candidateId);
+    }
+
+    @Override
+    public void updateIsSeenUploadedCV(long jobId, long candidateId) {
+            appliedJobRepository.updateIsSeenUploadedCV(jobId, candidateId);
     }
 }

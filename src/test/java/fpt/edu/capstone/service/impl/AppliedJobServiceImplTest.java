@@ -41,14 +41,14 @@ public class AppliedJobServiceImplTest {
 
     @Test
     public void testGetAppliedJobPendingApproval() {
-        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl");
+        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false);
         when(mockAppliedJobRepository.getAppliedJobPendingApproval(1L, 1L, "status", false)).thenReturn(appliedJob);
         final AppliedJob result = appliedJobServiceImplUnderTest.getAppliedJobPendingApproval(1L, 1L);
     }
 
     @Test
     public void testGetAppliedJobBefore() {
-        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl");
+        final AppliedJob appliedJob = new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false);
         when(mockAppliedJobRepository.getByCandidateIdAndJobId(1L, 1L)).thenReturn(appliedJob);
         final AppliedJob result = appliedJobServiceImplUnderTest.getAppliedJobBefore(1L, 1L);
     }
@@ -56,7 +56,7 @@ public class AppliedJobServiceImplTest {
     @Test
     public void testGetCvAppliedJob() {
         final Page<AppliedJob> appliedJobs = new PageImpl<>(
-                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl")));
+                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false)));
         when(mockAppliedJobRepository.getCvAppliedJob(any(Pageable.class), eq(1L), eq(false))).thenReturn(appliedJobs);
         final Page<AppliedJob> result = appliedJobServiceImplUnderTest.getCvAppliedJob(PageRequest.of(1, 10), 1L, false);
     }
@@ -84,7 +84,7 @@ public class AppliedJobServiceImplTest {
     @Test
     public void testSearchAppliedJobsOfCandidate() {
         final Page<AppliedJob> appliedJobs = new PageImpl<>(
-                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl")));
+                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false)));
         when(mockAppliedJobRepository.searchAppliedJobsOfCandidate(any(Pageable.class), eq(1L),
                 eq("approvalStatus"))).thenReturn(appliedJobs);
         final Page<AppliedJob> result = appliedJobServiceImplUnderTest.searchAppliedJobsOfCandidate(
