@@ -40,4 +40,7 @@ public class AppliedJob extends BaseEntity {
 
     @Column(name = "cv_upload_url")
     private String cvUploadUrl;
+
+    @Column(name = "is_seen_uploaded_cv")
+    private boolean isSeenUploadedCV;
 }

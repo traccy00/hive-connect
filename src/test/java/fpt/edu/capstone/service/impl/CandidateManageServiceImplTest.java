@@ -273,7 +273,7 @@ class CandidateManageServiceImplTest {
     public void testSearchAppliedJobsOfCandidate_ImageServiceReturnsAbsent() {
         when(candidateService.existsById(1L)).thenReturn(false);
         final Page<AppliedJob> appliedJobs = new PageImpl<>(
-                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl")));
+                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false)));
         when(appliedJobService.searchAppliedJobsOfCandidate(any(Pageable.class), eq(1L),
                 eq("approvalStatus"))).thenReturn(appliedJobs);
 

@@ -1882,7 +1882,7 @@ public class RecruiterManageServiceImplTest {
         when(mockJobService.findById(1L)).thenReturn(job);
 
         final Page<AppliedJob> appliedJobs = new PageImpl<>(
-                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl")));
+                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false)));
         when(mockAppliedJobService.getCvAppliedJob(any(Pageable.class), eq(1L), eq(true))).thenReturn(appliedJobs);
 
         final Candidate candidate = candidate();
@@ -1932,7 +1932,7 @@ public class RecruiterManageServiceImplTest {
         final Optional<Job> job = Optional.of(job());
         when(mockJobService.findById(1L)).thenReturn(job);
         final Page<AppliedJob> appliedJobs = new PageImpl<>(
-                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl")));
+                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false)));
         when(mockAppliedJobService.getCvAppliedJob(any(Pageable.class), eq(1L), eq(true))).thenReturn(appliedJobs);
         final Candidate candidate = candidate();
         when(mockCandidateService.getCandidateById(1L)).thenReturn(candidate);
@@ -1950,7 +1950,7 @@ public class RecruiterManageServiceImplTest {
         final Optional<Job> job = Optional.of(job());
         when(mockJobService.findById(1L)).thenReturn(job);
         final Page<AppliedJob> appliedJobs = new PageImpl<>(
-                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl")));
+                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false)));
         when(mockAppliedJobService.getCvAppliedJob(any(Pageable.class), eq(1L), eq(true))).thenReturn(appliedJobs);
         final Candidate candidate = candidate();
         when(mockCandidateService.getCandidateById(1L)).thenReturn(candidate);
@@ -1970,7 +1970,7 @@ public class RecruiterManageServiceImplTest {
         when(mockJobService.findById(1L)).thenReturn(job);
 
         final Page<AppliedJob> appliedJobs = new PageImpl<>(
-                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl")));
+                Arrays.asList(new AppliedJob(1L, 1L, 1L, false, "approvalStatus", false, "cvUploadUrl", false)));
         when(mockAppliedJobService.getCvAppliedJob(any(Pageable.class), eq(1L), eq(true))).thenReturn(appliedJobs);
         final Candidate candidate =candidate();
         when(mockCandidateService.getCandidateById(1L)).thenReturn(candidate);

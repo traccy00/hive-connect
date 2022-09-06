@@ -775,7 +775,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                 responseObj.setAvatar(candidate.getAvatarUrl());
                 if (appliedJob.isUploadCv()) {
                     //upload CV
-                    responseObj.setCvUrl(appliedJob.getCvUploadUrl());
+                    responseObj.setCvUrl("************");
                 }
                 CV cv = cvRepository.getByCandidateId(appliedJob.getCandidateId());
                 if (cv == null) {
