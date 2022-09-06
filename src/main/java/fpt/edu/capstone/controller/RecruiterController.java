@@ -8,10 +8,7 @@ import fpt.edu.capstone.dto.recruiter.RecruiterProfileResponse;
 import fpt.edu.capstone.dto.recruiter.RecruiterUpdateProfileRequest;
 import fpt.edu.capstone.dto.recruiter.SentRequestJoinCompanyResponse;
 import fpt.edu.capstone.dto.recruiter.UploadBusinessLicenseRequest;
-import fpt.edu.capstone.entity.Company;
-import fpt.edu.capstone.entity.Notification;
-import fpt.edu.capstone.entity.Recruiter;
-import fpt.edu.capstone.entity.RequestJoinCompany;
+import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,6 +38,8 @@ public class RecruiterController {
     private final CompanyService companyService;
 
     private final NotificationService notificationService;
+
+    private final ProfileViewerService profileViewerService;
 
     @GetMapping("/recruiter-profile/{userId}")
     public ResponseData getRecruiterProfile(@PathVariable("userId") long userId) {
@@ -139,32 +138,6 @@ public class RecruiterController {
         }
     }
 
-    //fetch request by creator_id Check xem thang nay co phair creator cua thang nao khong => fetch
-//    @GetMapping("/get-receive-request")
-//    @Operation(summary = "recruiter - người tạo company đang có những request nào")
-//    public ResponseData getReceiveRequest(@RequestParam(defaultValue = "0") Integer pageNo,
-//                                          @RequestParam(defaultValue = "10") Integer pageSize,
-//                                          @RequestParam long approverId) {
-//        try {
-//            ResponseDataPagination requestJoinCompanyOp = requestJoinCompanyService.getReceiveRequest(pageNo, pageSize, approverId);
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.NO_REQUEST_JOIN_COMPANY_RECEIVED, requestJoinCompanyOp);
-//        } catch (Exception ex) {
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
-//        }
-//    }
-//    @GetMapping("/get-receive-request")
-//    @Operation(summary = "recruiter - người tạo company đang có những request nào")
-//    public ResponseData getReceiveRequest(@RequestParam long approverId) {
-//        try {
-//            Optional<List<RequestJoinCompany>> requestJoinCompanyOp = requestJoinCompanyService.getReceiveRequest(approverId);
-//            if (requestJoinCompanyOp.isPresent()) {
-//                return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, requestJoinCompanyOp.get());
-//            }
-//            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.NO_REQUEST_JOIN_COMPANY_RECEIVED, null);
-//        } catch (Exception ex) {
-//            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
-//        }
-//    }
 
     @PutMapping("/approve-join-company-request")
     @Operation(summary = "recruiter thực hiện approve/deny request company")
@@ -310,4 +283,18 @@ public class RecruiterController {
             return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
         }
     }
+    @GetMapping("/save-or-unsave-cv")
+    public ResponseData saveOrUnSaveCV(@RequestParam boolean isSave, @RequestParam long id, @RequestParam long recruiterId) {
+        try{
+            Optional<ProfileViewer> profileViewerOP = profileViewerService.getByCvIdAndViewerIdOptional(id, recruiterId);
+            if(!profileViewerOP.isPresent()) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ResponseMessageConstants.PROFILE_VIEWER_NOT_FOUND);
+            }
+            profileViewerService.updateIsSave(isSave, id,recruiterId);
+            return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, isSave);
+        }catch (Exception ex){
+            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), ex.getMessage());
+        }
+    }
+
 }

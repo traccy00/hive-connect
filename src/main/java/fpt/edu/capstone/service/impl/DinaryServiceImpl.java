@@ -53,7 +53,7 @@ public class DinaryServiceImpl {
             File uploadedFile = convertMultiPartToFile(gif);
             Map uploadResult = cloudinaryConfig.uploader().upload(uploadedFile, ObjectUtils.emptyMap());
             boolean isDeleted = uploadedFile.delete();
-            return  uploadResult.get("url").toString();
+            return  uploadResult.get("url").toString().replace(".pdf", ".jpg");
         }catch (Exception ex) {
             throw new RuntimeException(ex);
         }
