@@ -371,7 +371,7 @@ public class CandidateJobServiceImplTest {
     @Test
     public void testGetPopularJob() {
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getPopularJobList(any(Pageable.class))).thenReturn(jobs);
+        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
         final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
         when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
         final Company company = company();
@@ -383,7 +383,7 @@ public class CandidateJobServiceImplTest {
 
     @Test
     public void testGetPopularJob_JobServiceReturnsNoItems() {
-        when(mockJobService.getPopularJobList(any(Pageable.class))).thenReturn(new PageImpl<>(Collections.emptyList()));
+        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(new PageImpl<>(Collections.emptyList()));
         final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
         when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
         final Company company = company();
@@ -396,7 +396,7 @@ public class CandidateJobServiceImplTest {
     @Test
     public void testGetPopularJob_JobHashTagServiceReturnsNull() {
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getPopularJobList(any(Pageable.class))).thenReturn(jobs);
+        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
 
         when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(null);
         final Company company = company();
@@ -409,7 +409,7 @@ public class CandidateJobServiceImplTest {
     @Test
     public void testGetPopularJob_JobHashTagServiceReturnsNoItems() {
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getPopularJobList(any(Pageable.class))).thenReturn(jobs);
+        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
 
         when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(Collections.emptyList());
         final Company company = company();
@@ -422,7 +422,7 @@ public class CandidateJobServiceImplTest {
     @Test
     public void testGetPopularJob_CompanyServiceReturnsNull() {
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getPopularJobList(any(Pageable.class))).thenReturn(jobs);
+        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
         final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
         when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
         when(mockCompanyService.getCompanyById(1L)).thenReturn(null);
@@ -434,7 +434,7 @@ public class CandidateJobServiceImplTest {
     @Test
     public void testGetPopularJob_ImageServiceReturnsNull() {
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getPopularJobList(any(Pageable.class))).thenReturn(jobs);
+        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
         final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
         when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
         final Company company = company();

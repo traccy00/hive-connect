@@ -177,9 +177,9 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Page<Job> getPopularJobList(Pageable pageable) {
+    public Page<Job> getPopularJobList(Pageable pageable, List<Long> popularJobId) {
         String flag = Enums.Flag.Posted.getStatus();
-        return jobRepository.getPopularJob(pageable, true, 0, flag);
+        return jobRepository.getPopularJob(pageable, true, 0, flag, popularJobId);
     }
 
     @Override
@@ -236,7 +236,7 @@ public class JobServiceImpl implements JobService {
         Page<Job> fullTimeList = jobRepository.getListJobByWorkForm(pageable, "FULLTIME", flag);
         Page<Job> partTimeList = jobRepository.getListJobByWorkForm(pageable, "PARTTIME", flag);
         Page<Job> remoteList = jobRepository.getListJobByWorkForm(pageable, "REMOTE", flag);
-        Page<Job> popularList = jobRepository.getPopularJob(pageable, true, 0, flag);
+        Page<Job> popularList = jobRepository.getPopularJob(pageable, true, 0, flag,null);
         Page<Job> newestList = jobRepository.getNewestJob(pageable, true, 0, flag);
         Page<Job> urgentList = jobRepository.getUrgentJob(pageable, true, 0, flag);
         Page<Job> jobByFields = jobRepository.getListJobByFieldId(pageable, 1, flag);
@@ -266,6 +266,12 @@ public class JobServiceImpl implements JobService {
         job.setFlag(Enums.Flag.Draft.getStatus());
         jobRepository.saveAndFlush(job);
 
+    }
+
+    @Override
+    public List<Long> getListPopularJobId() {
+        //Lấy ra những job phổ biến với điều kiện có từ 2 lượt apply
+        return jobRepository.getListPopularJobId(2);
     }
 
     public List<JobHomePageResponse> displayJobInHomePage(Page<Job> jobs) {

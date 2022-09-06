@@ -170,4 +170,8 @@ public interface ResponseMessageConstants {
     String UPLOAD_FILE_SUCCESS = "Tải lên tệp thành công";
     String UPLOAD_FILE_FAILED = "Tải lên tệp thất bại";
     String GENDER_MALE = "Nam";
+
+
+    //CONFIG NEW JOB
+    String NEW_JOB_DAYS = "21 days";
 }

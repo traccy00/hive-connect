@@ -663,15 +663,15 @@ class JobServiceImplTest {
 	@Test
 	public void testGetPopularJobList() {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs);
-		final Page<Job> result = jobService.getPopularJobList(PageRequest.of(1, 10));
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs);
+		final Page<Job> result = jobService.getPopularJobList(PageRequest.of(1, 10),null);
 	}
 
 	@Test
 	public void testGetPopularJobList_JobRepositoryReturnsNoItems() {
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag")))
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null))
 				.thenReturn(new PageImpl<>(Collections.emptyList()));
-		final Page<Job> result = jobService.getPopularJobList(PageRequest.of(1, 10));
+		final Page<Job> result = jobService.getPopularJobList(PageRequest.of(1, 10),null);
 	}
 
 	@Test
@@ -830,7 +830,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
 		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs1);
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs1);
 		final Page<Job> jobs2 = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs2);
 		final Page<Job> jobs3 = new PageImpl<>(Arrays.asList(job()));
@@ -871,7 +871,7 @@ class JobServiceImplTest {
 		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag")))
 				.thenReturn(new PageImpl<>(Collections.emptyList()));
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs);
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs);
 		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs1);
 		final Page<Job> jobs2 = new PageImpl<>(Arrays.asList(job()));
@@ -912,7 +912,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
 
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag")))
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null))
 				.thenReturn(new PageImpl<>(Collections.emptyList()));
 		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs1);
@@ -954,7 +954,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
 		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs1);
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs1);
 
 		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag")))
 				.thenReturn(new PageImpl<>(Collections.emptyList()));
@@ -996,7 +996,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
 		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs1);
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs1);
 		final Page<Job> jobs2 = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs2);
 
@@ -1038,7 +1038,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
 		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs1);
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs1);
 		final Page<Job> jobs2 = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs2);
 		final Page<Job> jobs3 = new PageImpl<>(Arrays.asList(job()));
@@ -1080,7 +1080,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
 		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs1);
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs1);
 		final Page<Job> jobs2 = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs2);
 		final Page<Job> jobs3 = new PageImpl<>(Arrays.asList(job()));
@@ -1121,7 +1121,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
 		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs1);
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs1);
 		final Page<Job> jobs2 = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs2);
 		final Page<Job> jobs3 = new PageImpl<>(Arrays.asList(job()));
@@ -1163,7 +1163,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
 		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs1);
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs1);
 		final Page<Job> jobs2 = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs2);
 		final Page<Job> jobs3 = new PageImpl<>(Arrays.asList(job()));
@@ -1189,7 +1189,7 @@ class JobServiceImplTest {
 		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
 		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs1);
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs1);
 		final Page<Job> jobs2 = new PageImpl<>(Arrays.asList(job()));
 		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs2);
 		final Page<Job> jobs3 = new PageImpl<>(Arrays.asList(job()));

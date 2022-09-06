@@ -11,6 +11,7 @@ import fpt.edu.capstone.utils.ResponseDataPaginationRevenue;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface PaymentService {
     PaymentResponseDTO getPaymentVNPay(PaymentDTO paymentDTO) throws UnsupportedEncodingException;
@@ -42,5 +43,5 @@ public interface PaymentService {
 
     List<Payment> getPaymentNormalPackageInUse(long id);
 
-    Payment findByJobId(long jobId);
+    Optional<Payment> findByJobId(long jobId);
 }

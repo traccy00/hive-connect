@@ -36,7 +36,7 @@ public interface JobService {
 
     Page<Job> getUrgentJobList(Pageable pageable);
 
-    Page<Job> getPopularJobList(Pageable pageable);
+    Page<Job> getPopularJobList(Pageable pageable, List<Long> popularJobId);
 
     Job getJobById(long jobId);
 
@@ -57,4 +57,6 @@ public interface JobService {
     int countJobInSystem();
 
     void draftJob(long jobId);
+
+    List <Long> getListPopularJobId();
 }
