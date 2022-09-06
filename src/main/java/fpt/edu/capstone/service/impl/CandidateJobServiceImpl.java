@@ -64,10 +64,12 @@ public class CandidateJobServiceImpl implements CandidateJobService {
             for (Job job : jobs) {
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                     JobResponse jobResponse = new JobResponse();
-//                    Optional<Payment> payment = paymentService.findByJobId(job.getId());
-//                    if (payment.get().getJobId() != 0) {
-//                        jobResponse.setPayment(true);
-//                    }
+                    Optional<Payment> payment = paymentService.findByJobId(job.getId());
+                    if (payment == null || payment.isEmpty()) {
+                        jobResponse.setPayment(false);
+                    } else {
+                        jobResponse.setPayment(true);
+                    }
                     jobResponse.setJobId(job.getId());
                     jobResponse.setCompanyId(job.getCompanyId());
                     jobResponse.setRecruiterId(job.getRecruiterId());
@@ -129,7 +131,9 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                     JobResponse jobResponse = new JobResponse();
                     Optional<Payment> payment = paymentService.findByJobId(job.getId());
-                    if (payment.get().getJobId() != 0) {
+                    if (payment == null || payment.isEmpty()) {
+                        jobResponse.setPayment(false);
+                    } else {
                         jobResponse.setPayment(true);
                     }
                     jobResponse.setJobId(job.getId());
@@ -236,10 +240,13 @@ public class CandidateJobServiceImpl implements CandidateJobService {
                 JobResponse jobResponse = new JobResponse();
                 if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                     Optional<Payment> payment = paymentService.findByJobId(job.getId());
-//                    if(payment.get().getJobId() != 0){
-//                        jobResponse.setPayment(true);
-//                    }
+                    if (payment == null || payment.isEmpty()) {
+                        jobResponse.setPayment(false);
+                    } else {
+                        jobResponse.setPayment(true);
+                    }
                     jobResponse.setJobId(job.getId());
+
                     jobResponse.setCompanyId(job.getCompanyId());
                     jobResponse.setRecruiterId(job.getRecruiterId());
                     List<JobHashtag> listJobHashTag = jobHashTagService.getHashTagOfJob(job.getId());
