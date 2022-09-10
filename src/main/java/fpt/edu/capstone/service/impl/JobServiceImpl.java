@@ -274,6 +274,11 @@ public class JobServiceImpl implements JobService {
         return jobRepository.getListPopularJobId(2);
     }
 
+    @Override
+    public List<Job> findAll() {
+        return jobRepository.findAll();
+    }
+
     public List<JobHomePageResponse> displayJobInHomePage(Page<Job> jobs) {
         List<JobHomePageResponse> responseList = new ArrayList<>();
         if (jobs.hasContent()) {

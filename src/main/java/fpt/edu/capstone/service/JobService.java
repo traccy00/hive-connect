@@ -59,4 +59,6 @@ public interface JobService {
     void draftJob(long jobId);
 
     List <Long> getListPopularJobId();
+
+    List <Job> findAll();
 }

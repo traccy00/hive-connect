@@ -59,4 +59,17 @@ public class JobScheduler {
         }
         logger.info("-------------->END-CHECK_PAYMENT_EXPIRE:" + new Date());
     }
+
+    @Scheduled(fixedDelay = 86400000)
+    public void checkJobExpired() {
+        logger.info("-------------->START-CHECK_JOB_EXPIRE:" + new Date());
+        List<Job> jobList = jobService.findAll();
+        for (Job job : jobList) {
+            if (LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
+                job.setIsDeleted(1);
+            }
+            jobService.saveJob(job);
+        }
+        logger.info("-------------->END-CHECK_JOB_EXPIRE:" + new Date());
+    }
 }
