@@ -5,6 +5,9 @@ import fpt.edu.capstone.entity.Role;
 import fpt.edu.capstone.entity.Users;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.UserRepository;
+import fpt.edu.capstone.service.AppliedJobService;
+import fpt.edu.capstone.service.CVService;
+import fpt.edu.capstone.service.JobService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -31,6 +34,15 @@ public class UserServiceImplTest {
 
     @Mock
     RoleServiceImpl roleService;
+
+    @Mock
+    private AppliedJobService mockAppliedJobService;
+
+    @Mock
+    private JobService mockJobService;
+
+    @Mock
+    private CVService mockCvService;
 
     @Mock
     PasswordEncoder passwordEncoder;
@@ -653,5 +665,20 @@ public class UserServiceImplTest {
         when(userRepository.findUsersByUsernameOrEmail("username")).thenReturn(Optional.empty());
         final Optional<Users> result = userService.findUsersByUsernameOrEmail("username");
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void testCountTotalRecruitmentStatistic() {
+        // Setup
+        final HashMap<String, Integer> expectedResult = new HashMap<>();
+        when(mockAppliedJobService.countAppliedCVInSystem()).thenReturn(0);
+        when(mockJobService.countJobInSystem()).thenReturn(0);
+        when(mockCvService.countCVInSystem()).thenReturn(0);
+
+        // Run the test
+        final HashMap<String, Integer> result = userService.countTotalRecruitmentStatistic();
+
+        // Verify the results
+        assertThat(result).isEqualTo(expectedResult);
     }
 }

@@ -12,11 +12,11 @@ import fpt.edu.capstone.repository.ReportedRepository;
 import fpt.edu.capstone.service.JobService;
 import fpt.edu.capstone.service.RecruiterService;
 import fpt.edu.capstone.service.UserService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,8 +34,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ReportedServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class ReportedServiceImplTest {
 
     @Mock
     private ReportedRepository mockReportedRepository;
@@ -50,8 +50,8 @@ public class ReportedServiceImplTest {
 
     private ReportedServiceImpl reportedServiceImplUnderTest;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() throws Exception {
         reportedServiceImplUnderTest = new ReportedServiceImpl(mockReportedRepository, mockUserService, mockJobService,
                 mockModelMapper, mockRecruiterService);
     }
@@ -154,90 +154,141 @@ public class ReportedServiceImplTest {
     }
 
     @Test
-    public void testSearchReportedUsers() {
+    void testSearchReportedUsers() {
         when(mockReportedRepository.searchReportedUsers(any(Pageable.class), eq("username"), eq("personReportName"),
                 eq(Arrays.asList(1L)), eq(Arrays.asList(1L)))).thenReturn(new PageImpl<>(Arrays.asList()));
-        final Page<ReportedUserResponse> result = reportedServiceImplUnderTest.searchReportedUsers(PageRequest.of(1, 10),
+        final Page<ReportedUserResponse> result = reportedServiceImplUnderTest.searchReportedUsers(PageRequest.of(0, 1),
                 "username", "personReportName", Arrays.asList(1L), Arrays.asList(1L));
     }
 
     @Test
-    public void testSearchReportedUsers_ReportedRepositoryReturnsNoItems() {
+    void testSearchReportedUsers_ReportedRepositoryReturnsNoItems() {
         when(mockReportedRepository.searchReportedUsers(any(Pageable.class), eq("username"), eq("personReportName"),
                 eq(Arrays.asList(1L)), eq(Arrays.asList(1L)))).thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<ReportedUserResponse> result = reportedServiceImplUnderTest.searchReportedUsers(PageRequest.of(1, 10),
+        final Page<ReportedUserResponse> result = reportedServiceImplUnderTest.searchReportedUsers(PageRequest.of(0, 1),
                 "username", "personReportName", Arrays.asList(1L), Arrays.asList(1L));
     }
 
     @Test
-    public void testSearchReportedJob() {
-        when(mockReportedRepository.searchReportedJob(any(Pageable.class),null,null,null,null, eq("jobName")))
-                .thenReturn(new PageImpl<>(Arrays.asList()));
-        final Page<ReportedJobResponse> result = reportedServiceImplUnderTest.searchReportedJob(PageRequest.of(1, 10),
-                LocalDateTime.now(), LocalDateTime.now().plusDays(3),
-                LocalDateTime.now(), LocalDateTime.now().plusDays(3), "jobName");
+    void testSearchReportedJob() {
+        when(mockReportedRepository.searchReportedJob(any(Pageable.class), eq(localDateTime),
+                eq(localDateTime), eq(localDateTime),
+                eq(localDateTime), eq("jobName"))).thenReturn(new PageImpl<>(Arrays.asList()));
+        final Page<ReportedJobResponse> result = reportedServiceImplUnderTest.searchReportedJob(PageRequest.of(0, 1),
+                localDateTime, localDateTime,
+                localDateTime, localDateTime, "jobName");
     }
 
+    LocalDateTime localDateTime = LocalDateTime.of(2020, 1, 1, 0, 0, 0);
     @Test
-    public void testSearchReportedJob_ReportedRepositoryReturnsNoItems() {
-        when(mockReportedRepository.searchReportedJob(any(Pageable.class), null,null,null,null,eq("jobName")))
+    void testSearchReportedJob_ReportedRepositoryReturnsNoItems() {
+        when(mockReportedRepository.searchReportedJob(any(Pageable.class), eq(localDateTime),
+                eq(localDateTime), eq(localDateTime),
+                eq(localDateTime), eq("jobName")))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<ReportedJobResponse> result = reportedServiceImplUnderTest.searchReportedJob(PageRequest.of(1, 10),
-                LocalDateTime.now(), LocalDateTime.now().plusDays(3),
-                LocalDateTime.now(), LocalDateTime.now().plusDays(3), "jobName");
+
+        final Page<ReportedJobResponse> result = reportedServiceImplUnderTest.searchReportedJob(PageRequest.of(0, 1),
+                localDateTime, localDateTime,
+                localDateTime, localDateTime, "jobName");
     }
 
     @Test
-    public void testReportJob() {
-        final ReportJobRequest request = request();
-        final Users users =users();
+    void testReportJob() {
+        final ReportJobRequest request = new ReportJobRequest();
+        request.setJobId(1L);
+        request.setReportReason("reportReason");
+        request.setRelatedLink("relatedLink");
+        request.setFullName("fullName");
+        request.setPhone("phone");
+        request.setUserAddress("userAddress");
+        request.setUserEmail("userEmail");
+
+        final Users users = users();
         when(mockUserService.getUserById(1L)).thenReturn(users);
+
         final Job job = job();
         when(mockJobService.getJobById(1L)).thenReturn(job);
+
         final Report report = report();
         when(mockModelMapper.map(any(Object.class), eq(Report.class))).thenReturn(report);
+
         final Recruiter recruiter = recruiter();
         when(mockRecruiterService.getRecruiterById(1L)).thenReturn(recruiter);
+
         final Report report1 = report();
         when(mockReportedRepository.save(any(Report.class))).thenReturn(report1);
-        final Optional<Report> report2 = Optional.of(report());
+
+        final Optional<Report> report2 = Optional.of(report);
         when(mockReportedRepository.findById(1L)).thenReturn(report2);
         final Report result = reportedServiceImplUnderTest.reportJob(request, 1L);
         verify(mockReportedRepository).save(any(Report.class));
     }
 
     @Test
-    public void testReportJob_UserServiceReturnsNull() {
-        final ReportJobRequest request = request();
+    void testReportJob_UserServiceReturnsNull() {
+        final ReportJobRequest request = new ReportJobRequest();
+        request.setJobId(1L);
+        request.setReportReason("reportReason");
+        request.setRelatedLink("relatedLink");
+        request.setFullName("fullName");
+        request.setPhone("phone");
+        request.setUserAddress("userAddress");
+        request.setUserEmail("userEmail");
+
         when(mockUserService.getUserById(1L)).thenReturn(null);
+
         assertThatThrownBy(() -> reportedServiceImplUnderTest.reportJob(request, 1L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
     @Test
-    public void testReportJob_JobServiceReturnsNull() {
-        final ReportJobRequest request = request();
+    void testReportJob_JobServiceReturnsNull() {
+        final ReportJobRequest request = new ReportJobRequest();
+        request.setJobId(1L);
+        request.setReportReason("reportReason");
+        request.setRelatedLink("relatedLink");
+        request.setFullName("fullName");
+        request.setPhone("phone");
+        request.setUserAddress("userAddress");
+        request.setUserEmail("userEmail");
+
         final Users users = users();
         when(mockUserService.getUserById(1L)).thenReturn(users);
+
         when(mockJobService.getJobById(1L)).thenReturn(null);
+
         assertThatThrownBy(() -> reportedServiceImplUnderTest.reportJob(request, 1L))
                 .isInstanceOf(HiveConnectException.class);
     }
 
     @Test
-    public void testReportJob_ReportedRepositoryFindByIdReturnsAbsent() {
-        final ReportJobRequest request = request();
+    void testReportJob_ReportedRepositoryFindByIdReturnsAbsent() {
+        final ReportJobRequest request = new ReportJobRequest();
+        request.setJobId(1L);
+        request.setReportReason("reportReason");
+        request.setRelatedLink("relatedLink");
+        request.setFullName("fullName");
+        request.setPhone("phone");
+        request.setUserAddress("userAddress");
+        request.setUserEmail("userEmail");
+
         final Users users = users();
         when(mockUserService.getUserById(1L)).thenReturn(users);
+
         final Job job = job();
         when(mockJobService.getJobById(1L)).thenReturn(job);
+
         final Report report = report();
         when(mockModelMapper.map(any(Object.class), eq(Report.class))).thenReturn(report);
+
         final Recruiter recruiter = recruiter();
         when(mockRecruiterService.getRecruiterById(1L)).thenReturn(recruiter);
+
         final Report report1 = report();
         when(mockReportedRepository.save(any(Report.class))).thenReturn(report1);
+
         when(mockReportedRepository.findById(1L)).thenReturn(Optional.empty());
+        
         assertThatThrownBy(() -> reportedServiceImplUnderTest.reportJob(request, 1L))
                 .isInstanceOf(HiveConnectException.class);
         verify(mockReportedRepository).save(any(Report.class));
