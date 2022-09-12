@@ -680,4 +680,14 @@ public class RecruiterServiceImplTest {
         final Integer result = recruiterServiceImplUnderTest.getTotalViewCV(1L);
         assertThat(result).isEqualTo(0);
     }
+
+    @Test
+    public void testRemoveRecruiterFromCompany() {
+        final Recruiter recruiter = recruiter();
+        when(mockRecruiterRepository.getById(0L)).thenReturn(recruiter);
+        final Recruiter recruiter1 = recruiter();
+        when(mockRecruiterRepository.saveAndFlush(any(Recruiter.class))).thenReturn(recruiter1);
+        recruiterServiceImplUnderTest.removeRecruiterFromCompany(0L);
+        verify(mockRecruiterRepository).saveAndFlush(any(Recruiter.class));
+    }
 }

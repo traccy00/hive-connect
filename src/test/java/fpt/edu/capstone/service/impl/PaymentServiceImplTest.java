@@ -10,6 +10,7 @@ import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.PaymentRepository;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.Pagination;
+import fpt.edu.capstone.utils.ResponseDataPagination;
 import fpt.edu.capstone.utils.ResponseDataPaginationRevenue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -939,7 +940,36 @@ class PaymentServiceImplTest {
 
 		assertEquals(0,responseDataPagination.getTotalRevenue());
 	}
+	
+	@Test
+	public void testGetListPaymentFilter() {
+		final Page<Payment> payments = new PageImpl<>(Arrays.asList(payment()));
+		when(paymentRepository.getListPaymentFilter(any(Pageable.class), eq(1L), eq(1L), eq(1L),
+				eq("transactionCode"), eq("orderType"))).thenReturn(payments);
+		
+		final ResponseDataPagination result = paymentService.getListPaymentFilter(1, 10, 1L, 1L, 1L,
+				"transactionCode", "orderType");
+	}
 
-	//PayController line 141
+	@Test
+	public void testGetPaymentBannerInUse() {
+		final List<Payment> paymentList = Arrays.asList(payment());
+		when(paymentRepository.findByBannerIdAndExpiredStatusIsFalse(1L)).thenReturn(paymentList);
+		final List<Payment> result = paymentService.getPaymentBannerInUse(1L);
+	}
+
+	@Test
+	public void testGetPaymentNormalPackageInUse() {
+		final List<Payment> paymentList = Arrays.asList(payment());
+		when(paymentRepository.findByDetailPackageIdAndExpiredStatusIsFalse(1L)).thenReturn(paymentList);
+		final List<Payment> result = paymentService.getPaymentNormalPackageInUse(1L);
+	}
+
+	@Test
+	void testFindByJobId() {
+		final Optional<Payment> payment = Optional.of(payment());
+		when(paymentRepository.findByJobId(1L)).thenReturn(payment);
+		final Optional<Payment> result = paymentService.findByJobId(1L);
+	}
 
 }

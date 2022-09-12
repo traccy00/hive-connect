@@ -115,4 +115,13 @@ public class CompanyServiceImplTest {
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<Company> result = companyServiceImplUnderTest.searchCompany(PageRequest.of(1, 10), "companyName");
     }
+
+    @Test
+    public void testGetAdditionCompanies() {
+        final Company company = company();
+        final List<Company> companies = Arrays.asList(company);
+        when(mockCompanyRepository.getAdditionCompanies(0, Arrays.asList(0L))).thenReturn(companies);
+        final List<Company> result = companyServiceImplUnderTest.getAdditionCompanies(0, Arrays.asList(0L));
+    }
+
 }

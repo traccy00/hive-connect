@@ -1,5 +1,6 @@
 package fpt.edu.capstone.service.impl;
 
+import fpt.edu.capstone.entity.Payment;
 import fpt.edu.capstone.entity.ProfileViewer;
 import fpt.edu.capstone.repository.ProfileViewerRepository;
 import org.junit.Before;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -95,5 +98,11 @@ public class ProfileViewerServiceImplTest {
         when(mockProfileViewerRepository.getByCvIdAndViewerIdOptional(1L, 1L)).thenReturn(Optional.empty());
         final Optional<ProfileViewer> result = profileViewerServiceImplUnderTest.getByCvIdAndViewerIdOptional(1L, 1L);
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    public void testUpdateIsSave() {
+        profileViewerServiceImplUnderTest.updateIsSave(false, 1L, 1L);
+        verify(mockProfileViewerRepository).updateIsSave(false, 1L, 1L);
     }
 }

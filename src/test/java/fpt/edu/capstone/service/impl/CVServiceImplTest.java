@@ -121,4 +121,11 @@ public class CVServiceImplTest {
         when(cvServiceImplUnderTest.cvRepository.getByCandidateId(1L)).thenReturn(cv);
         final CV result = cvServiceImplUnderTest.getCVByCandidateId(1L);
     }
+
+    @Test
+    public void testCountCVInSystem(){
+        int i  = 0;
+        when(cvServiceImplUnderTest.cvRepository.countCV()).thenReturn(i);
+        i = cvServiceImplUnderTest.countCVInSystem();
+    }
 }

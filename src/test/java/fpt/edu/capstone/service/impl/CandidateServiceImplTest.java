@@ -225,4 +225,12 @@ public class CandidateServiceImplTest {
                 .isInstanceOf(HiveConnectException.class);
         verify(candidateServiceImplUnderTest.candidateRepository).save(any(Candidate.class));
     }
+
+    @Test
+    public void testInsertCandidateForRegister() {
+        final Candidate candidate = candidate();
+        when(candidateServiceImplUnderTest.candidateRepository.save(any(Candidate.class))).thenReturn(candidate);
+        candidateServiceImplUnderTest.insertCandidateForRegister(1L, "fullName");
+        verify(candidateServiceImplUnderTest.candidateRepository).save(any(Candidate.class));
+    }
 }

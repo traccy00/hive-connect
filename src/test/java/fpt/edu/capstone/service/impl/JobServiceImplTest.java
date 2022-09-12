@@ -6,6 +6,7 @@ import fpt.edu.capstone.dto.recruiter.CountTotalCreatedJobResponse;
 import fpt.edu.capstone.entity.*;
 import fpt.edu.capstone.exception.HiveConnectException;
 import fpt.edu.capstone.repository.JobRepository;
+import fpt.edu.capstone.service.AppliedJobService;
 import fpt.edu.capstone.utils.Pagination;
 import fpt.edu.capstone.utils.ResponseDataPagination;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,6 +69,9 @@ class JobServiceImplTest {
 
 	@Mock
 	ModelMapper modelMapper;
+
+	@Mock
+	private AppliedJobService mockAppliedJobService;
 
 	@BeforeEach
 	public void init(){
@@ -661,24 +665,10 @@ class JobServiceImplTest {
 	}
 
 	@Test
-	public void testGetPopularJobList() {
-		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs);
-		final Page<Job> result = jobService.getPopularJobList(PageRequest.of(1, 10),null);
-	}
-
-	@Test
 	public void testGetPopularJobList_JobRepositoryReturnsNoItems() {
 		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null))
 				.thenReturn(new PageImpl<>(Collections.emptyList()));
 		final Page<Job> result = jobService.getPopularJobList(PageRequest.of(1, 10),null);
-	}
-
-	@Test
-	public void testGetJobOfRecruiter() {
-		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getAllByRecruiterIdAndJobNameOrderByUpdatedAtDesc(any(Pageable.class), eq(1L), "")).thenReturn(jobs);
-		final Page<Job> result = jobService.getJobOfRecruiter(PageRequest.of(1, 10), 1L, "");
 	}
 
 	@Test
@@ -823,47 +813,6 @@ class JobServiceImplTest {
 		when(imageService.getImageCompany(1L, true)).thenReturn(image);
 		when(companyService.getCompanyById(1L)).thenReturn(null);
 		final List<JobResponse> result = jobService.getSameJobsOtherCompanies(1L);
-	}
-
-	@Test
-	public void testGetDataHomePage() {
-		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
-		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),null)).thenReturn(jobs1);
-		final Page<Job> jobs2 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs2);
-		final Page<Job> jobs3 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getUrgentJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs3);
-		final Page<Job> jobs4 = new PageImpl<>(Arrays.asList(job()));
-		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs4);
-		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse(1L, 1L, "jobName", "workPlace",
-				"workForm", LocalDateTime.of(2021, 10, 1, 0, 0, 0), LocalDateTime.of(2021, 10, 1, 0, 0, 0), 1L, 1L, 1L,
-				"rank", "experience", false, "jobDescription", "jobRequirement", "benefit", 1L, 1L,
-				"weekday", 1L, "flag", "companyAvatar", Arrays.asList("value"), "companyName");
-		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
-		final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
-		when(jobHashTagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
-		final Company company = new Company();
-		company.setId(1L);
-		company.setFieldWork("fieldWork");
-		company.setName("companyName");
-		company.setEmail("email");
-		company.setPhone("phone");
-		company.setDescription("description");
-		company.setWebsite("website");
-		company.setNumberEmployees("numberEmployees");
-		company.setAddress("address");
-		company.setTaxCode("taxCode");
-		company.setIsDeleted(0);
-		company.setMapUrl("mapUrl");
-		company.setCreatorId(1L);
-		company.setLocked(false);
-		when(companyService.getCompanyById(1L)).thenReturn(company);
-		final Optional<Image> image = Optional.of(
-				new Image(1L, "name", "companyAvatar", 1L, 0, false, "contentType", "content".getBytes(), false));
-		when(imageService.getImageCompany(1L, true)).thenReturn(image);
-		final HomePageData result = jobService.getDataHomePage();
 	}
 
 	@Test
@@ -1631,5 +1580,101 @@ class JobServiceImplTest {
 	public void testCountTotalCreatedJobOfRecruiter() {
 		when(jobRepository.countTotalCreatedJobOfRecruiter(1L)).thenReturn(null);
 		final CountTotalCreatedJobResponse result = jobService.countTotalCreatedJobOfRecruiter(1L);
+	}
+
+	@Test
+	void testGetPopularJobList() {
+		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),
+				eq(Arrays.asList(0L)))).thenReturn(jobs);
+		final Page<Job> result = jobService.getPopularJobList(PageRequest.of(1, 10), Arrays.asList(0L));
+	}
+
+	@Test
+	void testGetJobOfRecruiter() {
+		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
+		when(jobRepository.getAllByRecruiterIdAndJobNameOrderByUpdatedAtDesc(any(Pageable.class), eq(0L),
+				eq("jobName"))).thenReturn(jobs);
+		final Page<Job> result = jobService.getJobOfRecruiter(PageRequest.of(1, 10), 0L, "jobName");
+	}
+
+	@Test
+	public void testCountJobInSystem() {
+		when(jobRepository.countJobInSystem("Posted")).thenReturn(0);
+		final int result = jobService.countJobInSystem();
+		assertThat(result).isEqualTo(0);
+	}
+
+	@Test
+	public void testDraftJob() {
+		final Job job = job();
+		when(jobRepository.getById(0L)).thenReturn(job);
+		when(mockAppliedJobService.countAppliedCVOfJob(0L)).thenReturn(0);
+		final Job job1 = job();
+		when(jobRepository.saveAndFlush(any(Job.class))).thenReturn(job1);
+		jobService.draftJob(0L);
+		verify(jobRepository).saveAndFlush(any(Job.class));
+	}
+
+	@Test
+	public void testGetListPopularJobId() {
+		when(jobRepository.getListPopularJobId(2L)).thenReturn(Arrays.asList(0L));
+		final List<Long> result = jobService.getListPopularJobId();
+		assertThat(result).isEqualTo(Arrays.asList(0L));
+	}
+
+	@Test
+	public void testFindAll() {
+		final List<Job> jobs = Arrays.asList(job());
+		when(jobRepository.findAll()).thenReturn(jobs);
+		final List<Job> result = jobService.findAll();
+	}
+
+	@Test
+	void testGetDataHomePage() {
+		final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
+		when(jobRepository.getListJobByWorkForm(any(Pageable.class), eq("FULLTIME"), eq("flag"))).thenReturn(jobs);
+
+		final Page<Job> jobs1 = new PageImpl<>(Arrays.asList(job()));
+		when(jobRepository.getPopularJob(any(Pageable.class), eq(true), eq(0), eq("flag"),
+				eq(Arrays.asList(0L)))).thenReturn(jobs1);
+
+		final Page<Job> jobs2 = new PageImpl<>(Arrays.asList(job()));
+		when(jobRepository.getNewestJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs2);
+
+		final Page<Job> jobs3 = new PageImpl<>(Arrays.asList(job()));
+		when(jobRepository.getUrgentJob(any(Pageable.class), eq(true), eq(0), eq("flag"))).thenReturn(jobs3);
+
+		final Page<Job> jobs4 = new PageImpl<>(Arrays.asList(job()));
+		when(jobRepository.getListJobByFieldId(any(Pageable.class), eq(1L), eq("flag"))).thenReturn(jobs4);
+
+		final JobHomePageResponse jobHomePageResponse = new JobHomePageResponse();
+		when(modelMapper.map(any(Object.class), eq(JobHomePageResponse.class))).thenReturn(jobHomePageResponse);
+
+		final List<JobHashtag> jobHashtags = Arrays.asList(new JobHashtag(0L, 0L, 0L, "hashTagName", "status"));
+		when(jobHashTagService.getHashTagOfJob(0L)).thenReturn(jobHashtags);
+
+		final Company company = new Company();
+		company.setCreatedAt(LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+		company.setId(0L);
+		company.setFieldWork("fieldWork");
+		company.setName("companyName");
+		company.setEmail("email");
+		company.setPhone("phone");
+		company.setDescription("description");
+		company.setWebsite("website");
+		company.setNumberEmployees("numberEmployees");
+		company.setAddress("address");
+		company.setTaxCode("taxCode");
+		company.setIsDeleted(0);
+		company.setMapUrl("mapUrl");
+		company.setCreatorId(0L);
+		company.setLocked(false);
+		when(companyService.getCompanyById(0L)).thenReturn(company);
+
+		final Optional<Image> image = Optional.of(image());
+		when(imageService.getImageCompany(0L, true)).thenReturn(image);
+
+		final HomePageData result = jobService.getDataHomePage();
 	}
 }
