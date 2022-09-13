@@ -368,18 +368,18 @@ public class CandidateJobServiceImplTest {
         final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "workForm");
     }
 
-    @Test
-    public void testGetPopularJob() {
-        final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
-        final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
-        when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
-        final Company company = company();
-        when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
-        final Optional<Image> image = Optional.ofNullable(imageEntity);
-        when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getPopularJob(1, 10);
-    }
+//    @Test
+//    public void testGetPopularJob() {
+//        final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
+//        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
+//        final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
+//        when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
+//        final Company company = company();
+//        when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
+//        final Optional<Image> image = Optional.ofNullable(imageEntity);
+//        when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
+//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getPopularJob(1, 10);
+//    }
 
     @Test
     public void testGetPopularJob_JobServiceReturnsNoItems() {
@@ -521,5 +521,27 @@ public class CandidateJobServiceImplTest {
         when(mockAppliedJobService.getAppliedJobBefore(1L, 1L)).thenReturn(appliedJob);
         when(mockFollowRepository.getFollowIfHave(1L, 1L, 1L)).thenReturn(Optional.empty());
         final JobDetailResponse result = candidateJobServiceImplUnderTest.getJobDetail(1L, 1L);
+    }
+
+    @Test
+    public void testGetPopularJob() {
+        when(mockJobService.getListPopularJobId()).thenReturn(Arrays.asList(1L));
+        
+        final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
+        when(mockJobService.getPopularJobList(any(Pageable.class), eq(Arrays.asList(1L)))).thenReturn(jobs);
+        
+        final Optional<Payment> payment = Optional.of(new Payment());
+        when(paymentService.findByJobId(1L)).thenReturn(payment);
+        
+        final List<JobHashtag> jobHashtags = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
+        when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(jobHashtags);
+        
+        final Company company = company();
+        when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
+        
+        final Optional<Image> image = Optional.of(imageEntity);
+        when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
+        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getPopularJob(0, 0);
+        
     }
 }

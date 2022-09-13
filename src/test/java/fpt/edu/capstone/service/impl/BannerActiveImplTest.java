@@ -23,6 +23,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -93,12 +94,12 @@ public class BannerActiveImplTest {
         final BannerActive result = bannerActiveImplUnderTest.findByPaymentIdAndPosition(1L, "position");
     }
 
-    @Test
-    public void testGetAllBannerForApproval() {
-        final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(bannerActive()));
-        when(mockBannerActiveRepository.getAllBannerForApproval(any(Pageable.class),null,null,null)).thenReturn(bannerActives);
-        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(1, 10),null,null,null);
-    }
+//    @Test
+//    public void testGetAllBannerForApproval() {
+//        final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(bannerActive()));
+//        when(mockBannerActiveRepository.getAllBannerForApproval(any(Pageable.class),null,null,null)).thenReturn(bannerActives);
+//        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(1, 10),null,null,null);
+//    }
 
     @Test
     public void testGetAllBannerForApproval_BannerActiveRepositoryReturnsNoItems() {
@@ -118,5 +119,17 @@ public class BannerActiveImplTest {
     public void testFindById_BannerActiveRepositoryReturnsAbsent() {
         when(mockBannerActiveRepository.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> bannerActiveImplUnderTest.findById(1L)).isInstanceOf(HiveConnectException.class);
+    }
+
+    @Test
+    public void testGetAllBannerForApproval() {
+        final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(bannerActive()));
+        when(mockBannerActiveRepository.getAllBannerForApproval(any(Pageable.class), eq("screenName"),
+                eq(LocalDateTime.of(2020, 1, 1, 0, 0, 0)), eq(LocalDateTime.of(2020, 1, 1, 0, 0, 0))))
+                .thenReturn(bannerActives);
+
+        final Page<BannerActive> result = bannerActiveImplUnderTest.getAllBannerForApproval(PageRequest.of(0, 1),
+                "screenName", LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0));
+
     }
 }

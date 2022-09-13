@@ -18,10 +18,12 @@ import org.springframework.data.domain.Pageable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -119,5 +121,25 @@ public class AppliedJobServiceImplTest {
         when(mockAppliedJobRepository.countAppliedCVOfAJob(1L)).thenReturn(0);
         final int result = appliedJobServiceImplUnderTest.countAppliedCVOfJob(1L);
         assertThat(result).isEqualTo(0);
+    }
+
+    @Test
+    public void testCountAppliedCVInSystem() {
+        when(mockAppliedJobRepository.countAppliedCVInSystem()).thenReturn(0);
+        final int result = appliedJobServiceImplUnderTest.countAppliedCVInSystem();
+        assertThat(result).isEqualTo(0);
+    }
+
+    @Test
+    public void testGetAppliedJobByJobIDandCandidateID() {
+        final Optional<AppliedJob> appliedJob = Optional.of(new AppliedJob());
+        when(mockAppliedJobRepository.getAppliedJobByJobIDandCandidateID(1L, 1L)).thenReturn(appliedJob);
+        final Optional<AppliedJob> result = appliedJobServiceImplUnderTest.getAppliedJobByJobIDandCandidateID(1L, 1L);
+    }
+
+    @Test
+    public void testUpdateIsSeenUploadedCV() {
+        appliedJobServiceImplUnderTest.updateIsSeenUploadedCV(1L, 1L);
+        verify(mockAppliedJobRepository).updateIsSeenUploadedCV(1L, 1L);
     }
 }

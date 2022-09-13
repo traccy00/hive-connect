@@ -259,26 +259,10 @@ public class BannerServiceImplTest {
     }
 
     @Test
-    public void testGetBannerByFilter() {
-        final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"),"","", eq(3L), eq(false)))
-                .thenReturn(bannerPage);
-        final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(0, 0, "title", false, "", "");
-    }
-
-    @Test
     public void testGetBannerByFilter_BannerRepositoryReturnsNoItems() {
         when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"), "","",eq(3L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(0, 0, "title", false, "", "");
-    }
-
-    @Test
-    public void testGetListFilter() {
-        final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
-                .thenReturn(bannerPage);
-        final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(1, 10), "name", "","",1L, false);
     }
 
     @Test
@@ -293,5 +277,23 @@ public class BannerServiceImplTest {
         final Banner banner = banner();
         when(mockBannerRepository.findByRentalPackageIdAndId(1L, 1L)).thenReturn(banner);
         final Banner result = bannerServiceImplUnderTest.findByRentalPackageIdAndId(1L, 1L);
+    }
+
+    @Test
+    public void testGetBannerByFilter() {
+        final Page<Banner> banners = new PageImpl<>(Arrays.asList(banner()));
+        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"), eq("timeExpired"), eq("section"),
+                eq(3L), eq(false))).thenReturn(banners);
+        final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(1, 10, "title", false,
+                "timeExpired", "section");
+    }
+
+    @Test
+    public void testGetListFilter() {
+        final Page<Banner> banners = new PageImpl<>(Arrays.asList(banner()));
+        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"), eq("timeExpired"), eq("benefit"),
+                eq(0L), eq(false))).thenReturn(banners);
+        final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(1, 10), "name",
+                "timeExpired", "benefit", 0L, false);
     }
 }
