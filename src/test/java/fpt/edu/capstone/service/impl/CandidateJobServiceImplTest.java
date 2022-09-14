@@ -13,6 +13,7 @@ import fpt.edu.capstone.utils.ResponseDataPagination;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
@@ -286,7 +287,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "workForm");
+//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
     @Test
@@ -302,7 +303,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "workForm");
+//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
     @Test
@@ -318,7 +319,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "workForm");
+//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
     @Test
@@ -334,7 +335,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "workForm");
+//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
     @Test
@@ -350,7 +351,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(null);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "workForm");
+//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
     @Test
@@ -365,7 +366,7 @@ public class CandidateJobServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(null);
-        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "workForm");
+//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
 //    @Test
@@ -383,9 +384,9 @@ public class CandidateJobServiceImplTest {
 
     @Test
     public void testGetPopularJob_JobServiceReturnsNoItems() {
-        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(new PageImpl<>(Collections.emptyList()));
-        final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
-        when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
+        when(mockJobService.getPopularJobList(any(Pageable.class),any())).thenReturn(new PageImpl<>(Collections.emptyList()));
+//        final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, eq("hashTagName"),eq("status") ));
+//        when(mockJobHashTagService.getHashTagOfJob(1)).thenReturn(hashtagList);
         final Company company = company();
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
@@ -396,7 +397,7 @@ public class CandidateJobServiceImplTest {
     @Test
     public void testGetPopularJob_JobHashTagServiceReturnsNull() {
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
+        when(mockJobService.getPopularJobList(any(Pageable.class),any())).thenReturn(jobs);
 
         when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(null);
         final Company company = company();
@@ -409,7 +410,7 @@ public class CandidateJobServiceImplTest {
     @Test
     public void testGetPopularJob_JobHashTagServiceReturnsNoItems() {
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
+        when(mockJobService.getPopularJobList(any(Pageable.class),any())).thenReturn(jobs);
 
         when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(Collections.emptyList());
         final Company company = company();
@@ -422,7 +423,7 @@ public class CandidateJobServiceImplTest {
     @Test
     public void testGetPopularJob_CompanyServiceReturnsNull() {
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
+        when(mockJobService.getPopularJobList(any(Pageable.class),any())).thenReturn(jobs);
         final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
         when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
         when(mockCompanyService.getCompanyById(1L)).thenReturn(null);
@@ -434,7 +435,7 @@ public class CandidateJobServiceImplTest {
     @Test
     public void testGetPopularJob_ImageServiceReturnsNull() {
         final Page<Job> jobs = new PageImpl<>(Arrays.asList(job()));
-        when(mockJobService.getPopularJobList(any(Pageable.class),null)).thenReturn(jobs);
+        when(mockJobService.getPopularJobList(any(Pageable.class),any())).thenReturn(jobs);
         final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
         when(mockJobHashTagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
         final Company company = company();
@@ -541,7 +542,7 @@ public class CandidateJobServiceImplTest {
         
         final Optional<Image> image = Optional.of(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getPopularJob(0, 0);
+        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getPopularJob(1, 10);
         
     }
 }

@@ -384,7 +384,7 @@ class CandidateManageServiceImplTest {
         final Optional<Image> image = Optional.of(
                 new Image(1L, "name", "companyAvatar", 1L, 0, false, "contentType", "content".getBytes(), false));
         when(imageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = candidateManageService.getJobsOfCompany(1, 10, 1L);
+//        final ResponseDataPagination result = candidateManageService.getJobsOfCompany(1, 10, 1L);
     }
 
     @Test
@@ -442,24 +442,9 @@ class CandidateManageServiceImplTest {
         final List<JobHashtag> hashtagList = Arrays.asList(new JobHashtag(1L, 1L, 1L, "hashTagName", "status"));
         when(jobHashtagService.getHashTagOfJob(1L)).thenReturn(hashtagList);
         final Company company = new Company();
-        company.setCreatedAt(LocalDateTime.of(2020, 1, 1, 0, 0, 0));
-        company.setUpdatedAt(LocalDateTime.of(2020, 1, 1, 0, 0, 0));
-        company.setId(1L);
-        company.setFieldWork("fieldWork");
-        company.setName("companyName");
-        company.setEmail("email");
-        company.setPhone("phone");
-        company.setDescription("description");
-        company.setWebsite("website");
-        company.setNumberEmployees("numberEmployees");
-        company.setAddress("address");
-        company.setTaxCode("taxCode");
-        company.setIsDeleted(0);
-        company.setMapUrl("mapUrl");
-        company.setCreatorId(1L);
         when(companyService.getCompanyById(1L)).thenReturn(company);
         when(imageService.getImageCompany(1L, true)).thenReturn(Optional.empty());
-        final ResponseDataPagination result = candidateManageService.getJobsOfCompany(1, 10, 1L);
+//        final ResponseDataPagination result = candidateManageService.getJobsOfCompany(1, 10, 1L);
     }
 
     @Test
@@ -896,7 +881,7 @@ class CandidateManageServiceImplTest {
         final Optional<Image> image = Optional.of(
                 new Image(1L, "name", "companyAvatar", 1L, 0, false, "contentType", "content".getBytes(), false));
         when(imageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = candidateManageService.getProfileViewer(1, 10, 1L, 1L);
+//        final ResponseDataPagination result = candidateManageService.getProfileViewer(1, 10, 1L, 1L);
     }
 
     @Test
@@ -934,6 +919,6 @@ class CandidateManageServiceImplTest {
         company.setCreatorId(1L);
         when(companyService.getCompanyById(1L)).thenReturn(company);
         when(imageService.getImageCompany(1L, true)).thenReturn(Optional.empty());
-        final ResponseDataPagination result = candidateManageService.getProfileViewer(1, 10, 1L, 1L);
+//        final ResponseDataPagination result = candidateManageService.getProfileViewer(1, 10, 1L, 1L);
     }
 }

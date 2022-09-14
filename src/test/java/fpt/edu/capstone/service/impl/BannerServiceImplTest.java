@@ -55,13 +55,13 @@ public class BannerServiceImplTest {
     }
 
     private UpdateBannerRequest request(){
-        UpdateBannerRequest request = new UpdateBannerRequest(1L, 123L, 12345678L, 1L, "timeExpired", "title",
+        UpdateBannerRequest request = new UpdateBannerRequest(1L, 1, 12345678L, 1L, "timeExpired", "titleNe",
                 "description", "image", true, true, false, false, false, false, false);
         return request;
     }
     
     private ConfigBannerRequest bannerRequest(){
-        ConfigBannerRequest bannerRequest = new ConfigBannerRequest(123L, 12345678L, 1L, "timeExpired", "title", "description",
+        ConfigBannerRequest bannerRequest = new ConfigBannerRequest(1, 12345678L, 1L, "timeExpired", "ten goi chua ton tai", "description",
                 "image", true, false, false, false, false, false, false);
         return bannerRequest;
     }
@@ -260,14 +260,14 @@ public class BannerServiceImplTest {
 
     @Test
     public void testGetBannerByFilter_BannerRepositoryReturnsNoItems() {
-        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"), "","",eq(3L), eq(false)))
+        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("title"), eq("timeExpired"),eq("benefit") ,eq(3L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(0, 0, "title", false, "", "");
+        final ResponseDataPagination result = bannerServiceImplUnderTest.getBannerByFilter(1, 10, "title", false, "timeExpired","benefit");
     }
 
     @Test
     public void testGetListFilter_BannerRepositoryReturnsNoItems() {
-        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
+        when(mockBannerRepository.getBannerByFilter(any(Pageable.class), eq("name"),eq("timeExpired"),eq("benefit"), eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<Banner> result = bannerServiceImplUnderTest.getListFilter(PageRequest.of(1, 10), "name","","", 1L, false);
     }

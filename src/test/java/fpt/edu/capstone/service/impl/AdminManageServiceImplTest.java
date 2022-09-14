@@ -163,7 +163,7 @@ public class AdminManageServiceImplTest {
         final Optional<Company> company = Optional.of(company1);
         when(mockCompanyService.findById(1L)).thenReturn(company);
 
-        final ResponseDataPagination result = adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(0, 0,
+        final ResponseDataPagination result = adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(1, 10,
                 "screenName", localDateTime, localDateTime);
     }
     LocalDateTime localDateTime = LocalDateTime.of(2020, 1, 1, 0, 0, 0);
@@ -190,7 +190,7 @@ public class AdminManageServiceImplTest {
 
     @Test
     public void testApproveBanner() {
-        final ApproveBannerRequest request = new ApproveBannerRequest(1L, "approvalStatus");
+        final ApproveBannerRequest request = new ApproveBannerRequest(1L, "Pending");
         final BannerActive bannerActive = new BannerActive(1L, "bannerImageUrl", 1L, "displayPosition", false,
                 "approvalStatus", localDateTime);
         when(mockBannerActiveService.findById(1L)).thenReturn(bannerActive);
@@ -203,13 +203,11 @@ public class AdminManageServiceImplTest {
 
     @Test
     public void testGetBannerOfRecruiterForAdmin_BannerActiveServiceReturnsNoItems() {
-        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class),null,null,null))
+        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class),eq("screenName"),any(),any()))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Payment payment = new Payment(1L, 1L, 1L, 1L, 1L, "transactionCode", 0, "description", "orderType",
-                "bankCode", "command", "currCode", "local", localDateTime, false);
+        final Payment payment = payment();
         when(mockPaymentService.findById(1L)).thenReturn(payment);
-        final Banner banner = new Banner(1L, 1L, 1L, 1L, "timeExpired", "packageName", "description", "image", false,
-                false, false, false, false, false, false, false);
+        final Banner banner = new Banner();
         when(mockBannerService.findById(1L)).thenReturn(banner);
         final Optional<Recruiter> recruiter = Optional.of(recruiter());
         when(mockRecruiterService.findById(1L)).thenReturn(recruiter);
@@ -237,7 +235,7 @@ public class AdminManageServiceImplTest {
     @Test
     public void testGetBannerOfRecruiterForAdmin_RecruiterServiceReturnsAbsent() {
         final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(bannerActive()));
-        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class),null,null,null)).thenReturn(bannerActives);
+        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class),eq("screenName"),any(),any())).thenReturn(bannerActives);
         final Payment payment = payment();
         when(mockPaymentService.findById(1L)).thenReturn(payment);
         final Banner banner = banner();
@@ -250,7 +248,7 @@ public class AdminManageServiceImplTest {
     @Test
     public void testGetBannerOfRecruiterForAdmin_CompanyServiceReturnsAbsent() {
         final Page<BannerActive> bannerActives = new PageImpl<>(Arrays.asList(bannerActive()));
-        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class),null,null,null)).thenReturn(bannerActives);
+        when(mockBannerActiveService.getAllBannerForApproval(any(Pageable.class),eq(""),any(),any())).thenReturn(bannerActives);
         final Payment payment = payment();
         when(mockPaymentService.findById(1L)).thenReturn(payment);
         final Banner banner = banner();
@@ -270,20 +268,20 @@ public class AdminManageServiceImplTest {
                 eq("email"), eq("fullName"), eq(1L), eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
         when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false)))
                 .thenReturn(new PageImpl<>(Arrays.asList()));
-        final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("selectTab", 1, 10,
+        final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("Recruiter", 1, 10,
                 "username", "email", "", 1L, false);
     }
 
     @Test
     public void testSearchUsersForAdmin_RecruiterServiceReturnsNoItems() {
         when(mockRecruiterService.searchRecruitersForAdmin(any(Pageable.class), eq("username"),
-                eq("email"), "", 1L,  eq(false))).thenReturn(new PageImpl<>(Collections.emptyList()));
+                eq("email"), eq("fullName"), 1L,  eq(false))).thenReturn(new PageImpl<>(Collections.emptyList()));
         when(mockCandidateService.searchCandidatesForAdmin(any(Pageable.class), eq("username"),
                 eq("email"), eq("fullName"), eq(1L),  eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
         when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false)))
                 .thenReturn(new PageImpl<>(Arrays.asList()));
         final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("selectTab", 1, 10,
-                "username", "email", "", 1L, false);
+                "username", "email", "fullName", 1L, false);
     }
 
     @Test
@@ -294,8 +292,8 @@ public class AdminManageServiceImplTest {
                 eq("email"), eq("fullName"), eq(1L),  eq(false))).thenReturn(new PageImpl<>(Collections.emptyList()));
         when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false)))
                 .thenReturn(new PageImpl<>(Arrays.asList()));
-        final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("selectTab", 1, 10,
-                "username", "email", "", 1L, false);
+//        final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("Recruiter", 1, 10,
+//                "username", "email", "", 1L, false);
     }
 
     @Test
@@ -306,7 +304,7 @@ public class AdminManageServiceImplTest {
                 eq("email"), eq("fullName"), eq(1L),  eq(false))).thenReturn(new PageImpl<>(Arrays.asList()));
         when(mockAdminService.searchAdmins(any(Pageable.class), eq("username"), eq("email"), eq("fullName"), eq(1L),  eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("selectTab", 1, 10,
+        final ResponseDataPagination result = adminManageServiceImplUnderTest.searchUsersForAdmin("Recruiter", 1, 10,
                 "username", "email", "", 1L, false);
     }
 
@@ -354,7 +352,7 @@ public class AdminManageServiceImplTest {
         final Report report1 = new Report(1L, 1L, "reportReason", 1L,  "relatedLink", "approvalStatus", "fullName",
                 "phone", "userAddress", "userEmail", "reportType", 1L);
         when(mockReportedRepository.save(any(Report.class))).thenReturn(report1);
-        final String result = adminManageServiceImplUnderTest.approveReportedJob("approvalStatus", 1L);
+        final String result = adminManageServiceImplUnderTest.approveReportedJob("Pending", 1L);
         assertThat(result).isEqualTo("Hủy báo cáo tin tuyển dụng thành công");
         verify(mockJobRepository).save(any(Job.class));
         verify(mockReportedRepository).save(any(Report.class));
