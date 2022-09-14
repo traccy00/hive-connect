@@ -101,7 +101,7 @@ public class AdminManageServiceImplTest {
     }
     
     BannerActive bannerActive(){
-        BannerActive bannerActive = new BannerActive(0L, "bannerImageUrl", 0L, "displayPosition", false, "approvalStatus",
+        BannerActive bannerActive = new BannerActive(1L, "bannerImageUrl", 1L, "displayPosition", false, "approvalStatus",
                         localDateTime);
         return bannerActive;
     }
@@ -124,7 +124,7 @@ public class AdminManageServiceImplTest {
     }
     
     private Banner banner(){
-        Banner banner = new Banner(0L, 0L, 0L, 0L, "timeExpired", "packageName", "description", "image", false,
+        Banner banner = new Banner(1L, 1L, 1L, 1L, "timeExpired", "packageName", "description", "image", false,
                 false, false, false, false, false, false, false);
         return banner;
     }
@@ -136,18 +136,18 @@ public class AdminManageServiceImplTest {
                 .thenReturn(bannerActives);
 
         final Payment payment = payment();
-        when(mockPaymentService.findById(0L)).thenReturn(payment);
+        when(mockPaymentService.findById(1L)).thenReturn(payment);
 
         final Banner banner = banner();
-        when(mockBannerService.findById(0L)).thenReturn(banner);
+        when(mockBannerService.findById(1L)).thenReturn(banner);
 
         final Optional<Recruiter> recruiter = Optional.of(recruiter());
-        when(mockRecruiterService.findById(0L)).thenReturn(recruiter);
+        when(mockRecruiterService.findById(1L)).thenReturn(recruiter);
 
         final Company company1 = new Company();
         company1.setCreatedAt(localDateTime);
         company1.setUpdatedAt(localDateTime);
-        company1.setId(0L);
+        company1.setId(1L);
         company1.setFieldWork("fieldWork");
         company1.setName("companyName");
         company1.setEmail("email");
@@ -159,9 +159,9 @@ public class AdminManageServiceImplTest {
         company1.setTaxCode("taxCode");
         company1.setIsDeleted(0);
         company1.setMapUrl("mapUrl");
-        company1.setCreatorId(0L);
+        company1.setCreatorId(1L);
         final Optional<Company> company = Optional.of(company1);
-        when(mockCompanyService.findById(0L)).thenReturn(company);
+        when(mockCompanyService.findById(1L)).thenReturn(company);
 
         final ResponseDataPagination result = adminManageServiceImplUnderTest.getBannerOfRecruiterForAdmin(0, 0,
                 "screenName", localDateTime, localDateTime);

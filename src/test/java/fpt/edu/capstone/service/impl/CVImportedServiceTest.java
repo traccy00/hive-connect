@@ -48,7 +48,7 @@ public class CVImportedServiceTest {
     }
 
     @Test
-    public void testSave_ThrowsIOException() {
+    public void testSave_ThrowsIOException() throws Exception{
         final MultipartFile file = null;
         final CVImported cvImported = cvImported();
         when(mockCvImportedRepository.save(any(CVImported.class))).thenReturn(cvImported);

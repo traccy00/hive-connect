@@ -684,10 +684,10 @@ public class RecruiterServiceImplTest {
     @Test
     public void testRemoveRecruiterFromCompany() {
         final Recruiter recruiter = recruiter();
-        when(mockRecruiterRepository.getById(0L)).thenReturn(recruiter);
+        when(mockRecruiterRepository.getById(1L)).thenReturn(recruiter);
         final Recruiter recruiter1 = recruiter();
         when(mockRecruiterRepository.saveAndFlush(any(Recruiter.class))).thenReturn(recruiter1);
-        recruiterServiceImplUnderTest.removeRecruiterFromCompany(0L);
+        recruiterServiceImplUnderTest.removeRecruiterFromCompany(1L);
         verify(mockRecruiterRepository).saveAndFlush(any(Recruiter.class));
     }
 }

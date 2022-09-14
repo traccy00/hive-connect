@@ -19,8 +19,8 @@ public class EducationServiceImplTest {
 
     private EducationServiceImpl educationServiceImplUnderTest;
 
-    private Education education = new Education(1L, 1L, "school", "major", LocalDateTime.now(),
-            LocalDateTime.now(), false, "description");
+    private Education education = new Education(1L, 1L, "school", "major", LocalDateTime.of(2020,1,1,1,1,1),
+            LocalDateTime.of(2020,1,1,1,1,1), false, "description");
     @Before
     public void setUp() throws Exception {
         educationServiceImplUnderTest = new EducationServiceImpl();
@@ -55,7 +55,9 @@ public class EducationServiceImplTest {
         final Education updateEducation = education;
         educationServiceImplUnderTest.updateEducation(updateEducation);
         verify(educationServiceImplUnderTest.educationRepository).updateEducation("school", "major",
-                LocalDateTime.now(), LocalDateTime.now(), "description", false, 1L);
+                LocalDateTime.of(2020,1,1,1,1,1),
+                LocalDateTime.of(2020,1,1,1,1,1),
+                "description", false, 1L);
     }
 
     @Test

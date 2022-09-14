@@ -120,8 +120,8 @@ public class CompanyServiceImplTest {
     public void testGetAdditionCompanies() {
         final Company company = company();
         final List<Company> companies = Arrays.asList(company);
-        when(mockCompanyRepository.getAdditionCompanies(0, Arrays.asList(0L))).thenReturn(companies);
-        final List<Company> result = companyServiceImplUnderTest.getAdditionCompanies(0, Arrays.asList(0L));
+        when(mockCompanyRepository.getAdditionCompanies(0, Arrays.asList(1L))).thenReturn(companies);
+        final List<Company> result = companyServiceImplUnderTest.getAdditionCompanies(0, Arrays.asList(1L));
     }
 
 }

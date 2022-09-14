@@ -71,7 +71,7 @@ public class FieldsServiceImplTest {
     }
     @Test
     public void testFindByName() {
-        final Optional<Fields> fields = Optional.of(new Fields(0L, "fieldName", "status"));
+        final Optional<Fields> fields = Optional.of(new Fields(1L, "fieldName", "status"));
         when(mockFieldsRepository.findByFieldName("name")).thenReturn(fields);
         final Optional<Fields> result = fieldsServiceImplUnderTest.findByName("name");
     }

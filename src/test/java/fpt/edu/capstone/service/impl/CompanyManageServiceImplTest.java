@@ -126,7 +126,7 @@ public class CompanyManageServiceImplTest {
 
     CreateCompanyRequest companyRequest (){
         CreateCompanyRequest request = new CreateCompanyRequest();
-        request.setFieldWork("fieldWork");
+        request.setFieldWork("Công nghệ thông tin");
         request.setName("nameName");
         request.setEmail("email");
         request.setPhoneNumber("companyPhone");
@@ -182,7 +182,7 @@ public class CompanyManageServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final UpdateCompanyInforRequest result = companyManageServiceImplUnderTest.updateCompanyInformation(1L,
                 request);
-        verify(mockImageService).saveImageCompany(true, false, 1L, Arrays.asList("value"));
+        verify(mockImageService).saveImageCompany(true, false, 1L, Arrays.asList("avatarUrl"));
         verify(mockImageService).deleteImageById(Arrays.asList(1L));
     }
 

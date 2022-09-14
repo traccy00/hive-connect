@@ -52,12 +52,12 @@ public class DetailPackageServiceImplTest {
     
     private DetailPackage detailPackage(){
         DetailPackage detailPackage = new DetailPackage(1L, 1L, "detailNamePackage", 12345L,
-                123L, "timeExpired", "description", false, false, false, 0,false,false, false);
+                123L, "timeExpired", "description", false, false, false, 100,false,false, false);
         return detailPackage;
     }
     
     private CreatePackageRequest packageRequest = new CreatePackageRequest(1L, "detailNameTest", 12345L,
-            123L, "timeExpired", "description", false, false, 0, false, false, false);
+            123L, "timeExpired", "description", false, false, 100, false, false, false);
     
     private Banner banner(){
         Banner banner = new Banner(1L, 1L, 12345L, 123L, "timeExpired",
@@ -66,38 +66,26 @@ public class DetailPackageServiceImplTest {
         return banner;
     }
 
-//    @Test
-//    public void testGetListDetailPackageFilter() {
-//        final Page<DetailPackage> packagePage = new PageImpl<>(Arrays.asList(detailPackage()));
-//        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), "","", eq(1L), eq(false)))
-//                .thenReturn(packagePage);
-//        final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-//        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
-//                .thenReturn(bannerPage);
-//        final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name","","",
-//                1L, false);
-//    }
-
     @Test
     public void testGetListDetailPackageFilter_DetailPackageRepositoryReturnsNoItems() {
-        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
+        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"),eq("timeExpired"),eq("benefit"), eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<Banner> bannerPage = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
+        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"),eq("timeExpired"),eq("benefit"), eq(1L), eq(false)))
                 .thenReturn(bannerPage);
         final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name",
-                "","",  1L, false);
+                "timeExpired","benefit",  1L, false);
     }
 
     @Test
     public void testGetListDetailPackageFilter_BannerServiceReturnsNoItems() {
         final Page<DetailPackage> packagePage = new PageImpl<>(Arrays.asList(detailPackage()));
-        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
+        when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"),eq("timeExpired"),eq("benefit"), eq(1L), eq(false)))
                 .thenReturn(packagePage);
-        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"),"","", eq(1L), eq(false)))
+        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"),eq("timeExpired"),eq("benefit"), eq(1L), eq(false)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name",
-                "","",  1L, false);
+                "timeExpired","benefit",  1L, false);
     }
 
     @Test
@@ -239,11 +227,11 @@ public class DetailPackageServiceImplTest {
     public void testGetListDetailPackageFilter() {
         final Page<DetailPackage> detailPackages = new PageImpl<>(Arrays.asList(detailPackage()));
         when(mockDetailPackageRepository.getListFilter(any(Pageable.class), eq("name"), eq("timeExpired"),
-                eq("benefit"), eq(0L), eq(false))).thenReturn(detailPackages);
+                eq("benefit"), eq(1L), eq(false))).thenReturn(detailPackages);
         final Page<Banner> banners = new PageImpl<>(Arrays.asList(banner()));
-        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq("timeExpired"), eq("benefit"), eq(0L),
+        when(mockBannerService.getListFilter(any(Pageable.class), eq("name"), eq("timeExpired"), eq("benefit"), eq(1L),
                 eq(false))).thenReturn(banners);
-        final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(0, 0, "name",
-                "timeExpired", "benefit", 0L, false);
+        final ResponseDataPagination result = detailPackageServiceImplUnderTest.getListDetailPackageFilter(1, 10, "name",
+                "timeExpired", "benefit", 1L, false);
     }
 }

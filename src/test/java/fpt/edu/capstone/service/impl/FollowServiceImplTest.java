@@ -163,7 +163,7 @@ public class FollowServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Image image = imageEntity;
 //        when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 10L);
+        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 11L);
     }
 
     @Test
@@ -180,7 +180,7 @@ public class FollowServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Image image = imageEntity;
 //        when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 10L);
+        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 11L);
     }
 
     @Test
@@ -196,7 +196,7 @@ public class FollowServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Image image = imageEntity;
 //        when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 10L);
+        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 11L);
     }
 
     @Test
@@ -212,7 +212,7 @@ public class FollowServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Image image = imageEntity;
 //        when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 10L);
+        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 11L);
     }
 
     @Test
@@ -228,7 +228,7 @@ public class FollowServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(null);
         final Image image = imageEntity;
 //        when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 10L);
+        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 11L);
     }
 
     @Test
@@ -244,7 +244,7 @@ public class FollowServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(null);
-        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 10L);
+        final ResponseDataPagination result = followServiceImplUnderTest.getFollowedJobByCandidateID(1, 11, 11L);
     }
 
     @Test

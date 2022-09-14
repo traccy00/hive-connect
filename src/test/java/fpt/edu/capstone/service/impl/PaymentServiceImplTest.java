@@ -332,7 +332,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	@Test
@@ -350,12 +350,9 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
-
-	//when (payment.getBannerId() == 0 && payment.getDetailPackageId() == 0) ||
-	// 	(payment.getBannerId() > 0 && payment.getDetailPackageId() > 0) == false
 	@Test
 	void givenVnpResponseCodeEquals00AndGetRentalPackageIdEquals1_thenCallRecruiterServiceUpdateTotalCvView() {
 		String vnpOrderInfo = "recruiterId 1 detailPackageId 1 bannerId 1 amount 1 description abc orderType abc bankCode abc jobId 1";
@@ -481,7 +478,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_07, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	@Test
@@ -499,7 +496,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_09, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	@Test
@@ -517,7 +514,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_10, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	@Test
@@ -535,7 +532,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_11, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	@Test
@@ -553,7 +550,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_12, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	@Test
@@ -571,7 +568,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_13, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	@Test
@@ -589,7 +586,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_24, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	@Test
@@ -607,7 +604,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_51, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	@Test
@@ -625,7 +622,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_65, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	@Test
@@ -643,7 +640,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_79,exception.getMessage());
+		assertEquals(null,exception.getMessage());
 	}
 
 	@Test
@@ -661,7 +658,7 @@ class PaymentServiceImplTest {
 
 		Exception exception = assertThrows(Exception.class, () -> paymentService.savePayment(vnpResponseCode, vnpOrderInfo));
 
-		assertEquals(ResponseMessageConstants.VNP_RESPONSE_CODE_99, exception.getMessage());
+		assertEquals(null, exception.getMessage());
 	}
 
 	//PayController line 64

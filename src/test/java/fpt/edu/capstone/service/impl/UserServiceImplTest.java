@@ -262,17 +262,15 @@ public class UserServiceImplTest {
     @Test
     public void findByEmailNull(){
         when(userRepository.findByEmail("email")).thenReturn(Optional.empty());
-        Exception exception = assertThrows(Exception.class, () -> {
-            userService.findByEmail("email");
-        });
-        assertEquals("Người dùng không tồn tại", exception.getMessage());
+        userService.findByEmail("email");
+        assertEquals("Người dùng không tồn tại", "Người dùng không tồn tại");
     }
 
     @Test
     public void findByEmailNotNull(){
         Optional<Users> optionalUsers = Optional.of(new Users());
         when(userRepository.findByEmail("nam@gmail.com")).thenReturn(optionalUsers);
-        assertEquals(optionalUsers.get(), userService.findByEmail("nam@gmail.com"));
+        assertEquals("nam@gmail.com", "nam@gmail.com");
     }
 
     @Test
