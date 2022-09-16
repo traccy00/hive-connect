@@ -266,10 +266,9 @@ public class RecruiterController {
                                   @RequestParam(defaultValue = "") String fullName,
                                   @RequestParam(defaultValue = "") String email,
                                   @RequestParam(defaultValue = "") String status,
-                                  @RequestParam(defaultValue = "") String phone,
-                                  @RequestParam(required = true) long id) {
+                                  @RequestParam(defaultValue = "") String phone) {
         try {
-            Page<ReceiveRequestJoinCompanyResponse> page = requestJoinCompanyService.getReceiveRequestJoinCompanyWithFilter(fullName, email, phone, status, id, pageSize, pageNo);
+            Page<ReceiveRequestJoinCompanyResponse> page = requestJoinCompanyService.getReceiveRequestJoinCompanyWithFilter(fullName, email, phone, status, pageSize, pageNo);
             ResponseDataPagination responseDataPagination = new ResponseDataPagination();
             Pagination pagination = new Pagination();
             System.out.println(page.getContent());

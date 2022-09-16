@@ -196,10 +196,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                 }
                 response.setUserName(user.getUsername());
 
-                Image image = imageService.getAvatarRecruiter(recruiter.getId());
-                if (image != null) {
-                    response.setAvatar(image.getUrl());
-                }
+                response.setAvatar(user.getAvatar());
                 response.setFullName(recruiter.getFullName());
                 response.setGender(recruiter.isGender());
                 response.setPosition(recruiter.getPosition());

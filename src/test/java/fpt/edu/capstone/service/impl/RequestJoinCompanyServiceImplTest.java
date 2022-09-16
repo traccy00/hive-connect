@@ -163,18 +163,18 @@ class RequestJoinCompanyServiceImplTest {
     @Test
     void testGetReceiveRequestJoinCompanyWithFilter() {
         when(mockRequestJoinCompanyRepository.getReceiveRequestJoinCompanyWithFilter(eq("fullName"), eq("email"),
-                eq("phone"), eq("status"), eq(1L), any(Pageable.class))).thenReturn(new PageImpl<>(Arrays.asList()));
+                eq("phone"), eq("status"), any(Pageable.class))).thenReturn(new PageImpl<>(Arrays.asList()));
         final Page<ReceiveRequestJoinCompanyResponse> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequestJoinCompanyWithFilter(
-                "fullName", "email", "phone", "status", 1L, 10, 1);
+                "fullName", "email", "phone", "status", 10, 1);
     }
 
     @Test
     void testGetReceiveRequestJoinCompanyWithFilter_RequestJoinCompanyRepositoryReturnsNoItems() {
         when(mockRequestJoinCompanyRepository.getReceiveRequestJoinCompanyWithFilter(eq("fullName"), eq("email"),
-                eq("phone"), eq("status"), eq(1L), any(Pageable.class)))
+                eq("phone"), eq("status"), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Page<ReceiveRequestJoinCompanyResponse> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequestJoinCompanyWithFilter(
-                "fullName", "email", "phone", "status", 1L, 10, 1);
+                "fullName", "email", "phone", "status", 10, 1);
     }
 
     @Test
