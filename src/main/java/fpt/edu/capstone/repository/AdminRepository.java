@@ -20,8 +20,8 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO public.admins (user_id, full_name) VALUES(?1, null)", nativeQuery = true)
-    void insertAdmin(long userId);
+    @Query(value = "INSERT INTO public.admins (user_id, full_name) VALUES(?1, ?2)", nativeQuery = true)
+    void insertAdmin(long userId, String fullName);
 
     Optional <Admin> findByUserId(long userId);
 

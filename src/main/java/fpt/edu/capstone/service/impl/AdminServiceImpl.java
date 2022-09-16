@@ -65,8 +65,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void insertAdmin(long userId) {
-        adminRepository.insertAdmin(userId);
+    public void insertAdmin(long userId, String fullName) {
+        adminRepository.insertAdmin(userId, fullName);
     }
 
     @Override

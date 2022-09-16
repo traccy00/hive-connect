@@ -14,7 +14,7 @@ public interface AdminService {
 
     Optional<Admin> findAdminByUserId(long userId);
 
-    void insertAdmin(long userId);
+    void insertAdmin(long userId, String fullName);
 
     Page<AdminManageResponse> searchAdmins(Pageable pageable, String username, String email, String fullName, long userId, boolean isLocked);
 

@@ -341,8 +341,9 @@ public class AuthenticationController {
             if (user.getRoleId() == 2) {
                 recruiterService.insertRecruiterForRegister(user.getId(), fullName);
             }
-            if (user.getRoleId() == 1) {
-                adminService.insertAdmin(user.getId());
+            //1 super admin | 4 counselors
+            if (user.getRoleId() == 1 || user.getRoleId() == 4) {
+                adminService.insertAdmin(user.getId(), fullName);
             }
             final UserDetails userDetails = securityUserService.loadUserByUsername(username);
 

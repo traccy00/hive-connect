@@ -148,8 +148,8 @@ public class AdminServiceImplTest {
 
     @Test
     public void testInsertAdmin() {
-        adminServiceImplUnderTest.insertAdmin(1L);
-        verify(mockAdminRepository).insertAdmin(1L);
+        adminServiceImplUnderTest.insertAdmin(1L,"test");
+        verify(mockAdminRepository).insertAdmin(1L,"test");
     }
 
     @Test
