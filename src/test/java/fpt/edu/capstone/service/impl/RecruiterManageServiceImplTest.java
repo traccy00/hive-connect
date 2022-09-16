@@ -354,42 +354,42 @@ public class RecruiterManageServiceImplTest {
     @Test
     public void testGetRecruitersOfCompany() {
         final Page<Recruiter> recruiterPage = new PageImpl<>(Arrays.asList(recruiter()));
-        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 11L)).thenReturn(recruiterPage);
+        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 11L,"","","")).thenReturn(recruiterPage);
         final Users users = users();
         when(mockUserService.getUserById(1L)).thenReturn(users);
         final Image image = image();
         when(mockImageService.getAvatarRecruiter(1L)).thenReturn(image);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 11, 11L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 11, 11L,"","","");
     }
 
     @Test
     public void testGetRecruitersOfCompany_RecruiterServiceReturnsNoItems() {
-        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 11L))
+        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 11L,"","",""))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         final Users users = users();
         when(mockUserService.getUserById(1L)).thenReturn(users);
         final Image image = image();
         when(mockImageService.getAvatarRecruiter(1L)).thenReturn(image);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 11, 11L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 11, 11L,"","","");
     }
 
     @Test
     public void testGetRecruitersOfCompany_UserServiceReturnsNull() {
         final Page<Recruiter> recruiterPage = new PageImpl<>(Arrays.asList(recruiter()));
-        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 11L)).thenReturn(recruiterPage);
+        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 11L,"","","")).thenReturn(recruiterPage);
         when(mockUserService.getUserById(1L)).thenReturn(null);
-        assertThatThrownBy(() -> recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 11, 11L))
+        assertThatThrownBy(() -> recruiterManageServiceImplUnderTest.getRecruitersOfCompany(1, 11, 11L,"","",""))
                 .isInstanceOf(HiveConnectException.class);
     }
 
     @Test
     public void testGetRecruitersOfCompany_ImageServiceImplReturnsNull() {
         final Page<Recruiter> recruiterPage = new PageImpl<>(Arrays.asList(recruiter()));
-        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 11L)).thenReturn(recruiterPage);
+        when(mockRecruiterService.getRecruiterByCompanyId(0, 1, 11L,"","","")).thenReturn(recruiterPage);
         final Users users = users();
         when(mockUserService.getUserById(1L)).thenReturn(users);
         when(mockImageService.getAvatarRecruiter(1L)).thenReturn(null);
-        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(0, 1, 11L);
+        final ResponseDataPagination result = recruiterManageServiceImplUnderTest.getRecruitersOfCompany(0, 1, 11L,"","","");
     }
 
     @Test

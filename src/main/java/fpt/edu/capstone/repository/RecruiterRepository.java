@@ -61,8 +61,13 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
     Page<RecruiterManageResponse> searchRecruitersForAdmin(Pageable pageable, @Param("username") String username,
                                                            @Param("email") String email,@Param("fullName") String fullName, @Param("userId") long userId, @Param("isLocked") boolean isLocked);
 
-    @Query(value = "select * from recruiter where company_id = ?", nativeQuery = true)
-    Page<Recruiter> getRecruiterByCompanyId(long companyId, Pageable pageable);
+    @Query(value = "select r from Recruiter r " +
+            "join Users u on r.userId = u.id " +
+            "where lower(r.fullName) like lower(concat('%', :fullName ,'%')) " +
+            "and lower(u.email) like lower(concat('%', :email ,'%')) " +
+            "and lower(u.phone) like lower(concat('%', :phone ,'%')) " +
+            "and r.companyId =:companyId")
+    Page<Recruiter> getRecruiterByCompanyId(long companyId, String fullName, String email, String phone, Pageable pageable);
 
     @Query(value = "select * from recruiter r where (business_license_approval_status is not null " +
             "or additional_license_approval_status is not null) and (business_license_approval_status like concat('%',?1,'%') or business_license_approval_status is null) " +

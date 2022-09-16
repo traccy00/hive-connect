@@ -169,9 +169,13 @@ public class RecruiterController {
     @GetMapping("/get-recruiter-by-company")
     public ResponseData getRecruiterByCompany(@RequestParam(defaultValue = "0") Integer pageNo,
                                               @RequestParam(defaultValue = "10") Integer pageSize,
-                                              @RequestParam("companyId") long companyId) {
+                                              @RequestParam("companyId") long companyId,
+                                              @RequestParam("fullName") String fullName,
+                                              @RequestParam("email") String email,
+                                              @RequestParam("phone") String phone) {
         try {
-            ResponseDataPagination pagination = recruiterManageService.getRecruitersOfCompany(pageNo, pageSize, companyId);
+            ResponseDataPagination pagination = recruiterManageService.getRecruitersOfCompany
+                    (pageNo, pageSize, companyId, fullName, email, phone);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, pagination);
         } catch (Exception ex) {
             String msg = LogUtils.printLogStackTrace(ex);

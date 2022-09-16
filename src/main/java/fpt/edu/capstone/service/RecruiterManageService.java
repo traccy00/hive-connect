@@ -15,7 +15,7 @@ public interface RecruiterManageService {
 
     CommonRecruiterInformationResponse getCommonInforOfRecruiter(long recruiterId);
 
-    ResponseDataPagination getRecruitersOfCompany(Integer pageNo, Integer pageSize, long companyId);
+    ResponseDataPagination getRecruitersOfCompany(Integer pageNo, Integer pageSize, long companyId, String fullName, String email, String phone);
 
     RecruiterProfileResponse updateRecruiterInformation(long recruiterId, RecruiterUpdateProfileRequest request) throws Exception;
 

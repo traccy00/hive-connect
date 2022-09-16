@@ -182,9 +182,9 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         return response;
     }
 
-    public ResponseDataPagination getRecruitersOfCompany(Integer pageNo, Integer pageSize, long companyId) {
+    public ResponseDataPagination getRecruitersOfCompany(Integer pageNo, Integer pageSize, long companyId, String fullName, String email, String phone) {
         List<RecruiterBaseOnCompanyResponse> responseList = new ArrayList<>();
-        Page<Recruiter> recruiters = recruiterService.getRecruiterByCompanyId(pageNo, pageSize, companyId);
+        Page<Recruiter> recruiters = recruiterService.getRecruiterByCompanyId(pageNo, pageSize, companyId, fullName, email, phone);
         if (recruiters.hasContent()) {
             for (Recruiter recruiter : recruiters) {
                 RecruiterBaseOnCompanyResponse response = new RecruiterBaseOnCompanyResponse();

@@ -541,15 +541,15 @@ public class RecruiterServiceImplTest {
     @Test
     public void testGetRecruiterByCompanyId() {
         final Page<Recruiter> recruiterPage = new PageImpl<>(Arrays.asList(recruiter()));
-        when(mockRecruiterRepository.getRecruiterByCompanyId(eq(1L), any(Pageable.class))).thenReturn(recruiterPage);
-        final Page<Recruiter> result = recruiterServiceImplUnderTest.getRecruiterByCompanyId(1L, 11L, 1L);
+        when(mockRecruiterRepository.getRecruiterByCompanyId(eq(1L),eq(""), eq(""), eq(""), any(Pageable.class))).thenReturn(recruiterPage);
+        final Page<Recruiter> result = recruiterServiceImplUnderTest.getRecruiterByCompanyId(1L, 11L, 1L,"","","");
     }
 
     @Test
     public void testGetRecruiterByCompanyId_RecruiterRepositoryReturnsNoItems() {
-        when(mockRecruiterRepository.getRecruiterByCompanyId(eq(1L), any(Pageable.class)))
+        when(mockRecruiterRepository.getRecruiterByCompanyId(eq(1L),eq(""), eq(""), eq(""), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<Recruiter> result = recruiterServiceImplUnderTest.getRecruiterByCompanyId(1L, 11L, 1L);
+        final Page<Recruiter> result = recruiterServiceImplUnderTest.getRecruiterByCompanyId(1L, 11L, 1L,"","","");
     }
 
     @Test

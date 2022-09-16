@@ -81,10 +81,10 @@ public class RecruiterServiceImpl implements RecruiterService {
     }
 
     @Override
-    public Page<Recruiter> getRecruiterByCompanyId(long pageNo, long quantity, long companyId) {
+    public Page<Recruiter> getRecruiterByCompanyId(long pageNo, long quantity, long companyId, String fullName, String email, String phone) {
         int pageReq = (int) (pageNo >= 1 ? pageNo - 1 : pageNo);
         Pageable pageable = PageRequest.of(pageReq, (int) quantity);
-        return recruiterRepository.getRecruiterByCompanyId(companyId, pageable);
+        return recruiterRepository.getRecruiterByCompanyId(companyId, fullName, email, phone, pageable);
     }
 
     @Override

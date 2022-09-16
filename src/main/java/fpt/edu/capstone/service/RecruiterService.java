@@ -33,7 +33,7 @@ public interface RecruiterService {
 
     void updateCompany(long companyId, long id);
 
-    Page<Recruiter> getRecruiterByCompanyId(long pageNo, long quantity, long companyId);
+    Page<Recruiter> getRecruiterByCompanyId(long pageNo, long quantity, long companyId, String fullName, String email, String phone);
 
     Recruiter uploadLicense(long recruiterId,
                             MultipartFile businessMultipartFile,
