@@ -13,6 +13,7 @@ import fpt.edu.capstone.service.*;
 import fpt.edu.capstone.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -170,9 +171,9 @@ public class RecruiterController {
     public ResponseData getRecruiterByCompany(@RequestParam(defaultValue = "0") Integer pageNo,
                                               @RequestParam(defaultValue = "10") Integer pageSize,
                                               @RequestParam("companyId") long companyId,
-                                              @RequestParam("fullName") String fullName,
-                                              @RequestParam("email") String email,
-                                              @RequestParam("phone") String phone) {
+                                              @RequestParam(value = "fullName", defaultValue = StringUtils.EMPTY) String fullName,
+                                              @RequestParam(value = "email", defaultValue = StringUtils.EMPTY) String email,
+                                              @RequestParam(value = "phone", defaultValue = StringUtils.EMPTY) String phone) {
         try {
             ResponseDataPagination pagination = recruiterManageService.getRecruitersOfCompany
                     (pageNo, pageSize, companyId, fullName, email, phone);
