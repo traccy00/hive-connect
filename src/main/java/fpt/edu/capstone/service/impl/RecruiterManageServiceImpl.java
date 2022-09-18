@@ -139,10 +139,10 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
             if (companyCreator.getBusinessLicenseApprovalStatus() != null
                     && companyCreator.getBusinessLicenseApprovalStatus().equals(Enums.ApprovalStatus.APPROVED.getStatus())) {
                 step++;
+            } else {
+                message = ResponseMessageConstants.BUSINESS_LICENSE_HAS_NOT_BEEN_VERIFIED;
+                uncheck = "license";
             }
-        } else {
-            message = ResponseMessageConstants.BUSINESS_LICENSE_HAS_NOT_BEEN_VERIFIED;
-            uncheck = "license";
         }
         if (step == totalStep) {
             message = ResponseMessageConstants.ACCOUNT_VERIFY_SUCCESSFULLY;
