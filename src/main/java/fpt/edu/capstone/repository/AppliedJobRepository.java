@@ -42,7 +42,7 @@ public interface AppliedJobRepository extends JpaRepository<AppliedJob, Long> {
     List<CompanyResponse> getTopCompaniesHomepage();
 
     @Query(value = "select * from applied_job aj where candidate_id = :candidateId " +
-            "and (approval_status like (:status) or :status is null or :status = '')",
+            "and (approval_status like (:status) or :status is null or :status = '') and is_applied = true",
             nativeQuery = true)
     Page<AppliedJob> searchAppliedJobsOfCandidate(Pageable pageable, @Param("candidateId") long candidateId,@Param("status") String approvalStatus);
 
