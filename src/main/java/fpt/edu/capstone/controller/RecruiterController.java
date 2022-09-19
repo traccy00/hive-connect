@@ -158,7 +158,7 @@ public class RecruiterController {
             notificationService.insertNotification(notification);
 
 
-            requestJoinCompanyService.approveRequest(newRequestJoinCompany.getStatus(), newRequestJoinCompany.getId());
+            requestJoinCompanyService.approveRequest(newRequestJoinCompany.getStatus(), newRequestJoinCompany.getSenderId());
             if (!newRequestJoinCompany.getStatus().toLowerCase().equals("deny")) {
                 recruiterService.updateCompany(newRequestJoinCompany.getCompanyId(), newRequestJoinCompany.getSenderId());
             }

@@ -64,8 +64,8 @@ public class RequestJoinCompanyServiceImpl implements RequestJoinCompanyService 
     }
 
     @Override
-    public void approveRequest(String status, long id) {
-        requestJoinCompanyRepository.approveRequest(status, id);
+    public void approveRequest(String status, long senderId) {
+        requestJoinCompanyRepository.approveRequest(status, senderId);
     }
 
     @Override

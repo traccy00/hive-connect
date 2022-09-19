@@ -22,10 +22,10 @@ public interface RequestJoinCompanyRepository extends JpaRepository<RequestJoinC
 
     @Modifying
     @Transactional
-    @Query(value = "Update request_join_company set status = ?1 where id = ?2", nativeQuery = true)
-    void approveRequest(String status, long id);
+    @Query(value = "Update request_join_company set status = ?1 where sender_id = ?2", nativeQuery = true)
+    void approveRequest(String status, long senderId);
 
-    @Query(value = "select r.id as senderId, r.fullname as fullname , rjc.status, u.email , u.phone " +
+    @Query(value = "select r.id as senderId, r.fullname as fullname , rjc.status, u.email , u.phone, rjc.company_id as companyId " +
             " from request_join_company rjc " +
             "join recruiter r on r.id  = rjc.sender_id " +
             "join users u on u.id = r.user_id " +

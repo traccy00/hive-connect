@@ -18,7 +18,7 @@ public interface RequestJoinCompanyService {
 
     ResponseDataPagination getReceiveRequest(Integer pageNo, Integer pageSize, long approverId);
 
-    void approveRequest(String status, long id);
+    void approveRequest(String status, long senderId);
 
     Optional<RequestJoinCompany> findById(long id);
 

@@ -6,4 +6,5 @@ public interface ReceiveRequestJoinCompanyResponse {
     String getStatus();
     String getEmail();
     String getPhone();
+    long getCompanyId();
 }
