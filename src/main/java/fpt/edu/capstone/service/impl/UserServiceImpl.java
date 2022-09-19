@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         }
         Optional<Users> userExistByUserName = userRepository.findByUsername(request.getUsername());
         if (userExistByUserName.isPresent()) {
-            throw new HiveConnectException(ResponseMessageConstants.USERNAME_EXISTS);
+            throw new HiveConnectException(ResponseMessageConstants.EMAIL_EXISTS);
         }
         Optional<Users> userExistByEmail = userRepository.findByEmail(request.getEmail());
         if (userExistByEmail.isPresent()) {
