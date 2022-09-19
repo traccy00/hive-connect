@@ -271,7 +271,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<Long> getListPopularJobId() {
         //Lấy ra những job phổ biến với điều kiện có từ 2 lượt apply
-        return jobRepository.getListPopularJobId(2);
+        return jobRepository.getListPopularJobId(1);
     }
 
     @Override

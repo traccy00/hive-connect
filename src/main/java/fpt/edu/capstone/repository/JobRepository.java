@@ -52,7 +52,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query(value = "select * from job j " +
             "left join  payment p on j.id = p.job_id left join detail_package dp on dp.id  = p.detail_package_id " +
             "where ((dp.is_urgent_job  = ?1) or (j.end_date - j.start_date  <=  interval '21 days')) " +
-            "and p.expired_status = false and (j.is_deleted = ?2 or j.is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
+            "and (j.is_deleted = ?2 or j.is_deleted is null) and flag = ?3 order by random()", nativeQuery = true)
     Page<Job> getUrgentJob(Pageable pageable, boolean isUrgentJob, int isDeleted, String flag);
 
     @Query(value = "select * from job j " +
