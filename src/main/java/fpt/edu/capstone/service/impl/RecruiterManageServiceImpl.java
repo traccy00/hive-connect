@@ -437,7 +437,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         Page<Job> jobsListOfRecruiter = jobService.getJobOfRecruiter(pageable, recruiterId, jobName);
         if (jobsListOfRecruiter.hasContent()) {
             for (Job job : jobsListOfRecruiter) {
-                if (!LocalDateTimeUtils.checkExpireTime(job.getEndDate())) {
                     JobForRecruiterResponse response = new JobForRecruiterResponse();
                     response.setJobId(job.getId());
                     response.setJobName(job.getJobName());
@@ -457,7 +456,6 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                     response.setEndDate(job.getEndDate());
                     response.setFlag(job.getFlag());
                     responseList.add(response);
-                }
             }
         }
         ResponseDataPagination responseDataPagination = new ResponseDataPagination();
