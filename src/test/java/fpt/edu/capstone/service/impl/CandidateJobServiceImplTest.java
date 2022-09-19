@@ -287,7 +287,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
+        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
     @Test
@@ -303,7 +303,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
+        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
     @Test
@@ -319,7 +319,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
+        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
     @Test
@@ -335,7 +335,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
+        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
     @Test
@@ -351,7 +351,7 @@ public class CandidateJobServiceImplTest {
         when(mockCompanyService.getCompanyById(1L)).thenReturn(null);
         final Optional<Image> image = Optional.ofNullable(imageEntity);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(image);
-//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
+        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
     @Test
@@ -366,7 +366,7 @@ public class CandidateJobServiceImplTest {
         final Company company = company();
         when(mockCompanyService.getCompanyById(1L)).thenReturn(company);
         when(mockImageService.getImageCompany(1L, true)).thenReturn(null);
-//        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
+        final ResponseDataPagination result = candidateJobServiceImplUnderTest.getListJobByWorkForm(1, 10, "REMOTE");
     }
 
 //    @Test
