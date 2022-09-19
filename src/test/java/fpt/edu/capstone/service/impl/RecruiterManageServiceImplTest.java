@@ -106,6 +106,8 @@ public class RecruiterManageServiceImplTest {
     private MajorService mockMajorService;
     @Mock
     private WorkExperienceRepository mockWorkExperienceRepository;
+    @Mock
+    private MajorRepository majorRepository;
 
     private RecruiterManageServiceImpl recruiterManageServiceImplUnderTest;
 
@@ -118,7 +120,7 @@ public class RecruiterManageServiceImplTest {
                 mockDetailPackageService, mockRentalPackageService, mockBannerActiveService, mockFieldsService,
                 mockCountryService, mockCertificateService, mockLanguageService, mockMajorLevelService,
                 mockOtherSkillService, mockProfileViewerService, mockProfileViewerRepository,
-                mockCvRepository, mockEducationRepository, mockMajorService, mockWorkExperienceRepository);
+                mockCvRepository, mockEducationRepository, mockMajorService, majorRepository, mockWorkExperienceRepository);
     }
     private Recruiter recruiter(){
         Recruiter recruiter = new Recruiter();

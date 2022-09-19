@@ -94,6 +94,8 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
 
     private final MajorService majorService;
 
+    private final MajorRepository majorRepository;
+
     private final WorkExperienceRepository workExperienceRepository;
 
     @Override
@@ -603,6 +605,10 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
         List<Education> educations = educationService.getListEducationByCvId(cv.get().getId());
         List<Language> languages = languageService.getListLanguageByCvId(cv.get().getId());
         List<MajorLevel> majorLevels = majorLevelService.getListMajorLevelByCvId(cv.get().getId());
+        for (MajorLevel ml : majorLevels){
+            Major majorName = majorRepository.findById(ml.getMajorId()).get();
+            cvProfileResponse.setMajorName(majorName.getMajorName());
+        }
         List<OtherSkill> otherSkills = otherSkillService.getListOtherSkillByCvId(cv.get().getId());
         List<WorkExperience> workExperiences = workExperienceService.getListWorkExperienceByCvId(cv.get().getId());
         cvProfileResponse.setCandidateId(cv.get().getCandidateId());

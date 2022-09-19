@@ -31,6 +31,7 @@ public class CVProfileResponse {
     private List<Education> educations;
     private List<Language> languages;
     private List<MajorLevel> majorLevels;
+    private String majorName;
     private List<OtherSkill> otherSkills;
     private List<WorkExperience> workExperiences;
 }
