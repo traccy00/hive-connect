@@ -25,5 +25,5 @@ public interface RequestJoinCompanyService {
     void deleteOldSentRequest(long id);
 
     Page<ReceiveRequestJoinCompanyResponse> getReceiveRequestJoinCompanyWithFilter
-            (String fullName, String email, String phone, String status, int pageSize, int pageNo);
+            (String fullName, String email, String phone, String status, long approverId, int pageSize, int pageNo);
 }

@@ -1,7 +1,7 @@
 package fpt.edu.capstone.dto.recruiter;
 
 public interface ReceiveRequestJoinCompanyResponse {
-    long getId();
+    long getSenderId();
     String getFullname();
     String getStatus();
     String getEmail();

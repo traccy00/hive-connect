@@ -25,14 +25,14 @@ public interface RequestJoinCompanyRepository extends JpaRepository<RequestJoinC
     @Query(value = "Update request_join_company set status = ?1 where id = ?2", nativeQuery = true)
     void approveRequest(String status, long id);
 
-    @Query(value = "select r.id, r.fullname as fullname , rjc.status, u.email , u.phone " +
+    @Query(value = "select r.id as senderId, r.fullname as fullname , rjc.status, u.email , u.phone " +
             " from request_join_company rjc " +
             "join recruiter r on r.id  = rjc.sender_id " +
             "join users u on u.id = r.user_id " +
             "where lower(r.fullname)  like lower(concat('%', ?1 ,'%')) " +
             "and lower(u.email) like lower(concat('%', ?2 ,'%')) " +
             "and  (u.phone like concat('%', ?3 ,'%') or u.phone is null ) " +
-            "and lower(rjc.status) like lower(concat('%', ?4 ,'%')) ", nativeQuery = true)
+            "and lower(rjc.status) like lower(concat('%', ?4 ,'%')) and rjc.approver_id = ?5 ", nativeQuery = true)
     Page<ReceiveRequestJoinCompanyResponse> getReceiveRequestJoinCompanyWithFilter
-            ( String fullName, String email, String phone, String status,  Pageable pageable);
+            ( String fullName, String email, String phone, String status, long approverId,  Pageable pageable);
 }
