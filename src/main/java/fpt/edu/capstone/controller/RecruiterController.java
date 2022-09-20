@@ -133,6 +133,7 @@ public class RecruiterController {
                 sentRequestJoinCompanyResponse.setApproverId(requestJoinCompanyOp.get().getApproverId());
                 sentRequestJoinCompanyResponse.setStatus(requestJoinCompanyOp.get().getStatus());
                 sentRequestJoinCompanyResponse.setCompany(companyOptinal.get());
+
                 return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.SUCCESS, sentRequestJoinCompanyResponse);
             }
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(), ResponseMessageConstants.NO_REQUEST_JOIN_COMPANY_SENT);
@@ -157,7 +158,7 @@ public class RecruiterController {
             notificationService.insertNotification(notification);
 
 
-            requestJoinCompanyService.approveRequest(newRequestJoinCompany.getStatus(), newRequestJoinCompany.getId());
+            requestJoinCompanyService.approveRequest(newRequestJoinCompany.getStatus(), newRequestJoinCompany.getSenderId());
             if (!newRequestJoinCompany.getStatus().toLowerCase().equals("deny")) {
                 recruiterService.updateCompany(newRequestJoinCompany.getCompanyId(), newRequestJoinCompany.getSenderId());
             }
@@ -266,6 +267,7 @@ public class RecruiterController {
 
     @GetMapping("/get-receive-request")
     public ResponseData getReceiveRequestJoinCompanyWithFilter(
+                                  @RequestParam long approverId,
                                   @RequestParam(defaultValue = "0") Integer pageNo,
                                   @RequestParam(defaultValue = "10") Integer pageSize,
                                   @RequestParam(defaultValue = "") String fullName,
@@ -273,7 +275,7 @@ public class RecruiterController {
                                   @RequestParam(defaultValue = "") String status,
                                   @RequestParam(defaultValue = "") String phone) {
         try {
-            Page<ReceiveRequestJoinCompanyResponse> page = requestJoinCompanyService.getReceiveRequestJoinCompanyWithFilter(fullName, email, phone, status, pageSize, pageNo);
+            Page<ReceiveRequestJoinCompanyResponse> page = requestJoinCompanyService.getReceiveRequestJoinCompanyWithFilter(fullName, email, phone, status, approverId, pageSize, pageNo);
             ResponseDataPagination responseDataPagination = new ResponseDataPagination();
             Pagination pagination = new Pagination();
             System.out.println(page.getContent());

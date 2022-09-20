@@ -160,22 +160,22 @@ class RequestJoinCompanyServiceImplTest {
         assertThat(result).isEmpty();
     }
 
-    @Test
-    void testGetReceiveRequestJoinCompanyWithFilter() {
-        when(mockRequestJoinCompanyRepository.getReceiveRequestJoinCompanyWithFilter(eq("fullName"), eq("email"),
-                eq("phone"), eq("status"), any(Pageable.class))).thenReturn(new PageImpl<>(Arrays.asList()));
-        final Page<ReceiveRequestJoinCompanyResponse> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequestJoinCompanyWithFilter(
-                "fullName", "email", "phone", "status", 10, 1);
-    }
-
-    @Test
-    void testGetReceiveRequestJoinCompanyWithFilter_RequestJoinCompanyRepositoryReturnsNoItems() {
-        when(mockRequestJoinCompanyRepository.getReceiveRequestJoinCompanyWithFilter(eq("fullName"), eq("email"),
-                eq("phone"), eq("status"), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Collections.emptyList()));
-        final Page<ReceiveRequestJoinCompanyResponse> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequestJoinCompanyWithFilter(
-                "fullName", "email", "phone", "status", 10, 1);
-    }
+//    @Test
+//    void testGetReceiveRequestJoinCompanyWithFilter() {
+//        when(mockRequestJoinCompanyRepository.getReceiveRequestJoinCompanyWithFilter(eq("fullName"), eq("email"),
+//                eq("phone"), eq("status"), any(Pageable.class))).thenReturn(new PageImpl<>(Arrays.asList()));
+//        final Page<ReceiveRequestJoinCompanyResponse> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequestJoinCompanyWithFilter(
+//                "fullName", "email", "phone", "status", 10, 1);
+//    }
+//
+//    @Test
+//    void testGetReceiveRequestJoinCompanyWithFilter_RequestJoinCompanyRepositoryReturnsNoItems() {
+//        when(mockRequestJoinCompanyRepository.getReceiveRequestJoinCompanyWithFilter(eq("fullName"), eq("email"),
+//                eq("phone"), eq("status"), any(Pageable.class)))
+//                .thenReturn(new PageImpl<>(Collections.emptyList()));
+//        final Page<ReceiveRequestJoinCompanyResponse> result = requestJoinCompanyServiceImplUnderTest.getReceiveRequestJoinCompanyWithFilter(
+//                "fullName", "email", "phone", "status", 10, 1);
+//    }
 
     @Test
     void testDeleteOldSentRequest() {

@@ -64,8 +64,8 @@ public class RequestJoinCompanyServiceImpl implements RequestJoinCompanyService 
     }
 
     @Override
-    public void approveRequest(String status, long id) {
-        requestJoinCompanyRepository.approveRequest(status, id);
+    public void approveRequest(String status, long senderId) {
+        requestJoinCompanyRepository.approveRequest(status, senderId);
     }
 
     @Override
@@ -75,11 +75,11 @@ public class RequestJoinCompanyServiceImpl implements RequestJoinCompanyService 
 
     @Override
     public Page<ReceiveRequestJoinCompanyResponse> getReceiveRequestJoinCompanyWithFilter
-            (String fullName, String email, String phone, String status, int pageSize, int pageNo){
+            (String fullName, String email, String phone, String status, long approverId, int pageSize, int pageNo){
         int pageReq = pageNo >= 1 ? pageNo - 1 : pageNo;
         Pageable pageable = PageRequest.of(pageReq, pageSize);
         Page<ReceiveRequestJoinCompanyResponse> page = requestJoinCompanyRepository.getReceiveRequestJoinCompanyWithFilter
-                ( fullName, email, phone, status,pageable);
+                ( fullName, email, phone, status, approverId,pageable);
         return page;
     }
 
