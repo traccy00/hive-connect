@@ -250,11 +250,11 @@ public class PaymentServiceImpl implements PaymentService {
         if(paymentDTO.getBannerId() == 0){
             DetailPackage getName = detailPackageService.findById(paymentDTO.getDetailPackageId());
             String name  = getName.getDetailName();
-            paymentDTO.setOrderType("MUA " +name);
+            paymentDTO.setOrderType("MUA_" +name);
         } else {
             Banner getName = bannerService.findById(paymentDTO.getBannerId());
             String bannerName = getName.getTitle();
-            paymentDTO.setOrderType("MUA "+bannerName);
+            paymentDTO.setOrderType("MUA_"+bannerName);
         }
 
         LocalDateTime now = LocalDateTime.now();

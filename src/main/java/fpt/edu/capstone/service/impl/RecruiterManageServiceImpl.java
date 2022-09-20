@@ -445,6 +445,7 @@ public class RecruiterManageServiceImpl implements RecruiterManageService {
                         //company không tồn tại mà đã tạo được job
                         throw new HiveConnectException(ResponseMessageConstants.PLEASE_TRY_TO_CONTACT_ADMIN);
                     }
+                    response.setNumberRecruits(job.getNumberRecruits());
                     response.setCompanyName(company.getName());
                     response.setWorkPlace(job.getWorkPlace());
                     response.setFromSalary(job.getFromSalary());
