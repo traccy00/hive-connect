@@ -9,6 +9,7 @@ import fpt.edu.capstone.service.impl.DinaryServiceImpl;
 import fpt.edu.capstone.utils.Enums;
 import fpt.edu.capstone.utils.ResponseData;
 import lombok.AllArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -17,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
 
 
 @RestController
@@ -209,9 +212,22 @@ public class FileController {
 //            return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), e.getMessage());
 //        }
 //    }
+    private boolean isValidFile(MultipartFile file, String type){
+        String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+        if(type.equals("image")) {
+            return  Arrays.asList(new String[] {"jpeg","jpg","png"}).contains(fileExtension.toLowerCase()) ;
+        }
+        return  Arrays.asList(new String[] {"pdf","jpeg","jpg","png"}).contains(fileExtension.toLowerCase()) ;
+    }
     @PostMapping("upload-file")
-    public ResponseData uploadToDinary(@RequestParam MultipartFile file){
+    public ResponseData uploadToDinary(@RequestParam MultipartFile file, @RequestParam String typeUpload){ //Type = "IMG" || CV
         try {
+            if(!isValidFile(file, typeUpload)) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Tệp bạn tải lên không đúng định dạng cho phép");
+            }
+            if(file.getSize() > 30000000) {
+                return new ResponseData(Enums.ResponseStatus.ERROR.getStatus(), "Tệp bạn tải lên vượt quá 30 MB");
+            }
             String url = dinaryService.uploadFile(file);
             return new ResponseData(Enums.ResponseStatus.SUCCESS.getStatus(),
                     ResponseMessageConstants.UPLOAD_FILE_SUCCESS, url);
